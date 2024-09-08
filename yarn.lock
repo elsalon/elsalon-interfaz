@@ -751,6 +751,13 @@
     primevue "4.0.5"
     unplugin-vue-components "0.27.0"
 
+"@primevue/themes@^4.0.5":
+  version "4.0.5"
+  resolved "https://registry.npmjs.org/@primevue/themes/-/themes-4.0.5.tgz"
+  integrity sha512-cRrAhOapOT8eFCTDwNdB/acg2ZEEkn7y6h6p188PYSjJsWnYK+D8eI1Js1ZB5HwWo4sWs3oR3Sy8bPwejnGbAw==
+  dependencies:
+    "@primeuix/styled" "^0.0.5"
+
 "@rollup/plugin-alias@^5.1.0":
   version "5.1.0"
   resolved "https://registry.npmjs.org/@rollup/plugin-alias/-/plugin-alias-5.1.0.tgz"

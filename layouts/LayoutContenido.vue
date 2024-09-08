@@ -26,7 +26,7 @@
     const userMenu = ref();
     const items = ref([
         {
-            label: 'Options',
+            label: 'Opciones',
             items: [
                 {
                     label: 'Cerrar Sesión',

@@ -24,9 +24,8 @@ export default defineNuxtConfig({
   primevue: {
     options: {
         unstyled: true
-        
     },
-    importPT: { as: 'Salon', from: '~/primevue-presets/salon' }
+    importPT: { as: 'Salon', from: '~/primevue-presets/salon' },    
   },
   // *****
   // AUTH

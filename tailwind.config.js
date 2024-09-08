@@ -1,6 +1,9 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   content: [
+    "./primevue-presets/**/*.{js,vue,ts}",
     "./components/**/*.{js,vue,ts}",
     "./layouts/**/*.vue",
     "./pages/**/*.vue",
@@ -9,7 +12,20 @@ module.exports = {
     "./error.vue",
   ],
   theme: {
-    extend: {},
+    
+    extend: {
+      colors: {
+        primary: 'black',
+        secondary: 'black',
+        neutral: 'black',
+        accent: 'black',
+        surface: {
+          400: 'black',
+        },
+      },
+    },
+    
+    
     container:{
       center: true,
       padding: '1rem',
