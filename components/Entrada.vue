@@ -10,11 +10,14 @@
             </div>
             <div class="ml-4">
                 <h2 class="font-bold text-gray-800">Jane Doe</h2>
-                <p class="text-gray-600 text-sm">Software Engineer</p>
+                <div class="flex">
+                    <a class="text-sm mr-2" href="#">PAV2</a>
+                    <p class="text-gray-400 text-sm">Hace 10 minutos</p>
+                </div>
             </div>
         </div>
         
-        <div class="prose lg:prose-lg prose-headings:my-1 pl-[55px]" v-html="entrada.contenido"></div>
+        <div class="prose lg:prose-lg prose-headings:my-1 sm:pl-[55px]" v-html="entrada.contenido"></div>
         
     </article>
 </template>

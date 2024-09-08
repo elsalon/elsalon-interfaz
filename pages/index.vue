@@ -1,5 +1,8 @@
 <template>
-    <div class="container">
+    <NuxtLayout name="layout-contenido">
+
+
+    
         <h1 class="text-3xl font-bold">Welcome, {{ data.user.email }}!</h1>
         
         <button @click="handleLogout">Logout</button>
@@ -7,7 +10,8 @@
         <EditorEntrada />
 
         <ListaEntradas />
-    </div>
+    
+    </NuxtLayout>
   </template>
   
   <script setup>
