@@ -14,6 +14,12 @@
   </template>
   
   <script setup>
+  definePageMeta({
+    auth: {
+      unauthenticatedOnly: true,
+      navigateAuthenticatedTo: '/'
+    }
+  })
   import { ref } from 'vue'
   import { useAuth } from '#imports'
   

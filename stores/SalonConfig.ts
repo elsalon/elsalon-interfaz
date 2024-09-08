@@ -13,7 +13,9 @@ export const useSalonStore = defineStore('salon', {
     actions: {
       async fetchConfig() {
         try {
-          const { data }: any  = await $fetch(useRuntimeConfig().public.apiBase + '/api/config')
+          return;
+          const runtimeConfig = useRuntimeConfig().public
+          const { data }: any  = await $fetch(runtimeConfig.apiBase + runtimeConfig.configApi)
           if(data.value){
             this.config = data.value
           }

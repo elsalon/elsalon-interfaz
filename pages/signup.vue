@@ -31,8 +31,11 @@
 <script setup>
 // Permito que se pueda acceder a la página sin autenticación
 definePageMeta({
-  auth: false
-})
+    auth: {
+      unauthenticatedOnly: true,
+      navigateAuthenticatedTo: '/'
+    }
+  })
 
 import { ref } from 'vue'
 const { signup } = useAuth()

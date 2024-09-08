@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   plugins: [
-    '~/plugins/SalonConfig.ts'
+    '~/plugins/SalonConfig.ts',
   ],
   modules: [
     '@sidebase/nuxt-auth',
@@ -11,7 +11,9 @@ export default defineNuxtConfig({
   ],
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:4000'
+      apiBase: 'http://localhost:4000/',
+      configApi: 'api/config',
+      entradasApi: 'api/entradas',
     }
   },
   // *****
