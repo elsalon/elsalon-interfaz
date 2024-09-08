@@ -1,6 +1,7 @@
 <template>
     <div>
       <h1 class="text-3xl font-bold">Welcome, {{ data.user.email }}!</h1>
+      *{{ $auth }}*
       <button @click="handleLogout">Logout</button>
     </div>
   </template>
