@@ -6,6 +6,13 @@
   outline: none !important;
 }
 
+/* Altura minima Quill Editor */
+.dialog-quill-editor {
+  .ql-editor{
+    min-height: 200px;
+  }
+}
+
 /* Primary and Surface Palettes */
 :root {
   --p-primary-50: var(--p-surface-50);

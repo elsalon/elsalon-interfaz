@@ -26,7 +26,7 @@
     const userMenu = ref();
     const items = ref([
         {
-            label: 'Opciones',
+            label: data.value?.user?.nombre,
             items: [
                 {
                     label: 'Cerrar Sesión',

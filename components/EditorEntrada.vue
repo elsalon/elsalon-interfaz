@@ -1,37 +1,14 @@
 <template>
     <Button id="btnEscribir" label="+ Escribir" @click="visible = true" />
 
-
-    <Dialog v-model:visible="visible" modal header="" :style="{ width: '25rem' }">
-        <!-- <span class="text-surface-500 dark:text-surface-400 block mb-8">Update your information.</span>
-        <div class="flex items-center gap-4 mb-4">
-            <label for="username" class="font-semibold w-24">Username</label>
-            <InputText id="username" class="flex-auto" autocomplete="off" />
-        </div>
-        <div class="flex items-center gap-4 mb-8">
-            <label for="email" class="font-semibold w-24">Email</label>
-            <InputText id="email" class="flex-auto" autocomplete="off" />
-        </div>
-        <div class="flex justify-end gap-2">
-            <Button type="button" label="Cancel" severity="secondary" @click="visible = false"></Button>
-            <Button type="button" label="Save" @click="visible = false"></Button>
-        </div> -->
-        <EditorEntradaModal/>
+    <Dialog class="dialog-quill-editor" header=" " v-model:visible="visible" modal maximizable :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+        <EditorEntradaQuill/>
     </Dialog>
 </template>
 
 <script setup>
-
-// import { useDialog } from 'primevue/usedialog';
-
-// const dialog = useDialog();
-
-// const dynamicComponent = defineAsyncComponent(() => import('./EditorEntradaModal.vue'));
-
-// // const abrirEditor = () => {
-// //     dialog.open(dynamicComponent, {});
-// // }
 import { ref } from "vue";
+import EditorEntradaQuill from "./EditorEntradaQuill.vue";
 
 const visible = ref(false);
 
