@@ -7,14 +7,25 @@ export default defineNuxtConfig({
   ],
   modules: [
     '@sidebase/nuxt-auth',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@primevue/nuxt-module'
   ],
+  
   runtimeConfig: {
     public: {
       apiBase: 'http://localhost:4000/',
       configApi: 'api/config',
       entradasApi: 'api/entradas',
     }
+  },
+  // *****
+  // primevue
+  // *****
+  primevue: {
+    options: {
+        unstyled: true
+    },
+    importPT: { as: 'Aura', from: '~/primevue-presets/aura' }
   },
   // *****
   // AUTH

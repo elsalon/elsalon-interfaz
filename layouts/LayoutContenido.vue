@@ -1,6 +1,5 @@
 <template>
-    <div class="flex  flex-col">
-      <header class="sticky top-0 flex h-16 items-center gap-4 z-50 px-4 md:px-6">
+      <header class="sticky top-0 flex h-16 items-center z-50 px-4 md:px-6">
         <nav class="w-full flex flex-row justify-between">
             <a href="/"><img class="h-10 w-10 " src="/public/salon_logo_sm_192x192.png"></a>
             
@@ -9,17 +8,10 @@
                 <div class="absolute inset-0 rounded-full"></div>
             </div>
         </nav>
-        <!-- <slot name="header">
-          
-
-
-
-
-            
-        </slot> -->
+       
       </header>
-      <main class="container-sm mx-auto">
+      <main class="container mx-auto">
+
         <slot />
       </main>
-    </div>
   </template>

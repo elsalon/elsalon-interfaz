@@ -15,11 +15,14 @@
     "@vueup/vue-quill": "^1.2.0",
     "nuxt": "^3.13.0",
     "pinia": "^2.2.2",
+    "primevue": "^4.0.5",
     "quill-image-uploader": "^1.3.0",
+    "tailwindcss-primeui": "^0.3.4",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@primevue/nuxt-module": "^4.0.5",
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.45",
