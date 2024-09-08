@@ -60,6 +60,8 @@ const Publicar = async () => {
 
     const response = await useApi('api/entradas', {contenido: html}, 'POST');
     console.log('Content submitted successfully:', response)
+
+	// TODO cerrar ventana y refrescar lista de entradas desde pagina 0
 }
 
 const autorSeleccionado = ref();
