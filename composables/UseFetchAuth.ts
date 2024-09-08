@@ -1,7 +1,7 @@
 // Funcion para hacer llamados a la API con autenticacion
 import { useRuntimeConfig } from '#app';
 
-export const useApi = async <T>(endpoint: string, body: any, method: string = 'POST'): Promise<T> => {
+export const useApi = async <T>(endpoint: string, body: any, method: string = 'GET'): Promise<T> => {
   const runtimeConfig = useRuntimeConfig().public;
   const { token } = useAuth();
 

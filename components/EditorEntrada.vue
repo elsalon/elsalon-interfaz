@@ -33,7 +33,7 @@ const Publicar = async () => {
     let html = quill.value.root.innerHTML
     console.log('Publicar', delta, html)
 
-    const response = await useApi('api/entradas', {contenido: html});
+    const response = await useApi('api/entradas', {contenido: html}, 'POST');
     console.log('Content submitted successfully:', response)
 //     try {
 //         const runtimeConfig = useRuntimeConfig().public
