@@ -1,6 +1,6 @@
 <template>    
     <article>
-        <div class="flex items-center">
+        <div class="flex items-center mb-2">
             <div class="relative">
                 <img class="h-10 w-10 object-cover rounded" src="https://randomuser.me/api/portraits/women/87.jpg" alt="Avatar">
                 <div class="absolute inset-0 rounded"></div>

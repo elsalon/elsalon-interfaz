@@ -24,8 +24,9 @@ export default defineNuxtConfig({
   primevue: {
     options: {
         unstyled: true
+        
     },
-    importPT: { as: 'Aura', from: '~/primevue-presets/aura' }
+    importPT: { as: 'Salon', from: '~/primevue-presets/salon' }
   },
   // *****
   // AUTH
@@ -61,7 +62,7 @@ export default defineNuxtConfig({
   // *********
   // TAILWIND
   // *********
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', "primeicons/primeicons.css"],
   postcss: {
     plugins: {
       tailwindcss: {},

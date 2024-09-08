@@ -3,10 +3,12 @@
         <nav class="w-full flex flex-row justify-between">
             <a href="/"><img class="h-10 w-10 " src="/public/salon_logo_sm_192x192.png"></a>
             
-            <div class="relative">
+            <div class="relative" @click="toggleUserMenu">
                 <img class="h-10 w-10 object-cover rounded-full" src="https://randomuser.me/api/portraits/women/87.jpg" alt="Avatar">
                 <div class="absolute inset-0 rounded-full"></div>
+                <Menu ref="userMenu" id="overlay_menu" :model="items" :popup="true" />
             </div>
+            
         </nav>
        
       </header>
@@ -15,3 +17,29 @@
         <slot />
       </main>
   </template>
+
+<script setup>
+    import { ref } from "vue";
+    import { PrimeIcons } from '@primevue/core/api';
+    const { data, signOut } = useAuth()
+
+    const userMenu = ref();
+    const items = ref([
+        {
+            label: 'Options',
+            items: [
+                {
+                    label: 'Cerrar Sesión',
+                    icon: PrimeIcons.SIGN_OUT,
+                    command: () => {
+                        signOut({ callbackUrl: '/login' })
+                    }
+                }
+            ]
+        }
+    ]);
+
+    const toggleUserMenu = (event) => {
+        userMenu.value.toggle(event);
+    };
+</script>
