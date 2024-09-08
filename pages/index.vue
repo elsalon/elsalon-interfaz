@@ -1,7 +1,6 @@
 <template>
     <div>
-        
-      <h1>Welcome, {{ data.user.email }}!</h1>
+      <h1 class="text-3xl font-bold">Welcome, {{ data.user.email }}!</h1>
       <button @click="handleLogout">Logout</button>
     </div>
   </template>

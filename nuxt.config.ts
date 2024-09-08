@@ -5,13 +5,9 @@ export default defineNuxtConfig({
   modules: [
     '@sidebase/nuxt-auth'
   ],
-  // runtimeConfig: {
-  //   public: {
-  //     authJs: {
-  //       baseURL: 'http://localhost:4000'
-  //     }
-  //   }
-  // },
+  // *****
+  // AUTH
+  // *****
   auth: {
     // https://auth.sidebase.io/guide/local/quick-start
     baseURL: 'http://localhost:4000/',
@@ -29,13 +25,6 @@ export default defineNuxtConfig({
         type: 'Bearer',
         headerName: 'Authorization'
       },
-      // sessionDataType: {
-      //   user: '{id:string,email:string,createdAt:string,updatedAt:string}',
-      //   // id: 'string',
-      //   // email: 'string',
-      //   // createdAt: 'string',
-      //   // updatedAt: 'string',
-      // },
       // refresh:{
         // todo
       // }
@@ -46,5 +35,15 @@ export default defineNuxtConfig({
       
     },
     globalAppMiddleware: true
+  },
+  // *********
+  // TAILWIND
+  // *********
+  css: ['~/assets/css/main.css'],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
   },
 })

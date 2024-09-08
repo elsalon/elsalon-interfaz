@@ -44,31 +44,14 @@ const { signUp } = useAuth()
 
 const handleSignup = async () => {
   try {
-    // // You'll need to implement this API call yourself
-    // const response = await $fetch('/api/users', {
-    //   method: 'POST',
-    //   body: {
-    //     // username: username.value,
-    //     email: email.value,
-    //     password: password.value
-    //   }
-    // })
     const credentials = { 
         email: email.value,
         password: password.value
     }
-    await signUp(credentials,
-        {
-            callbackUrl: '/',
-            redirect: true,
-        }
-    )
-    
-    // After successful signup, sign in the user
-    // await signIn({
-    //   email: email.value,
-    //   password: password.value
-    // })
+    await signUp(credentials,{
+        callbackUrl: '/',
+        redirect: true,
+    })
   } catch (error) {
     console.error('Signup failed:', error)
   }
