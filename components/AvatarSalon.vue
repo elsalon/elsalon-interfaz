@@ -1,6 +1,6 @@
 <template>
-    <Avatar v-if="tieneImagen" :image="avatarUrl" size="large" style="background-color: #fff"/>
-    <Avatar v-else :label="iniciales" size="large" style="background-color: #000; color: #fff" />
+    <Avatar v-if="tieneImagen" :image="avatarUrl" size="large" style="background-color: #fff" shape=""/>
+    <Avatar v-else :label="iniciales" size="large" style="background-color: #000; color: #fff" shape=""/>
 </template>
 
 <script setup>

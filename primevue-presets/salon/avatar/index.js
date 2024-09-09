@@ -21,6 +21,7 @@ export default {
 
             // Shapes
             {
+                '' : props.shape == "",
                 'rounded-lg': props.shape == 'square',
                 'rounded-full': props.shape == 'circle'
             },
