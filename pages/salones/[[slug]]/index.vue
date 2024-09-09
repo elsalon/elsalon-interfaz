@@ -1,6 +1,10 @@
+<!-- <template>
+    <p>{{ $route.params.slug }} </p>
+</template> -->
+
 <template>
     <NuxtLayout name="layout-contenido">        
-        <EditorEntrada />
+        <!-- <EditorEntrada /> -->
         <ListaEntradas />
     </NuxtLayout>
 </template>
