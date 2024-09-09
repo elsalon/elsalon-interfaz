@@ -37,6 +37,7 @@ import { ImageDrop } from 'quill-image-drop-module';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 const { data } = useAuth()
+import Compressor from 'compressorjs';
 
 const toast = useToast();
 import { useToast } from "primevue/usetoast";
@@ -66,20 +67,21 @@ const onEditorReady = (editor) => {
 }
 
 const uploadImage = async (file) => {
-  const formData = new FormData()
-  const randFilename = useRandomFilenameBlob(file)
+	const formData = new FormData()
+  	const randFilename = useRandomFilenameBlob(file)
 //   console.log("Random filename:", randFilename)
-  formData.append('file', file, randFilename)
+	const imageFile = await CompressImage(file)
+  	formData.append('file', imageFile, randFilename)
 //   console.log("Uploading image:", file)
-  try {
-	const {doc} = await useUploadFile('/api/imagenes', formData);
-	console.log("Response:", doc)
-    return { id: doc.id, url: doc.url } // Assuming PayloadCMS returns both id and url
-  } catch (error) {
-    console.error('Error uploading image:', error)
-	toast.add({ severity: 'error', summary: 'Error', detail: 'No se puede subir esa imagen', life: 3000});
-    return null
-  }
+  	try {
+		const {doc} = await useUploadFile('/api/imagenes', formData);
+		console.log("Response:", doc)
+		return { id: doc.id, url: doc.url } // Assuming PayloadCMS returns both id and url
+	} catch (error) {
+		console.error('Error uploading image:', error)
+		toast.add({ severity: 'error', summary: 'Error', detail: 'No se puede subir esa imagen', life: 3000});
+		return null
+	}
 }
 
 const ProcesarContenido = async () => {
@@ -110,6 +112,25 @@ const ProcesarContenido = async () => {
 	}
 
   return html
+}
+
+const CompressImage = async(blob) => {
+	console.log("Compressing image")
+	return new Promise((resolve, reject) => {
+        new Compressor(blob, {
+          quality: 0.7,
+          maxWidth: 1920,
+          retainExif: true,
+
+          success(result) {
+            resolve(result);
+          },
+          error(err) {
+            console.log(err.message);
+            reject(err);
+          },
+        });
+	});
 }
 
 const Publicar = async () => {
