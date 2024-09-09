@@ -14,18 +14,24 @@
     const page = ref(-1);
     const route = useRoute()
     
+    const scrollEndOffset = 300;
+    
     onMounted(() => {
         FetchEntries();
-        const scrollEndOffset = 300;
+        CheckLlegoFinDePagina(); // lo llamo una vez para que cargue la primera vez
 
         window.onscroll = async () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight-scrollEndOffset) {
-                if(hasNextPage.value){
-                    FetchEntries();
-                }
-            }
+            CheckLlegoFinDePagina();
         }
     })
+    
+    const CheckLlegoFinDePagina = () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight-scrollEndOffset) {
+            if(hasNextPage.value){
+                FetchEntries();
+            }
+        }
+    }
 
     const FetchEntries = async () => {
         const slug = route.params?.slug || 'el-salon'; // TODO algo que no lo haga hardcodeado

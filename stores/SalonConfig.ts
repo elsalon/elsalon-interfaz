@@ -1,9 +1,7 @@
 import { defineStore } from 'pinia'
 import { useRuntimeConfig } from '#app'
 
-interface Config {
-  siteName: string
-}
+
 interface Salon{
   id: string;
   nombre: string;
@@ -14,21 +12,27 @@ interface Salon{
 
 export const useSalonStore = defineStore('salon', {
     state: () => ({
-      config: null as Config | null,
       salones: [] as Salon[],
+      initialized: false,
+      loading: false,
     }),
 
     actions: {
       async fetchConfig() {
+        if(this.initialized) return;
+        this.loading = true;
         try {
           // return;
           const runtimeConfig = useRuntimeConfig().public
-          const { docs }: any  = await $fetch(runtimeConfig.apiBase + "/api/salones?sort=orden")
-          if(docs.length > 0){
-            this.salones = docs
+          const { data }: any  = await useFetch(runtimeConfig.apiBase + "/api/salones?sort=orden$limit=-1")
+          if(data.value.docs.length > 0){
+            this.salones = data.value.docs;
+            this.initialized = true
           }
         } catch (error) {
           console.error('Failed to fetch config:', error)
+        } finally {
+          this.loading = false;
         }
       }
     }

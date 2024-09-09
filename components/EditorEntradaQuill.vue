@@ -37,6 +37,10 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 const { data } = useAuth()
 
+const toast = useToast();
+import { useToast } from "primevue/usetoast";
+
+const attachedImages = ref([])
 const uploading = ref(false)
 
 const myContent = ref('')
@@ -58,14 +62,75 @@ const onEditorReady = (editor) => {
   quill.value = editor
 }
 
+// const runtimeConfig = useRuntimeConfig().public;
+// const { token } = useAuth();
+
+const uploadImage = async (file) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  console.log("Uploading image:", file)
+  try {
+	const response = await useUploadFile('/api/imagenes', formData);
+    // const response = await fetch(runtimeConfig.apiBase + "/api/imagenes", {
+    //   method: 'POST',
+    //   body: formData,
+    // })
+	console.log("Response:", response)
+    // const data = await response.json()
+	// console.log("Uploaded image:", data)
+    // return { id: data.id, url: data.url } // Assuming PayloadCMS returns both id and url
+  } catch (error) {
+    console.error('Error uploading image:', error)
+	toast.add({ severity: 'error', summary: 'Error', detail: 'No se puede subir esa imagen', life: 3000});
+    return null
+  }
+}
+
+const ProcesarContenido = async () => {
+	const delta = quill.value.getContents()
+	let html = quill.value.root.innerHTML
+	attachedImages.value = []
+
+	for (let op of delta.ops) {
+		if (op.insert && op.insert.image) {
+			const imageUrl = op.insert.image
+			if (imageUrl.startsWith('data:')) {
+				// This is a base64 image, need to upload
+				const file = await fetch(imageUrl).then(res => res.blob())
+				const uploadedImage = await uploadImage(file)
+				if (uploadedImage) {
+				html = html.replace(imageUrl, `{image:${uploadedImage.id}}`)
+				attachedImages.value.push(uploadedImage.id)
+				}
+			} else if (!imageUrl.startsWith('{image:')) {
+				// This is an already uploaded image, but not yet converted to our format
+				const imageId = extractImageIdFromUrl(imageUrl)
+				if (imageId) {
+				html = html.replace(imageUrl, `{image:${imageId}}`)
+				attachedImages.value.push(imageId)
+				}
+			}
+		}
+	}
+
+  return html
+}
+
 const Publicar = async () => {
 	uploading.value = true
 	const { paginaActual } = useSalon()
-    const delta = quill.value.getContents()
-    let html = quill.value.root.innerHTML
-
+    // const delta = quill.value.getContents()
+    // let html = quill.value.root.innerHTML
+	const html = await ProcesarContenido();
+	return;
 	try{
-		const response = await useApi('/api/entradas', {contenido: html, sala: paginaActual.value.id}, 'POST');
+		// todo attachedImages
+		const response = await useApi('/api/entradas', {
+			contenido: html, 
+			imagenes: attachedImages.value, 
+			sala: paginaActual.value.id
+		}, 'POST');
+		console.log("Publicacion creada:", response)
 		useNuxtApp().callHook("publicacion:creada", {resultado:"ok"})
 	}catch{
 		useNuxtApp().callHook("publicacion:creada", {resultado:"error"})

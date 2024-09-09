@@ -26,3 +26,24 @@ export const useApi = async <T>(endpoint: string, body: any, method: string = 'G
     throw error;
   }
 };
+
+export const useUploadFile = async <T>(endpoint: string, body: any, method: string = 'POST'): Promise<T> => {
+  const runtimeConfig = useRuntimeConfig().public;
+  const { token } = useAuth();
+
+  try {
+    // Realizar la solicitud a la API
+    const response: T = await $fetch(runtimeConfig.apiBase + endpoint, {
+      method,
+      headers: {
+        'Authorization': token.value,
+      },
+      body,
+    });
+
+    return response;
+  } catch (error) {
+    console.error('API Error:', error);
+    throw error;
+  }
+};
