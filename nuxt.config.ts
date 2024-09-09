@@ -13,9 +13,9 @@ export default defineNuxtConfig({
   
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:4000/',
-      configApi: 'api/config',
-      entradasApi: 'api/entradas',
+      apiBase: 'http://localhost:4000',
+      configApi: '/api/config',
+      entradasApi: '/api/entradas',
     }
   },
   // *****

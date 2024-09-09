@@ -29,7 +29,7 @@
 
     const FetchEntries = async () => {
         page.value++; // Increment page value before the request
-        const res = await useApi(`api/entradas?page=${page.value}`)
+        const res = await useApi(`/api/entradas?depth=2&page=${page.value}`)
         // console.log(res)
         hasNextPage.value = res.hasNextPage
         page.value = res.page

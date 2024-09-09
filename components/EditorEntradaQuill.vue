@@ -58,7 +58,7 @@ const Publicar = async () => {
     let html = quill.value.root.innerHTML
     console.log('Publicar', delta, html)
 
-    const response = await useApi('api/entradas', {contenido: html}, 'POST');
+    const response = await useApi('/api/entradas', {contenido: html}, 'POST');
     console.log('Content submitted successfully:', response)
 
 	// TODO cerrar ventana y refrescar lista de entradas desde pagina 0
