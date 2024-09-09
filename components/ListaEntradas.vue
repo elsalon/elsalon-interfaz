@@ -36,9 +36,8 @@
         }else{
             // Dashboard el salon (TODO)
         }
-        console.log("Fetching entries. Slug:", slug);
+        // console.log("Fetching entries. Slug:", slug);
         const res = await useApi(apiUrl)
-        console.log(res)
         hasNextPage.value = res.hasNextPage
         page.value = res.page
         entradas.value = [...entradas.value, ...res.docs]

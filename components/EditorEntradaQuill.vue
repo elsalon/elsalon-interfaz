@@ -54,11 +54,13 @@ const onEditorReady = (editor) => {
 }
 
 const Publicar = async () => {
+	const { paginaActual } = useSalon()
     const delta = quill.value.getContents()
     let html = quill.value.root.innerHTML
-    console.log('Publicar', delta, html)
+	console.log("paginaActual", paginaActual)
+    console.log('Publicar', delta, {sala: paginaActual.value.id})
 
-    const response = await useApi('/api/entradas', {contenido: html}, 'POST');
+    const response = await useApi('/api/entradas', {contenido: html, sala: paginaActual.value.id}, 'POST');
     console.log('Content submitted successfully:', response)
 
 	// TODO cerrar ventana y refrescar lista de entradas desde pagina 0

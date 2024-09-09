@@ -5,6 +5,7 @@ interface Config {
   siteName: string
 }
 interface Salon{
+  id: string;
   nombre: string;
   siglas: string;
   color: string;

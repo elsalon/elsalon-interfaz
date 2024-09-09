@@ -3,12 +3,11 @@
         <!-- Fixed Nav -->
         <nav class="w-full flex flex-row justify-between items-center">
             <!-- Logo Salon -->
-            <!-- <img class="h-12 w-12 " src="/public/salon_logo_sm_192x192.png"  @click="toggleSalonesMenu"> -->
             <Avatar :label="paginaActual.siglas" class="cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape=""  @click="toggleSalonesMenu"/>
             
             <Menu ref="salonesMenu" id="overlay_menu_salones" :model="elsalon.salones" :popup="true"> 
                 <template #item="{ item, props }">
-                    <router-link v-if="item.slug" v-slot="{ href, navigate }" :to="'/salones/'+item.slug" custom>
+                    <router-link v-if="item.slug" v-slot="{ href, navigate }" :to="GenerateUrl(item.slug)" custom>
                         <a v-ripple :href="href" v-bind="props.action" @click="navigate">
                             <span class="mr-2">
                                 <Avatar :label="item.siglas" :style="{backgroundColor: item.color, color: '#fff'}" shape="circle" />
@@ -37,12 +36,15 @@
     import { ref } from "vue";
     import { PrimeIcons } from '@primevue/core/api';
     const { data, signOut } = useAuth()
-    const route = useRoute()
+    const { paginaActual } = useSalon()
     const elsalon = useSalonStore();
 
-    const slug = route.params?.slug || 'el-salon'; // TODO algo que no lo haga hardcodeado
-    const paginaActual = ref(elsalon.salones.find(s => s.slug === slug));
-    console.log("paginaActual",paginaActual)
+    const GenerateUrl = (slug) => {
+        if(slug == 'el-salon'){
+            return '/';
+        }
+        return `/salones/${slug}`;
+    }
 
     const userMenu = ref();
     const itemsUserMenu = ref([
