@@ -13,7 +13,6 @@
     const hasNextPage = ref(true);
     const page = ref(-1);
     const route = useRoute()
-
     
     onMounted(() => {
         FetchEntries();
@@ -39,7 +38,7 @@
         }
         console.log("Fetching entries. Slug:", slug);
         const res = await useApi(apiUrl)
-        // console.log(res)
+        console.log(res)
         hasNextPage.value = res.hasNextPage
         page.value = res.page
         entradas.value = [...entradas.value, ...res.docs]
