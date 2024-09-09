@@ -21,7 +21,6 @@
 
     if(tieneImagen){
         avatarUrl.value = runtimeConfig.apiBase + usuario.avatar.sizes.thumbnail.url;
-        console.log('Avatar URL:', avatarUrl.value)
     }else{
         iniciales.value = usuario?.nombre.split(' ').map(n => n[0]).join('');
     }
