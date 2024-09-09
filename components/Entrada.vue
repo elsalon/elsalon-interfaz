@@ -1,10 +1,6 @@
 <template>    
     <article>
         <div class="flex items-center mb-2">
-            <!-- <div class="relative">
-                <img class="h-10 w-10 object-cover rounded" src="https://randomuser.me/api/portraits/women/87.jpg" alt="Avatar">
-                <div class="absolute inset-0 rounded"></div>
-            </div> -->
             <AvatarSalon :usuario="entrada.autor" />
             <div class="ml-4">
                 <h2 class="font-bold text-gray-800">{{ entrada.autor.nombre }}</h2>
@@ -21,8 +17,6 @@
 </template>
 
 <script setup>
-import Avatar from 'primevue/avatar';
-
     const props = defineProps({
     entrada: {
         type: Object,

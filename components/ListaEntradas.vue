@@ -13,7 +13,6 @@
     const hasNextPage = ref(true);
     const page = ref(-1);
     
-    
     onMounted(() => {
         FetchEntries();
         const scrollEndOffset = 300;
