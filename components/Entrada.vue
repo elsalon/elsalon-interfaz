@@ -11,7 +11,7 @@
             </div>
         </div>
         
-        <div class="prose prose-sm prose-headings:my-1 sm:pl-[55px]" v-html="entrada.contenido"></div>
+        <div class="prose prose-sm prose-headings:my-1 sm:pl-[55px] leading-normal" v-html="entrada.contenido"></div>
         
     </article>
 </template>

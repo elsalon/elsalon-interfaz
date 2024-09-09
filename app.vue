@@ -1,4 +1,4 @@
 <template>
   <NuxtPage />
-  <DynamicDialog />
+  <Toast position="bottom-left"/>
 </template>
