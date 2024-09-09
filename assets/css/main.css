@@ -83,3 +83,6 @@
   --p-text-hover-muted-color: var(--p-surface-300);
 }
 
+.focus\:ring-surface-500:focus{
+  --tw-ring-opacity: 0 !important;
+}
