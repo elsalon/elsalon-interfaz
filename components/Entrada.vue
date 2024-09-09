@@ -93,7 +93,7 @@
                 const imageId = match[1]
                 const image = entrada.imagenes.find(img => img.imagen.id == imageId)
                 if (image) {
-                    const imgUrl = runtimeConfig.apiBase + image.imagen.sizes.high.url;
+                    const imgUrl = runtimeConfig.apiBase + image.imagen.url;
                     content = content.replace(match[0], imgUrl);
                 }
             }
