@@ -34,7 +34,6 @@
     const datetime = new Date(entrada.createdAt);
     const fechaFormateada = datetime.toLocaleDateString('es-ES', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
 
-    
     const opcionesArticulo = ref([
         {
             label: 'Copiar Link',
@@ -43,7 +42,7 @@
             }
         },
     ]);
-    console.log(data.value.user)
+    // Opciones si el usuario es el autor
     if(entrada.autor.id == data.value.user.id){
         opcionesArticulo.value = [
             ...opcionesArticulo.value,
@@ -61,6 +60,7 @@
             },
         ];
     }
+    // Opciones si el usuario es admin
     if(data.value.user.isAdmin){
         opcionesArticulo.value = [
             ...opcionesArticulo.value,
@@ -74,7 +74,6 @@
     }
     
     const menuRefs = ref({})
-    
     const ToggleArticleOptions = (event) => {
         const menu = menuRefs.value[entrada.id]
         if (menu && menu.toggle) {

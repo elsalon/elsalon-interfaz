@@ -60,18 +60,15 @@ const Publicar = async () => {
 	const { paginaActual } = useSalon()
     const delta = quill.value.getContents()
     let html = quill.value.root.innerHTML
-	// console.log("paginaActual", paginaActual)
-    // console.log('Publicar', delta, {sala: paginaActual.value.id})
 
 	try{
 		const response = await useApi('/api/entradas', {contenido: html, sala: paginaActual.value.id}, 'POST');
-		// console.log('Content submitted successfully:', response)
 		useNuxtApp().callHook("publicacion:creada", {resultado:"ok"})
 	}catch{
 		useNuxtApp().callHook("publicacion:creada", {resultado:"error"})
 	}
 	uploading.value = false;
-	// TODO cerrar ventana y refrescar lista de entradas desde pagina 0
+	// TODO refrescar lista de entradas desde pagina 0 (sin pisar las existentes)
 }
 
 const autorSeleccionado = ref();
