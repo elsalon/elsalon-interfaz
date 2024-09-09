@@ -52,6 +52,27 @@
             label: data.value?.user?.nombre,
             items: [
                 {
+                    label: 'Bitácora',
+                    icon: PrimeIcons.BOOK,
+                    command: () => {
+                        navigateTo('/usuario/'+ data.value.user.slug)
+                    }
+                },
+                {
+                    label: 'Grupos',
+                    icon: PrimeIcons.USERS,
+                    command: () => {
+                        navigateTo('/grupos')
+                    }
+                },
+                {
+                    label: 'Configuración',
+                    icon: PrimeIcons.COG,
+                    command: () => {
+                        navigateTo('/perfil')
+                    }
+                },
+                {
                     label: 'Cerrar Sesión',
                     icon: PrimeIcons.SIGN_OUT,
                     command: () => {
