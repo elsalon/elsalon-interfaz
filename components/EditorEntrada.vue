@@ -14,6 +14,7 @@ const toast = useToast();
 import { useToast } from "primevue/usetoast";
 const visible = ref(false);
 
+
 onMounted(() => {
     useNuxtApp().hooks.hook('publicacion:creada', (data) => {
         if(data.resultado == "ok"){

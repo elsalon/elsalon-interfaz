@@ -15,13 +15,14 @@
                 <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" /> 
             </div>
         </div>
-        <div class="prose prose-sm prose-headings:my-1 sm:pl-[55px] leading-normal" v-html="entrada.contenido"></div>
+        <div class="prose prose-sm prose-headings:my-1 sm:pl-[55px] leading-normal" v-html="contenidoRendereado"></div>
         
     </article>
 </template>
 
 <script setup>
     import Menu from 'primevue/menu';
+    const runtimeConfig = useRuntimeConfig().public;
     const { data } = useAuth()
     const props = defineProps({
     entrada: {
@@ -80,4 +81,27 @@
             menu.toggle(event)
         }
     };
+    
+    const contenidoRendereado = ref('')
+    const renderContenido = async () => {
+        let content = entrada.contenido
+        const imageRegex = /{image:([^}]+)}/g
+        const matches = [...content.matchAll(imageRegex)]
+        
+        for (const match of matches) {
+            if(entrada.imagenes){
+                const imageId = match[1]
+                const image = entrada.imagenes.find(img => img.imagen.id == imageId)
+                if (image) {
+                    const imgUrl = runtimeConfig.apiBase + image.imagen.sizes.high.url;
+                    content = content.replace(match[0], imgUrl);
+                }
+            }
+        }
+        
+        contenidoRendereado.value = content
+    }
+    onMounted(() => {
+        renderContenido();
+    });
 </script>

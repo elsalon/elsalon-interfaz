@@ -13,7 +13,7 @@
 						<div>{{ slotProps.value.name }}</div>
 					</div>
 					<span v-else>
-						*{{ slotProps.placeholder }}*
+						{{ slotProps.placeholder }}
 					</span>
 				</template>
 				<template #option="slotProps">
@@ -62,23 +62,16 @@ const onEditorReady = (editor) => {
   quill.value = editor
 }
 
-// const runtimeConfig = useRuntimeConfig().public;
-// const { token } = useAuth();
-
 const uploadImage = async (file) => {
   const formData = new FormData()
-  formData.append('file', file)
-  console.log("Uploading image:", file)
+  const randFilename = useRandomFilenameBlob(file)
+//   console.log("Random filename:", randFilename)
+  formData.append('file', file, randFilename)
+//   console.log("Uploading image:", file)
   try {
-	const response = await useUploadFile('/api/imagenes', formData);
-    // const response = await fetch(runtimeConfig.apiBase + "/api/imagenes", {
-    //   method: 'POST',
-    //   body: formData,
-    // })
-	console.log("Response:", response)
-    // const data = await response.json()
-	// console.log("Uploaded image:", data)
-    // return { id: data.id, url: data.url } // Assuming PayloadCMS returns both id and url
+	const {doc} = await useUploadFile('/api/imagenes', formData);
+	console.log("Response:", doc)
+    return { id: doc.id, url: doc.url } // Assuming PayloadCMS returns both id and url
   } catch (error) {
     console.error('Error uploading image:', error)
 	toast.add({ severity: 'error', summary: 'Error', detail: 'No se puede subir esa imagen', life: 3000});
@@ -100,7 +93,7 @@ const ProcesarContenido = async () => {
 				const uploadedImage = await uploadImage(file)
 				if (uploadedImage) {
 				html = html.replace(imageUrl, `{image:${uploadedImage.id}}`)
-				attachedImages.value.push(uploadedImage.id)
+				attachedImages.value.push({imagen: uploadedImage.id})
 				}
 			} else if (!imageUrl.startsWith('{image:')) {
 				// This is an already uploaded image, but not yet converted to our format
@@ -119,10 +112,7 @@ const ProcesarContenido = async () => {
 const Publicar = async () => {
 	uploading.value = true
 	const { paginaActual } = useSalon()
-    // const delta = quill.value.getContents()
-    // let html = quill.value.root.innerHTML
 	const html = await ProcesarContenido();
-	return;
 	try{
 		// todo attachedImages
 		const response = await useApi('/api/entradas', {

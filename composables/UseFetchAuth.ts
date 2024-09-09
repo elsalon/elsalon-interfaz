@@ -47,3 +47,9 @@ export const useUploadFile = async <T>(endpoint: string, body: any, method: stri
     throw error;
   }
 };
+
+export const useRandomFilenameBlob = (blob: Blob): string => {
+  const random = Math.random().toString(36).substring(7);
+  const ext = blob.type.split('/')[1];
+  return `${random}.${ext}`;
+}
