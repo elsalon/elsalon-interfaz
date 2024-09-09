@@ -41,7 +41,8 @@ definePageMeta({
 })
 import { ref } from 'vue'
 import { useAuth } from '#imports'
-import FloatLabel from 'primevue/floatlabel';
+const toast = useToast();
+import { useToast } from "primevue/usetoast";
 
 const email = ref('')
 const password = ref('')
@@ -57,6 +58,7 @@ const handleSubmit = async () => {
     })
   } catch (error) {
     console.error('Login failed:', error)
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Error logueando. Probá de nuevo', life: 3000});
   }
 }
 </script>

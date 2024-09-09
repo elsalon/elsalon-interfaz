@@ -3,7 +3,7 @@
         <!-- Fixed Nav -->
         <nav class="w-full flex flex-row justify-between items-center">
             <!-- Logo Salon -->
-            <Avatar :label="paginaActual.siglas" class="cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape=""  @click="toggleSalonesMenu"/>
+            <Avatar :label="paginaActual?.siglas" class="cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape=""  @click="toggleSalonesMenu"/>
             
             <Menu ref="salonesMenu" id="overlay_menu_salones" :model="elsalon.salones" :popup="true"> 
                 <template #item="{ item, props }">
