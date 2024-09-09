@@ -1,11 +1,11 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor">
 		<!-- Editor -->
-        <QuillEditor v-model:content="myContent" :options="editorOptions" @ready="onEditorReady"/>
+        <QuillEditor v-model:content="myContent" :modules="editorModules" :toolbar="editorToolbar" @ready="onEditorReady"/>
 
 		<!-- Selector de Autoría -->
         <div class="flex justify-end mt-4 flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
-			<Select v-model="autorSeleccionado" :options="autoresOpciones" optionLabel="name" placeholder="Autoría" class="w-full md:w-56">
+			<Select v-model="autorSeleccionado"  :options="autoresOpciones" optionLabel="name" placeholder="Autoría" class="w-full md:w-56">
 				<template #value="slotProps">
 					<!-- Seleccionado -->
 					<div v-if="slotProps.value" class="flex items-center">
@@ -33,6 +33,7 @@
 
 <script setup>
 const runtimeConfig = useRuntimeConfig().public;
+import { ImageDrop } from 'quill-image-drop-module';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 const { data } = useAuth()
@@ -45,18 +46,20 @@ const uploading = ref(false)
 
 const myContent = ref('')
 const quill = ref(null)
-const editorOptions = {
-  modules: {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      ['blockquote', 'code-block'],
-      [{ 'header': 1 }, { 'header': 2 }],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      ['link', 'image', 'video'],
-      ['clean']
-    ]
-  }
-}
+const editorToolbar = [
+	['bold', 'italic', 'underline', 'strike'],
+	['blockquote', 'code-block'],
+	[{ 'header': 1 }, { 'header': 2 }],
+	[{ 'list': 'ordered' }, { 'list': 'bullet' }],
+	['link', 'image', 'video'],
+	['clean']
+]
+const editorModules = [
+	{
+		module: ImageDrop,
+		name: 'image-drop',
+	}
+]
 
 const onEditorReady = (editor) => {
   quill.value = editor
