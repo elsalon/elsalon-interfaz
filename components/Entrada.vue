@@ -1,6 +1,6 @@
 <template>    
-    <article>
-        <div class="flex items-center mb-2">
+    <article class="group">
+        <div class="flex items-center pb-2">
             <AvatarSalon :usuario="entrada.autor" />
             <div class="ml-4">
                 <h2 class="font-bold text-gray-700">{{ entrada.autor.nombre }}</h2>
@@ -9,14 +9,20 @@
                     <p class="text-gray-400 text-sm">{{ fechaFormateada }}</p>
                 </div>
             </div>
+            <!-- Ajustes entrada -->
+            <div class="flex-grow invisible group-hover:visible text-right">
+                <Button text @click="ToggleArticleOptions">...</Button>
+                <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" /> 
+            </div>
         </div>
-        
         <div class="prose prose-sm prose-headings:my-1 sm:pl-[55px] leading-normal" v-html="entrada.contenido"></div>
         
     </article>
 </template>
 
 <script setup>
+    import Menu from 'primevue/menu';
+    const { data } = useAuth()
     const props = defineProps({
     entrada: {
         type: Object,
@@ -27,4 +33,52 @@
 
     const datetime = new Date(entrada.createdAt);
     const fechaFormateada = datetime.toLocaleDateString('es-ES', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+
+    
+    const opcionesArticulo = ref([
+        {
+            label: 'Copiar Link',
+            command: () => {
+                console.log('Copiar Link');
+            }
+        },
+    ]);
+    console.log(data.value.user)
+    if(entrada.autor.id == data.value.user.id){
+        opcionesArticulo.value = [
+            ...opcionesArticulo.value,
+            {
+                label: 'Editar',
+                command: () => {
+                    console.log('Editar');
+                }
+            },
+            {
+                label: 'Eliminar',
+                command: () => {
+                    console.log('Eliminar');
+                }
+            },
+        ];
+    }
+    if(data.value.user.isAdmin){
+        opcionesArticulo.value = [
+            ...opcionesArticulo.value,
+            {
+                label: 'Destacar',
+                command: () => {
+                    console.log('Destacar');
+                }
+            },
+        ];
+    }
+    
+    const menuRefs = ref({})
+    
+    const ToggleArticleOptions = (event) => {
+        const menu = menuRefs.value[entrada.id]
+        if (menu && menu.toggle) {
+            menu.toggle(event)
+        }
+    };
 </script>
