@@ -5,7 +5,7 @@
             <div class="ml-4">
                 <h2 class="font-bold text-gray-700">{{ entrada.autor.nombre }}</h2>
                 <div class="flex">
-                    <a class="text-sm mr-2" href="#">PAV2</a>
+                    <a class="text-sm mr-2" href="#">{{ entrada.sala.nombre }}</a>
                     <p class="text-gray-400 text-sm">{{ fechaFormateada }}</p>
                 </div>
             </div>
