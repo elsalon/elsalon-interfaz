@@ -86,3 +86,18 @@
 .focus\:ring-surface-500:focus{
   --tw-ring-opacity: 0 !important;
 }
+
+.prose iframe {
+  @apply w-full aspect-video;
+}
+
+#editorContainer{
+  height: calc(100% - 130px);
+}
+
+@media (min-width: 768px) {
+  /* TAILWIND BREAKPOINT */
+  #editorContainer{
+    height: calc(100% - 100px);
+  }
+}

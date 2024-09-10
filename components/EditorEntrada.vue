@@ -1,10 +1,9 @@
 <template>
     <Button id="btnEscribir" label="+ Escribir" @click="visible = true" />
 
-    <!-- TODO ver si no usar un Drawer a pantalla completa -->
-    <Dialog class="dialog-quill-editor" header=" " v-model:visible="visible" modal maximizable :breakpoints="{ '1199px': '75vw', '575px': '90vw' }">
+    <Drawer v-model:visible="visible" header="Escribir" position="full">
         <EditorEntradaQuill/>
-    </Dialog>
+    </Drawer>
 </template>
 
 <script setup>

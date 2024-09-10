@@ -1,32 +1,35 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor">
-		<!-- Editor -->
-        <QuillEditor v-model:content="myContent" :modules="editorModules" :toolbar="editorToolbar" @ready="onEditorReady"/>
+		<div id="editorContainer">
+			
+			<!-- Editor -->
+			<QuillEditor v-model:content="myContent" :modules="editorModules" :toolbar="editorToolbar" theme="snow" @ready="onEditorReady"/>
 
-		<!-- Selector de Autoría -->
-        <div class="flex justify-end mt-4 flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
-			<Select v-model="autorSeleccionado"  :options="autoresOpciones" optionLabel="name" placeholder="Autoría" class="w-full md:w-56">
-				<template #value="slotProps">
-					<!-- Seleccionado -->
-					<div v-if="slotProps.value" class="flex items-center">
-						<img v-if="slotProps.value.avatar" :alt="slotProps.value.label" :src="slotProps.value.avatar" :class="`mr-2`" style="width: 18px" />
-						<div>{{ slotProps.value.name }}</div>
-					</div>
-					<span v-else>
-						{{ slotProps.placeholder }}
-					</span>
-				</template>
-				<template #option="slotProps">
-					<!-- Lista opciones -->
-					<div class="flex items-center">
-						<img v-if="slotProps.option.avatar !=null" :alt="slotProps.option.label" :src="slotProps.option.avatar" :class="`mr-2`" style="width: 18px" />
-						<div>{{ slotProps.option.name }}</div>
-					</div>
-				</template>
-			</Select>
+			<!-- Selector de Autoría -->
+			<div class="flex justify-end mt-4 flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
+				<Select v-model="autorSeleccionado"  :options="autoresOpciones" optionLabel="name" placeholder="Autoría" class="w-full md:w-56">
+					<template #value="slotProps">
+						<!-- Seleccionado -->
+						<div v-if="slotProps.value" class="flex items-center">
+							<img v-if="slotProps.value.avatar" :alt="slotProps.value.label" :src="slotProps.value.avatar" :class="`mr-2`" style="width: 18px" />
+							<div>{{ slotProps.value.name }}</div>
+						</div>
+						<span v-else>
+							{{ slotProps.placeholder }}
+						</span>
+					</template>
+					<template #option="slotProps">
+						<!-- Lista opciones -->
+						<div class="flex items-center">
+							<img v-if="slotProps.option.avatar !=null" :alt="slotProps.option.label" :src="slotProps.option.avatar" :class="`mr-2`" style="width: 18px" />
+							<div>{{ slotProps.option.name }}</div>
+						</div>
+					</template>
+				</Select>
 
-			<!-- Boton Publicar -->
-			<Button @click="Publicar" :loading="uploading">Publicar</Button>
+				<!-- Boton Publicar -->
+				<Button @click="Publicar" :loading="uploading">Publicar</Button>
+			</div>
         </div>
     </ClientOnly>
 </template>
@@ -173,12 +176,4 @@ onMounted(() => {
 		autorSeleccionado.value = autoresOpciones.value[0];
 	}
 })
-
-
-
 </script>
-<style lang="scss">
-.prose iframe {
-    @apply w-full aspect-video;
-  }
-</style>
