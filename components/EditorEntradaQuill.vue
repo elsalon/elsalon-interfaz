@@ -174,4 +174,11 @@ onMounted(() => {
 	}
 })
 
+
+
 </script>
+<style lang="scss">
+.prose iframe {
+    @apply w-full aspect-video;
+  }
+</style>

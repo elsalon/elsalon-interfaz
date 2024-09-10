@@ -1,5 +1,6 @@
 <template>    
     <article class="group">
+        <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
         <div class="flex items-center pb-2">
             <AvatarSalon :usuario="entrada.autor" />
             <div class="ml-4">
@@ -15,7 +16,7 @@
                 <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" /> 
             </div>
         </div>
-        <div class="prose prose-sm prose-headings:my-1 sm:pl-[55px] leading-normal" v-html="contenidoRendereado"></div>
+        <div class="prose prose-headings:my-1 sm:pl-[55px] leading-normal" v-html="contenidoRendereado"></div>
         
     </article>
 </template>
@@ -105,3 +106,11 @@
         renderContenido();
     });
 </script>
+
+<style>
+img {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+</style>
