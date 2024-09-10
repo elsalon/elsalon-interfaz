@@ -17,7 +17,6 @@
     const scrollEndOffset = 300;
     
     onMounted(() => {
-        FetchEntries();
         CheckLlegoFinDePagina(); // lo llamo una vez para que cargue la primera vez
 
         window.onscroll = async () => {
