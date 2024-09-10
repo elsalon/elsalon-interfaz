@@ -3,7 +3,7 @@ export default {
         class: [
             // Sizing and Shape
             'min-w-[12.5rem]',
-            'rounded-md',
+            // 'rounded-md',
 
             // Spacing
             'p-1',

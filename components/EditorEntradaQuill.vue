@@ -28,7 +28,7 @@
 				</Select>
 
 				<!-- Boton Publicar -->
-				<Button @click="Publicar" :loading="uploading">Publicar</Button>
+				<Button @click="Publicar" :loading="uploading">{{isEditing ? 'Guardar' : 'Publicar'}}</Button>
 			</div>
         </div>
     </ClientOnly>
@@ -96,31 +96,40 @@ const uploadImage = async (file) => {
 const ProcesarContenido = async () => {
 	const delta = quill.value.getContents()
 	let html = quill.value.root.innerHTML
-	attachedImages.value = []
-
+	// Procesar imagenes
+	// Busco todos los blobs de imagenes y las subo
+	// Los convierto a formato [image:id] para que el backend lo entienda
+	// Si payload cambia la url de la imagen no se pierde la imagen en el contenido
+	// Tambien guardo referencia a todas las imagenes del posteo en attachedImages
 	for (let op of delta.ops) {
 		if (op.insert && op.insert.image) {
 			const imageUrl = op.insert.image
 			if (imageUrl.startsWith('data:')) {
+				console.log(op)
 				// This is a base64 image, need to upload
 				const file = await fetch(imageUrl).then(res => res.blob())
 				const uploadedImage = await uploadImage(file)
 				if (uploadedImage) {
-				html = html.replace(imageUrl, `{image:${uploadedImage.id}}`)
-				attachedImages.value.push({imagen: uploadedImage.id})
-				}
-			} else if (!imageUrl.startsWith('{image:')) {
-				// This is an already uploaded image, but not yet converted to our format
-				const imageId = extractImageIdFromUrl(imageUrl)
-				if (imageId) {
-				html = html.replace(imageUrl, `{image:${imageId}}`)
-				attachedImages.value.push(imageId)
+					html = html.replace(imageUrl, `[image:${uploadedImage.id}]`)
+					console.log("PUshing image", uploadedImage.id)
+					attachedImages.value.push({imagen: uploadedImage.id})
 				}
 			}
 		}
 	}
+	html = html.replace(/<img src="(\[image:[^"]+\])">/g, '$1'); // remuevo los tags img que no necesito
 
-  return html
+	// Ahora vuelvo a convertir <img src="" data-salonid="123"> en [image:123]
+	// Esto es en caso que estuviesemos editando una entrada ya existente
+	const imageRegex = /<img src="[^"]+" data-salonid="([^"]+)">/g;
+	const matches = [...html.matchAll(imageRegex)]
+	for (const match of matches) {
+		const tag = match[0]
+		const imageId = match[1]
+		html = html.replace(tag, `[image:${imageId}]`)
+	}
+
+	return html
 }
 
 const CompressImage = async(blob) => {
@@ -146,13 +155,22 @@ const Publicar = async () => {
 	uploading.value = true
 	const { paginaActual } = useSalon()
 	const html = await ProcesarContenido();
+	let method ='POST'
+	let data = {
+		contenido: html, 
+		// imagenes: attachedImages.value, 
+		sala: paginaActual.value.id
+	}
+	console.log("DATA", data)	
+	let endpoint = '/api/entradas'
+	if(isEditing.value){
+		method = 'PATCH';
+		endpoint = `/api/entradas/${props.postEdit.entrada.id}`
+	}else{
+		data.imagenes = attachedImages.value
+	}
 	try{
-		// todo attachedImages
-		const response = await useApi('/api/entradas', {
-			contenido: html, 
-			imagenes: attachedImages.value, 
-			sala: paginaActual.value.id
-		}, 'POST');
+		const response = await useApi(endpoint, data, method);
 		console.log("Publicacion creada:", response)
 		useNuxtApp().callHook("publicacion:creada", {resultado:"ok"})
 	}catch{
@@ -166,9 +184,12 @@ const autorSeleccionado = ref();
 const autoresOpciones = ref([]);
 
 const loadExistingContent = async () => {
-	const { contenido, autor } = props.postEdit
-	console.log("Editing post:", contenido)
-	myContent.value = contenido
+	const { entrada, html } = props.postEdit
+	myContent.value = html
+	
+	attachedImages.value = []
+	attachedImages.value = entrada.imagenes.map(imagen => ({imagen: imagen.id}))
+	console.log("*** Editing post:", 	attachedImages.value , entrada.imagenes)
 }
 
 onMounted(() => {

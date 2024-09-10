@@ -32,7 +32,7 @@ onMounted(() => {
 
     useNuxtApp().hooks.hook('publicacion:editar', (data) => {
 		visible.value = true;
-        editContent.value = data.entrada;
+        editContent.value = data;
 	})
 });
 

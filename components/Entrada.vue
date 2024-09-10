@@ -54,7 +54,7 @@
                 label: 'Editar',
                 command: () => {
                     console.log('Editar');
-                    useNuxtApp().callHook("publicacion:editar", {entrada})
+                    useNuxtApp().callHook("publicacion:editar", {entrada, html:contenidoRendereado.value})
                 }
             },
             {
@@ -88,18 +88,23 @@
     
     const contenidoRendereado = ref('')
     const renderContenido = async () => {
+        if(!entrada.imagenes){
+            contenidoRendereado.value = entrada.contenido
+            return;
+        }
+        // Convierto los tags [image:id] en las imagenes reales
         let content = entrada.contenido
-        const imageRegex = /{image:([^}]+)}/g
+        const imageRegex = /\[image:([^\]]+)\]/g;
         const matches = [...content.matchAll(imageRegex)]
         
         for (const match of matches) {
-            if(entrada.imagenes){
-                const imageId = match[1]
-                const image = entrada.imagenes.find(img => img.imagen.id == imageId)
-                if (image) {
-                    const imgUrl = runtimeConfig.apiBase + image.imagen.url;
-                    content = content.replace(match[0], imgUrl);
-                }
+            const tag = match[0]
+            const imageId = match[1]
+            // const imageId = match[1]
+            const image = entrada.imagenes.find(img => img.imagen.id == imageId)
+            if (image) {
+                const imgTag = `<img src="${runtimeConfig.apiBase}${image.imagen.url}" data-salonid="${imageId}" />`
+                content = content.replace(match[0], imgTag);
             }
         }
         
