@@ -1,26 +1,34 @@
 <template>
-    <article class="group">
-        <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
-        <div class="flex items-center pb-2">
-            <AvatarSalon :usuario="entrada.autor" />
-            <div class="ml-4">
-                <h2 class="font-bold text-gray-700">{{ entrada.autor.nombre }}</h2>
-                <div class="flex">
-                    <a v-if="entrada.sala" class="text-sm mr-2" href="#">{{ entrada.sala.nombre }}</a>
-                    <p class="text-gray-400 text-sm">{{ fechaFormateada }}</p>
+    <div>
+        <article class="group">
+            <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
+            <div class="flex items-center pb-2">
+                <AvatarSalon :usuario="entrada.autor" />
+                <div class="ml-4">
+                    <h2 class="font-bold text-gray-700">{{ entrada.autor.nombre }}</h2>
+                    <div class="flex">
+                        <a v-if="entrada.sala" class="text-sm mr-2" href="#">{{ entrada.sala.nombre }}</a>
+                        <p class="text-gray-400 text-sm">{{ fechaFormateada }}</p>
+                    </div>
                 </div>
-            </div>
-            <!-- Ajustes entrada -->
-            <div class="flex-grow invisible group-hover:visible text-right">
-                <Button text @click="ToggleArticleOptions">...</Button>
-                <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" /> 
+                <!-- Ajustes entrada -->
+                <div class="flex-grow invisible group-hover:visible text-right">
+                    <Button text @click="ToggleArticleOptions">...</Button>
+                    <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" /> 
                 </div>
             </div>
             <DeferredContent @load="onEntradaScrolled">
                 <div class="prose prose-headings:my-1 sm:pl-[55px] leading-normal" v-html="contenidoRendereado"></div>
             </DeferredContent>
-            
+
         </article>
+        <div class="despues-entrada md:px-20">
+            <!-- <Divider /> -->
+            <!-- Comentarios -->
+            <ListaComentarios/>
+            <CajaComentario/>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -117,6 +125,8 @@
 
     const onEntradaScrolled = () => {
         // console.log('Entrada scrolled');
+        // TODO fetch comentarios
+        // TODO fetch aprecios
     }
 </script>
 

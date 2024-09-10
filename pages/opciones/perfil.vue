@@ -11,7 +11,7 @@
 
         <div class="flex flex-col gap-2">
             <label for="avatar">avatar</label>
-            <input type="file" id="avatar" ref="avatarFileInput" class="leading-none m-0 py-2 px-3 rounded-md text-surface-800 dark:text-white/80 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-950 border border-surface-300 dark:border-surface-700 invalid:focus:ring-red-200 invalid:hover:border-red-500 hover:border-surface-400 dark:hover:border-surface-600 focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 dark:focus:ring-primary-400 focus:z-10 appearance-none transition-colors duration-200"/>
+            <input type="file" id="avatar" ref="avatarFileInput" class="caja-input"/>
         </div>
         
         <div class="text-right">

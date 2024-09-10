@@ -5,7 +5,7 @@ export default {
             'rounded-md',
 
             //Colors
-            'border border-surface-200 dark:border-surface-700',
+            'dark:border-surface-700',
             'bg-surface-0 dark:bg-surface-900'
         ]
     },
