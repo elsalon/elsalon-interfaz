@@ -1,8 +1,8 @@
 <template>
-    <Button id="btnEscribir" label="+ Escribir" @click="visible = true" />
+    <Button id="btnEscribir" label="+ Escribir" @click="AbrirEditor" />
 
     <Drawer v-model:visible="visible" header="Escribir" position="full">
-        <EditorEntradaQuill/>
+        <EditorEntradaQuill :postEdit="editContent"/>
     </Drawer>
 </template>
 
@@ -12,7 +12,12 @@ import EditorEntradaQuill from "./EditorEntradaQuill.vue";
 const toast = useToast();
 import { useToast } from "primevue/usetoast";
 const visible = ref(false);
+const editContent = ref(null);
 
+const AbrirEditor = () => {
+    editContent.value = null;
+    visible.value = true;
+}
 
 onMounted(() => {
     useNuxtApp().hooks.hook('publicacion:creada', (data) => {
@@ -24,6 +29,11 @@ onMounted(() => {
             toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo publicar la entrada', life: 3000});
         }
     });
+
+    useNuxtApp().hooks.hook('publicacion:editar', (data) => {
+		visible.value = true;
+        editContent.value = data.entrada;
+	})
 });
 
 </script>

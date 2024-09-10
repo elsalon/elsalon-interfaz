@@ -54,6 +54,7 @@
                 label: 'Editar',
                 command: () => {
                     console.log('Editar');
+                    useNuxtApp().callHook("publicacion:editar", {entrada})
                 }
             },
             {

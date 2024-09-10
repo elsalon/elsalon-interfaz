@@ -3,7 +3,7 @@
 		<div id="editorContainer">
 			
 			<!-- Editor -->
-			<QuillEditor v-model:content="myContent" :modules="editorModules" :toolbar="editorToolbar" theme="snow" @ready="onEditorReady"/>
+			<QuillEditor v-model:content="myContent" content-type="html" :modules="editorModules" :toolbar="editorToolbar" theme="snow" @ready="onEditorReady"/>
 
 			<!-- Selector de Autoría -->
 			<div class="flex justify-end mt-4 flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
@@ -50,6 +50,12 @@ const uploading = ref(false)
 
 const myContent = ref('')
 const quill = ref(null)
+
+const props = defineProps({
+  postEdit: { type: Object, default: null } // If provided, we're in edit mode
+})
+const isEditing = ref(!!props.postEdit)
+
 const editorToolbar = [
 	['bold', 'italic', 'underline', 'strike'],
 	['blockquote', 'code-block'],
@@ -159,6 +165,12 @@ const Publicar = async () => {
 const autorSeleccionado = ref();
 const autoresOpciones = ref([]);
 
+const loadExistingContent = async () => {
+	const { contenido, autor } = props.postEdit
+	console.log("Editing post:", contenido)
+	myContent.value = contenido
+}
+
 onMounted(() => {
 	autoresOpciones.value.push({
 		avatar: runtimeConfig.apiBase + data.value?.user?.avatar?.sizes?.thumbnail?.url, 
@@ -174,6 +186,10 @@ onMounted(() => {
 	});
 	if(!autorSeleccionado.value && autoresOpciones.value.length > 0){
 		autorSeleccionado.value = autoresOpciones.value[0];
+	}
+
+	if (isEditing.value) {
+		loadExistingContent()
 	}
 })
 </script>
