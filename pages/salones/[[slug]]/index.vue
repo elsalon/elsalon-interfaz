@@ -1,7 +1,14 @@
 <template>
     <NuxtLayout name="layout-contenido">        
         <EditorEntrada />
-        <ListaEntradas />
+        <!-- TODO Query -->
+        <ListaEntradas :endpointQuery="query"/> 
     </NuxtLayout>
 </template>
+
+<script setup>
+const route = useRoute()
+const slug = route.params?.slug
+const query = slug ? `where[sala.slug][equals]=${slug}` : ''
+</script>
   

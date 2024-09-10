@@ -23,7 +23,7 @@
             <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
         </div> -->
         <div>
-          <Button type="submit" label="Ingresar" class="w-full md:w-auto mb-3"></Button>
+          <Button type="submit" label="Ingresar" class="w-full md:w-auto mb-3" :loading="loading"></Button>
         </div>
       </form>
     </div>
@@ -46,9 +46,11 @@ import { useToast } from "primevue/usetoast";
 
 const email = ref('')
 const password = ref('')
+const loading = ref(false)
 const { signIn } = useAuth()
 
 const handleSubmit = async () => {
+  loading.value = true
   try {
     await signIn({
       email: email.value,
@@ -58,7 +60,9 @@ const handleSubmit = async () => {
     })
   } catch (error) {
     console.error('Login failed:', error)
-    toast.add({ severity: 'error', summary: 'Error', detail: 'Error logueando. Probá de nuevo', life: 3000});
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Usuario o contraseña incorrectas', life: 3000});
+  } finally{
+    loading.value = false
   }
 }
 </script>

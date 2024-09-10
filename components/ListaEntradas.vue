@@ -12,9 +12,13 @@
     const entradas = ref([])
     const hasNextPage = ref(true);
     const page = ref(0);
-    const route = useRoute()
     
     const scrollEndOffset = 300;
+
+    // props
+    const props = defineProps({
+        endpointQuery: { type: String, default: '' }
+    })
     
     onMounted(() => {
         CheckLlegoFinDePagina(); // lo llamo una vez para que cargue la primera vez
@@ -39,14 +43,17 @@
         coolingDown = true;
         setTimeout(() => coolingDown = false, 1000);
         
-        const slug = route.params?.slug || 'el-salon'; // TODO algo que no lo haga hardcodeado
+        // const slug = route.params?.slug || 'el-salon'; // TODO algo que no lo haga hardcodeado
         page.value++; // incremento la paginacion para hacerlo progreso en la siguiente llamada
         let apiUrl = `/api/entradas?depth=2&page=${page.value}`;
-        if(slug){
-            apiUrl += `&where[sala.slug][equals]=${slug}`;
-        }else{
-            // Dashboard el salon (TODO)
+        if(props.endpointQuery != ''){
+            apiUrl += `&${props.endpointQuery}`;
         }
+        // if(slug){
+        //     apiUrl += `&where[sala.slug][equals]=${slug}`;
+        // }else{
+        //     // Dashboard el salon (TODO)
+        // }
         const res = await useApi(apiUrl)
         hasNextPage.value = res.hasNextPage
         entradas.value = [...entradas.value, ...res.docs]
