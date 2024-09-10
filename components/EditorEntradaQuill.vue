@@ -78,10 +78,8 @@ const onEditorReady = (editor) => {
 const uploadImage = async (file) => {
 	const formData = new FormData()
   	const randFilename = useRandomFilenameBlob(file)
-//   console.log("Random filename:", randFilename)
 	const imageFile = await CompressImage(file)
   	formData.append('file', imageFile, randFilename)
-//   console.log("Uploading image:", file)
   	try {
 		const {doc} = await useUploadFile('/api/imagenes', formData);
 		console.log("Response:", doc)
@@ -158,7 +156,7 @@ const Publicar = async () => {
 	let method ='POST'
 	let data = {
 		contenido: html, 
-		// imagenes: attachedImages.value, 
+		imagenes: attachedImages.value, 
 		sala: paginaActual.value.id
 	}
 	console.log("DATA", data)	
@@ -166,8 +164,6 @@ const Publicar = async () => {
 	if(isEditing.value){
 		method = 'PATCH';
 		endpoint = `/api/entradas/${props.postEdit.entrada.id}`
-	}else{
-		data.imagenes = attachedImages.value
 	}
 	try{
 		const response = await useApi(endpoint, data, method);
@@ -186,10 +182,8 @@ const autoresOpciones = ref([]);
 const loadExistingContent = async () => {
 	const { entrada, html } = props.postEdit
 	myContent.value = html
-	
 	attachedImages.value = []
-	attachedImages.value = entrada.imagenes.map(imagen => ({imagen: imagen.id}))
-	console.log("*** Editing post:", 	attachedImages.value , entrada.imagenes)
+	attachedImages.value = entrada.imagenes.map(data => ({imagen: data.imagen.id}))
 }
 
 onMounted(() => {
