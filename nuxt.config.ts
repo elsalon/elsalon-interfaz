@@ -63,6 +63,11 @@ export default defineNuxtConfig({
       },
       
     },
+    sessionRefresh:{
+      enableOnWindowFocus: false,
+      // every hour in ms: 
+      enablePeriodically: 60 * 60 * 1000, // cada cuanto tiempo se refresca la sesion en ms
+    },
     globalAppMiddleware: true
   },
   // *********
