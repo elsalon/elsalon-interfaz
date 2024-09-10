@@ -116,7 +116,7 @@
     });
 
     const onEntradaScrolled = () => {
-        console.log('Entrada scrolled');
+        // console.log('Entrada scrolled');
     }
 </script>
 

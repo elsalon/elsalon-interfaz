@@ -20,6 +20,8 @@ export const useApi = async <T>(endpoint: string, body: any, method: string = 'G
       body,
     });
 
+    console.log("**",response)
+
     return response;
   } catch (error) {
     console.error('API Error:', error);

@@ -42,14 +42,21 @@ export default defineNuxtConfig({
         getSession: { path: 'api/users/me', method: 'get' }
       },
       token: {
-        // maxAgeInSeconds: 60 * 60 * 24 * 30, // 30 days
+        maxAgeInSeconds: 60 * 60 * 24 * 15, // 15 days
         signInResponseTokenPointer: '/token',
         type: 'Bearer',
         headerName: 'Authorization'
       },
       // refresh:{
-        // todo
-      // }
+      //   isEnabled: false,
+      //   endpoint: {
+      //     path: 'api/users/refresh-token',
+      //     method: 'post',
+      //   },
+      //   token:{
+      //     signInResponseRefreshTokenPointer: "/refreshedToken",
+      //   }
+      // },
       pages: {
         // adonde redirigir si no está autenticado
         login: '/login'
