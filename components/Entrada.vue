@@ -1,4 +1,4 @@
-<template>    
+<template>
     <article class="group">
         <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
         <div class="flex items-center pb-2">
@@ -14,11 +14,13 @@
             <div class="flex-grow invisible group-hover:visible text-right">
                 <Button text @click="ToggleArticleOptions">...</Button>
                 <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" /> 
+                </div>
             </div>
-        </div>
-        <div class="prose prose-headings:my-1 sm:pl-[55px] leading-normal" v-html="contenidoRendereado"></div>
-        
-    </article>
+            <DeferredContent @load="onEntradaScrolled">
+                <div class="prose prose-headings:my-1 sm:pl-[55px] leading-normal" v-html="contenidoRendereado"></div>
+            </DeferredContent>
+            
+        </article>
 </template>
 
 <script setup>
@@ -102,9 +104,14 @@
         
         contenidoRendereado.value = content
     }
+
     onMounted(() => {
         renderContenido();
     });
+
+    const onEntradaScrolled = () => {
+        console.log('Entrada scrolled');
+    }
 </script>
 
 <style>

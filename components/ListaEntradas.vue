@@ -11,7 +11,7 @@
 <script setup>
     const entradas = ref([])
     const hasNextPage = ref(true);
-    const page = ref(-1);
+    const page = ref(0);
     const route = useRoute()
     
     const scrollEndOffset = 300;
@@ -32,7 +32,13 @@
         }
     }
 
+    let coolingDown = false;
+
     const FetchEntries = async () => {
+        if(coolingDown) return;
+        coolingDown = true;
+        setTimeout(() => coolingDown = false, 1000);
+        
         const slug = route.params?.slug || 'el-salon'; // TODO algo que no lo haga hardcodeado
         page.value++; // incremento la paginacion para hacerlo progreso en la siguiente llamada
         let apiUrl = `/api/entradas?depth=2&page=${page.value}`;
@@ -41,10 +47,8 @@
         }else{
             // Dashboard el salon (TODO)
         }
-        // console.log("Fetching entries. Slug:", slug);
         const res = await useApi(apiUrl)
         hasNextPage.value = res.hasNextPage
-        page.value = res.page
         entradas.value = [...entradas.value, ...res.docs]
     }
 </script>
