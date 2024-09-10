@@ -87,7 +87,7 @@
   --tw-ring-opacity: 0 !important;
 }
 
-.prose iframe {
+.prose iframe, .ql-editor iframe{
   @apply w-full aspect-video;
 }
 
