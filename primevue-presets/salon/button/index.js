@@ -25,7 +25,7 @@ export default {
 
             // Shapes
             { 'shadow-lg': props.raised },
-            { 'rounded-md': !props.rounded, 'rounded-full': props.rounded },
+            { '': !props.rounded, 'rounded-md': props.rounded },
             { 'rounded-none first:rounded-l-md last:rounded-r-md': parent.instance.$name == 'InputGroup' },
 
             // Link Button

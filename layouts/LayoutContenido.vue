@@ -20,8 +20,10 @@
                 </Menu>
                 
                 <!-- Avatar Usuario -->
-                <AvatarSalon class="cursor-pointer" v-if="data" :usuario="data?.user" @click="toggleUserMenu"/>
-                <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true" /> 
+                <client-only>
+                    <AvatarSalon :key="myKey" class="cursor-pointer" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
+                    <Menu :key="myKey" ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true" /> 
+                </client-only>
             </nav>
         </header>
         <main class="container mx-auto">
@@ -31,9 +33,11 @@
 </template>
 
 <script setup>
+    const { authData, myKey } = useReactiveAuth()
+    const {data} = useAuth()
     import { ref } from "vue";
     import { PrimeIcons } from '@primevue/core/api';
-    const { data, signOut } = useAuth()
+    // const authData = computed(() => useAuth().data)
     const { paginaActual } = useSalon()
     const elsalon = useSalonStore();
 
@@ -47,7 +51,7 @@
     const userMenu = ref();
     const itemsUserMenu = ref([
         {
-            label: data.value?.user?.nombre,
+            label: authData?.value?.nombre,
             items: [
                 {
                     label: 'Notificaciones',
@@ -60,7 +64,7 @@
                     label: 'Bitácora',
                     icon: PrimeIcons.BOOK,
                     command: () => {
-                        navigateTo('/usuarios/'+ data.value.user.slug)
+                        navigateTo('/usuarios/'+ authData.slug)
                     }
                 },
                 {

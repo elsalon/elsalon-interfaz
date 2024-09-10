@@ -1,24 +1,15 @@
 <template>
     <NuxtLayout name="layout-contenido">        
-
         <!-- <AvatarSalon :usuario="usuario" size="xlarge" imagesize="large"/> -->
-         
-
         <EditorEntrada v-if="userIsMe" />
         <ListaEntradas :endpointQuery="query" />
     </NuxtLayout>
 </template>
 
 <script setup>
-// import { ref, watchEffect, useRoute } from 'vue'
-
 const route = useRoute()
 const slug = route.params?.slug
-
-// Use the authentication hook without ref
 const {data} = useAuth()
-// const userIsMe = ref(false)
-
 
 // Fetch the user data based on the slug
 const res = await useApi(`/api/users?where[slug][equals]=${slug}`)
