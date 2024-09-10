@@ -1,5 +1,9 @@
 <template>
     <NuxtLayout name="layout-contenido">        
+
+        <!-- <AvatarSalon :usuario="usuario" size="xlarge" imagesize="large"/> -->
+         
+
         <EditorEntrada v-if="userIsMe" />
         <ListaEntradas :endpointQuery="query" />
     </NuxtLayout>

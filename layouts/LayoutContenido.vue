@@ -71,10 +71,10 @@
                     }
                 },
                 {
-                    label: 'Configuración',
+                    label: 'Opciones',
                     icon: PrimeIcons.COG,
                     command: () => {
-                        navigateTo('/perfil')
+                        navigateTo('/opciones/perfil')
                     }
                 },
                 {

@@ -105,3 +105,9 @@
 .ql-snow .ql-editor img {
   max-width: 90% !important;
 }
+
+#opciones-nav{
+  .active{
+    @apply underline;
+  }
+}
