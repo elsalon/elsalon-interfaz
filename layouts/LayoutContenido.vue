@@ -64,7 +64,7 @@
                     label: 'Bitácora',
                     icon: PrimeIcons.BOOK,
                     command: () => {
-                        navigateTo('/usuarios/'+ authData.slug)
+                        navigateTo('/usuarios/'+ authData?.value.slug)
                     }
                 },
                 {

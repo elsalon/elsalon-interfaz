@@ -108,7 +108,7 @@
 
 #opciones-nav{
   .active{
-    @apply underline;
+    @apply font-bold;
   }
 }
 

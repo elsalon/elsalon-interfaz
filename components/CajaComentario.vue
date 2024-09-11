@@ -2,11 +2,11 @@
     <ClientOnly fallback-tag="div" fallback="cargando editor">
         <div>
             <!-- Editor -->
-            <div class="comment-input relative border-surface-200 border-solid p-2" :class="{'border' : mostrarExtras}">
-                <div v-if="!mostrarExtras" class="absolute left-8 top-5 text-sm text-surface-300">Comentar</div>
+            <div class="comment-input relative border border-surface-0 border-solid p-2" :class="{'border-surface-200' : mostrarExtras}">
+                <div v-if="!userEdited" class="absolute left-8 top-5 text-sm text-surface-300">Comentar</div>
                 <QuillEditor v-model:content="myComment" content-type="html" :modules="editorModules" :toolbar="editorToolbar" theme="bubble" @ready="onEditorReady" @focus="focused" @blur="blured"/>
             </div>
-            <div class="text-right mt-2" :style="{ visibility: mostrarExtras ? 'visible' : 'hidden' }">
+            <div class="text-right mt-2" :style="{ visibility: userEdited ? 'visible' : 'hidden' }">
                 <Button  @click="Publicar" :loading="uploading" size="small">Comentar</Button>
             </div>
         </div>
@@ -37,9 +37,12 @@ const editorModules = [
 const focused = () => {
     mostrarExtras.value = true
 }
-const blurred = () => {
+const blured = () => {
     mostrarExtras.value = false
 }
+const userEdited = computed(() => {
+    return myComment.value !== ''
+})
 
 const onEditorReady = () => {
     console.log('Editor ready')
