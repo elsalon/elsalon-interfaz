@@ -1,34 +1,38 @@
 <template>
-  <div class="container mx-auto">
-    <div class="surface-card p-4">
-      <div class="text-center mb-5">
-        <img src="/public/salon_logo_lg_600x80.png" alt="Image" height="50" class="" />
-        <!-- <div class="text-900 text-3xl font-medium mb-3">Welcome Back</div>
-        <span class="text-600 font-medium line-height-3">Don't have an account?</span> -->
-        <!-- <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer">Create today!</a> -->
+  <div class="flex container min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
+
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <img class="mx-auto w-auto" src="/public/salon_logo_lg_600x80.png" alt="El Salon">
+    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Iniciá sesión</h2>
+  </div>
+
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form @submit.prevent="handleSubmit" class="space-y-3">
+      <div>
+        <label for="email" class="block text-900 font-medium mb-2">Email</label>
+        <InputText id="email" type="text" class="block w-full" v-model="email" required />
       </div>
 
-      <form @submit.prevent="handleSubmit">
-        <label for="email1" class="block text-900 font-medium mb-2">Email</label>
-        <InputText id="email" type="text" class="w-full md:w-auto mb-3" v-model="email" required />
-
+      <div>
+      <div class="flex items-center justify-between">
         <label for="password1" class="block text-900 font-medium mb-2">Password</label>
-        <InputText id="password" type="password" class="w-full md:w-auto mb-3" v-model="password" required />
-
-        <!-- <div class="flex align-items-center justify-content-between mb-6">
-            <div class="flex align-items-center">
-                <Checkbox id="rememberme1" :binary="true" v-model="checked" class="mr-2"></Checkbox>
-                <label for="rememberme1">Remember me</label>
-            </div>
-            <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Forgot password?</a>
-        </div> -->
+        <div class="text-sm">
+          <a href="#" class="font-semibold text-surface-300 hover:text-surface-500">¿Olvidaste tu contraseña?</a>
+        </div>
+      </div>
+      <InputText id="password" type="password" class="block w-full" v-model="password" required />
+    </div>
+      
         <div>
-          <Button type="submit" label="Ingresar" class="w-full md:w-auto mb-3" :loading="loading"></Button>
+          <Button type="submit" label="Ingresar" class="block w-full mt-3" :loading="loading"></Button>
         </div>
       </form>
+
+      <p class="mt-10 text-center text-sm text-gray-500">
+        ¿No tenés usuario?
+        <a href="/registrar" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">Registrate</a>
+      </p>
     </div>
-
-
   </div>
 </template>
 

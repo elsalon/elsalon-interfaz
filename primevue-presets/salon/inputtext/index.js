@@ -3,6 +3,7 @@ export default {
         class: [
             // Font
             'leading-none',
+            'font-mono',
 
             // Flex
             { 'flex-1 w-[1%]': parent.instance.$name == 'InputGroup' },
@@ -32,8 +33,8 @@ export default {
             { 'border-surface-300 dark:border-surface-700': !props.invalid },
 
             // Invalid State
-            'invalid:focus:ring-red-200',
-            'invalid:hover:border-red-500',
+            'invalid:focus:border-red-500',
+            // 'invalid:hover:border-red-500',
             { 'border-red-500 dark:border-red-400': props.invalid },
 
             // States
@@ -48,7 +49,8 @@ export default {
 
             // Misc
             'appearance-none',
-            'transition-colors duration-200'
+            'transition-colors duration-200',
+            'font-mono'
         ]
     })
 };

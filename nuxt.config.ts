@@ -59,7 +59,7 @@ export default defineNuxtConfig({
       // },
       pages: {
         // adonde redirigir si no está autenticado
-        login: '/login'
+        login: '/login',
       },
       
     },

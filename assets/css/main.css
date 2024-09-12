@@ -104,3 +104,6 @@
     overflow: visible;
   }
 }
+form label{
+  @apply font-mono;
+}

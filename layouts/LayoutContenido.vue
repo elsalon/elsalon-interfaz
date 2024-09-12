@@ -34,7 +34,7 @@
 
 <script setup>
     const { authData, myKey } = useReactiveAuth()
-    const {data} = useAuth()
+    const {signOut} = useAuth()
     import { ref } from "vue";
     import { PrimeIcons } from '@primevue/core/api';
     // const authData = computed(() => useAuth().data)

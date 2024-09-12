@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <article class="group">
+    <div class="group/entrada">
+        <article>
             <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
             <div class="flex items-center pb-2">
                 <AvatarSalon :usuario="entrada.autor" />
@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <!-- Ajustes entrada -->
-                <div class="flex-grow invisible group-hover:visible text-right">
+                <div class="flex-grow invisible group-hover/entrada:visible text-right">
                     <Button text @click="ToggleArticleOptions">...</Button>
                     <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" /> 
                 </div>

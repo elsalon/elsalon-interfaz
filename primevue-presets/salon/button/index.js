@@ -210,6 +210,7 @@ export default {
         class: [
             'duration-200',
             'font-medium',
+            'font-mono',
             {
                 'hover:underline': props.link
             },
