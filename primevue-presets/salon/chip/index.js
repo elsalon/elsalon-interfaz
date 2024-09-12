@@ -22,7 +22,7 @@ export default {
         class: 'leading-6 mr-2'
     },
     image: {
-        class: ['w-8 h-8 -ml-2 mr-2', 'rounded-full']
+        class: ['w-6 h-6 -ml-2 mr-2', 'rounded-full']
     },
     removeIcon: {
         class: [
