@@ -26,10 +26,10 @@
             </DeferredContent>
 
         </article>
-        <div class="despues-entrada mt-2 sm:pl-[65px]">
+        <div class="despues-entrada sm:pl-[65px]">
             <!-- <Divider /> -->
             <!-- Comentarios -->
-             <Aprecio :entradaId="entrada.id"/>
+            <Aprecio :entradaId="entrada.id"/>
             <ListaComentarios :entradaId="entrada.id"/>
         </div>
     </div>
