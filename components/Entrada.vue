@@ -26,7 +26,7 @@
             </DeferredContent>
 
         </article>
-        <div class="despues-entrada md:px-20">
+        <div class="despues-entrada sm:pl-[65px]">
             <!-- <Divider /> -->
             <!-- Comentarios -->
             <ListaComentarios :entradaId="entrada.id"/>
