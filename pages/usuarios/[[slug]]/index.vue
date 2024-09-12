@@ -63,7 +63,6 @@ const DetenerColaboracion = async () =>{
 
 onMounted(async() => {    
     if(usuario.value.id != data.value?.user.id){
-        console.log("***")
         // Check if the user is already collaborating
         const resColaboracion = await useApi(`/api/colaboraciones?where[autor][equals]=${data.value.user.id}&where[colaborador][equals]=${usuario.value.id}`)
         if(resColaboracion.docs.length > 0){

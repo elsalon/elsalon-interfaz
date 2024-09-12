@@ -68,6 +68,13 @@
                     }
                 },
                 {
+                    label: 'Aprecio',
+                    icon: PrimeIcons.HEART,
+                    command: () => {
+                        navigateTo('/aprecio')
+                    }
+                },
+                {
                     label: 'Grupos',
                     icon: PrimeIcons.USERS,
                     command: () => {

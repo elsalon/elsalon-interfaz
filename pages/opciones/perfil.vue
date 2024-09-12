@@ -54,7 +54,6 @@ const handleSubmit = async () => {
         }
 
         // Luego guardamos el perfil
-        console.log("^^", perfil.value)
         const userRes = await useApi(`/api/users/${data.value.user.id}`, perfil.value, 'PATCH');
         console.log(userRes)
 

@@ -135,10 +135,10 @@ export default {
             { 'text-surface-900 dark:text-surface-0 border border-surface-900 dark:border-surface-0': props.outlined && props.severity === 'contrast' && !props.plain },
 
             // --- Severity Button States ---
-            'focus:outline-none focus:outline-offset-0 focus:ring-1',
+            // 'focus:outline-none focus:outline-offset-0 focus:ring-1',
 
             // Link
-            { 'focus:ring-primary': props.link },
+            // { 'focus:ring-primary': props.link },
 
             // Plain
             { 'hover:bg-gray-600 hover:border-gray-600': props.plain && !props.outlined && !props.text },
@@ -147,25 +147,25 @@ export default {
 
             // Primary
             { 'hover:bg-primary-emphasis hover:border-primary-emphasis': !props.link && props.severity === null && !props.text && !props.outlined && !props.plain },
-            { 'focus:ring-primary': props.severity === null },
+            // { 'focus:ring-primary': props.severity === null },
             // Text & Outlined Button
             { 'hover:bg-primary-300/10': (props.text || props.outlined) && props.severity === null && !props.plain },
 
             // Secondary
             { 'hover:bg-surface-200 dark:hover:bg-surface-600 hover:border-surface-200 dark:hover:border-surface-600': props.severity === 'secondary' && !props.text && !props.outlined && !props.plain },
-            { 'focus:ring-surface-500 dark:focus:ring-surface-400': props.severity === 'secondary' },
+            // { 'focus:ring-surface-500 dark:focus:ring-surface-400': props.severity === 'secondary' },
             // Text & Outlined Button
             { 'hover:bg-surface-300/10': (props.text || props.outlined) && props.severity === 'secondary' && !props.plain },
 
             // Success
             { 'hover:bg-green-600 dark:hover:bg-green-300 hover:border-green-600 dark:hover:border-green-300': props.severity === 'success' && !props.text && !props.outlined && !props.plain },
-            { 'focus:ring-green-500 dark:focus:ring-green-400': props.severity === 'success' },
+            // { 'focus:ring-green-500 dark:focus:ring-green-400': props.severity === 'success' },
             // Text & Outlined Button
             { 'hover:bg-green-300/10': (props.text || props.outlined) && props.severity === 'success' && !props.plain },
 
             // Info
             { 'hover:bg-blue-600 dark:hover:bg-blue-300 hover:border-blue-600 dark:hover:border-blue-300': props.severity === 'info' && !props.text && !props.outlined && !props.plain },
-            { 'focus:ring-blue-500 dark:focus:ring-blue-400': props.severity === 'info' },
+            // { 'focus:ring-blue-500 dark:focus:ring-blue-400': props.severity === 'info' },
             // Text & Outlined Button
             { 'hover:bg-blue-300/10': (props.text || props.outlined) && props.severity === 'info' && !props.plain },
 
