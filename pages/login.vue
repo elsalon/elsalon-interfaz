@@ -1,18 +1,11 @@
 <template>
-  <div class="flex container min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
-
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-    <img class="mx-auto w-auto" src="/public/salon_logo_lg_600x80.png" alt="El Salon">
-    <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Iniciá sesión</h2>
-  </div>
-
-  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+  <NuxtLayout name="layout-credenciales">
     <form @submit.prevent="handleSubmit" class="space-y-3">
       <div>
         <label for="email" class="block text-900 font-medium mb-2">Email</label>
         <InputText id="email" type="text" class="block w-full" v-model="email" required />
       </div>
-
+  
       <div>
       <div class="flex items-center justify-between">
         <label for="password1" class="block text-900 font-medium mb-2">Password</label>
@@ -27,13 +20,13 @@
           <Button type="submit" label="Ingresar" class="block w-full mt-3" :loading="loading"></Button>
         </div>
       </form>
-
+  
       <p class="mt-10 text-center text-sm text-gray-500">
         ¿No tenés usuario?
         <a href="/registrar" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">Registrate</a>
       </p>
-    </div>
-  </div>
+  </NuxtLayout>
+ 
 </template>
 
 <script setup>

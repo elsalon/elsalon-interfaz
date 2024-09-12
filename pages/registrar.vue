@@ -1,40 +1,32 @@
 <template>
-  <div class="flex container min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
+	<NuxtLayout name="layout-credenciales">
+		<template #cta>Darse de alta en El Salón</template>
 
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img class="mx-auto w-auto" src="/public/salon_logo_lg_600x80.png" alt="El Salon">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Darse de alta</h2>
-    </div>
-
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form @submit.prevent="handleSignup" class="space-y-3">
-
-          <div>
-            <label for="nombre" class="block text-900 font-medium mb-2">Nombre</label>
-            <InputText id="nombre" type="text" class="block w-full" v-model="nombre" required minlength="3"/>
-          </div>
-          
-          <div>
-            <label for="email" class="block text-900 font-medium mb-2">Email</label>
-            <InputText id="email" type="text" class="block w-full" v-model="email" required />
-          </div>
-
-          <div>
-            <label for="password" class="block text-900 font-medium mb-2">Contraseña</label>
-            <InputText id="password" type="password" class="block w-full" v-model="password" required />
-          </div>  
-        
-          <div>
-            <Button type="submit" label="Registrar" class="block w-full mt-3" :loading="loading"></Button>
-          </div>
-        </form>
-
-        <p class="mt-10 text-center text-sm text-gray-500">
-        ¿Ya tenés usuario?
-        <a href="/login" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">Iniciá sesión</a>
-      </p>
-    </div>
-  </div>
+		<form @submit.prevent="handleSignup" class="space-y-3">
+      		<div>
+				<label for="nombre" class="block text-900 font-medium mb-2">Nombre</label>
+				<InputText id="nombre" type="text" class="block w-full" v-model="nombre" required minlength="3"/>
+			</div>
+      
+			<div>
+				<label for="email" class="block text-900 font-medium mb-2">Email</label>
+				<InputText id="email" type="text" class="block w-full" v-model="email" required />
+			</div>
+  
+			<div>
+				<label for="password" class="block text-900 font-medium mb-2">Contraseña</label>
+				<InputText id="password" type="password" class="block w-full" v-model="password" required />
+			</div>  
+    
+			<div>
+				<Button type="submit" label="Registrar" class="block w-full mt-3" :loading="loading"></Button>
+			</div>
+		</form>
+  
+		<p class="mt-10 text-center text-sm text-gray-500">¿Ya tenés usuario?
+			<a href="/login" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">Iniciá sesión</a>
+  		</p>
+  </NuxtLayout>
 </template>
   
 <script setup>
