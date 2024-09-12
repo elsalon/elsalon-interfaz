@@ -114,3 +114,19 @@ form label{
     @apply: overflow-visible;
   }
 }
+
+.ql-editor.ql-blank::before{
+  font-style: normal !important;
+  @apply text-xs text-surface-300;
+}
+
+.despues-entrada > .actions{
+  @apply flex flex-row items-center justify-start;  
+}
+
+.despues-entrada > .actions > button:first-child{
+  @apply pl-0;
+}
+.panelComentario > div{
+    padding: 0 !important;
+  }

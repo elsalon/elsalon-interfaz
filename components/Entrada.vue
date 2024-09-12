@@ -29,24 +29,34 @@
         <div class="despues-entrada sm:pl-[65px]">
             <!-- <Divider /> -->
             <!-- Comentarios -->
-            <Aprecio :entradaId="entrada.id"/>
-            <ListaComentarios :entradaId="entrada.id"/>
+             <div class="actions">
+                <Button link class="my-2 text-xs text-surface-500" label="Comentar" @click="ToggleCommentBox"/>
+                <Aprecio :entradaId="entrada.id"/>
+             </div>
+            <ListaComentarios :entradaId="entrada.id" :showCommentBox="showCommentBox" @userPosted="showCommentBox='0'"/>
         </div>
     </div>
+
+
 </template>
 
 <script setup>
+const active = ref('0');
     import Menu from 'primevue/menu';
     const runtimeConfig = useRuntimeConfig().public;
     const { data } = useAuth()
     const props = defineProps({
-    entrada: {
-        type: Object,
-        required: true,
-    },
+        entrada: {
+            type: Object,
+            required: true,
+        },
     });
     const { entrada } = props;
-
+    const showCommentBox = ref('0');
+    const ToggleCommentBox = () => {
+        showCommentBox.value = showCommentBox.value == '0' ? '1' : '0';
+        console.log('Toggle Comment Box', showCommentBox.value);
+    }
     const datetime = new Date(entrada.createdAt);
     const fechaFormateada = datetime.toLocaleDateString('es-ES', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
 

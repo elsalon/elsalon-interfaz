@@ -2,11 +2,10 @@
     <ClientOnly fallback-tag="div" fallback="cargando editor">
         <div>
             <!-- Editor -->
-            <div class="comment-input relative border border-surface-0 border-solid p-2" :class="{'border-surface-200' : mostrarExtras}">
-                <div v-if="!userEdited" class="absolute left-8 top-5 text-sm text-surface-300">Comentar</div>
-                <QuillEditor v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/>
+            <div class="comment-input relative border border-surface-0 border-solid p-2 border-surface-200">
+                <QuillEditor placeholder="Comentario" v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/>
             </div>
-            <div class="text-right mt-2" :style="{ visibility: userEdited ? 'visible' : 'hidden' }">
+            <div class="text-right mt-2">
                 <Button  @click="Publicar" :loading="uploading" size="small">{{isEditing ? 'Guardar' : 'Comentar'}}</Button>
             </div>
         </div>
@@ -53,7 +52,7 @@ const userEdited = computed(() => {
 })
 
 const Publicar = async () => {
-    if(miComentario.value == ''){
+    if(miComentario.value == ""){
         return;
     }
     console.log('Publicar', props.entradaId, miComentario.value)
@@ -75,6 +74,7 @@ const Publicar = async () => {
 		useNuxtApp().callHook("comentario:creado", {resultado:"ok"})
         toast.add({ severity: 'contrast', detail: 'Comentario publicado', life: 3000});   
         emit('userPosted', response.doc)
+        
 	}catch{
 		useNuxtApp().callHook("comentario:creado", {resultado:"error"})
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo publicar el comentario', life: 3000});

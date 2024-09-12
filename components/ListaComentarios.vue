@@ -4,7 +4,14 @@
             <div v-if="fetchingComentarios" class="my-4 text-center text-gray-500 text-sm">Cargando comentarios...</div>
             <Comentario v-for="comentario in comentarios" :comentario="comentario" :key="comentario.id" />
             <button v-if="quedanMasComentarios" @click="fetchComentarios">Cargar más comentarios</button>
-            <CajaComentario :entradaId="entradaId" @userPosted="handleUserPostedComment" :key="cajaComentarioKey"/>
+            
+            <Accordion :value="showCommentBox">
+                <AccordionPanel value="1">
+                    <AccordionContent>
+                    <CajaComentario :entradaId="entradaId" @userPosted="handleUserPostedComment" :key="cajaComentarioKey"/>
+                </AccordionContent>
+            </AccordionPanel>
+        </Accordion>
         </DeferredContent>
     </div>
   </template>
@@ -14,17 +21,21 @@
   
     const props = defineProps({
         entradaId: {
-        type: String,
-        required: true,
+            type: String,
+            required: true,
+        },
+        showCommentBox: {
+            type: String,
+            default: '0',
         },
     })
-  
     const page = ref(1)
     const quedanMasComentarios = ref(false)
     const comentarios = ref([])
     const newestCommentDate = ref(null)
     const cajaComentarioKey = ref(0)
     const fetchingComentarios = ref(true)
+    const emit = defineEmits(['userPosted'])
     
     const fetchComentarios = async () => {
         const res = await useApi(`/api/comentarios?where[entrada][equals]=${props.entradaId}&sort=createdAt&limit=5&page=${page.value}`)
@@ -58,6 +69,7 @@
     const handleUserPostedComment = async () => {
         console.log('User posted comment')
         await fetchNewerComments()
+        emit('userPosted'); // lo vuelvo a emitir a "Entrada" para que cierre el accordion
         cajaComentarioKey.value++; // Fuerzo reiniciar el componente CajaComentario
     }
     
