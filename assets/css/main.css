@@ -84,16 +84,6 @@
   @apply w-full aspect-video;
 }
 
-#editorContainer{
-  height: calc(100% - 130px);
-}
-
-@media (min-width: 768px) {
-  /* TAILWIND BREAKPOINT */
-  #editorContainer{
-    height: calc(100% - 100px);
-  }
-}
 /* Imagenes en editor de entrada */
 .ql-snow .ql-editor img {
   max-width: 90% !important;
