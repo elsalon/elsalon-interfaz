@@ -7,7 +7,7 @@
                 <QuillEditor v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @ready="onEditorReady" @focus="focused" @blur="blured"/>
             </div>
             <div class="text-right mt-2" :style="{ visibility: userEdited ? 'visible' : 'hidden' }">
-                <Button  @click="Publicar" :loading="uploading" size="small">Comentar</Button>
+                <Button  @click="Publicar" :loading="uploading" size="small">{{isEditing ? 'Guardar' : 'Comentar'}}</Button>
             </div>
         </div>
     </ClientOnly>
@@ -26,7 +26,7 @@ const isEditing = ref(false);
 const attachedImages = ref([])
 
 const props = defineProps({
-    entradaId: { type: String, required: true},
+    entradaId: { type: String},
     commentEdit: { type: Object, default: null } // If provided, we're in edit mode
 })
 
@@ -70,18 +70,14 @@ const Publicar = async () => {
 	let endpoint = '/api/comentarios'
 	if(isEditing.value){
 		method = 'PATCH';
-		endpoint = `/api/comentarios/${props.commentEdit.comentario.id}`
+		endpoint = `/api/comentarios/${props.commentEdit.id}`
 	}
 	try{
 		const response = await useApi(endpoint, data, method);
-		console.log("Comentario creadp:", response)
+		console.log("Comentario creado:", response)
 		useNuxtApp().callHook("comentario:creado", {resultado:"ok"})
         toast.add({ severity: 'contrast', detail: 'Comentario publicado', life: 3000});   
-        emit('userPosted')
-        // Reseteo la caja
-        // miComentario.value = ''
-        // attachedImages.value = []
-        // userEdited.value = false
+        emit('userPosted', response.doc)
 	}catch{
 		useNuxtApp().callHook("comentario:creado", {resultado:"error"})
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo publicar el comentario', life: 3000});
@@ -96,6 +92,15 @@ const handleHotkey = (e) => {
         Publicar();
     }
 }
+
+onMounted(() => {
+    if (props.commentEdit) {
+        isEditing.value = true
+        miComentario.value = props.commentEdit.contenido
+        attachedImages.value = props.commentEdit.imagenes.map(data => ({imagen: data.imagen.id}))
+        mostrarExtras.value = true
+    }
+})
 
 
 </script>

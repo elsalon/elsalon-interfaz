@@ -18,7 +18,7 @@
                 </div>
             </div>
             <DeferredContent @load="onEntradaScrolled">
-                <div class="prose prose-headings:my-1 sm:pl-[55px] leading-normal" v-html="contenidoRendereado"></div>
+                <div class="prose prose-headings:my-1 sm:pl-[65px] leading-normal" v-html="contenidoRendereado"></div>
             </DeferredContent>
 
         </article>
