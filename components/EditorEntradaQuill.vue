@@ -1,6 +1,6 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor">
-		<div id="editorContainer">
+		<div id="editorContainer" class="grow h-full flex flex-col">
 			
 			<!-- Editor -->
 			<QuillEditor v-model:content="myContent" content-type="html" :modules="editorModules" :toolbar="editorToolbar" theme="snow" @ready="onEditorReady"/>
