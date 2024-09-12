@@ -159,7 +159,7 @@ const Publicar = async () => {
 		imagenes: attachedImages.value, 
 		sala: paginaActual.value.id
 	}
-	console.log("DATA", data)	
+	// console.log("DATA", data)	
 	let endpoint = '/api/entradas'
 	if(isEditing.value){
 		method = 'PATCH';

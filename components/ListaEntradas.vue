@@ -1,5 +1,5 @@
 <template>
-    <div class="space-y-20">
+    <div class="space-y-10">
         <Entrada v-for="entrada in entradas" :key="entrada.id" :entrada="entrada" />
     </div>
     

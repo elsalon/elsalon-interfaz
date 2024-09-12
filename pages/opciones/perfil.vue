@@ -57,8 +57,10 @@ const handleSubmit = async () => {
         // refrescar auth
         await getSession() // esto funciona pero por algun motivo no es reactivo
         // location.reload(); // asi que lo hacemos asi que es mas feo pero funciona
+        toast.add({ severity: 'contrast', detail: 'Perfil guardado', life: 3000});   
     }catch{
         console.error('Error al guardar perfil')
+        toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo guardar tu perfil', life: 3000});
     }finally{
         loading.value = false
     }

@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Altura minima Quill Editor */
-.dialog-quill-editor {
-  .ql-editor{
-    min-height: 200px;
-  }
-}
-
 /* Primary and Surface Palettes */
 :root {
   outline: none !important;

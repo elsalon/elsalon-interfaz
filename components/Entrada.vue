@@ -25,8 +25,8 @@
         <div class="despues-entrada md:px-20">
             <!-- <Divider /> -->
             <!-- Comentarios -->
-            <ListaComentarios/>
-            <CajaComentario/>
+            <ListaComentarios :entradaId="entrada.id"/>
+            <CajaComentario :entradaId="entrada.id"/>
         </div>
     </div>
 </template>
