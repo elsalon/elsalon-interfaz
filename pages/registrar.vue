@@ -28,6 +28,11 @@
             <Button type="submit" label="Registrar" class="block w-full mt-3" :loading="loading"></Button>
           </div>
         </form>
+
+        <p class="mt-10 text-center text-sm text-gray-500">
+        ¿Ya tenés usuario?
+        <a href="/login" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">Iniciá sesión</a>
+      </p>
     </div>
   </div>
 </template>
