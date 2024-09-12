@@ -30,24 +30,22 @@ const props = defineProps({
     commentEdit: { type: Object, default: null } // If provided, we're in edit mode
 })
 
+const emit = defineEmits(['userPosted'])
+
 const editorToolbar = [
 	['bold', 'italic', 'underline', 'strike'],
 	['blockquote', 'code-block'],
 	['link', 'image', 'video'],
 	['clean']
 ]
-// const editorModules = [
-// 	{
-// 		module: ImageDrop,
-// 		name: 'image-drop',
-// 	}
-// ]
 
 const focused = () => {
     mostrarExtras.value = true
+    window.addEventListener('keydown', handleHotkey)
 }
 const blured = () => {
     mostrarExtras.value = false
+    window.removeEventListener('keydown', handleHotkey)
 }
 const userEdited = computed(() => {
     return miComentario.value !== ''
@@ -58,6 +56,9 @@ const onEditorReady = () => {
 }
 
 const Publicar = async () => {
+    if(miComentario.value == ''){
+        return;
+    }
     console.log('Publicar', props.entradaId, miComentario.value)
     let method ='POST'
 	let data = {
@@ -76,10 +77,25 @@ const Publicar = async () => {
 		console.log("Comentario creadp:", response)
 		useNuxtApp().callHook("comentario:creado", {resultado:"ok"})
         toast.add({ severity: 'contrast', detail: 'Comentario publicado', life: 3000});   
+        emit('userPosted')
+        // Reseteo la caja
+        // miComentario.value = ''
+        // attachedImages.value = []
+        // userEdited.value = false
 	}catch{
 		useNuxtApp().callHook("comentario:creado", {resultado:"error"})
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo publicar el comentario', life: 3000});
 	}
 	uploading.value = false;
 }
+
+const handleHotkey = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault()
+        console.log("Hotkey Publicar comentario")
+        Publicar();
+    }
+}
+
+
 </script>

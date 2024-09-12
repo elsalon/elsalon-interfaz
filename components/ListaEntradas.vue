@@ -29,8 +29,6 @@
         
         // Set up interval to check for new entries every 2 minutes
         checkNewEntriesInterval = setInterval(FetchNewer, 120000)
-
-
         removeOnCreateHook = hooks.hook('publicacion:creada', handlePublicacionCreada)
     })
 
@@ -59,7 +57,7 @@
       coolingDown = true
       setTimeout(() => coolingDown = false, 1000)
 
-      let apiUrl = `/api/entradas?depth=2&page=${page.value}&limit=${props.limit}`
+      let apiUrl = `/api/entradas?depth=2&page=${page.value}`
       if (props.endpointQuery != '') {
         apiUrl += `&${props.endpointQuery}`
       }

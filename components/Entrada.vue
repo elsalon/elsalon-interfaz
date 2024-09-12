@@ -26,7 +26,6 @@
             <!-- <Divider /> -->
             <!-- Comentarios -->
             <ListaComentarios :entradaId="entrada.id"/>
-            <CajaComentario :entradaId="entrada.id"/>
         </div>
     </div>
 </template>

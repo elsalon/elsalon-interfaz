@@ -206,5 +206,19 @@ onMounted(() => {
 	if (isEditing.value) {
 		loadExistingContent()
 	}
+	
+    window.addEventListener('keydown', handleHotkey)
 })
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleHotkey)
+});
+
+const handleHotkey = (e) => {
+	if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+		e.preventDefault()
+		console.log("Hotkey Publicar")
+		Publicar();
+	}
+}
 </script>
