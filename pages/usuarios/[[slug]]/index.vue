@@ -1,6 +1,16 @@
 <template>
     <NuxtLayout name="layout-contenido">        
-        <!-- <AvatarSalon :usuario="usuario" size="xlarge" imagesize="large"/> -->
+        <div class="text-center">
+            <AvatarSalon :usuario="usuario" size="xlarge" imagesize="large"/>
+            <h1 class="text-3xl font-bold">{{ usuario.nombre }}</h1>
+        </div>
+        <div class="text-md my-5">{{ usuario.bio }}</div>
+
+        <div class="text-center mb-5">
+            <Button>Seguir</Button>
+            <Button class="bg-white text-black">Dejar de seguir</Button>
+        </div>
+        
         <EditorEntrada v-if="userIsMe" />
         <ListaEntradas :endpointQuery="query" />
     </NuxtLayout>

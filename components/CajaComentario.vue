@@ -35,7 +35,8 @@ const emit = defineEmits(['userPosted'])
 const editorToolbar = [
 	['bold', 'italic', 'underline', 'strike'],
 	['blockquote', 'code-block'],
-	['link', 'image', 'video'],
+	// ['link', 'image', 'video'], // TODO
+    ['link'],
 	['clean']
 ]
 
