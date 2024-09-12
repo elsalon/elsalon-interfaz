@@ -1,10 +1,12 @@
 <template>
     <Panel :toggleable="false" class="border-surface-0 background-red text-sm group/comentario">
         <template #header>
-            <div class="flex items-center gap-2">
-                <AvatarSalon :usuario="miComentario.autor" size="small" />
-                <span class="font-bold">{{ miComentario.autor.nombre }}</span>
-            </div>
+            <NuxtLink :to="'/usuarios/' + miComentario.autor.slug">
+                <div class="flex items-center gap-2">
+                    <AvatarSalon :usuario="miComentario.autor" size="small" />
+                    <span class="font-bold">{{ miComentario.autor.nombre }}</span>
+                </div>
+            </NuxtLink>
         </template>
         
         <template #icons >

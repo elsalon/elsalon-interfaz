@@ -21,8 +21,8 @@
                 
                 <!-- Avatar Usuario -->
                 <client-only>
-                    <AvatarSalon :key="myKey" class="cursor-pointer" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
-                    <Menu :key="myKey" ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true" /> 
+                    <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
+                    <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true" /> 
                 </client-only>
             </nav>
         </header>

@@ -3,9 +3,13 @@
         <article>
             <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
             <div class="flex items-center pb-2">
-                <AvatarSalon :usuario="entrada.autor" />
+                <NuxtLink :to="'/usuarios/' + entrada.autor.slug">
+                    <AvatarSalon :usuario="entrada.autor" />
+                </NuxtLink>
                 <div class="ml-4">
-                    <h2 class="font-bold text-gray-700">{{ entrada.autor.nombre }}</h2>
+                    <NuxtLink :to="'/usuarios/' + entrada.autor.slug">
+                        <h2 class="font-bold text-gray-700">{{ entrada.autor.nombre }}</h2>
+                    </NuxtLink>
                     <div class="flex">
                         <a v-if="entrada.sala" class="text-sm mr-2" href="#">{{ entrada.sala.nombre }}</a>
                         <p class="text-gray-400 text-sm">{{ fechaFormateada }}</p>

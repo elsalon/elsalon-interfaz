@@ -4,7 +4,7 @@
             <!-- Editor -->
             <div class="comment-input relative border border-surface-0 border-solid p-2" :class="{'border-surface-200' : mostrarExtras}">
                 <div v-if="!userEdited" class="absolute left-8 top-5 text-sm text-surface-300">Comentar</div>
-                <QuillEditor v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @ready="onEditorReady" @focus="focused" @blur="blured"/>
+                <QuillEditor v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/>
             </div>
             <div class="text-right mt-2" :style="{ visibility: userEdited ? 'visible' : 'hidden' }">
                 <Button  @click="Publicar" :loading="uploading" size="small">{{isEditing ? 'Guardar' : 'Comentar'}}</Button>
@@ -50,10 +50,6 @@ const blured = () => {
 const userEdited = computed(() => {
     return miComentario.value !== ''
 })
-
-const onEditorReady = () => {
-    console.log('Editor ready')
-}
 
 const Publicar = async () => {
     if(miComentario.value == ''){

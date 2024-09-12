@@ -23,6 +23,8 @@
 </template>
 
 <script setup>
+const toast = useToast();
+import { useToast } from "primevue/usetoast";
 const {data, getSession } = useAuth()
 const loading = ref(false)
 const perfil = ref({
@@ -33,7 +35,6 @@ const avatarFileInput = ref()
 
 const handleSubmit = async () => {
     try{
-
         loading.value = true
         // Primero chequeamos si hay que subir el avatar
         if (avatarFileInput.value.files.length > 0) {
@@ -41,9 +42,7 @@ const handleSubmit = async () => {
             const formData = new FormData()
             formData.append('file', avatarFile)
             const avatarRes = await useUploadFile('/api/avatares', formData);
-            
-            console.log(avatarRes)
-            
+            // console.log(avatarRes)
             perfil.value.avatar = avatarRes.doc.id
         }
 
@@ -64,21 +63,5 @@ const handleSubmit = async () => {
     }finally{
         loading.value = false
     }
-
-
-    // loading.value = true
-    // try {
-    //     await signIn({
-    //         email: email.value,
-    //         password: password.value
-    //     }, {
-    //         callbackUrl: '/'
-    //     })
-    // } catch (error) {
-    //     console.error('Login failed:', error)
-    //     toast.add({ severity: 'error', summary: 'Error', detail: 'Usuario o contraseña incorrectas', life: 3000});
-    // } finally{
-    //     loading.value = false
-    // }
 }
 </script>
