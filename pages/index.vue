@@ -1,5 +1,5 @@
 <template>
-    <NuxtLayout name="layout-contenido">        
+    <NuxtLayout name="layout-contenido">
         <EditorEntrada />
         <!-- TODO QUery -->
         <ListaEntradas />

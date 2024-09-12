@@ -9,11 +9,14 @@
 
 
 <script setup>
-    const entradas = ref([])
+    const { hooks } = useNuxtApp();
+    const entradas = ref([]);
     const hasNextPage = ref(true);
-    const page = ref(0);
-    
+    const page = ref(1);
     const scrollEndOffset = 300;
+    let coolingDown = false;
+    let checkNewEntriesInterval;
+    let removeOnCreateHook = null;
 
     // props
     const props = defineProps({
@@ -21,41 +24,60 @@
     })
     
     onMounted(() => {
-        CheckLlegoFinDePagina(); // lo llamo una vez para que cargue la primera vez
+        CheckLlegoFinDePagina()
+        window.addEventListener('scroll', CheckLlegoFinDePagina)
+        
+        // Set up interval to check for new entries every 2 minutes
+        checkNewEntriesInterval = setInterval(FetchNewer, 120000)
 
-        window.onscroll = async () => {
-            CheckLlegoFinDePagina();
-        }
+
+        removeOnCreateHook = hooks.hook('publicacion:creada', handlePublicacionCreada)
     })
-    
-    const CheckLlegoFinDePagina = () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight-scrollEndOffset) {
-            if(hasNextPage.value){
-                FetchEntries();
-            }
+
+    onUnmounted(() => {
+        window.removeEventListener('scroll', CheckLlegoFinDePagina)
+        clearInterval(checkNewEntriesInterval)
+        if(removeOnCreateHook) removeOnCreateHook()
+    })
+
+    const handlePublicacionCreada = (data) => {
+        if(data.resultado == "ok"){
+            FetchNewer()
         }
     }
-
-    let coolingDown = false;
+    
+    const CheckLlegoFinDePagina = () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - scrollEndOffset) {
+        if (hasNextPage.value) {
+          FetchEntries()
+        }
+      }
+    }
 
     const FetchEntries = async () => {
-        if(coolingDown) return;
-        coolingDown = true;
-        setTimeout(() => coolingDown = false, 1000);
-        
-        // const slug = route.params?.slug || 'el-salon'; // TODO algo que no lo haga hardcodeado
-        page.value++; // incremento la paginacion para hacerlo progreso en la siguiente llamada
-        let apiUrl = `/api/entradas?depth=2&page=${page.value}`;
-        if(props.endpointQuery != ''){
-            apiUrl += `&${props.endpointQuery}`;
-        }
-        // if(slug){
-        //     apiUrl += `&where[sala.slug][equals]=${slug}`;
-        // }else{
-        //     // Dashboard el salon (TODO)
-        // }
-        const res = await useApi(apiUrl)
-        hasNextPage.value = res.hasNextPage
-        entradas.value = [...entradas.value, ...res.docs]
+      if (coolingDown) return
+      coolingDown = true
+      setTimeout(() => coolingDown = false, 1000)
+
+      let apiUrl = `/api/entradas?depth=2&page=${page.value}&limit=${props.limit}`
+      if (props.endpointQuery != '') {
+        apiUrl += `&${props.endpointQuery}`
+      }
+      const res = await useApi(apiUrl)
+      hasNextPage.value = res.hasNextPage
+      entradas.value = [...entradas.value, ...res.docs]
+      page.value++
+    }
+
+    const FetchNewer = async () => {
+      const newestEntryDate = entradas.value[0]?.createdAt || new Date().toISOString()
+      let apiUrl = `/api/entradas?depth=2&where[createdAt][greater_than]=${newestEntryDate}&sort=-createdAt&limit=100`
+      if (props.endpointQuery != '') {
+        apiUrl += `&${props.endpointQuery}`
+      }
+      const res = await useApi(apiUrl)
+      if (res.docs.length > 0) {
+        entradas.value = [...res.docs, ...entradas.value]
+      }
     }
 </script>
