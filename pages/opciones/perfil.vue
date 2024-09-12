@@ -1,23 +1,23 @@
 <template>
     <form @submit.prevent="handleSubmit" class="space-y-3">
-        <div class="flex flex-col gap-2">
-            <label for="username">nombre</label>
-            <InputText id="username" v-model="perfil.nombre" required minlength="3" />
+        <div class="flex gap-2 mb-4 flex-col md:flex-row">
+            <label for="username" class="font-semibold w-24">nombre</label>
+            <InputText id="username" class="w-full" v-model="perfil.nombre" required minlength="3" />
         </div>
 
-        <div class="flex flex-col gap-2">
-            <label for="email">email</label>
-            <InputText id="email" type="email" v-model="perfil.email" required/>
+        <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
+            <label for="email" class="font-semibold w-24">email</label>
+            <InputText id="email" class="w-full" type="email" v-model="perfil.email" required/>
         </div>
 
-        <div class="flex flex-col gap-2">
-            <label for="avatar">avatar</label>
-            <input type="file" id="avatar" ref="avatarFileInput" class="caja-input"/>
+        <div class="flex gap-2 mb-4 flex-col md:flex-row">
+            <label for="avatar" class="font-semibold w-24">avatar</label>
+            <input type="file" id="avatar" ref="avatarFileInput" class="w-full caja-input"/>
         </div>
 
-        <div class="flex flex-col gap-2">
-            <label for="bio">bio</label>
-            <Textarea id="bio" class="leading-normal" v-model="perfil.bio" autoResize rows="5" cols="30" />
+        <div class="flex gap-2 mb-4 flex-col md:flex-row">
+            <label for="bio" class="font-semibold w-24">bio</label>
+            <Textarea id="bio" class="w-full leading-normal" v-model="perfil.bio" autoResize rows="5" cols="30" />
         </div>
         
         <div class="text-right">
