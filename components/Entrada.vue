@@ -12,7 +12,7 @@
                         <h2 class="font-bold text-gray-700">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex">
-                        <a v-if="entrada.sala" class="text-sm mr-2" href="#">{{ entrada.sala.nombre }}</a>
+                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2" :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
                         <p class="text-gray-400 text-sm">{{ fechaFormateada }}</p>
                     </div>
                 </div>
