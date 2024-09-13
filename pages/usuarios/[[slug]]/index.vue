@@ -34,7 +34,7 @@ if (res.docs.length === 0) {
 }
 const usuario = ref(res.docs[0])
 const userIsMe = ref(usuario.value.id == data.value?.user.id)
-const query = ref(`where[autor][equals]=${usuario.value.id}`)
+const query = ref(`where[autor][equals]=${usuario.value.id}&where[autoriaGrupal][not_equals]=true`) // posts del usuario que no sean grupales
 
 const IniciarColaboracion = async () =>{
     try{
