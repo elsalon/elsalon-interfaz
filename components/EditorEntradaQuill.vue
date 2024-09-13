@@ -11,8 +11,13 @@
 					<template #value="slotProps">
 						<!-- Seleccionado -->
 						<div v-if="slotProps.value" class="flex items-center">
-							<img v-if="slotProps.value.avatar" :alt="slotProps.value.label" :src="slotProps.value.avatar" :class="`mr-2`" style="width: 18px" />
-							<div>{{ slotProps.value.name }}</div>
+							<template v-if="slotProps.value.avatar">
+								<img v-if="slotProps.value.avatar" :alt="slotProps.value.label" :src="slotProps.value.avatar" :class="`mr-2`" style="width: 18px" />
+							</template>
+							<template v-else>
+								<div class="w-6 h-6"></div>
+							</template>
+							<div class="flex-grow">{{ slotProps.value.name }}</div>
 						</div>
 						<span v-else>
 							{{ slotProps.placeholder }}
@@ -21,8 +26,13 @@
 					<template #option="slotProps">
 						<!-- Lista opciones -->
 						<div class="flex items-center">
-							<img v-if="slotProps.option.avatar !=null" :alt="slotProps.option.label" :src="slotProps.option.avatar" :class="`mr-2`" style="width: 18px" />
-							<div>{{ slotProps.option.name }}</div>
+							<template v-if="slotProps.option.avatar">
+								<img v-if="slotProps.option.avatar !=null" :alt="slotProps.option.label" :src="slotProps.option.avatar" :class="`mr-2`" style="width: 18px" />
+							</template>
+							<template v-else>
+								<div class="w-6 h-6"></div>
+							</template>
+							<div class="flex-grow">{{ slotProps.option.name }}</div>
 						</div>
 					</template>
 				</Select>
@@ -39,7 +49,7 @@ const runtimeConfig = useRuntimeConfig().public;
 import { ImageDrop } from 'quill-image-drop-module';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
-const { data } = useAuth()
+const {data: authData} = useAuth()
 import Compressor from 'compressorjs';
 
 const toast = useToast();
@@ -178,7 +188,8 @@ const Publicar = async () => {
 
 const autorSeleccionado = ref();
 const autoresOpciones = ref([]);
-
+const {docs:gruposDelUsuario} = await useApi(`/api/grupos?where[integrantes][contains]=${authData.value?.user?.id}`);
+console.log(gruposDelUsuario)
 const loadExistingContent = async () => {
 	const { entrada, html } = props.postEdit
 	myContent.value = html
@@ -188,17 +199,24 @@ const loadExistingContent = async () => {
 
 onMounted(() => {
 	autoresOpciones.value.push({
-		avatar: runtimeConfig.apiBase + data.value?.user?.avatar?.sizes?.thumbnail?.url, 
-		name: data.value?.user?.nombre, 
-		id: data.value?.user?.id 
+		avatar: authData.value.user.avatar ? runtimeConfig.apiBase + authData.value.user.avatar.sizes.thumbnail.url : null,
+		name: authData.value?.user?.nombre, 
+		id: authData.value?.user?.id 
 	});
-	data.value.grupos.forEach(grupo => {
+	gruposDelUsuario.forEach(grupo => {
 		autoresOpciones.value.push({ 
-			avatar: null, // TODO
-			name: grupo,
-			id: "x"
+			avatar: grupo.avatar ? runtimeConfig.apiBase + grupo.avatar.sizes.thumbnail.url : null,
+			name: grupo.nombre,
+			id: grupo.id
 		});
 	});
+	// authData.value.grupos.forEach(grupo => {
+	// 	autoresOpciones.value.push({ 
+	// 		avatar: null, // TODO
+	// 		name: grupo,
+	// 		id: "x"
+	// 	});
+	// });
 	if(!autorSeleccionado.value && autoresOpciones.value.length > 0){
 		autorSeleccionado.value = autoresOpciones.value[0];
 	}

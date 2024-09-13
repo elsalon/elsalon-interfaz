@@ -78,7 +78,7 @@
                     label: 'Grupos',
                     icon: PrimeIcons.USERS,
                     command: () => {
-                        navigateTo('/grupos')
+                        navigateTo('/opciones/grupos')
                     }
                 },
                 {
