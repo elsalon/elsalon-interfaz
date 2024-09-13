@@ -32,6 +32,9 @@
         avatarUrl.value = runtimeConfig.apiBase + imageUrl;
     }else{
         iniciales.value = usuario?.nombre.split(' ').map(n => n[0]).join('');
+        iniciales.value = iniciales.value.toUpperCase();
+        // Max 3 iniciales
+        iniciales.value = iniciales.value.substring(0, 3);
     }
 
 </script>

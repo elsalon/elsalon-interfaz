@@ -3,12 +3,13 @@
         <article>
             <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
             <div class="flex items-center pb-2">
-                <NuxtLink :to="'/usuarios/' + entrada.autor.slug">
-                    <AvatarSalon :usuario="entrada.autor" />
+                <NuxtLink :to="identidadUrl">
+                    <AvatarSalon :usuario="identidad" />
                 </NuxtLink>
+                
                 <div class="ml-4">
-                    <NuxtLink :to="'/usuarios/' + entrada.autor.slug">
-                        <h2 class="font-bold text-gray-700">{{ entrada.autor.nombre }}</h2>
+                    <NuxtLink :to="identidadUrl">
+                        <h2 class="font-bold text-gray-700">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex">
                         <a v-if="entrada.sala" class="text-sm mr-2" href="#">{{ entrada.sala.nombre }}</a>
@@ -59,6 +60,9 @@ const active = ref('0');
     }
     const datetime = new Date(entrada.createdAt);
     const fechaFormateada = datetime.toLocaleDateString('es-ES', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+
+    const identidad = entrada.autoriaGrupal ? entrada.grupo : entrada.autor;
+    const identidadUrl = entrada.autoriaGrupal ? `/grupos/${identidad.slug}` : `/usuarios/${identidad.slug}`;
 
     const opcionesArticulo = ref([
         {

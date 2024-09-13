@@ -167,13 +167,19 @@ const Publicar = async () => {
 	let data = {
 		contenido: html, 
 		imagenes: attachedImages.value, 
-		sala: paginaActual.value.id
+		sala: paginaActual.value.id,
+		autoriaGrupal: false,
 	}
 	// console.log("DATA", data)	
 	let endpoint = '/api/entradas'
 	if(isEditing.value){
 		method = 'PATCH';
 		endpoint = `/api/entradas/${props.postEdit.entrada.id}`
+	}
+	// Autoria grupal
+	if(autorSeleccionado.value.id != authData.value.user.id){
+		data.autoriaGrupal = true
+		data.grupo = autorSeleccionado.value.id
 	}
 	try{
 		const response = await useApi(endpoint, data, method);
@@ -210,13 +216,7 @@ onMounted(() => {
 			id: grupo.id
 		});
 	});
-	// authData.value.grupos.forEach(grupo => {
-	// 	autoresOpciones.value.push({ 
-	// 		avatar: null, // TODO
-	// 		name: grupo,
-	// 		id: "x"
-	// 	});
-	// });
+
 	if(!autorSeleccionado.value && autoresOpciones.value.length > 0){
 		autorSeleccionado.value = autoresOpciones.value[0];
 	}
