@@ -9,7 +9,8 @@ const sharedState = {
   lastFetchTime: ref(null),
   isLoading: ref(false),
   error: ref(null),
-  totalNotifications: ref(0)
+  totalNotifications: ref(0),
+  loadedOnce: ref(false)
 }
 
 // let firstFetch = true;
@@ -54,7 +55,7 @@ export function useNotifications() {
 
   const startPolling = () => {
     stopPolling() // Clear any existing interval
-    pollingInterval.value = setInterval(() => fetchNotifications(true), .5 * 60 * 1000) // minutes
+    pollingInterval.value = setInterval(() => fetchNotifications(true), 5 * 60 * 1000) // minutes
   }
 
   const stopPolling = () => {
@@ -65,6 +66,8 @@ export function useNotifications() {
   }
 
   onMounted(() => {
+    if(sharedState.loadedOnce.value) return
+    sharedState.loadedOnce.value = true
     fetchNotifications()
     startPolling()
   })
