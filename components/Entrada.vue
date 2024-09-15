@@ -13,7 +13,7 @@
                     </NuxtLink>
                     <div class="flex">
                         <NuxtLink v-if="entrada.sala" class="text-sm mr-2" :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
-                        <p class="text-gray-400 text-sm">{{ fechaFormateada }}</p>
+                        <p class="text-gray-400 text-sm">{{ $formatDate(entrada.createdAt) }}</p>
                     </div>
                 </div>
                 <!-- Ajustes entrada -->
@@ -59,7 +59,7 @@ const active = ref('0');
         console.log('Toggle Comment Box', showCommentBox.value);
     }
     const datetime = new Date(entrada.createdAt);
-    const fechaFormateada = datetime.toLocaleDateString('es-ES', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    const { $formatDate } = useNuxtApp()
 
     const identidad = entrada.autoriaGrupal ? entrada.grupo : entrada.autor;
     const identidadUrl = entrada.autoriaGrupal ? `/grupos/${identidad.slug}` : `/usuarios/${identidad.slug}`;

@@ -27,7 +27,7 @@ export function useNotifications() {
     sharedState.error.value = null
 
     try {
-      const { docs: newNotifications, totalDocs: totalNotifications } = await useApi('/api/notificaciones?limit=5')
+      const { docs: newNotifications, totalDocs: totalNotifications } = await useApi('/api/notificaciones?where[leida][not_equals]=true&limit=1')
       
       console.log('Fetched notifications:', newNotifications, totalNotifications)
       sharedState.totalNotifications.value = totalNotifications
