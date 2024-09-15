@@ -36,6 +36,7 @@
 <script setup>
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
+const {data: authData} = useAuth()
 
 const confirm = useConfirm();
 const toast = useToast();
@@ -98,10 +99,17 @@ const AbandonarDialog =  () => {
         },
         accept: async () => {
             try{
-                await useApi(`/api/grupos/${props.grupo.id}/abandonar`, {}, 'POST');
-                toast.add({ severity: 'contrast', summary: 'Grupos', detail: `Abandonaste el grupo ${grupo.nombre}`, life: 3000 });
+                await useApi(
+                    `/api/grupos/${props.grupo.id}`, 
+                    {
+                        integrantes: props.grupo.integrantes.filter((i) => i.id != authData.value.user.id).map((i) => i.id) // envio los ids de los integrantes menos el mio
+                    },
+                    'PATCH'
+                );
+                toast.add({ severity: 'contrast', summary: 'Grupos', detail: `Abandonaste el grupo "${props.grupo.nombre}"`, life: 3000 });
                 emit('abandonadoGrupo', props.grupo.id);
             }catch(e){
+                console.error(e);
                 toast.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error al abandonar el grupo', life: 3000 });
             }
         },

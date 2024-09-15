@@ -66,7 +66,8 @@
 
     const handleAbandonadoGrupo = (grupo) => {
         console.log('Abandonado grupo', grupo);
-        grupos.value = grupos.value.filter((g) => g.id != grupo.id);
+        // grupos.value = grupos.value.filter((g) => g.id != grupo.id);
+        fetchGrupos();
     }
 
     const fetchGrupos = async () => {
