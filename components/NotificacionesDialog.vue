@@ -6,7 +6,7 @@
             </div>
             <div v-for="notificacion in notificaciones" class="p-3 m-1 " :class="{'bg-gray-100': !notificacion.leida}" >
                 <div class="flex items-center justify-between">
-                    <RouterLink :to="`entradas/${notificacion.linkTo.id}`" class="flex items-center grow">
+                    <RouterLink :to="`/entradas/${notificacion.linkTo.id}`" class="flex items-center grow">
                     <!-- Icono ? <i class="pi mr-4" :class="[notificationIcon(notificacion.tipoNotificacion)]"></i> --> 
                     <div class="flex flex-col grow">
                         <span class="text-sm mr-2" v-html="notificacion.mensaje"></span>

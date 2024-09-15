@@ -42,8 +42,7 @@
 </template>
 
 <script setup>
-const active = ref('0');
-    import Menu from 'primevue/menu';
+    const toast = useToast();
     const runtimeConfig = useRuntimeConfig().public;
     const { data } = useAuth()
     const props = defineProps({
@@ -56,7 +55,6 @@ const active = ref('0');
     const showCommentBox = ref('0');
     const ToggleCommentBox = () => {
         showCommentBox.value = showCommentBox.value == '0' ? '1' : '0';
-        console.log('Toggle Comment Box', showCommentBox.value);
     }
     const datetime = new Date(entrada.createdAt);
     const { $formatDate } = useNuxtApp()
@@ -68,7 +66,9 @@ const active = ref('0');
         {
             label: 'Copiar Link',
             command: () => {
-                console.log('Copiar Link');
+                const url = `${window.location.origin}/entradas/${entrada.id}`;
+                navigator.clipboard.writeText(url);
+                toast.add({ severity: 'contrast', detail: 'Link copiado', life: 3000});
             }
         },
     ]);
