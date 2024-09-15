@@ -12,7 +12,7 @@ const sharedState = {
   totalNotifications: ref(0)
 }
 
-let firstFetch = true;
+// let firstFetch = true;
 
 export function useNotifications() {
   const pollingInterval = ref(null)
@@ -37,10 +37,10 @@ export function useNotifications() {
         !sharedState.notifications.value.some(existing => existing.id === notification.id)
       )
       
-      if (!firstFetch && newOnes.length > 0) {
-        showToast(`You have ${newOnes.length} new notification(s)`)
-      }
-      firstFetch = false;
+      // if (!firstFetch && newOnes.length > 0) {
+      //   showToast(`You have ${newOnes.length} new notification(s)`)
+      // }
+      // firstFetch = false;
       
       sharedState.notifications.value = newNotifications
       sharedState.lastFetchTime.value = now
@@ -82,9 +82,4 @@ export function useNotifications() {
     startPolling,
     stopPolling
   }
-}
-
-function showToast(message: string) {
-  // Implement your toast notification logic here
-  console.log("TOAST",message) // Placeholder
 }

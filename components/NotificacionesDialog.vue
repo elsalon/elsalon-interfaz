@@ -6,11 +6,10 @@
             </div>
             <div v-for="notificacion in notificaciones" class="p-3 m-1 " :class="{'bg-gray-100': !notificacion.leida}" >
                 <div class="flex items-center justify-between">
-                    <RouterLink to="/salon" class="flex items-center grow">
-                    <i class="pi mr-4" :class="[notificationIcon(notificacion.tipoNotificacion)]"></i>
-
+                    <RouterLink :to="`entradas/${notificacion.linkTo.id}`" class="flex items-center grow">
+                    <!-- Icono ? <i class="pi mr-4" :class="[notificationIcon(notificacion.tipoNotificacion)]"></i> --> 
                     <div class="flex flex-col grow">
-                        <span class="mr-2">{{ notificacion.mensaje }}</span>
+                        <span class="text-sm mr-2" v-html="notificacion.mensaje"></span>
                         <span class="text-muted-color text-xs">{{ $formatDate(notificacion.createdAt) }}</span>
                     </div>
                     </RouterLink>
@@ -55,15 +54,15 @@ const hasNextPage = ref(true);
 const page = ref(1);
 
 const emit = defineEmits(['update:visible'])
-const notificationIcon = (tipo) => {
-    switch(tipo){
-        case 'comentario':
-            return 'pi-comment'
+// const notificationIcon = (tipo) => {
+//     switch(tipo){
+//         case 'comentario':
+//             return 'pi-comment'
         
-        default:
-            return 'pi-info-circle'
-    }
-}
+//         default:
+//             return 'pi-info-circle'
+//     }
+// }
 
 const closeDialog = () => {
     emit('update:visible', false)

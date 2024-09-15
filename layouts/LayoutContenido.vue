@@ -63,6 +63,22 @@
     const notificacionesVisible = ref(false);
     const notificacionesDialog = ref();
 
+    const toast = useToast();
+    import { useToast } from "primevue/usetoast";
+
+    // listen for totalNotifications change
+    let firstRun = true;
+    watch(totalNotifications, (val) => {
+        if(val > 0){
+            if(firstRun){
+                firstRun = false;
+                return;
+            }
+            console.log('Nuevas notificaciones!!!', val)
+            toast.add({ severity: 'contrast', detail: 'Tenés nuevas notificaciones', life: 3000});
+        }
+    });
+
     const GenerateUrl = (slug) => {
         if(slug == 'el-salon'){
             return '/';
