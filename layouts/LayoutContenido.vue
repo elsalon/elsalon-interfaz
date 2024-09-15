@@ -4,8 +4,8 @@
             <!-- Fixed Nav -->
             <nav class="w-full flex flex-row justify-between items-center">
                 <!-- Logo Salon -->
-                <Avatar :label="paginaActual?.siglas" class="cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape=""  @click="toggleSalonesMenu"/>
                 
+                <Avatar :label="paginaActual?.siglas" class="cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape=""  @click="toggleSalonesMenu"/>
                 <Menu ref="salonesMenu" id="overlay_menu_salones" :model="elsalon.salones" :popup="true"> 
                     <template #item="{ item, props }">
                         <router-link v-if="item.slug" v-slot="{ href, navigate }" :to="GenerateUrl(item.slug)" custom>
@@ -21,8 +21,27 @@
                 
                 <!-- Avatar Usuario -->
                 <client-only>
-                    <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
-                    <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true" /> 
+                    <!-- Avatar Con notificationes -->
+                    <template v-if="totalNotifications > 0">
+                        <OverlayBadge :value="totalNotifications" size="small">
+                            <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
+                        </OverlayBadge>
+                    </template>
+                    <!-- Avatar Sin notificationes -->
+                    <template v-else>
+                        <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
+                    </template>
+                    
+                    <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true"> 
+                        <template #item="{ item, props }">
+                            <a class="flex items-center" v-bind="props.action">
+                                <span :class="item.icon" class="mr-2" />
+                                <span>{{ item.label }} </span>
+                                <Badge size="small" v-if="item.badge > 0" class="ml-auto" :value="item.badge" />
+                                <span v-if="item.shortcut" class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{ item.shortcut }}</span>
+                            </a>
+                        </template>
+                    </Menu>
                 </client-only>
             </nav>
         </header>
@@ -33,9 +52,9 @@
 </template>
 
 <script setup>
+    const { notifications, totalNotifications } = useNotifications()
     const { authData, myKey } = useReactiveAuth()
     const {signOut} = useAuth()
-    import { ref } from "vue";
     import { PrimeIcons } from '@primevue/core/api';
     // const authData = computed(() => useAuth().data)
     const { paginaActual } = useSalon()
@@ -49,7 +68,7 @@
     }
 
     const userMenu = ref();
-    const itemsUserMenu = ref([
+    const itemsUserMenu = computed(()=>[
         {
             label: authData?.value?.nombre,
             items: [
@@ -58,7 +77,8 @@
                     icon: PrimeIcons.BELL,
                     command: () => {
                         // Abrir drawer de notificaciones?
-                    }
+                    },
+                    badge: totalNotifications.value
                 },
                 {
                     label: 'Bitácora',
@@ -72,15 +92,9 @@
                     icon: PrimeIcons.USERS,
                     command: () => {
                         navigateTo('/opciones/grupos')
-                    }
+                    },
+                    separator: true
                 },
-                // {
-                //     label: 'Guardados',
-                //     icon: PrimeIcons.HEART,
-                //     command: () => {
-                //         navigateTo('/guardados')
-                //     }
-                // },
                 {
                     label: 'Opciones',
                     icon: PrimeIcons.COG,
