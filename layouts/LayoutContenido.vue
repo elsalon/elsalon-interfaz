@@ -48,17 +48,20 @@
         <main class="container mx-auto">
             <slot />
         </main>
+        <NotificacionesDialog v-model:visible="notificacionesVisible" ref="notificacionesDialog" />
     </DataLoader>
 </template>
 
 <script setup>
-    const { notifications, totalNotifications } = useNotifications()
+    const { totalNotifications } = useNotifications()
     const { authData, myKey } = useReactiveAuth()
     const {signOut} = useAuth()
     import { PrimeIcons } from '@primevue/core/api';
     // const authData = computed(() => useAuth().data)
     const { paginaActual } = useSalon()
     const elsalon = useSalonStore();
+    const notificacionesVisible = ref(false);
+    const notificacionesDialog = ref();
 
     const GenerateUrl = (slug) => {
         if(slug == 'el-salon'){
@@ -77,6 +80,8 @@
                     icon: PrimeIcons.BELL,
                     command: () => {
                         // Abrir drawer de notificaciones?
+                        notificacionesVisible.value = true;
+                        // console.log(notificacionesDialog.value)
                     },
                     badge: totalNotifications.value
                 },
