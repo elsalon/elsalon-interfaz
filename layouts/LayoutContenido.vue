@@ -68,19 +68,19 @@
                     }
                 },
                 {
-                    label: 'Aprecio',
-                    icon: PrimeIcons.HEART,
-                    command: () => {
-                        navigateTo('/aprecio')
-                    }
-                },
-                {
                     label: 'Grupos',
                     icon: PrimeIcons.USERS,
                     command: () => {
                         navigateTo('/opciones/grupos')
                     }
                 },
+                // {
+                //     label: 'Guardados',
+                //     icon: PrimeIcons.HEART,
+                //     command: () => {
+                //         navigateTo('/guardados')
+                //     }
+                // },
                 {
                     label: 'Opciones',
                     icon: PrimeIcons.COG,

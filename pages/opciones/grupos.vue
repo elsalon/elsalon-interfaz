@@ -1,19 +1,8 @@
 <template>
-    <Button label="Nuevo grupo" @click="visible=true"/>
+    <Button label="Nuevo grupo" @click="visible=true" class="mb-10"/>
 
 
-    <div>
-        <div v-for="grupo in grupos">
-            <h2 class="font-bold">{{ grupo.nombre }}</h2>
-            <div v-for="usuario in grupo.integrantes">
-                <div class="flex items-center gap-2">
-                    <AvatarSalon :usuario="usuario" />
-                    <span >{{ usuario.nombre }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    <Grupo v-for="grupo in grupos" :key="grupo.id" :grupo="grupo" @abandonadoGrupo="handleAbandonadoGrupo"/>
 
     <!-- DIALOG CREAR NUEVO GRUPO -->
     <Dialog v-model:visible="visible" modal header="Nuevo grupo" style="min-width: 35vw;">
@@ -72,14 +61,43 @@
         nombre: '',
         usuarios: []
     });
-
+    const menuRefs = ref({})
     const grupos = ref([]);
+
+    const handleAbandonadoGrupo = (grupo) => {
+        console.log('Abandonado grupo', grupo);
+        grupos.value = grupos.value.filter((g) => g.id != grupo.id);
+    }
 
     const fetchGrupos = async () => {
         const {docs} = await useApi(`/api/grupos?where[integrantes][contains]=${authData.value.user.id}&limit=10`);
         grupos.value = docs;
     }
     fetchGrupos();
+
+    const opcionesGrupo = ref([
+            {
+                label: 'Agregar integrantes',
+                icon: 'pi pi-user-plus',
+                command: (event) => {
+                    console.log('Agregar integrantes', event);
+                }
+            },
+            {
+                label: 'Editar',
+                icon: 'pi pi-pencil',
+                command: (event) => {
+                    console.log('Editar', event);
+                }
+            },
+            {
+                label: 'Dejar grupo',
+                icon: 'pi pi-sign-out',
+                command: (event) => {
+                    console.log('Dejar grupo', event);
+                }
+            }
+        ]);
 
     // LOGICA CREAR NUEVO GRUPO
     const postingNewGroup = ref(false);
