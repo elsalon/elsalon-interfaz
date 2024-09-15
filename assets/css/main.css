@@ -80,6 +80,10 @@
   --tw-ring-opacity: 0 !important;
 }
 
+#editorContainer #toolbar{
+  display: flex;
+}
+
 .prose iframe, .ql-editor iframe{
   @apply w-full aspect-video;
 }

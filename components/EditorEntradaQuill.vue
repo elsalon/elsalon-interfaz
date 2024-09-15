@@ -3,7 +3,45 @@
 		<div id="editorContainer" class="grow h-full flex flex-col">
 			
 			<!-- Editor -->
-			<QuillEditor v-model:content="myContent" content-type="html" :modules="editorModules" :toolbar="editorToolbar" theme="snow" @ready="onEditorReady"/>
+			<QuillEditor v-model:content="myContent" content-type="html" :modules="editorModules" toolbar="#toolbar" theme="snow" @ready="onEditorReady">
+				<template #toolbar>
+					<div id="toolbar">
+						<button class="ql-bold"></button>
+						<button class="ql-italic"></button>
+						<button class="ql-underline mr-2"></button>
+						<button class="ql-strike"></button>
+						
+						<div style="width: 15px;"></div>
+						
+						<button class="ql-blockquote"></button>
+						<button class="ql-code-block"></button>
+						<button class="ql-header" value="1"></button>
+						<div style="width: 15px;"></div>
+
+						<button class="ql-list" value="ordered"></button>
+						<button class="ql-list" value="bullet"></button>
+						<div style="width: 15px;"></div>
+						<button class="ql-link"></button>
+						<button class="ql-image"></button>
+						<button class="ql-video"></button>
+						<button class="ql-upload" @click="handleAttachFile"><i class="pi pi-cloud-upload"></i></button>
+						<div style="width: 15px;"></div>
+						<button class="ql-clean"></button>
+					</div>
+				</template>
+
+			</QuillEditor>
+			
+			<!-- Lista de archivos adjuntos -->
+			<div class="">
+
+				<input type="file" ref="fileInput" style="display: none;" @change="handleFileChange" />
+				<div v-for="f in attachedFiles">
+					{{ f.name }}
+					<button @click="attachedFiles.splice(attachedFiles.indexOf(f), 1)">X</button>
+				</div>
+			</div>
+
 
 			<!-- Selector de Autoría -->
 			<div class="flex justify-end mt-4 flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
@@ -51,11 +89,13 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 const {data: authData} = useAuth()
 import Compressor from 'compressorjs';
+const fileInput = ref(null)
 
 const toast = useToast();
 import { useToast } from "primevue/usetoast";
 
 const attachedImages = ref([])
+const attachedFiles = ref([])
 const uploading = ref(false)
 
 const myContent = ref('')
@@ -66,20 +106,33 @@ const props = defineProps({
 })
 const isEditing = ref(!!props.postEdit)
 
-const editorToolbar = [
-	['bold', 'italic', 'underline', 'strike'],
-	['blockquote', 'code-block'],
-	[{ 'header': 1 }, { 'header': 2 }],
-	[{ 'list': 'ordered' }, { 'list': 'bullet' }],
-	['link', 'image', 'video'],
-	['clean']
-]
+// const editorToolbar = [
+// 	['bold', 'italic', 'underline', 'strike'],
+// 	['blockquote', 'code-block'],
+// 	[{ 'header': 1 }, { 'header': 2 }],
+// 	[{ 'list': 'ordered' }, { 'list': 'bullet' }],
+// 	['link', 'image', 'video'],
+// 	['clean']
+// ]
 const editorModules = [
 	{
 		module: ImageDrop,
 		name: 'image-drop',
 	}
 ]
+
+const handleAttachFile = () => {
+	console.log("attach file")
+	fileInput.value.click();
+}
+const handleFileChange = (evt)  => {
+	const files = evt.target.files;
+	if (files.length > 0) {
+		attachedFiles.value.push(files[0])
+	}
+
+}
+
 
 const onEditorReady = (editor) => {
   quill.value = editor
