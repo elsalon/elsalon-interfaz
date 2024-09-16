@@ -1,6 +1,6 @@
 <template>
     <div class="space-y-10">
-        <Entrada v-for="entrada in entradas" :key="entrada.id" :entrada="entrada" />
+        <Entrada v-for="entrada in entradas" :key="entrada.id" :entrada="entrada" @eliminar="EliminarEntrada(entrada.id)" />
     </div>
     
     <div v-if="!hasNextPage" class="my-4 text-center text-gray-500 text-sm">No hay más entradas</div>
@@ -17,6 +17,7 @@
     let coolingDown = false;
     let checkNewEntriesInterval;
     let removeOnCreateHook = null;
+    let removeOnRemoveHook = null;
 
     // props
     const props = defineProps({
@@ -42,6 +43,9 @@
         if(data.resultado == "ok"){
             FetchNewer()
         }
+    }
+    const EliminarEntrada = (id) => {
+      entradas.value = entradas.value.filter(entrada => entrada.id != id)  
     }
     
     const CheckLlegoFinDePagina = () => {

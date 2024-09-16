@@ -43,10 +43,8 @@
 
 <script setup>
 import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
-
     const toast = useToast();
-    const runtimeConfig = useRuntimeConfig().public;
-    const { data } = useAuth()
+    const { data : authData} = useAuth()
     const props = defineProps({
         entrada: {
             type: Object,
@@ -54,11 +52,12 @@ import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
         },
     });
     const { entrada } = props;
+    const emit = defineEmits(['eliminar']);
     const showCommentBox = ref('0');
     const ToggleCommentBox = () => {
         showCommentBox.value = showCommentBox.value == '0' ? '1' : '0';
     }
-    const datetime = new Date(entrada.createdAt);
+    
     const { $formatDate } = useNuxtApp()
 
     const identidad = entrada.autoriaGrupal ? entrada.grupo : entrada.autor;
@@ -75,7 +74,7 @@ import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
         },
     ]);
     // Opciones si el usuario es el autor
-    if(entrada.autor.id == data.value.user.id){
+    if(entrada.autor.id == authData.value.user.id){
         opcionesArticulo.value = [
             ...opcionesArticulo.value,
             {
@@ -88,13 +87,13 @@ import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
             {
                 label: 'Eliminar',
                 command: () => {
-                    console.log('Eliminar');
+                    EliminarEntrada();
                 }
             },
         ];
     }
     // Opciones si el usuario es admin
-    if(data.value.user.isAdmin){
+    if(authData.value.user.isAdmin){
         opcionesArticulo.value = [
             ...opcionesArticulo.value,
             {
@@ -115,6 +114,19 @@ import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
     };
     
     const contenidoRendereado = ref('')
+    
+    const EliminarEntrada = async () => {
+        console.log('Eliminar entrada');
+        try{
+            const response = await useApi(`/api/entradas/${entrada.id}`, {}, 'DELETE');
+            console.log("Entrada eliminada:", response)
+            emit('eliminar');
+            toast.add({ severity: 'contrast', detail: 'Entrada eliminada', life: 3000});
+        }catch(e){
+            console.warn(e);
+            toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la entrada', life: 3000});
+        }
+    }
 
     onMounted(async () => {
         contenidoRendereado.value = await useRenderSalonHtml(entrada);

@@ -2,7 +2,7 @@
     <div>
         <DeferredContent @load="onComentarioScrolled">
             <div v-if="fetchingComentarios" class="my-4 text-center text-gray-500 text-sm">Cargando comentarios...</div>
-            <Comentario v-for="comentario in comentarios" :comentario="comentario" :key="comentario.id" />
+            <Comentario v-for="comentario in comentarios" :comentario="comentario" :key="comentario.id"  @eliminar="EliminarComentario(comentario.id)" />
             <button v-if="quedanMasComentarios" @click="fetchComentarios">Cargar más comentarios</button>
             
             <Accordion :value="showCommentBox">
@@ -82,5 +82,8 @@
     
     const onComentarioScrolled = () => {
         fetchComentarios()
+    }
+    const EliminarComentario = (id) => {
+        comentarios.value = comentarios.value.filter(comentario => comentario.id != id)  
     }
     </script>

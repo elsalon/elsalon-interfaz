@@ -1,17 +1,17 @@
 <template>
     <Panel :toggleable="false" class="border-surface-0 background-red text-sm group/comentario panelComentario">
         <template #header>
-            <NuxtLink :to="'/usuarios/' + miComentario.autor.slug">
+            <NuxtLink :to="'/usuarios/' + comentario.autor.slug">
                 <div class="flex items-center gap-2">
-                    <AvatarSalon :usuario="miComentario.autor" size="small" />
-                    <span class="font-bold">{{ miComentario.autor.nombre }}</span>
+                    <AvatarSalon :usuario="comentario.autor" size="small" />
+                    <span class="font-bold">{{ comentario.autor.nombre }}</span>
                 </div>
             </NuxtLink>
         </template>
         
-        <template #icons >
+        <template #icons v-if="opcionesComment.length">
             <Button text @click="ToggleCommentOptions" class="invisible group-hover/comentario:visible">...</Button>
-            <Menu :ref="el => menuCommentRefs[miComentario.id] = el" id="overlay_menu_comment" :model="opcionesComment" :popup="true" class="text-xs" /> 
+            <Menu :ref="el => menuCommentRefs[comentario.id] = el" id="overlay_menu_comment" :model="opcionesComment" :popup="true" class="text-xs" /> 
         </template>
 
         <DeferredContent>
@@ -22,46 +22,74 @@
 </template>
 
 <script setup>
+    const toast = useToast();
+    const { data : authData} = useAuth()
+    const props = defineProps({
+        comentario: {
+            type: Object,
+            required: true,
+        },
+    });
+    const { comentario } = props;
+    const emit = defineEmits(['eliminar']);
 
-const props = defineProps({
-    comentario: {
-        type: Object,
-        required: true,
-    },
-});
-const contenidoRendereado = ref('')
-
-const miComentario = ref(props.comentario)
-const commentEdit = ref(null)
-const editandoComentario = ref(false);
-const commentFoceRender = ref(0);
-const opcionesComment = ref([
+    const contenidoRendereado = ref('')
+    // const comentario = ref(props.comentario)
+    const commentEdit = ref(null)
+    const editandoComentario = ref(false);
+    const commentFoceRender = ref(0);
+    const opcionesComment = ref([]);
+    console.log("**", comentario.value, comentario.autor)
+    if(comentario.autor.id == authData.value.user.id){
+        opcionesComment.value = [
+        ...opcionesComment.value,
         {
             label: 'Editar',
             command: () => {
                 console.log('Editar Comment');
-                commentEdit.value = {entrada: miComentario, html:contenidoRendereado.value}
+                commentEdit.value = {entrada: comentario, html:contenidoRendereado.value}
                 editandoComentario.value = true;
             }
         },
-    ]);
-const menuCommentRefs = ref({})
-const ToggleCommentOptions = (event) => {
-    const menu = menuCommentRefs.value[miComentario.value.id]
-    if (menu && menu.toggle) {
-        menu.toggle(event)
-    }
-};
-
-const handleUserEditedComment = async (doc) => {
-    console.log('User edited comment', doc)
-    editandoComentario.value = false;
-    miComentario.value = doc
-    contenidoRendereado.value = await useRenderSalonHtml(doc)
-    // commentFoceRender.value++;
+        {
+            label: 'Eliminar',
+            command: () => {
+                EliminarComentario();
+            }
+        },
+    ];
 }
 
-onMounted(async () => {
-    contenidoRendereado.value = await useRenderSalonHtml(miComentario.value)
-})
+    const menuCommentRefs = ref({})
+    const ToggleCommentOptions = (event) => {
+        const menu = menuCommentRefs.value[comentario.id]
+        if (menu && menu.toggle) {
+            menu.toggle(event)
+        }
+    };
+
+    const handleUserEditedComment = async (doc) => {
+        console.log('User edited comment', doc)
+        editandoComentario.value = false;
+        comentario = doc
+        contenidoRendereado.value = await useRenderSalonHtml(doc)
+        // commentFoceRender.value++;
+    }
+
+    const EliminarComentario = async () => {
+        console.log('Eliminar entrada');
+        try{
+            const response = await useApi(`/api/comentarios/${comentario.id}`, {}, 'DELETE');
+            console.log("Comentario eliminado:", response)
+            emit('eliminar');
+            toast.add({ severity: 'contrast', detail: 'Comentario eliminada', life: 3000});
+        }catch(e){
+            console.warn(e);
+            toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el comentario', life: 3000});
+        }
+    }
+
+    onMounted(async () => {
+        contenidoRendereado.value = await useRenderSalonHtml(comentario)
+    })
 </script>

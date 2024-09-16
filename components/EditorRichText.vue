@@ -5,24 +5,24 @@
                 <div class="toolbarContainer">
                     <div :id="`toolbar-${editorId}`" class="richTextToolbar">
                         <button class="ql-bold" v-tooltip.top="'Bold (ctrl+B)'"></button>
-                        <button class="ql-italic"></button>
-                        <!-- <button class="ql-underline mr-2"></button> -->
+                        <button class="ql-italic" v-tooltip.top="'Italica (ctrl+I)'"></button>
+                        <button class="ql-underline mr-2" v-tooltip.top="'Subrayar (ctrl+U)'"></button>
                         
-                        <button class="ql-strike"></button>
+                        <button class="ql-strike"  v-tooltip.top="'Tachar (ctrl+B)'"></button>
                         <div style="width: 15px;"></div>
-                        <button class="ql-blockquote"></button>
-                        <button class="ql-code-block"></button>
+                        <button class="ql-blockquote" v-tooltip.top="'Cita'"></button>
+                        <button class="ql-code-block" v-tooltip.top="'Código'"></button>
                         <!-- <button class="ql-header" value="1"></button> -->
                         <!-- <button class="ql-list" value="ordered"></button> -->
-                        <button class="ql-list" value="bullet"></button>
+                        <button class="ql-list" value="bullet"  v-tooltip.top="'List'"></button>
                         
                         <div style="width: 15px;"></div>
-                        <button class="ql-link"></button>
-                        <button class="ql-image"></button>
-                        <button class="ql-video"></button>
+                        <button class="ql-link" v-tooltip.top="'Link (ctrl+K)'"></button>
+                        <button class="ql-image" v-tooltip.top="'Subir Imagen'"></button>
+                        <button class="ql-video" v-tooltip.top="'Embeber Video'"></button>
                         <button class="ql-upload" v-tooltip.top="'Adjuntar Archivo'" @click="handleAttachFile"><i class="pi pi-file-arrow-up"></i></button>
                         <div style="width: 15px;"></div>
-                        <button class="ql-clean"></button>
+                        <button class="ql-clean" v-tooltip.top="'Quitar Formato'"></button>
                     </div>
                 </div>
             </template>

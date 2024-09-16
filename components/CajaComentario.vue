@@ -15,7 +15,6 @@
 
 <script setup>
 const toast = useToast();
-import { useToast } from "primevue/usetoast";
 
 const editor = ref(null)
 const miComentario = ref('')
