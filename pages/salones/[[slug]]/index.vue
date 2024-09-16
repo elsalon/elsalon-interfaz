@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout name="layout-contenido">        
-        <EditorEntrada />
+        <CrearEntradaBtn />
         <!-- TODO Query -->
         <ListaEntradas :endpointQuery="query"/> 
     </NuxtLayout>

@@ -3,7 +3,6 @@ export default {
         class: [
             // Position and Shadows
             'absolute',
-            'shadow-md',
             'p-fadein',
             // Spacing
             {
@@ -26,10 +25,10 @@ export default {
             'border-transparent',
             'border-solid',
             {
-                'border-y-[10px] border-r-[10px] border-l-0 border-r-surface-700': context?.right || (!context?.right && !context?.left && !context?.top && !context?.bottom),
-                'border-y-[10px] border-l-[10px] border-r-0 border-l-surface-700': context?.left,
-                'border-x-[10px] border-t-[10px] border-b-0 border-t-surface-700': context?.top,
-                'border-x-[10px] border-b-[10px] border-t-0 border-b-surface-700': context?.bottom
+                'border-y-[10px] border-r-[10px] border-l-0 border-r-black': context?.right || (!context?.right && !context?.left && !context?.top && !context?.bottom),
+                'border-y-[10px] border-l-[10px] border-r-0 border-l-black': context?.left,
+                'border-x-[10px] border-t-[10px] border-b-0 border-t-black': context?.top,
+                'border-x-[10px] border-b-[10px] border-t-0 border-b-black': context?.bottom
             },
 
             // Spacing
@@ -40,6 +39,6 @@ export default {
         ]
     }),
     text: {
-        class: ['p-3', 'bg-surface-700', 'text-white', 'leading-none', 'rounded-md', 'whitespace-pre-line', 'break-words']
+        class: ['p-3', 'bg-black', 'text-white', 'leading-none', 'rounded-md', 'whitespace-pre-line', 'break-words']
     }
 };

@@ -5,7 +5,7 @@
 		<form @submit.prevent="handleSignup" class="space-y-3">
       		<div>
 				<label for="nombre" class="block text-900 font-medium mb-2">Nombre</label>
-				<InputText id="nombre" type="text" class="block w-full" v-model="nombre" required minlength="3"/>
+				<InputText id="nombre" type="text" class="block w-full" v-model="nombre" autofocus required minlength="3"/>
 			</div>
       
 			<div>

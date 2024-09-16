@@ -2,27 +2,29 @@
     <ClientOnly fallback-tag="div" fallback="cargando editor">
         <div>
             <!-- Editor -->
-            <div class="comment-input relative border border-surface-0 border-solid p-2 border-surface-200">
-                <QuillEditor placeholder="Comentario" v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/>
+            <div class="comment-input">
+                <EditorRichText ref="editor" :editingData="props.commentEdit" @publishHotKey="Publicar"/>
+                <!-- <QuillEditor placeholder="Comentario" v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/> -->
             </div>
             <div class="text-right mt-2">
-                <Button  @click="Publicar" :loading="uploading" size="small">{{isEditing ? 'Guardar' : 'Comentar'}}</Button>
+                <Button  @click="Publicar" :loading="uploading" size="small" :label="isEditing ? 'Guardar' : 'Comentar'"></Button>
             </div>
         </div>
     </ClientOnly>
 </template>
 
 <script setup>
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.bubble.css';
 const toast = useToast();
 import { useToast } from "primevue/usetoast";
 
+const editor = ref(null)
 const miComentario = ref('')
-const mostrarExtras = ref(false)
+// const mostrarExtras = ref(false)
 const uploading = ref(false)
 const isEditing = ref(false);
 const attachedImages = ref([])
+const editingData = ref(null)
+
 
 const props = defineProps({
     entradaId: { type: String},
@@ -31,42 +33,32 @@ const props = defineProps({
 
 const emit = defineEmits(['userPosted'])
 
-const editorToolbar = [
-	['bold', 'italic', 'underline', 'strike'],
-	['blockquote', 'code-block'],
-	// ['link', 'image', 'video'], // TODO
-    ['link'],
-	['clean']
-]
-
-const focused = () => {
-    mostrarExtras.value = true
-    window.addEventListener('keydown', handleHotkey)
-}
-const blured = () => {
-    mostrarExtras.value = false
-    window.removeEventListener('keydown', handleHotkey)
-}
 const userEdited = computed(() => {
     return miComentario.value !== ''
 })
 
+const ClearEditor = () => {
+    editor.value.clear()
+}
+
 const Publicar = async () => {
-    if(miComentario.value == ""){
+    const {html, attachedImages} = await editor.value.parseEditorToUpload()
+    if(html == ""){
         return;
     }
-    console.log('Publicar', props.entradaId, miComentario.value)
+    uploading.value = true
+    // console.log('Publicar', props.entradaId, miComentario.value)
     let method ='POST'
 	let data = {
         entrada: props.entradaId,
-		contenido: miComentario.value, 
-		imagenes: attachedImages.value,
+		contenido: html, 
+		imagenes: attachedImages,
 	}
 	// console.log("DATA", data)	
 	let endpoint = '/api/comentarios'
 	if(isEditing.value){
 		method = 'PATCH';
-		endpoint = `/api/comentarios/${props.commentEdit.id}`
+		endpoint = `/api/comentarios/${props.commentEdit.entrada.id}`
 	}
 	try{
 		const response = await useApi(endpoint, data, method);
@@ -93,11 +85,14 @@ const handleHotkey = (e) => {
 onMounted(() => {
     if (props.commentEdit) {
         isEditing.value = true
-        miComentario.value = props.commentEdit.contenido
-        attachedImages.value = props.commentEdit.imagenes.map(data => ({imagen: data.imagen.id}))
-        mostrarExtras.value = true
+        // miComentario.value = props.commentEdit.contenido
+        // attachedImages.value = props.commentEdit.imagenes.map(data => ({imagen: data.imagen.id}))
+        // editingData.value = {contenido: props.commentEdit.contenido, imagenes: attachedImages.value}
+        // mostrarExtras.value = true
     }
 })
+
+defineExpose({ClearEditor})
 
 
 </script>

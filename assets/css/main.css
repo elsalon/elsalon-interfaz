@@ -106,22 +106,20 @@
 form label{
   @apply font-mono;
 }
-.ql-container{
-  @apply overflow-y-auto prose prose-headings:my-1 leading-normal max-w-none;
+.ql-editor {
+  @apply prose prose prose-headings:my-1 leading-normal max-w-none;
+  overflow: none;
+}
+.ql-container {
+  max-width: unset;
   font-family: unset !important;
+  border-top: none !important;
+  overflow-y: auto;
 }
 .comment-input{
   .ql-container{
     overflow: visible;
   }
-  .ql-editor{
-    @apply: overflow-visible;
-  }
-}
-
-.ql-editor.ql-blank::before{
-  font-style: normal !important;
-  @apply text-xs text-surface-300;
 }
 
 .despues-entrada > .actions{
@@ -132,5 +130,20 @@ form label{
   @apply pl-0;
 }
 .panelComentario > div{
-    padding: 0 !important;
-  }
+  padding: 0 !important;
+}
+
+.toolbarContainer{
+  padding: 5px;
+  background-color: #f3f3f3;
+  border: 1px solid #ccc;
+  border-bottom: none;
+}
+.richTextToolbar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 500px;
+  padding: 0 !important;
+  border: none !important;
+}

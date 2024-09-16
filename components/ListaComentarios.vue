@@ -8,7 +8,7 @@
             <Accordion :value="showCommentBox">
                 <AccordionPanel value="1">
                     <AccordionContent>
-                    <CajaComentario :entradaId="entradaId" @userPosted="handleUserPostedComment" :key="cajaComentarioKey"/>
+                    <CajaComentario v-if="showCommentBox=='1'"  :entradaId="entradaId" @userPosted="handleUserPostedComment" :key="cajaComentarioKey" ref="cajaComentario"/>
                 </AccordionContent>
             </AccordionPanel>
         </Accordion>
@@ -35,6 +35,7 @@
     const newestCommentDate = ref(null)
     const cajaComentarioKey = ref(0)
     const fetchingComentarios = ref(true)
+    const cajaComentario = ref(null)
     const emit = defineEmits(['userPosted'])
     
     const fetchComentarios = async () => {
@@ -43,8 +44,10 @@
             !comentarios.value.some(existingComment => existingComment.id === newComment.id)
         )
         comentarios.value = [...comentarios.value, ...newComments]
-        quedanMasComentarios.value = res.totalDocs > comentarios.value.length
-        page.value++
+        if(res.totalDocs > 0){
+            quedanMasComentarios.value = res.totalDocs > comentarios.value.length
+            page.value++
+        }
         
         if (comentarios.value.length > 0 && !newestCommentDate.value) {
             newestCommentDate.value = comentarios.value[0].createdAt
@@ -53,7 +56,11 @@
     }
     
     const fetchNewerComments = async () => {
-        if (!newestCommentDate.value) return
+        // Si no hay comentarios, fetch el primer set de comentarios
+        if (!newestCommentDate.value) {
+            await fetchComentarios()
+            return
+        }
     
         const res = await useApi(`/api/comentarios?where[entrada][equals]=${props.entradaId}&where[createdAt][greater_than]=${newestCommentDate.value}&sort=createdAt`)
         const newComments = res.docs.filter(newComment => 
@@ -69,8 +76,8 @@
     const handleUserPostedComment = async () => {
         console.log('User posted comment')
         await fetchNewerComments()
-        emit('userPosted'); // lo vuelvo a emitir a "Entrada" para que cierre el accordion
-        cajaComentarioKey.value++; // Fuerzo reiniciar el componente CajaComentario
+        // emit('userPosted'); // lo vuelvo a emitir a "Entrada" para que cierre el accordion
+        cajaComentario.value.ClearEditor();
     }
     
     const onComentarioScrolled = () => {

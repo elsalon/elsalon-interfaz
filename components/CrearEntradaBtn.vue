@@ -2,14 +2,13 @@
     <Button id="btnEscribir" label="+ Escribir" @click="AbrirEditor" />
 
     <Drawer v-model:visible="visible" header="Escribir" position="full">
-        <EditorEntradaQuill :postEdit="editContent"/>
+        <!-- <EditorEntradaQuill :postEdit="editContent"/> -->
+        <CrearEntradaDrawer :entryEdit="editContent"/>
     </Drawer>
 </template>
 
 <script setup>
 const { hooks } = useNuxtApp()
-import { ref } from "vue";
-import EditorEntradaQuill from "./EditorEntradaQuill.vue";
 const toast = useToast();
 import { useToast } from "primevue/usetoast";
 const visible = ref(false);

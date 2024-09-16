@@ -33,7 +33,7 @@ export default {
             { 'border-surface-300 dark:border-surface-700': !props.invalid },
 
             // Invalid State
-            'invalid:focus:border-red-500',
+            // 'invalid:focus:border-red-500',
             // 'invalid:hover:border-red-500',
             { 'border-red-500 dark:border-red-400': props.invalid },
 

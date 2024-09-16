@@ -11,7 +11,7 @@
             <Button v-if="estadoMostrarBtnColaborador==2" @click="DetenerColaboracion" :loading="estadoColaboradorLoading" class="bg-white text-black" label="Dejar de colaborar"></Button>
         </div> -->
         
-        <!-- <EditorEntrada v-if="userIsMe" /> -->
+        <!-- <CrearEntradaBtn v-if="userIsMe" /> -->
         <div class="mt-10"></div>
         <ListaEntradas :endpointQuery="query" />
     </NuxtLayout>

@@ -15,9 +15,8 @@
         </template>
 
         <DeferredContent>
-            <div v-if="!editandoComentario" class="prose prose-headings:my-1 leading-normal text-sm" v-html="miComentario.contenido" :key="commentFoceRender"></div>
-            <CajaComentario v-if="editandoComentario" :comment-edit="miComentario" @userPosted="handleUserEditedComment"/>
-
+            <div v-if="!editandoComentario" class="prose prose-headings:my-1 leading-normal text-sm" v-html="contenidoRendereado" :key="commentFoceRender"></div>
+            <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit" @userPosted="handleUserEditedComment"/>
         </DeferredContent>
     </Panel>
 </template>
@@ -30,7 +29,10 @@ const props = defineProps({
         required: true,
     },
 });
+const contenidoRendereado = ref('')
+
 const miComentario = ref(props.comentario)
+const commentEdit = ref(null)
 const editandoComentario = ref(false);
 const commentFoceRender = ref(0);
 const opcionesComment = ref([
@@ -38,6 +40,7 @@ const opcionesComment = ref([
             label: 'Editar',
             command: () => {
                 console.log('Editar Comment');
+                commentEdit.value = {entrada: miComentario, html:contenidoRendereado.value}
                 editandoComentario.value = true;
             }
         },
@@ -54,6 +57,11 @@ const handleUserEditedComment = async (doc) => {
     console.log('User edited comment', doc)
     editandoComentario.value = false;
     miComentario.value = doc
-    commentFoceRender.value++;
+    contenidoRendereado.value = await useRenderSalonHtml(doc)
+    // commentFoceRender.value++;
 }
+
+onMounted(async () => {
+    contenidoRendereado.value = await useRenderSalonHtml(miComentario.value)
+})
 </script>

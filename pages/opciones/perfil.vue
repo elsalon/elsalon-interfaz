@@ -2,7 +2,7 @@
     <form @submit.prevent="handleSubmit" class="space-y-3">
         <div class="flex gap-2 mb-4 flex-col md:flex-row">
             <label for="username" class="font-semibold w-24">nombre</label>
-            <InputText id="username" class="w-full" v-model="perfil.nombre" required minlength="3" />
+            <InputText id="username" class="w-full" v-model="perfil.nombre" required minlength="3" autofocus />
         </div>
 
         <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">

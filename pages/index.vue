@@ -1,8 +1,13 @@
 <template>
     <NuxtLayout name="layout-contenido">
-        <EditorEntrada />
+        <CrearEntradaBtn />
         <!-- TODO QUery -->
         <ListaEntradas />
     </NuxtLayout>
 </template>
+
+<script setup>
+
+</script>
+
   
