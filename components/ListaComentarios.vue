@@ -1,9 +1,13 @@
 <template>
     <div>
         <DeferredContent @load="onComentarioScrolled">
-            <div v-if="fetchingComentarios" class="my-4 text-center text-gray-500 text-sm">Cargando comentarios...</div>
             <Comentario v-for="comentario in comentarios" :comentario="comentario" :key="comentario.id"  @eliminar="EliminarComentario(comentario.id)" />
-            <button v-if="quedanMasComentarios" @click="fetchComentarios">Cargar más comentarios</button>
+            
+            <div v-if="fetchingComentarios" class="my-4 w-full text-center text-gray-400 p-1 text-sm">Cargando comentarios...</div>
+
+            <button v-if="quedanMasComentarios && !fetchingComentarios" class="w-full my-4 text-gray-400 hover:text-gray-800 p-1 text-sm" @click="fetchComentarios">
+                Cargar más comentarios
+            </button>
             
             <Accordion :value="showCommentBox">
                 <AccordionPanel value="1">
@@ -39,6 +43,7 @@
     const emit = defineEmits(['userPosted'])
     
     const fetchComentarios = async () => {
+        fetchingComentarios.value = true
         const res = await useApi(`/api/comentarios?where[entrada][equals]=${props.entradaId}&sort=createdAt&limit=5&page=${page.value}`)
         const newComments = res.docs.filter(newComment => 
             !comentarios.value.some(existingComment => existingComment.id === newComment.id)
@@ -61,7 +66,7 @@
             await fetchComentarios()
             return
         }
-    
+        fetchingComentarios.value = true
         const res = await useApi(`/api/comentarios?where[entrada][equals]=${props.entradaId}&where[createdAt][greater_than]=${newestCommentDate.value}&sort=createdAt`)
         const newComments = res.docs.filter(newComment => 
         !comentarios.value.some(existingComment => existingComment.id === newComment.id)
@@ -69,8 +74,9 @@
         comentarios.value = [...comentarios.value, ...newComments]
         
         if (newComments.length > 0) {
-        newestCommentDate.value = newComments[0].createdAt
+            newestCommentDate.value = newComments[0].createdAt
         }
+        fetchingComentarios.value = false
     }
     
     const handleUserPostedComment = async () => {

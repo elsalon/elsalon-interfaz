@@ -82,7 +82,7 @@
             const response = await useApi(`/api/comentarios/${comentario.id}`, {}, 'DELETE');
             console.log("Comentario eliminado:", response)
             emit('eliminar');
-            toast.add({ severity: 'contrast', detail: 'Comentario eliminada', life: 3000});
+            toast.add({ severity: 'contrast', detail: 'Comentario eliminado', life: 3000});
         }catch(e){
             console.warn(e);
             toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el comentario', life: 3000});
