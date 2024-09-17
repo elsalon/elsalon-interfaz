@@ -137,6 +137,12 @@
         let archivos = []
         console.log("Subiendo archivos", attachedFiles.value)
         for (let file of attachedFiles.value) {
+            if(file.uploaded) {
+                console.log("Archivo ya subido", file)
+                console.log("Archivo ya subido", {archivo: file.id})
+                archivos.push({archivo: file.id})
+                continue
+            }
             const uploadedFile = await uploadFile(file)
             archivos.push({archivo: uploadedFile.id})
         }
@@ -200,6 +206,9 @@
         myContent.value = html
         attachedImages.value = []
         attachedImages.value = entrada.imagenes.map(data => ({imagen: data.imagen.id}))
+        // console.log('adjuntos', entrada.archivos)
+        attachedFiles.value = []
+        attachedFiles.value = entrada.archivos.map(data => ({id: data.archivo.id, name: data.archivo.filename, size: data.archivo.filesize, uploaded: true}))
     }
 
     onMounted(() => {

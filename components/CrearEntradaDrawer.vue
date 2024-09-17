@@ -78,7 +78,7 @@ const Publicar = async () => {
 	let endpoint = '/api/entradas'
 	if(isEditing.value){
 		method = 'PATCH';
-		endpoint = `/api/entradas/${props.postEdit.entrada.id}`
+		endpoint = `/api/entradas/${props.entryEdit.entrada.id}`
 	}
 	// Autoria grupal
 	// if(autorSeleccionado.value.id != authData.value.user.id){
@@ -96,7 +96,7 @@ const Publicar = async () => {
 }
 
 onMounted(() => {
-    if (props.commentEdit) {
+    if (props.entryEdit) {
         isEditing.value = true
     }
 })

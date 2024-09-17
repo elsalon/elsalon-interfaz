@@ -1,5 +1,5 @@
 <template>
-    <div v-for="archivo in archivos" :key="archivo.id" class="text-sm bg-gray-50 text-gray-400 hover:text-gray-800 p-2 mb-1 font-mono">
+    <div v-for="archivo in archivos" :key="archivo.id" class="text-sm  text-gray-400 hover:text-gray-800 py-2 mb-1 font-mono">
         <a :href="baseUrl + archivo.archivo.url" target="_blank" class="flex items ">
             <i class="pi pi-file mr-2 self-center" style="font-size: .7rem"></i>
             <span class="grow">{{ archivo.archivo.filename }}</span>

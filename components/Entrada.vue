@@ -22,9 +22,9 @@
                     <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" /> 
                 </div>
             </div>
-            <DeferredContent @load="onEntradaScrolled">
+            <DeferredContent>
                 <div class="prose prose-headings:my-1 sm:pl-[65px] leading-normal" v-html="contenidoRendereado"></div>
-                <ListaArchivos v-if="entrada.archivos" :archivos="entrada.archivos"/>
+                <div class="sm:pl-[65px]" v-if="entrada.archivos.length"><ListaArchivos :archivos="entrada.archivos"/></div>
             </DeferredContent>
 
         </article>
@@ -133,11 +133,6 @@
         contenidoRendereado.value = await useRenderSalonHtml(entrada);
     });
 
-    const onEntradaScrolled = () => {
-        // console.log('Entrada scrolled');
-        // TODO fetch comentarios
-        // TODO fetch aprecios
-    }
 </script>
 
 <style>
