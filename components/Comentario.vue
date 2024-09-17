@@ -16,7 +16,7 @@
 
         <DeferredContent>
             <div v-if="!editandoComentario" class="prose prose-headings:my-1 leading-normal text-sm" v-html="contenidoRendereado" :key="commentFoceRender"></div>
-            <ListaArchivos v-if="comentario.archivos" :archivos="comentario.archivos"/>
+            <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos"/>
             <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit" @userPosted="handleUserEditedComment"/>
         </DeferredContent>
     </Panel>
@@ -32,6 +32,7 @@
         },
     });
     const { comentario } = props;
+    const archivos = ref(comentario.archivos)
     const emit = defineEmits(['eliminar']);
 
     const contenidoRendereado = ref('')
@@ -71,9 +72,9 @@
     const handleUserEditedComment = async (doc) => {
         console.log('User edited comment', doc)
         editandoComentario.value = false;
-        comentario = doc
+        comentario.value = doc
+        archivos.value = doc.archivos
         contenidoRendereado.value = await useRenderSalonHtml(doc)
-        // commentFoceRender.value++;
     }
 
     const EliminarComentario = async () => {
