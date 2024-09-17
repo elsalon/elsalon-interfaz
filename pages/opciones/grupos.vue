@@ -1,5 +1,14 @@
 <template>
-    <Button label="Nuevo grupo" @click="visible=true" class="mb-10"/>
+    <template v-if="grupos.length">
+        <Button label="Nuevo grupo" @click="visible=true" class="mb-10"/>
+    </template>
+    <template v-else>
+
+        <div class="text-center text-gray-500">No estás en ningún grupo</div>
+        <div class="text-center mt-10">
+            <Button label="Crear primer grupo" @click="visible=true" class="mb-10"/>
+        </div>
+    </template>
 
 
     <Grupo v-for="grupo in grupos" :key="grupo.id" :grupo="grupo" @abandonadoGrupo="handleAbandonadoGrupo"/>
