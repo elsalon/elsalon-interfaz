@@ -24,7 +24,7 @@
             </div>
             <DeferredContent>
                 <div class="prose prose-headings:my-1 sm:pl-[65px] leading-normal" v-html="contenidoRendereado"></div>
-                <div class="sm:pl-[65px]" v-if="entrada.archivos.length"><ListaArchivos :archivos="entrada.archivos"/></div>
+                <div class="sm:pl-[65px]" v-if="archivos.length"><ListaArchivos :archivos="archivos"/></div>
             </DeferredContent>
 
         </article>
@@ -44,6 +44,7 @@
 
 <script setup>
     import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
+    const { hooks } = useNuxtApp();
     const toast = useToast();
     const { data : authData} = useAuth()
     const props = defineProps({
@@ -115,6 +116,7 @@
     };
     
     const contenidoRendereado = ref('')
+    const archivos = ref(entrada.archivos)
     
     const EliminarEntrada = async () => {
         console.log('Eliminar entrada');
@@ -129,9 +131,29 @@
         }
     }
 
+    let removeOnEditHook = null;
+
+    const handlePublicacionEditada = async (data) => {
+        if(data.resultado == "ok" && data.entrada.id == entrada.id){
+            entrada.value = data.entrada
+            contenidoRendereado.value = await useRenderSalonHtml(data.entrada);
+            archivos.value = data.entrada.archivos
+        }
+            // // Publicacion exitosa. Cierro el dialogo y muestro un toast
+            // toast.add({ severity: 'contrast', detail: 'Entrada editada', life: 3000});   
+            // contenidoRendereado.value = data.html
+        // console.log('User edited', data)
+        // entrada.contenido = data.html
+        // contenidoRendereado.value = data.html
+    }
+
     onMounted(async () => {
         contenidoRendereado.value = await useRenderSalonHtml(entrada);
+        removeOnEditHook = hooks.hook('publicacion:editada', handlePublicacionEditada)
     });
+    onUnmounted(() => {
+        if(removeOnEditHook) removeOnEditHook()
+    })
 
 </script>
 

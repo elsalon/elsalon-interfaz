@@ -15,6 +15,7 @@ const visible = ref(false);
 const editContent = ref(null);
 let removeOnCreateHook = null;
 let removeOnEditHook = null;
+let removeOnEditFinishHook = null;
 
 const AbrirEditor = () => {
     editContent.value = null;
@@ -23,12 +24,14 @@ const AbrirEditor = () => {
 
 onMounted(() => {
     removeOnCreateHook = hooks.hook('publicacion:creada', handlePublicacionCreada)
-    removeOnEditHook = hooks.hook('publicacion:editar', handlePublicacionEditada);
+    removeOnEditHook = hooks.hook('publicacion:editar', handlePublicacionEditar);
+    removeOnEditFinishHook = hooks.hook('publicacion:editada', handlePublicacionEditada);
 });
 
 onUnmounted(() => {
     if (removeOnCreateHook) removeOnCreateHook()
     if(removeOnEditHook) removeOnEditHook()
+    if(removeOnEditFinishHook) removeOnEditFinishHook()
 });
 
 const handlePublicacionCreada = (data) => {
@@ -40,9 +43,18 @@ const handlePublicacionCreada = (data) => {
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo publicar la entrada', life: 3000});
     }
 }
-const handlePublicacionEditada = (data) => {
+const handlePublicacionEditar = (data) => {
     visible.value = true;
     editContent.value = data;
+}
+const handlePublicacionEditada = (data) => {
+    if(data.resultado == "ok"){
+        // Publicacion exitosa. Cierro el dialogo y muestro un toast
+        visible.value = false;
+        toast.add({ severity: 'contrast', detail: 'Entrada editada', life: 3000});   
+    }else{
+        toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo editar la entrada', life: 3000});
+    }
 }
 
 const handleHotkey = (e) => {

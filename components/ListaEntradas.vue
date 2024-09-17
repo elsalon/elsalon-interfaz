@@ -17,7 +17,6 @@
     let coolingDown = false;
     let checkNewEntriesInterval;
     let removeOnCreateHook = null;
-    let removeOnRemoveHook = null;
 
     // props
     const props = defineProps({

@@ -88,9 +88,17 @@ const Publicar = async () => {
 	try{
 		const response = await useApi(endpoint, data, method);
 		console.log("Publicacion creada:", response)
-		useNuxtApp().callHook("publicacion:creada", {resultado:"ok"})
+        if(isEditing.value){
+            useNuxtApp().callHook("publicacion:editada", {resultado:"ok", entrada: response.doc})
+        }else{
+            useNuxtApp().callHook("publicacion:creada", {resultado:"ok"})
+        }
 	}catch{
-		useNuxtApp().callHook("publicacion:creada", {resultado:"error"})
+        if(isEditing.value){
+            useNuxtApp().callHook("publicacion:editada", {resultado:"error"})
+        }else{
+		    useNuxtApp().callHook("publicacion:creada", {resultado:"error"})
+        }
 	}
 	uploading.value = false;
 }
