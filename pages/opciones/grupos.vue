@@ -1,12 +1,13 @@
 <template>
-    <template v-if="grupos.length">
+    <template v-if="fetching">
+        <div class="my-4 text-center text-gray-500 text-sm">Cargando...</div>
+    </template>
+    <template v-else-if="grupos.length">
         <Button label="Nuevo grupo" @click="visible=true" class="mb-10"/>
     </template>
     <template v-else>
-
-        <div class="text-center text-gray-500">No estás en ningún grupo</div>
         <div class="text-center mt-10">
-            <Button label="Crear primer grupo" @click="visible=true" class="mb-10"/>
+            <Button label="Crear primer grupo" size="large" @click="visible=true" class="mb-10"/>
         </div>
     </template>
 
@@ -70,8 +71,8 @@
         nombre: '',
         usuarios: []
     });
-    const menuRefs = ref({})
     const grupos = ref([]);
+    const fetching = ref(true)
 
     const handleAbandonadoGrupo = (grupo) => {
         console.log('Abandonado grupo', grupo);
@@ -80,8 +81,10 @@
     }
 
     const fetchGrupos = async () => {
+        fetching.value = true;
         const {docs} = await useApi(`/api/grupos?where[integrantes][contains]=${authData.value.user.id}&limit=10`);
         grupos.value = docs;
+        fetching.value = false;
     }
     fetchGrupos();
 
