@@ -1,6 +1,6 @@
 <template>
     <div class="group/entrada">
-        <article>
+        <article :key="reloadkey">
             <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
             <div class="flex items-center pb-2">
                 <NuxtLink :to="identidadUrl">
@@ -53,6 +53,7 @@
             required: true,
         },
     });
+    const reloadkey = ref(0);
     const { entrada } = props;
     const emit = defineEmits(['eliminar']);
     const showCommentBox = ref('0');
@@ -62,8 +63,13 @@
     
     const { $formatDate } = useNuxtApp()
 
-    const identidad = entrada.autoriaGrupal ? entrada.grupo : entrada.autor;
-    const identidadUrl = entrada.autoriaGrupal ? `/grupos/${identidad.slug}` : `/usuarios/${identidad.slug}`;
+    const identidad = ref();
+    const identidadUrl = ref();
+    const DefinirIdentidad = (doc = entrada) => {
+        identidad.value = doc.autoriaGrupal ? doc.grupo : doc.autor;
+        identidadUrl.value = doc.autoriaGrupal ? `/grupos/${identidad.value.slug}` : `/usuarios/${identidad.value.slug}`;
+    }
+    DefinirIdentidad();
 
     const opcionesArticulo = ref([
         {
@@ -138,6 +144,9 @@
             entrada.value = data.entrada
             contenidoRendereado.value = await useRenderSalonHtml(data.entrada);
             archivos.value = data.entrada.archivos
+            console.log("autoriaGrupal",entrada.autoriaGrupal, data.entrada.autoriaGrupal)
+            DefinirIdentidad(data.entrada)
+            reloadkey.value++
         }
             // // Publicacion exitosa. Cierro el dialogo y muestro un toast
             // toast.add({ severity: 'contrast', detail: 'Entrada editada', life: 3000});   

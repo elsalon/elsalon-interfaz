@@ -3,7 +3,7 @@
         <DeferredContent @load="onComentarioScrolled">
             <Comentario v-for="comentario in comentarios" :comentario="comentario" :key="comentario.id"  @eliminar="EliminarComentario(comentario.id)" />
             
-            <div v-if="fetchingComentarios" class="my-4 w-full text-center text-gray-400 p-1 text-sm">Cargando comentarios...</div>
+            <div v-if="fetchingComentarios" class="my-4 w-full text-center text-gray-500 p-1 text-sm">Cargando comentarios...</div>
 
             <button v-if="quedanMasComentarios && !fetchingComentarios" class="w-full my-4 text-gray-400 hover:text-gray-800 p-1 text-sm" @click="fetchComentarios">
                 Cargar más comentarios

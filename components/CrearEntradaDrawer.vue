@@ -5,7 +5,7 @@
              
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
             <div class="flex justify-end mt-4 flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
-                <Select v-model="autorSeleccionado"  :options="autoresOpciones" optionLabel="name" placeholder="Autoría" class="w-full md:w-56">
+                <Select v-model="autorSeleccionado"  :options="autoresOpciones" optionLabel="name" placeholder="Autoría" class="w-full md:w-56" >
                     <template #value="slotProps">
                         <!-- Seleccionado -->
                         <div v-if="slotProps.value" class="flex items-center">
@@ -43,11 +43,10 @@
 </template>
 
 <script setup>
-
+const {data: authData} = useAuth()
+const runtimeConfig = useRuntimeConfig().public;
 const editor = ref(null)
 const isEditing = ref(false)
-const autorSeleccionado = ref(null)
-const autoresOpciones =ref([])
 const uploading = ref(false)
 const props = defineProps(
     {
@@ -57,6 +56,10 @@ const props = defineProps(
         }
     }
 )
+
+const autorSeleccionado = ref(null)
+const autoresOpciones =ref([])
+const {docs:gruposDelUsuario} = await useApi(`/api/grupos?where[integrantes][contains]=${authData.value?.user?.id}`);
 
 const Publicar = async () => {
     const {html, imagenes, archivos} = await editor.value.parseEditorToUpload()
@@ -81,10 +84,10 @@ const Publicar = async () => {
 		endpoint = `/api/entradas/${props.entryEdit.entrada.id}`
 	}
 	// Autoria grupal
-	// if(autorSeleccionado.value.id != authData.value.user.id){
-	// 	data.autoriaGrupal = true
-	// 	data.grupo = autorSeleccionado.value.id
-	// }
+	if(autorSeleccionado.value.id != authData.value.user.id){
+		data.autoriaGrupal = true
+		data.grupo = autorSeleccionado.value.id
+	}
 	try{
 		const response = await useApi(endpoint, data, method);
 		console.log("Publicacion creada:", response)
@@ -104,7 +107,29 @@ const Publicar = async () => {
 }
 
 onMounted(() => {
+    autoresOpciones.value.push({
+		avatar: authData.value.user.avatar ? runtimeConfig.apiBase + authData.value.user.avatar.sizes.thumbnail.url : null,
+		name: authData.value?.user?.nombre, 
+		id: authData.value?.user?.id 
+	});
+	gruposDelUsuario.forEach(grupo => {
+		autoresOpciones.value.push({ 
+			avatar: grupo.avatar ? runtimeConfig.apiBase + grupo.avatar.sizes.thumbnail.url : null,
+			name: grupo.nombre,
+			id: grupo.id
+		});
+	});
+
+	if(!autorSeleccionado.value && autoresOpciones.value.length > 0){
+		autorSeleccionado.value = autoresOpciones.value[0];
+	}
+
     if (props.entryEdit) {
+        console.log("Editando entrada", props.entryEdit)
+        if(props.entryEdit.entrada.autoriaGrupal){
+            autorSeleccionado.value = autoresOpciones.value.find(grupo => grupo.id == props.entryEdit.entrada.grupo.id)
+            console.log("Autor seleccionado", autorSeleccionado.value)
+        }
         isEditing.value = true
     }
 })
