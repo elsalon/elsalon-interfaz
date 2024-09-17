@@ -20,26 +20,43 @@
                         <button class="ql-link" v-tooltip.top="'Link (ctrl+K)'"></button>
                         <button class="ql-image" v-tooltip.top="'Subir Imagen'"></button>
                         <button class="ql-video" v-tooltip.top="'Embeber Video'"></button>
-                        <button class="ql-upload" v-tooltip.top="'Adjuntar Archivo'" @click="handleAttachFile"><i class="pi pi-file-arrow-up"></i></button>
+                        <button class="ql-upload" v-tooltip.top="'Adjuntar Archivo'" @click="handleUploadFileClick"><i class="pi pi-file-arrow-up"></i></button>
                         <div style="width: 15px;"></div>
                         <button class="ql-clean" v-tooltip.top="'Quitar Formato'"></button>
                     </div>
                 </div>
             </template>
-
         </QuillEditor>
+        <div class="attachedFiled">
+            <!-- <div v-for="f in attachedFiles">
+                {{ f.name }}
+            </div> -->
+            
+            <div v-for="archivo in attachedFiles" class="text-sm bg-gray-100 text-gray-400 p-2 mb-1 font-mono">
+                <div class="flex items">
+                    <div class="grow">
+                        <span>{{ archivo.name }}</span>
+                        <span> ({{ formatBytes(archivo.size) }})</span>
+                    </div>
+                    <button @click="attachedFiles.splice(attachedFiles.indexOf(f), 1)" class="hover:text-gray-800">X</button>
+                </div>
+            </div>
+        </div>
+        <input type="file"  accept=".zip,.rar,.7zip,.pdf,.tar" ref="fileInput" style="display: none;" @change="handleFileChange" />
     </ClientOnly>
 </template>
 <script setup>
     import { QuillEditor } from '@vueup/vue-quill'
     import '@vueup/vue-quill/dist/vue-quill.snow.css';
     import Compressor from 'compressorjs';
+    import formatBytes from '~/composables/useBytesDisplay';
     // Generate a unique ID for each editor instance
     const editorId = ref(`editor-${Math.random().toString(36).substring(2, 9)}`)
     const quill = ref(null)
     const myContent = ref('')
     const attachedImages = ref([])
     const attachedFiles = ref([])
+    const fileInput = ref(null)
 
     const emit = defineEmits(['publishHotKey'])
     const props = defineProps({
@@ -47,8 +64,12 @@
     })
     // const isEditing = ref(!!props.postEdit)
     
-    const handleAttachFile = () => {
-        console.log('handleAttachFile')
+    const handleUploadFileClick = () => {
+        fileInput.value.click();
+    }
+    const handleFileChange = (e) => {
+        const files = e.target.files;
+        attachedFiles.value.push(files[0])
     }
 
     const onEditorReady = (editor) => {
@@ -113,8 +134,28 @@
         }
 
         // Ahora subo los attachments
+        let archivos = []
+        console.log("Subiendo archivos", attachedFiles.value)
+        for (let file of attachedFiles.value) {
+            const uploadedFile = await uploadFile(file)
+            archivos.push({archivo: uploadedFile.id})
+        }
 
-        return {html, attachedImages: attachedImages.value}
+        return {html, imagenes: attachedImages.value, archivos: archivos}
+    }
+
+    const uploadFile = async (file) => {
+        const formData = new FormData()
+        formData.append('file', file, file.name)
+        try {
+            const {doc} = await useUploadFile('/api/archivos', formData);
+            console.log("Response:", doc)
+            return { id: doc.id, url: doc.url }
+        } catch (error) {
+            console.error('Error uploading file:', error)
+            // toast.add({ severity: 'error', summary: 'Error', detail: `No se puede subir el archivo ${file.name}`, life: 3000});
+            return null
+        }
     }
 
     const uploadImage = async (file) => {
@@ -125,7 +166,7 @@
         try {
             const {doc} = await useUploadFile('/api/imagenes', formData);
             console.log("Response:", doc)
-            return { id: doc.id, url: doc.url } // Assuming PayloadCMS returns both id and url
+            return { id: doc.id, url: doc.url }
         } catch (error) {
             console.error('Error uploading image:', error)
             toast.add({ severity: 'error', summary: 'Error', detail: 'No se puede subir esa imagen', life: 3000});
@@ -172,6 +213,7 @@
     const clear = () => {
         quill.value.root.innerHTML = ''
         attachedImages.value = []
+        attachedFiles.value = []
     }
     // Expose the function so the parent can access it
     defineExpose({

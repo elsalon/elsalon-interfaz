@@ -21,8 +21,6 @@ const miComentario = ref('')
 // const mostrarExtras = ref(false)
 const uploading = ref(false)
 const isEditing = ref(false);
-const attachedImages = ref([])
-const editingData = ref(null)
 
 
 const props = defineProps({
@@ -41,7 +39,7 @@ const ClearEditor = () => {
 }
 
 const Publicar = async () => {
-    const {html, attachedImages} = await editor.value.parseEditorToUpload()
+    const {html, imagenes, archivos} = await editor.value.parseEditorToUpload()
     if(html == ""){
         return;
     }
@@ -51,7 +49,8 @@ const Publicar = async () => {
 	let data = {
         entrada: props.entradaId,
 		contenido: html, 
-		imagenes: attachedImages,
+		imagenes: imagenes,
+        archivos: archivos,
 	}
 	// console.log("DATA", data)	
 	let endpoint = '/api/comentarios'
@@ -84,10 +83,6 @@ const handleHotkey = (e) => {
 onMounted(() => {
     if (props.commentEdit) {
         isEditing.value = true
-        // miComentario.value = props.commentEdit.contenido
-        // attachedImages.value = props.commentEdit.imagenes.map(data => ({imagen: data.imagen.id}))
-        // editingData.value = {contenido: props.commentEdit.contenido, imagenes: attachedImages.value}
-        // mostrarExtras.value = true
     }
 })
 

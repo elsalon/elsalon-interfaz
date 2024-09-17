@@ -59,7 +59,7 @@ const props = defineProps(
 )
 
 const Publicar = async () => {
-    const {html, attachedImages} = await editor.value.parseEditorToUpload()
+    const {html, imagenes, archivos} = await editor.value.parseEditorToUpload()
     if(html == ""){
         return;
     }
@@ -69,11 +69,12 @@ const Publicar = async () => {
     let method ='POST'
 	let data = {
 		contenido: html, 
-		imagenes: attachedImages, 
+		imagenes: imagenes,
+        archivos: archivos,
 		sala: paginaActual.value.id,
 		autoriaGrupal: false,
 	}
-	// console.log("DATA", html, attachedImages)	
+	// console.log("DATA", html, imagenes)	
 	let endpoint = '/api/entradas'
 	if(isEditing.value){
 		method = 'PATCH';
@@ -97,10 +98,6 @@ const Publicar = async () => {
 onMounted(() => {
     if (props.commentEdit) {
         isEditing.value = true
-        // miComentario.value = props.commentEdit.contenido
-        // attachedImages.value = props.commentEdit.imagenes.map(data => ({imagen: data.imagen.id}))
-        // editingData.value = {contenido: props.commentEdit.contenido, imagenes: attachedImages.value}
-        // mostrarExtras.value = true
     }
 })
 

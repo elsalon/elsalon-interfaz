@@ -16,6 +16,7 @@
 
         <DeferredContent>
             <div v-if="!editandoComentario" class="prose prose-headings:my-1 leading-normal text-sm" v-html="contenidoRendereado" :key="commentFoceRender"></div>
+            <ListaArchivos v-if="comentario.archivos" :archivos="comentario.archivos"/>
             <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit" @userPosted="handleUserEditedComment"/>
         </DeferredContent>
     </Panel>
@@ -39,7 +40,6 @@
     const editandoComentario = ref(false);
     const commentFoceRender = ref(0);
     const opcionesComment = ref([]);
-    console.log("**", comentario.value, comentario.autor)
     if(comentario.autor.id == authData.value.user.id){
         opcionesComment.value = [
         ...opcionesComment.value,

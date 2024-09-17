@@ -24,6 +24,7 @@
             </div>
             <DeferredContent @load="onEntradaScrolled">
                 <div class="prose prose-headings:my-1 sm:pl-[65px] leading-normal" v-html="contenidoRendereado"></div>
+                <ListaArchivos v-if="entrada.archivos" :archivos="entrada.archivos"/>
             </DeferredContent>
 
         </article>
@@ -42,7 +43,7 @@
 </template>
 
 <script setup>
-import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
+    import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
     const toast = useToast();
     const { data : authData} = useAuth()
     const props = defineProps({
