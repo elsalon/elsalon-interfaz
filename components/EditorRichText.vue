@@ -1,6 +1,6 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
-        <QuillEditor v-model:content="myContent" content-type="html" :toolbar="`#toolbar-${editorId}`" @ready="onEditorReady" class="quilleditor" @focus="focused" @blur="blured">
+        <QuillEditor v-model:content="myContent" content-type="html" :toolbar="`#toolbar-${editorId}`" :modules="modules" @ready="onEditorReady" class="quilleditor" @focus="focused" @blur="blured">
             <template #toolbar>
                 <div class="toolbarContainer">
                     <div :id="`toolbar-${editorId}`" class="richTextToolbar">
@@ -48,6 +48,9 @@
 <script setup>
     import { QuillEditor } from '@vueup/vue-quill'
     import '@vueup/vue-quill/dist/vue-quill.snow.css';
+    import { ImageDrop } from 'quill-image-drop-module';
+    import "quill-mention/autoregister";
+
     import Compressor from 'compressorjs';
     import formatBytes from '~/composables/useBytesDisplay';
     // Generate a unique ID for each editor instance
@@ -62,7 +65,13 @@
     const props = defineProps({
         editingData: { type: String, default: null }
     })
-    // const isEditing = ref(!!props.postEdit)
+    
+    const modules = [
+        {
+            module: ImageDrop,
+            name: 'image-drop',
+        }
+    ]
     
     const handleUploadFileClick = () => {
         fileInput.value.click();
