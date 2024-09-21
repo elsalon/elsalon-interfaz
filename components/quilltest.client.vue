@@ -73,14 +73,20 @@ onMounted(async () => {
                 mention: {
                     allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
                     mentionDenotationChars: ["@", "#"],
-                    source: function (searchTerm, renderList, mentionChar) {
-                        let values;
+                    source: async function (searchTerm, renderList, mentionChar) {
+                        let values = [];
 
                         if (mentionChar === "@") {
-                            values = [
-                                { id: 1, value: 'Fredrik Sundqvist' },
-                                { id: 2, value: 'Patrik Sjölin' }
-                            ];
+                            // values = [
+                            //     { id: 1, value: 'Fredrik Sundqvist' },
+                            //     { id: 2, value: 'Patrik Sjölin' }
+                            // ];
+                            if(searchTerm.length < 2) return
+                            const response = await useApi(`/api/users?where[nombre][contains]=${searchTerm}&limit=5`, null, 'GET');
+                            console.log(response.docs)
+                            values = response.docs.map(user => {
+                                return { id: user.id, value: user.nombre }
+                            })
                         } else {
                             values = [
                                 { id: 1, value: 'popular' },
@@ -110,6 +116,7 @@ onMounted(async () => {
     }
 })
 
+
 onBeforeUnmount(() => {
     if (quill) {
         quill.off('text-change')
@@ -120,5 +127,4 @@ onBeforeUnmount(() => {
 <style>
 @import 'quill/dist/quill.core.css';
 @import 'quill/dist/quill.snow.css';
-@import 'quill-mention/dist/quill.mention.min.css';
 </style>

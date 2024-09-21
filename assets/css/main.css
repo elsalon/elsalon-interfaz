@@ -109,6 +109,16 @@ form label{
 .ql-editor {
   @apply prose prose prose-headings:my-1 leading-normal max-w-none;
   overflow: none;
+  .mention{
+    @apply text-sm text-gray-500 bg-gray-100 p-0.5;
+    
+  }
+}
+.ql-mention-list-container{
+  @apply bg-white p-1 border border-solid border-zinc-100;
+  .ql-mention-list-item {
+    @apply p-1 cursor-pointer hover:bg-gray-100;
+  }
 }
 .ql-container {
   max-width: unset;
