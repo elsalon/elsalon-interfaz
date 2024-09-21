@@ -26,6 +26,7 @@ const AttachButtonHandler = () => {
 }
 
 import "quill-mention/autoregister";
+import { ImageDrop } from 'quill-image-drop-module';
 
 onMounted(async () => {
     if (process.client) {
@@ -40,6 +41,7 @@ onMounted(async () => {
         //     true
         // );
 
+        Quill.register('modules/imageDrop', ImageDrop);
         // Custom button definition
         const AttachButton = Quill.import('ui/icons')
         AttachButton['attach'] = '<i class="pi pi-file"></i>'
