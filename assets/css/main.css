@@ -159,6 +159,6 @@ form label{
   padding: 0 !important;
   border: none !important;
 }
-ul{
-  list-style-type: unset;
+ol{
+  list-style-type: unset !important;
 }
