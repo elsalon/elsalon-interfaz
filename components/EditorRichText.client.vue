@@ -253,7 +253,7 @@
             // quill.root.innerHTML = props.value
 
             quill.on('text-change', () => {
-                emit('update:value', quill.root.innerHTML)
+                // emit('update:value', quill.root.innerHTML)
             })
         }
         
@@ -273,7 +273,7 @@
     })
 
     const clear = () => {
-        quill.value.root.innerHTML = ''
+        quill.root.innerHTML = ''
         attachedImages.value = []
         attachedFiles.value = []
     }
