@@ -21,7 +21,6 @@ let quill = null
 
 const AttachButtonHandler = () => {
     console.log('Custom button clicked!', quill.root.innerHTML)
-    
     // Add your custom functionality here
 }
 
@@ -31,15 +30,6 @@ import { ImageDrop } from 'quill-image-drop-module';
 onMounted(async () => {
     if (process.client) {
         const { default: Quill } = await import('quill')
-
-        // const Mention = await import('quill-mention')
-        // // Register the mention module
-        // Quill.register(
-        //     {
-        //         'modules/mention': Mention.default
-        //     },
-        //     true
-        // );
 
         Quill.register('modules/imageDrop', ImageDrop);
         // Custom button definition

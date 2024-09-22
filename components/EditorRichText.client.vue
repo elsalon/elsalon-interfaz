@@ -1,32 +1,6 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
-        <QuillEditor v-model:content="myContent" content-type="html" :toolbar="`#toolbar-${editorId}`" :modules="modules" @ready="onEditorReady" class="quilleditor" @focus="focused" @blur="blured">
-            <template #toolbar>
-                <div class="toolbarContainer">
-                    <div :id="`toolbar-${editorId}`" class="richTextToolbar">
-                        <button class="ql-bold" v-tooltip.top="'Bold (ctrl+B)'"></button>
-                        <button class="ql-italic" v-tooltip.top="'Italica (ctrl+I)'"></button>
-                        <button class="ql-underline mr-2" v-tooltip.top="'Subrayar (ctrl+U)'"></button>
-                        
-                        <button class="ql-strike"  v-tooltip.top="'Tachar (ctrl+B)'"></button>
-                        <div style="width: 15px;"></div>
-                        <button class="ql-blockquote" v-tooltip.top="'Cita'"></button>
-                        <button class="ql-code-block" v-tooltip.top="'Código'"></button>
-                        <!-- <button class="ql-header" value="1"></button> -->
-                        <!-- <button class="ql-list" value="ordered"></button> -->
-                        <button class="ql-list" value="bullet"  v-tooltip.top="'List'"></button>
-                        
-                        <div style="width: 15px;"></div>
-                        <button class="ql-link" v-tooltip.top="'Link (ctrl+K)'"></button>
-                        <button class="ql-image" v-tooltip.top="'Subir Imagen'"></button>
-                        <button class="ql-video" v-tooltip.top="'Embeber Video'"></button>
-                        <button class="ql-upload" v-tooltip.top="'Adjuntar Archivo'" @click="handleUploadFileClick"><i class="pi pi-file-arrow-up"></i></button>
-                        <div style="width: 15px;"></div>
-                        <button class="ql-clean" v-tooltip.top="'Quitar Formato'"></button>
-                    </div>
-                </div>
-            </template>
-        </QuillEditor>
+        <div ref="editorContainer"></div>
         <div class="attachedFiled">
             <!-- <div v-for="f in attachedFiles">
                 {{ f.name }}
@@ -45,17 +19,19 @@
         <input type="file"  accept=".zip,.rar,.7zip,.pdf,.tar" ref="fileInput" style="display: none;" @change="handleFileChange" />
     </ClientOnly>
 </template>
+
 <script setup>
-    import { QuillEditor } from '@vueup/vue-quill'
-    import '@vueup/vue-quill/dist/vue-quill.snow.css';
-    import { ImageDrop } from 'quill-image-drop-module';
+    // import { QuillEditor } from '@vueup/vue-quill'
+    // import '@vueup/vue-quill/dist/vue-quill.snow.css';
     import "quill-mention/autoregister";
 
     import Compressor from 'compressorjs';
     import formatBytes from '~/composables/useBytesDisplay';
     // Generate a unique ID for each editor instance
-    const editorId = ref(`editor-${Math.random().toString(36).substring(2, 9)}`)
-    const quill = ref(null)
+    // const editorId = ref(`editor-${Math.random().toString(36).substring(2, 9)}`)
+    const editorContainer = ref(null)
+    let quill = null
+
     const myContent = ref('')
     const attachedImages = ref([])
     const attachedFiles = ref([])
@@ -66,13 +42,7 @@
         editingData: { type: String, default: null }
     })
     
-    const modules = [
-        {
-            module: ImageDrop,
-            name: 'image-drop',
-        }
-    ]
-    
+
     const handleUploadFileClick = () => {
         fileInput.value.click();
     }
@@ -81,12 +51,6 @@
         attachedFiles.value.push(files[0])
     }
 
-    const onEditorReady = (editor) => {
-        // Referencia al editor
-        quill.value = editor
-        quill.value.getModule('toolbar').addHandler('ql-video', omegaHandlerFunction);
-    }
-    
     // HOTKEY Publicar con [ctrl + enter]
     const focused = () => {
         window.addEventListener('keydown', handlePublishHotkey)
@@ -107,8 +71,9 @@
     }
     
     const parseEditorToUpload = async () => {
-        const delta = quill.value.getContents()
-	    let html = quill.value.root.innerHTML
+        
+        const delta = quill.getContents()
+	    let html = quill.root.innerHTML
         // Procesar imagenes
         // Busco todos los blobs de imagenes y las subo
         // Los convierto a formato [image:id] para que el backend lo entienda
@@ -220,11 +185,104 @@
         attachedFiles.value = entrada.archivos.map(data => ({id: data.archivo.id, name: data.archivo.filename, size: data.archivo.filesize, uploaded: true}))
     }
 
-    onMounted(() => {
+    const AttachButtonHandler = () => {
+        console.log('Custom button clicked!', quill.root.innerHTML)
+        // Add your custom functionality here
+    }
+
+    onMounted(async () => {
+        if (process.client) {
+
+            const { default: Quill } = await import('quill')
+
+            // Quill.register('modules/imageDrop', ImageDrop);
+            // Custom button definition
+            const AttachButton = Quill.import('ui/icons')
+            AttachButton['attach'] = '<i class="pi pi-file"></i>'
+
+            quill = new Quill(editorContainer.value, {
+                theme: 'snow',
+                modules: {
+                    toolbar: {
+                        container: [
+                            ['bold', 'italic', 'underline', 'strike'],
+                            [{ 'align': [] }],
+                            ['blockquote', 'code-block'],
+                            // [{ 'header': 1 }, { 'header': 2 }],
+                            [{ 'list': 'bullet' }],
+                            ['link', 'image', 'video', 'attach'],
+                            // [{ 'script': 'sub' }, { 'script': 'super' }],
+                            // [{ 'indent': '-1' }, { 'indent': '+1' }],
+                            // [{ 'direction': 'rtl' }],
+                            // [{ 'size': ['small', false, 'large', 'huge'] }],
+                            // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                            // [{ 'color': [] }, { 'background': [] }],
+                            // [{ 'font': [] }],
+                            ['clean'],
+                            // ['image'],
+                            // ['link'],
+                        ],
+                        handlers: {
+                            attach: AttachButtonHandler
+                        }
+                    },
+                    mention: {
+                        allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+                        mentionDenotationChars: ["@", "#"],
+                        source: async function (searchTerm, renderList, mentionChar) {
+                            let values = [];
+
+                            if (mentionChar === "@") {
+                                // values = [
+                                //     { id: 1, value: 'Fredrik Sundqvist' },
+                                //     { id: 2, value: 'Patrik Sjölin' }
+                                // ];
+                                if(searchTerm.length < 2) return
+                                const response = await useApi(`/api/users?where[nombre][contains]=${searchTerm}&limit=5`, null, 'GET');
+                                console.log(response.docs)
+                                values = response.docs.map(user => {
+                                    return { id: user.id, value: user.nombre }
+                                })
+                            } else {
+                                values = [
+                                    { id: 1, value: 'popular' },
+                                    { id: 2, value: 'programming' },
+                                    { id: 3, value: 'javascript' }
+                                ];
+                            }
+
+                            if (searchTerm.length === 0) {
+                                renderList(values, searchTerm);
+                            } else {
+                                const matches = values.filter(item =>
+                                    item.value.toLowerCase().includes(searchTerm.toLowerCase())
+                                );
+                                renderList(matches, searchTerm);
+                            }
+                        },
+                    },
+                }
+            })
+
+            // quill.root.innerHTML = props.value
+
+            quill.on('text-change', () => {
+                emit('update:value', quill.root.innerHTML)
+            })
+        }
+        
         if (props.editingData) {
             // isEditing.value = true
             // myContent.value = props.editingData
             parseExistingContent()
+        }
+
+        
+    })
+
+    onBeforeUnmount(() => {
+        if (quill) {
+            quill.off('text-change')
         }
     })
 
@@ -239,3 +297,8 @@
         clear
     })
 </script>
+
+<style>
+@import 'quill/dist/quill.core.css';
+@import 'quill/dist/quill.snow.css';
+</style>

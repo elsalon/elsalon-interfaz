@@ -1,6 +1,5 @@
 <template>
     <NuxtLayout name="layout-contenido">
-        <Quilltest />
         <CrearEntradaBtn />
         <!-- TODO QUery -->
         <ListaEntradas />
