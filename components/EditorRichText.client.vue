@@ -2,9 +2,6 @@
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
         <div ref="editorContainer"></div>
         <div class="attachedFiled">
-            <!-- <div v-for="f in attachedFiles">
-                {{ f.name }}
-            </div> -->
             
             <div v-for="archivo in attachedFiles" class="text-sm bg-gray-100 text-gray-400 p-2 mb-1 font-mono">
                 <div class="flex items">
@@ -65,13 +62,8 @@
             emit('publishHotKey')
         }
     }
-
-    const omegaHandlerFunction = () => {
-        console.log('omegaHandlerFunction')
-    }
     
     const parseEditorToUpload = async () => {
-        
         const delta = quill.getContents()
 	    let html = quill.root.innerHTML
         // Procesar imagenes
@@ -173,7 +165,6 @@
         });
     }
 
-
     const parseExistingContent = () => {
         const { entrada, html } = props.editingData
         console.log('parseExistingContent', entrada, html)
@@ -183,11 +174,6 @@
         // console.log('adjuntos', entrada.archivos)
         attachedFiles.value = []
         attachedFiles.value = entrada.archivos.map(data => ({id: data.archivo.id, name: data.archivo.filename, size: data.archivo.filesize, uploaded: true}))
-    }
-
-    const AttachButtonHandler = () => {
-        console.log('Custom button clicked!', quill.root.innerHTML)
-        // Add your custom functionality here
     }
 
     onMounted(async () => {
@@ -223,7 +209,7 @@
                             // ['link'],
                         ],
                         handlers: {
-                            attach: AttachButtonHandler
+                            attach: handleUploadFileClick
                         }
                     },
                     mention: {
