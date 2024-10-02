@@ -6,12 +6,15 @@
             </div>
             <div v-for="notificacion in notificaciones" class="p-3 m-1 " :class="{'bg-gray-100': !notificacion.leida}" >
                 <div class="flex items-center justify-between">
-                    <RouterLink :to="`/entradas/${notificacion.linkTo.id}`" class="flex items-center grow">
-                    <!-- Icono ? <i class="pi mr-4" :class="[notificationIcon(notificacion.tipoNotificacion)]"></i> --> 
-                    <div class="flex flex-col grow">
-                        <span class="text-sm mr-2" v-html="notificacion.mensaje"></span>
-                        <span class="text-muted-color text-xs">{{ $formatDate(notificacion.createdAt) }}</span>
-                    </div>
+                    <RouterLink 
+                        @click.prevent="handleClick(notificacion)"
+                        :to="`/entradas/${notificacion.linkTo.id}`"
+                        class="flex items-center grow">
+                        <!-- Icono ? <i class="pi mr-4" :class="[notificationIcon(notificacion.tipoNotificacion)]"></i> --> 
+                        <div class="flex flex-col grow">
+                            <span class="text-sm mr-2" v-html="notificacion.mensaje"></span>
+                            <span class="text-muted-color text-xs">{{ $formatDate(notificacion.createdAt) }}</span>
+                        </div>
                     </RouterLink>
 
                     <!-- Button placed outside of RouterLink to avoid triggering it -->
@@ -63,6 +66,12 @@ const emit = defineEmits(['update:visible'])
 //             return 'pi-info-circle'
 //     }
 // }
+
+const handleClick = async (notificacion) => {
+    // console.log('handleClick', id, notificacionId)
+    await MarcarLeida(notificacion)
+    this.$router.push(`/entradas/${notificacion.linkTo.id}`);
+}
 
 const closeDialog = () => {
     emit('update:visible', false)
