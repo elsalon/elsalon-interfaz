@@ -1,6 +1,6 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
-        <div ref="editorContainer"></div>
+        <div ref="editorContainer" tabindex="0"></div>
         <div class="attachedFiled">
             
             <div v-for="archivo in attachedFiles" class="text-sm bg-gray-100 text-gray-400 p-2 mb-1 font-mono">
@@ -48,13 +48,7 @@
         attachedFiles.value.push(files[0])
     }
 
-    // HOTKEY Publicar con [ctrl + enter]
-    const focused = () => {
-        window.addEventListener('keydown', handlePublishHotkey)
-    }
-    const blured = () => {
-        window.removeEventListener('keydown', handlePublishHotkey)
-    }
+    
     const handlePublishHotkey = (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
             e.preventDefault()
@@ -66,6 +60,7 @@
     const parseEditorToUpload = async () => {
         const delta = quill.getContents()
 	    let html = quill.root.innerHTML
+        
         // Procesar imagenes
         // Busco todos los blobs de imagenes y las subo
         // Los convierto a formato [image:id] para que el backend lo entienda
@@ -255,15 +250,20 @@
             quill.on('text-change', () => {
                 // emit('update:value', quill.root.innerHTML)
             })
+
+            editorContainer.value.firstChild.onfocus = () => {
+                window.addEventListener('keydown', handlePublishHotkey)
+            }
+            editorContainer.value.firstChild.onblur = () => {
+                window.removeEventListener('keydown', handlePublishHotkey)
+            }
         }
         
         if (props.editingData) {
             // isEditing.value = true
             // myContent.value = props.editingData
             parseExistingContent()
-        }
-
-        
+        }        
     })
 
     onBeforeUnmount(() => {
