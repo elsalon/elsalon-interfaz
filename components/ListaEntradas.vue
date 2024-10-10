@@ -17,6 +17,7 @@
     let coolingDown = false;
     let checkNewEntriesInterval;
     let removeOnCreateHook = null;
+    let removeOnFijar = null;
 
     // props
     const props = defineProps({
@@ -24,18 +25,21 @@
     })
     
     onMounted(() => {
-        CheckLlegoFinDePagina()
-        window.addEventListener('scroll', CheckLlegoFinDePagina)
-        
-        // Set up interval to check for new entries every 2 minutes
-        checkNewEntriesInterval = setInterval(FetchNewer, 120000)
-        removeOnCreateHook = hooks.hook('publicacion:creada', handlePublicacionCreada)
+      FetchFijadas();
+      CheckLlegoFinDePagina();
+      window.addEventListener('scroll', CheckLlegoFinDePagina)
+      
+      // Set up interval to check for new entries every 2 minutes
+      checkNewEntriesInterval = setInterval(FetchNewer, 120000)
+      removeOnCreateHook = hooks.hook('publicacion:creada', handlePublicacionCreada)
+      removeOnFijar = hooks.hook('publicacion:fijada', VolverAFetchear)
     })
 
     onUnmounted(() => {
         window.removeEventListener('scroll', CheckLlegoFinDePagina)
         clearInterval(checkNewEntriesInterval)
-        if(removeOnCreateHook) removeOnCreateHook()
+        if(removeOnCreateHook) removeOnCreateHook();
+        if(removeOnFijar) removeOnFijar();
     })
 
     const handlePublicacionCreada = (data) => {
@@ -43,6 +47,13 @@
             FetchNewer()
         }
     }
+    const VolverAFetchear = async () => {
+        entradas.value = []
+        page.value = 1
+        FetchFijadas();
+        FetchEntries();
+    }
+
     const EliminarEntrada = (id) => {
       entradas.value = entradas.value.filter(entrada => entrada.id != id)  
     }
@@ -55,12 +66,18 @@
       }
     }
 
+    const FetchFijadas = async() => {
+        let apiUrl = `/api/entradas?depth=2&where[fijada][equals]=true&sort=-createdAt`
+        const res = await useApi(apiUrl)
+        entradas.value = [...res.docs, ...entradas.value];
+    }
+
     const FetchEntries = async () => {
       if (coolingDown) return
       coolingDown = true
       setTimeout(() => coolingDown = false, 1000)
 
-      let apiUrl = `/api/entradas?depth=2&page=${page.value}`
+      let apiUrl = `/api/entradas?depth=2&page=${page.value}&sort=-createdAt&where[fijada][not_equals]=true`
       if (props.endpointQuery != '') {
         apiUrl += `&${props.endpointQuery}`
       }
@@ -72,7 +89,7 @@
 
     const FetchNewer = async () => {
       const newestEntryDate = entradas.value[0]?.createdAt || new Date().toISOString()
-      let apiUrl = `/api/entradas?depth=2&where[createdAt][greater_than]=${newestEntryDate}&sort=-createdAt&limit=100`
+      let apiUrl = `/api/entradas?depth=2&where[createdAt][greater_than]=${newestEntryDate}&where[fijada][not_equals]=true&sort=-createdAt&limit=100`
       if (props.endpointQuery != '') {
         apiUrl += `&${props.endpointQuery}`
       }

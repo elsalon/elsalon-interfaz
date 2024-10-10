@@ -11,9 +11,10 @@
                     <NuxtLink :to="identidadUrl">
                         <h2 class="font-bold text-gray-700">{{ identidad.nombre }}</h2>
                     </NuxtLink>
-                    <div class="flex">
+                    <div class="flex items-center">
                         <NuxtLink v-if="entrada.sala" class="text-sm mr-2" :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
                         <p class="text-gray-400 text-sm">{{ $formatDate(entrada.createdAt) }}</p>
+                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"></i>
                     </div>
                 </div>
                 <!-- Ajustes entrada -->
@@ -104,12 +105,23 @@
     if(authData.value.user.isAdmin){
         opcionesArticulo.value = [
             ...opcionesArticulo.value,
+            // DESTACAR
             {
-                label: 'Destacar',
-                command: () => {
+                label: !entrada.destacada ? 'Destacar' : 'Quitar Destacado',
+                command: async () => {
                     console.log('Destacar');
+                    await useApi(`/api/entradas/${entrada.id}`, {destacada:!entrada.destacada}, 'PATCH');
+                    useNuxtAppasync ().callHook("publicacion:fijada");
                 }
             },
+            {
+                label: !entrada.fijada ? 'Fijar' : 'Quitar Fijado',
+                command: async() => {
+                    console.log('Fijar');
+                    await useApi(`/api/entradas/${entrada.id}`, {fijada:!entrada.fijada}, 'PATCH');
+                    useNuxtApp().callHook("publicacion:fijada");
+                }
+            }
         ];
     }
     
