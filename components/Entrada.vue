@@ -133,7 +133,7 @@
     const opcionDestacar = {
         label: !entrada.destacada ? 'Destacar en El Salon' : 'Quitar Destacado',
         command: async () => {
-            console.log('Destacar');
+            // console.log('Destacar');
             await useApi(`/api/entradas/${entrada.id}`, {destacada:!entrada.destacada}, 'PATCH');
             useNuxtApp().callHook("publicacion:fijada");
         }

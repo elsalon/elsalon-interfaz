@@ -8,7 +8,7 @@
                 <div class="flex items-center justify-between">
                     <RouterLink 
                         @click.prevent="handleClick(notificacion)"
-                        :to="`/entradas/${notificacion.linkTo.id}`"
+                        :to="LinkNotificacion(notificacion)"
                         class="flex items-center grow">
                         <!-- Icono ? <i class="pi mr-4" :class="[notificationIcon(notificacion.tipoNotificacion)]"></i> --> 
                         <div class="flex flex-col grow">
@@ -67,10 +67,23 @@ const emit = defineEmits(['update:visible'])
 //     }
 // }
 
+const LinkNotificacion = (notificacion) => {
+    switch(notificacion.linkType){
+        case 'usuario':
+            return `/usuarios/${notificacion.linkTo}`
+        case 'entrada':
+            return `/entradas/${notificacion.linkTo}`
+        case 'grupo':
+            return `/grupos/${notificacion.linkTo}`
+        default:
+    }
+    // return `/entradas/${notificacion.linkTo.id}`
+}
+
 const handleClick = async (notificacion) => {
     // console.log('handleClick', id, notificacionId)
     await MarcarLeida(notificacion)
-    this.$router.push(`/entradas/${notificacion.linkTo.id}`);
+    this.$router.push(LinkNotificacion(notificacion));
 }
 
 const closeDialog = () => {
