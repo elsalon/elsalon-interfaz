@@ -77,7 +77,6 @@
         idsEntradasFijadas.value.push(item.entrada.id)
         item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
       }) 
-      console.log("idsEntradasFijadas",idsEntradasFijadas.value)
       entradas.value = [...res.docs.map(item => item.entrada), ...entradas.value];
     }
 
@@ -93,7 +92,6 @@
       const res = await useApi(apiUrl)
       hasNextPage.value = res.hasNextPage
       const entradasNoFijadas = res.docs.filter(entrada => !idsEntradasFijadas.value.includes(entrada.id))
-      console.log("Entradas no fijadas")
       entradas.value = [...entradas.value, ...entradasNoFijadas]
       page.value++
     }

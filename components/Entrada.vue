@@ -48,7 +48,6 @@
 
 <script setup>
     const salonStore = useSalonStore()
-    console.log(salonStore.currContext, salonStore.contextoId)
     
     import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
     const { hooks } = useNuxtApp();
@@ -147,9 +146,7 @@
     const opcionFijar = {
         label: !entrada.fijada ? 'Fijar' : 'Quitar Fijado',
         command: async() => {
-            console.log('Fijar');
             if(entrada.fijada){
-                console.log("desfijar", entrada.fijada)
                 await useApi(`/api/fijadas/${entrada.fijada}`, {}, 'DELETE');
             }else{
                 await useApi(`/api/fijadas`, {contexto: salonStore.contextoId, entrada: entrada.id}, 'POST');
@@ -174,7 +171,6 @@
     const archivos = ref(entrada.archivos)
     
     const EliminarEntrada = async () => {
-        console.log('Eliminar entrada');
         try{
             const response = await useApi(`/api/entradas/${entrada.id}`, {}, 'DELETE');
             console.log("Entrada eliminada:", response)
