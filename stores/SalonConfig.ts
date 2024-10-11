@@ -32,7 +32,7 @@ export const useSalonStore = defineStore('salon', {
           const runtimeConfig = useRuntimeConfig().public
           const { data }: any  = await useFetch(runtimeConfig.apiBase + "/api/salones?sort=orden$limit=-1")
           if(data.value.docs.length > 0){
-            this.salones = data.value.docs;
+            this.salones = data.value.docs.sort((a: any, b: any) => a.orden - b.orden);
             this.initialized = true
           }
         } catch (error) {
