@@ -12,7 +12,18 @@
         </div> -->
         
         <!-- <CrearEntradaBtn v-if="userIsMe" /> -->
-        <div class="mt-10"></div>
+        <!-- <div class="mt-10"></div> -->
+         <!-- Group Members -->
+        <div class="my-4">
+            <div class="flex flex-wrap justify-center gap-4">
+            <div v-for="usuario in grupo.integrantes" :key="usuario.id" class="flex items-center gap-x-2">
+                <AvatarSalon :usuario="usuario" class="w-8 h-8" />
+                <span class="text-sm text-gray-700">{{ usuario.nombre }}</span>
+            </div>
+            </div>
+        </div>
+
+
         <ListaEntradas :endpointQuery="query" />
     </NuxtLayout>
 </template>
@@ -25,6 +36,7 @@ const estadoMostrarBtnColaborador = ref(0) // 0 no se muestra nada, 1 se muestra
 const estadoColaboradorLoading = ref(false)
 const idColaboracion = ref(null)
 
+
 // Fetch the user data based on the slug
 const res = await useApi(`/api/grupos?where[slug][equals]=${slug}`)
 if (res.docs.length === 0) {
@@ -34,6 +46,8 @@ if (res.docs.length === 0) {
     })
 }
 const grupo = ref(res.docs[0])
+const elsalon = useSalonStore();
+elsalon.setContext('grupo', grupo.value.id)
 // const userIsMe = ref(usuario.value.id == data.value?.user.id)
 const query = ref(`where[grupo][equals]=${grupo.value.id}`)
 

@@ -73,6 +73,7 @@
     });
     const grupos = ref([]);
     const fetching = ref(true)
+    
 
     const handleAbandonadoGrupo = (grupo) => {
         console.log('Abandonado grupo', grupo);

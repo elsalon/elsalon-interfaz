@@ -11,6 +11,7 @@
 <script setup>
     const { hooks } = useNuxtApp();
     const entradas = ref([]);
+    const idsEntradasFijadas = ref([]);
     const hasNextPage = ref(true);
     const page = ref(1);
     const scrollEndOffset = 300;
@@ -18,15 +19,16 @@
     let checkNewEntriesInterval;
     let removeOnCreateHook = null;
     let removeOnFijar = null;
+    const SalonStore = useSalonStore();
 
     // props
     const props = defineProps({
         endpointQuery: { type: String, default: '' }
     })
     
-    onMounted(() => {
-      FetchFijadas();
-      CheckLlegoFinDePagina();
+    onMounted(async () => {
+      await FetchFijadas();
+      await CheckLlegoFinDePagina();
       window.addEventListener('scroll', CheckLlegoFinDePagina)
       
       // Set up interval to check for new entries every 2 minutes
@@ -50,26 +52,33 @@
     const VolverAFetchear = async () => {
         entradas.value = []
         page.value = 1
-        FetchFijadas();
-        FetchEntries();
+        await FetchFijadas();
+        await FetchEntries();
     }
 
     const EliminarEntrada = (id) => {
       entradas.value = entradas.value.filter(entrada => entrada.id != id)  
     }
     
-    const CheckLlegoFinDePagina = () => {
+    const CheckLlegoFinDePagina = async () => {
       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - scrollEndOffset) {
         if (hasNextPage.value) {
-          FetchEntries()
+          await FetchEntries()
         }
       }
     }
 
     const FetchFijadas = async() => {
-        let apiUrl = `/api/entradas?depth=2&where[fijada][equals]=true&sort=-createdAt`
-        const res = await useApi(apiUrl)
-        entradas.value = [...res.docs, ...entradas.value];
+      let apiUrl = `/api/fijadas?depth=3&where[contexto][equals]=${SalonStore.contextoId}&sort=-createdAt&limit=10`
+      const res = await useApi(apiUrl)
+      idsEntradasFijadas.value = [] // = res.docs.map(fijada => fijada.entrada.id)
+
+      res.docs.forEach(item => {
+        idsEntradasFijadas.value.push(item.entrada.id)
+        item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
+      }) 
+      console.log("idsEntradasFijadas",idsEntradasFijadas.value)
+      entradas.value = [...res.docs.map(item => item.entrada), ...entradas.value];
     }
 
     const FetchEntries = async () => {
@@ -77,25 +86,28 @@
       coolingDown = true
       setTimeout(() => coolingDown = false, 1000)
 
-      let apiUrl = `/api/entradas?depth=2&page=${page.value}&sort=-createdAt&where[fijada][not_equals]=true`
+      let apiUrl = `/api/entradas?depth=2&page=${page.value}&sort=-createdAt`
       if (props.endpointQuery != '') {
         apiUrl += `&${props.endpointQuery}`
       }
       const res = await useApi(apiUrl)
       hasNextPage.value = res.hasNextPage
-      entradas.value = [...entradas.value, ...res.docs]
+      const entradasNoFijadas = res.docs.filter(entrada => !idsEntradasFijadas.value.includes(entrada.id))
+      console.log("Entradas no fijadas")
+      entradas.value = [...entradas.value, ...entradasNoFijadas]
       page.value++
     }
 
     const FetchNewer = async () => {
       const newestEntryDate = entradas.value[0]?.createdAt || new Date().toISOString()
-      let apiUrl = `/api/entradas?depth=2&where[createdAt][greater_than]=${newestEntryDate}&where[fijada][not_equals]=true&sort=-createdAt&limit=100`
+      let apiUrl = `/api/entradas?depth=2&where[createdAt][greater_than]=${newestEntryDate}&sort=-createdAt&limit=100`
       if (props.endpointQuery != '') {
         apiUrl += `&${props.endpointQuery}`
       }
       const res = await useApi(apiUrl)
       if (res.docs.length > 0) {
-        entradas.value = [...res.docs, ...entradas.value]
+        const entradasNoFijadas = res.docs.filter(entrada => !idsEntradasFijadas.value.includes(entrada.id))
+        entradas.value = [entradasNoFijadas, ...entradas.value] // ? esto puede quedar raro? Porque quedarian las fijas por debajo de las nuevas
       }
     }
 </script>

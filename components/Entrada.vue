@@ -14,7 +14,10 @@
                     <div class="flex items-center">
                         <NuxtLink v-if="entrada.sala" class="text-sm mr-2" :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
                         <p class="text-gray-400 text-sm">{{ $formatDate(entrada.createdAt) }}</p>
-                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"></i>
+                        <!-- Entrada Fijada -->
+                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem" title="Entrada Fijada"></i>
+                        <!-- Entrada Destacada -->
+                        <i v-if="entrada.destacada" class="pi pi-star text-gray-400 ml-2" style="font-size: .7rem" title="Entrada Destacada"></i>
                     </div>
                 </div>
                 <!-- Ajustes entrada -->
@@ -44,6 +47,9 @@
 </template>
 
 <script setup>
+    const salonStore = useSalonStore()
+    console.log(salonStore.currContext, salonStore.contextoId)
+    
     import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
     const { hooks } = useNuxtApp();
     const toast = useToast();
@@ -72,6 +78,14 @@
     }
     DefinirIdentidad();
 
+    const UsuarioTieneAutoridad = () => {
+        if(entrada.autoriaGrupal){
+            return entrada.grupo?.integrantes.find(i => i.id == authData.value.user.id)
+        }else{
+            return entrada.autor.id == authData.value.user.id
+        }
+    }
+
     const opcionesArticulo = ref([
         {
             label: 'Copiar Link',
@@ -82,8 +96,8 @@
             }
         },
     ]);
-    // Opciones si el usuario es el autor
-    if(entrada.autor.id == authData.value.user.id){
+    // Opciones si el usuario es el autor o parte del grupo
+    if(UsuarioTieneAutoridad()){
         opcionesArticulo.value = [
             ...opcionesArticulo.value,
             {
@@ -101,29 +115,52 @@
             },
         ];
     }
-    // Opciones si el usuario es admin
-    if(authData.value.user.isAdmin){
-        opcionesArticulo.value = [
-            ...opcionesArticulo.value,
-            // DESTACAR
-            {
-                label: !entrada.destacada ? 'Destacar' : 'Quitar Destacado',
-                command: async () => {
-                    console.log('Destacar');
-                    await useApi(`/api/entradas/${entrada.id}`, {destacada:!entrada.destacada}, 'PATCH');
-                    useNuxtAppasync ().callHook("publicacion:fijada");
-                }
-            },
-            {
-                label: !entrada.fijada ? 'Fijar' : 'Quitar Fijado',
-                command: async() => {
-                    console.log('Fijar');
-                    await useApi(`/api/entradas/${entrada.id}`, {fijada:!entrada.fijada}, 'PATCH');
-                    useNuxtApp().callHook("publicacion:fijada");
-                }
-            }
-        ];
+    // Opciones si el usuario es admin o docente
+    // console.log(salonStore.currContext, salonStore.contextoId)
+    // console.log("Fijada: ", entrada.fijada)
+    const usuarioEsAdminODocente = authData.value.user.isAdmin || authData.value.user.rol == "docente";
+    let puedeFijar = false;
+    if(salonStore.currContext == "salon" && entrada.sala.id == salonStore.contextoId){
+        puedeFijar = usuarioEsAdminODocente; // si la entrada es del salon que vemos y el usuario es admin o docente
     }
+    if(salonStore.currContext == "bitacora" && entrada.autor.id == authData.value.user.id){
+        puedeFijar = true; // si estamos en la bitacora del usuario actual
+    }
+    if(salonStore.currContext == "grupo" ){
+        puedeFijar = UsuarioTieneAutoridad();
+    }
+
+    // const paginaActualEsUnSalon = route.name == "index" || route.name == "salones-slug"; // TODO guardar estas opciones en un store
+    // // DESTACAR
+    // const opcionDestacar = {
+    //     label: !entrada.destacada ? 'Destacar' : 'Quitar Destacado',
+    //     command: async () => {
+    //         console.log('Destacar');
+    //         await useApi(`/api/entradas/${entrada.id}`, {destacada:!entrada.destacada}, 'PATCH');
+    //         useNuxtAppasync ().callHook("publicacion:fijada");
+    //     }
+    // }
+
+    // if(authData.value.user.isAdmin){
+
+    // // FIJAR
+    const opcionFijar = {
+        label: !entrada.fijada ? 'Fijar' : 'Quitar Fijado',
+        command: async() => {
+            console.log('Fijar');
+            if(entrada.fijada){
+                console.log("desfijar", entrada.fijada)
+                await useApi(`/api/fijadas/${entrada.fijada}`, {}, 'DELETE');
+            }else{
+                await useApi(`/api/fijadas`, {contexto: salonStore.contextoId, entrada: entrada.id}, 'POST');
+            }
+            useNuxtApp().callHook("publicacion:fijada");
+        }
+    }
+    if(puedeFijar){
+        opcionesArticulo.value = [...opcionesArticulo.value, opcionFijar];
+    }
+        
     
     const menuRefs = ref({})
     const ToggleArticleOptions = (event) => {

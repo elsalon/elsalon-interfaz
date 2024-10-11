@@ -15,9 +15,15 @@ export const useSalonStore = defineStore('salon', {
       salones: [] as Salon[],
       initialized: false,
       loading: false,
+      currContext: null as String | null,
+      contextoId: null as String | null,
     }),
 
     actions: {
+      async setContext(context: string, salon: string = ''){
+        this.currContext = context;
+        this.contextoId = salon;
+      },
       async fetchConfig() {
         if(this.initialized) return;
         this.loading = true;
