@@ -23,7 +23,8 @@
 
     // props
     const props = defineProps({
-        endpointQuery: { type: String, default: '' }
+        endpointQuery: { type: String, default: '' },
+        overrideApiBase: { type: String, default: null }
     })
     
     onMounted(async () => {
@@ -86,6 +87,10 @@
       setTimeout(() => coolingDown = false, 1000)
 
       let apiUrl = `/api/entradas?depth=2&page=${page.value}&sort=-createdAt`
+      if(props.overrideApiBase) {
+        console.log('overrideApiBase', props.overrideApiBase)
+        apiUrl = `${props.overrideApiBase}`
+      }
       if (props.endpointQuery != '') {
         apiUrl += `&${props.endpointQuery}`
       }
@@ -99,6 +104,9 @@
     const FetchNewer = async () => {
       const newestEntryDate = entradas.value[0]?.createdAt || new Date().toISOString()
       let apiUrl = `/api/entradas?depth=2&where[createdAt][greater_than]=${newestEntryDate}&sort=-createdAt&limit=100`
+      if(props.overrideApiBase) {
+        apiUrl = `${props.overrideApiBase}`
+      }
       if (props.endpointQuery != '') {
         apiUrl += `&${props.endpointQuery}`
       }

@@ -129,18 +129,18 @@
         puedeFijar = UsuarioTieneAutoridad(); // si estamos en un grupo y el usuario es parte del grupo
     }
 
-    // const paginaActualEsUnSalon = route.name == "index" || route.name == "salones-slug"; // TODO guardar estas opciones en un store
-    // // DESTACAR
-    // const opcionDestacar = {
-    //     label: !entrada.destacada ? 'Destacar' : 'Quitar Destacado',
-    //     command: async () => {
-    //         console.log('Destacar');
-    //         await useApi(`/api/entradas/${entrada.id}`, {destacada:!entrada.destacada}, 'PATCH');
-    //         useNuxtAppasync ().callHook("publicacion:fijada");
-    //     }
-    // }
-
-    // if(authData.value.user.isAdmin){
+    // DESTACAR
+    const opcionDestacar = {
+        label: !entrada.destacada ? 'Destacar en El Salon' : 'Quitar Destacado',
+        command: async () => {
+            console.log('Destacar');
+            await useApi(`/api/entradas/${entrada.id}`, {destacada:!entrada.destacada}, 'PATCH');
+            useNuxtApp().callHook("publicacion:fijada");
+        }
+    }
+    if(usuarioEsAdminODocente){
+        opcionesArticulo.value = [...opcionesArticulo.value, opcionDestacar];
+    }
 
     // // FIJAR
     const opcionFijar = {

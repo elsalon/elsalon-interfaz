@@ -2,7 +2,7 @@
     <NuxtLayout name="layout-contenido">
         <CrearEntradaBtn />
         <!-- TODO QUery -->
-        <ListaEntradas />
+        <ListaEntradas overrideApiBase="/api/salones/dashboard"/>
     </NuxtLayout>
 </template>
 
