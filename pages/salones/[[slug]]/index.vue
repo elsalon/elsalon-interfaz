@@ -1,5 +1,6 @@
 <template>
-    <NuxtLayout name="layout-contenido">        
+    <NuxtLayout name="layout-contenido">    
+        <BtnColaborar/>    
         <CrearEntradaBtn />
         <!-- TODO Query -->
         <ListaEntradas :endpointQuery="query"/> 

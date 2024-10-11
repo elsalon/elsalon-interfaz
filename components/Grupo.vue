@@ -1,42 +1,43 @@
 <template>
-    
+    <!-- Lista de grupos de usuario en opciones > grupos -->
     <div class="transition-shadow duration-300 overflow-hidden">
-<!-- Group Header -->
-<div class="flex items-center gap-x-4 py-4 ">
-        <AvatarSalon :usuario="grupo" class="w-12 h-12" />
-        <h2 class="text-lg font-semibold text-gray-800 grow">{{ grupo.nombre }}</h2>
-        <div>
-            <Button text @click="ToggleGrupoOptions">...</Button>
-            <!-- <Menu :ref="el => menuRefs[grupo.id] = el" id="overlay_menu_grupo" :model="opcionesGrupo" :popup="true" class="text-xs" />  -->
-            <Menu :ref="el => menuRefs[grupo.id] = el" id="overlay_menu_article" :model="opcionesGrupo" :popup="true" class="text-xs" /> 
+        <!-- Group Header -->
+        <div class="flex items-center gap-x-4 py-4 ">
+            <AvatarSalon :usuario="grupo" class="w-12 h-12" />
+            <h2 class="text-lg font-semibold text-gray-800 grow">{{ grupo.nombre }}</h2>
+            <div>
+                <Button text @click="ToggleGrupoOptions">...</Button>
+                <!-- <Menu :ref="el => menuRefs[grupo.id] = el" id="overlay_menu_grupo" :model="opcionesGrupo" :popup="true" class="text-xs" />  -->
+                <Menu :ref="el => menuRefs[grupo.id] = el" id="overlay_menu_article" :model="opcionesGrupo"
+                    :popup="true" class="text-xs" />
+            </div>
         </div>
-      </div>
 
-      <!-- Group Members -->
-      <div class="py-4">
-        <h3 class="text-sm font-medium text-gray-500 mb-3">Integrantes</h3>
-        <div class="flex flex-wrap gap-4">
-          <div v-for="usuario in grupo.integrantes" :key="usuario.id" class="flex items-center gap-x-2">
-            <AvatarSalon :usuario="usuario" class="w-8 h-8" />
-            <span class="text-sm text-gray-700">{{ usuario.nombre }}</span>
-          </div>
+        <!-- Group Members -->
+        <div class="py-4">
+            <h3 class="text-sm font-medium text-gray-500 mb-3">Integrantes</h3>
+            <div class="flex flex-wrap gap-4">
+                <NuxtLink v-for="usuario in grupo.integrantes" :to="`/usuarios/${usuario.slug}`" :key="usuario.id" class="flex items-center gap-x-2">
+                    <AvatarSalon :usuario="usuario" class="w-8 h-8" />
+                    <span class="text-sm text-gray-700">{{ usuario.nombre }}</span>
+                </NuxtLink>
+            </div>
         </div>
-      </div>
 
-      <!-- Options (if needed) -->
-      <!-- <div class="px-4 py-3  text-right flex flex-col md:flex-row">
+        <!-- Options (if needed) -->
+        <!-- <div class="px-4 py-3  text-right flex flex-col md:flex-row">
         <Button text class="text-sm text-gray-500 hover:text-gray-700">Agregar integrantes</Button>
         <Button text class="text-sm text-gray-500 hover:text-gray-700">Editar</Button>
         <Button class="text-sm bg-gray-600 border-none">Dejar grupo</Button>
       </div> -->
     </div>
-    <Divider/>
+    <Divider />
 </template>
 
 <script setup>
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
-const {data: authData} = useAuth()
+const { data: authData } = useAuth()
 
 const confirm = useConfirm();
 const toast = useToast();
@@ -83,7 +84,7 @@ const ToggleGrupoOptions = (event) => {
 };
 
 
-const AbandonarDialog =  () => {
+const AbandonarDialog = () => {
     confirm.require({
         message: '¿Estás seguro querés abandonar el grupo?',
         header: props.grupo.nombre,
@@ -98,9 +99,9 @@ const AbandonarDialog =  () => {
             severity: 'danger'
         },
         accept: async () => {
-            try{
+            try {
                 await useApi(
-                    `/api/grupos/${props.grupo.id}`, 
+                    `/api/grupos/${props.grupo.id}`,
                     {
                         integrantes: props.grupo.integrantes.filter((i) => i.id != authData.value.user.id).map((i) => i.id) // envio los ids de los integrantes menos el mio
                     },
@@ -108,7 +109,7 @@ const AbandonarDialog =  () => {
                 );
                 toast.add({ severity: 'contrast', summary: 'Grupos', detail: `Abandonaste el grupo "${props.grupo.nombre}"`, life: 3000 });
                 emit('abandonadoGrupo', props.grupo.id);
-            }catch(e){
+            } catch (e) {
                 console.error(e);
                 toast.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error al abandonar el grupo', life: 3000 });
             }

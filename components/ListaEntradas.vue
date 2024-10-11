@@ -88,7 +88,6 @@
 
       let apiUrl = `/api/entradas?depth=2&page=${page.value}&sort=-createdAt`
       if(props.overrideApiBase) {
-        console.log('overrideApiBase', props.overrideApiBase)
         apiUrl = `${props.overrideApiBase}`
       }
       if (props.endpointQuery != '') {
