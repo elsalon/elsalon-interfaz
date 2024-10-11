@@ -120,14 +120,14 @@
     // console.log("Fijada: ", entrada.fijada)
     const usuarioEsAdminODocente = authData.value.user.isAdmin || authData.value.user.rol == "docente";
     let puedeFijar = false;
-    if(salonStore.currContext == "salon" && entrada.sala.id == salonStore.contextoId){
-        puedeFijar = usuarioEsAdminODocente; // si la entrada es del salon que vemos y el usuario es admin o docente
+    if(salonStore.currContext == "salon"){
+        puedeFijar = usuarioEsAdminODocente; // si la entrada es un salon y el usuario es admin o docente
     }
     if(salonStore.currContext == "bitacora" && entrada.autor.id == authData.value.user.id){
         puedeFijar = true; // si estamos en la bitacora del usuario actual
     }
     if(salonStore.currContext == "grupo" ){
-        puedeFijar = UsuarioTieneAutoridad();
+        puedeFijar = UsuarioTieneAutoridad(); // si estamos en un grupo y el usuario es parte del grupo
     }
 
     // const paginaActualEsUnSalon = route.name == "index" || route.name == "salones-slug"; // TODO guardar estas opciones en un store
