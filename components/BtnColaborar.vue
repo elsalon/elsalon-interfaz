@@ -10,7 +10,7 @@
     const SalonStore = useSalonStore()
     const idColaboracion = ref(null)
 
-    console.log("Boton colaborar. Tipo:", SalonStore.currContext, SalonStore.contextoId)
+    // console.log("Boton colaborar. Tipo:", SalonStore.currContext, SalonStore.contextoId)
 
     const estadoMostrarBtnColaborador = ref(0) // 0 no se muestra nada, 1 se muestra colaborar, 2 se muestra dejar de colaborar
     const estadoColaboradorLoading = ref(false)
@@ -40,9 +40,6 @@
     }
 
     onMounted(async() => {    
-        
-        // if(usuario.value.id != data.value?.user.id){
-            // Check if the user is already collaborating
         const resColaboracion = await useApi(`/api/colaboraciones?where[autor][equals]=${authData.value.user.id}&where[idColaborador][equals]=${SalonStore.contextoId}`)
         if(resColaboracion.docs.length > 0){
             idColaboracion.value = resColaboracion.docs[0].id
@@ -50,6 +47,5 @@
         }else{
             estadoMostrarBtnColaborador.value = 1
         }
-        // }
     })
 </script>

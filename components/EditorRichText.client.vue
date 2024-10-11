@@ -29,14 +29,14 @@
     const editorContainer = ref(null)
     let quill = null
 
-    const myContent = ref('')
+    // const myContent = ref('')
     const attachedImages = ref([])
     const attachedFiles = ref([])
     const fileInput = ref(null)
 
     const emit = defineEmits(['publishHotKey'])
     const props = defineProps({
-        editingData: { type: String, default: null }
+        editingData: { type: Object, default: null }
     })
     
 
@@ -163,7 +163,7 @@
     const parseExistingContent = () => {
         const { entrada, html } = props.editingData
         console.log('parseExistingContent', entrada, html)
-        myContent.value = html
+        quill.root.innerHTML = html
         attachedImages.value = []
         attachedImages.value = entrada.imagenes.map(data => ({imagen: data.imagen.id}))
         // console.log('adjuntos', entrada.archivos)
