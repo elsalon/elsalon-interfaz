@@ -33,7 +33,7 @@
       
       // Set up interval to check for new entries every 2 minutes
       checkNewEntriesInterval = setInterval(FetchNewer, 120000)
-      removeOnCreateHook = hooks.hook('publicacion:creada', handlePublicacionCreada)
+      removeOnCreateHook = hooks.hook('publicacion:creada', VolverAFetchear)
       removeOnFijar = hooks.hook('publicacion:fijada', VolverAFetchear)
     })
 
