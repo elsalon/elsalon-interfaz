@@ -100,6 +100,12 @@
 .prose iframe, .ql-editor iframe{
   @apply w-full aspect-video;
 }
+.prose img{
+  @apply w-full;
+}
+.prose img:hover{
+  @apply cursor-zoom-in;
+}
 
 /* Imagenes en editor de entrada */
 .ql-snow .ql-editor{
