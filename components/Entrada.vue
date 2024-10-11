@@ -31,7 +31,7 @@
                 </div>
             </div>
             <DeferredContent @load="onEntradaLoaded">
-                <div class="prose prose-headings:my-1 sm:pl-[65px] leading-normal" @click="onEntradaClicked"
+                <div class="prose prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2" @click="onEntradaClicked"
                     v-html="contenidoRendereado"></div>
                 <div class="sm:pl-[65px]" v-if="archivos.length">
                     <ListaArchivos :archivos="archivos" />
@@ -142,7 +142,7 @@ if (salonStore.currContext == "grupo") {
 
 // DESTACAR
 const opcionDestacar = {
-    label: !entrada.destacada ? 'Destacar en El Salon' : 'Quitar Destacado',
+    label: !entrada.destacada ? 'Destacar en El Salón' : 'Quitar destacado en El Salón',
     command: async () => {
         // console.log('Destacar');
         await useApi(`/api/entradas/${entrada.id}`, { destacada: !entrada.destacada }, 'PATCH');
@@ -224,7 +224,6 @@ let galleryPswp = null;
 let galleryOptions = null;
 
 const onEntradaLoaded = () => {
-    console.log('Entrada cargada');
     if (entrada.imagenes.length == 0) return;
     const runtimeConfig = useRuntimeConfig().public;
     const dataSource = entrada.imagenes.map(img => {

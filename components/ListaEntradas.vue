@@ -88,7 +88,7 @@
 
       let apiUrl = `/api/entradas?depth=2&page=${page.value}&sort=-createdAt`
       if(props.overrideApiBase) {
-        apiUrl = `${props.overrideApiBase}`
+        apiUrl = `${props.overrideApiBase}?page=${page.value}`
       }
       if (props.endpointQuery != '') {
         apiUrl += `&${props.endpointQuery}`
@@ -104,7 +104,7 @@
       const newestEntryDate = entradas.value[0]?.createdAt || new Date().toISOString()
       let apiUrl = `/api/entradas?depth=2&where[createdAt][greater_than]=${newestEntryDate}&sort=-createdAt&limit=100`
       if(props.overrideApiBase) {
-        apiUrl = `${props.overrideApiBase}`
+        apiUrl = `${props.overrideApiBase}?createdGreaterThan=${newestEntryDate}`
       }
       if (props.endpointQuery != '') {
         apiUrl += `&${props.endpointQuery}`

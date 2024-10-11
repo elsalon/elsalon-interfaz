@@ -5,8 +5,8 @@
             <nav class="w-full flex flex-row justify-between items-center">
                 <!-- Logo Salon -->
                 
-                <Avatar :label="paginaActual?.siglas" class="cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape=""  @click="toggleSalonesMenu"/>
-                <Menu ref="salonesMenu" id="overlay_menu_salones" :model="elsalon.salones" :popup="true"> 
+                <Avatar :label="paginaActual?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape=""  @click="toggleSalonesMenu"/>
+                <Menu ref="salonesMenu" id="overlay_menu_salones" :model="elsalon.salones" :popup="true" class="select-none"> 
                     <template #item="{ item, props }">
                         <router-link v-if="item.slug" v-slot="{ href, navigate }" :to="GenerateUrl(item.slug)" custom>
                             <a v-ripple :href="href" v-bind="props.action" @click="navigate">
