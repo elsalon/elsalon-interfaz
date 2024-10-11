@@ -84,14 +84,41 @@
   display: flex;
 }
 
+/* estilos links vieja escuela */
+.prose a{
+  color: blue;
+  text-decoration: none;
+  font-weight: unset;
+}
+.prose a:hover{
+  text-decoration: underline;
+}
+.prose a:visited{
+  color: purple;
+}
+
 .prose iframe, .ql-editor iframe{
   @apply w-full aspect-video;
 }
 
 /* Imagenes en editor de entrada */
-.ql-snow .ql-editor img {
-  max-width: 90% !important;
+.ql-snow .ql-editor{
+  img {
+    max-width: 90% !important;
+  }
+  a{
+    color: blue;
+    text-decoration: none !important;
+    font-weight: unset;
+  }
+  a:hover{
+    text-decoration: underline;
+  }
+  a:visited{
+    color: purple;
+  }
 }
+  
 
 #opciones-nav{
   .active{
@@ -109,6 +136,7 @@ form label{
 .ql-editor {
   @apply prose prose prose-headings:my-1 leading-normal max-w-none;
   overflow: none;
+  
 }
 .mention{
   @apply text-sm text-gray-500 bg-gray-100 p-0.5;
