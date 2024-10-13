@@ -20,6 +20,7 @@
             estadoColaboradorLoading.value = true;
             const res = await useApi('/api/colaboraciones', {autor: authData.value.user.id, tipo: SalonStore.currContext, idColaborador: SalonStore.contextoId}, 'POST')
             estadoMostrarBtnColaborador.value = 2
+            emit('estadoColaboracion', estadoMostrarBtnColaborador.value)
         }catch(e){
             console.log(e)
         }finally{
@@ -32,6 +33,7 @@
             estadoColaboradorLoading.value = true;
             await useApi(`/api/colaboraciones/${idColaboracion.value}`, null, 'DELETE')
             estadoMostrarBtnColaborador.value = 1
+            emit('estadoColaboracion', estadoMostrarBtnColaborador.value)
         }catch(e){
             console.log(e)
         }finally{
@@ -39,13 +41,15 @@
         }
     }
 
-    onMounted(async() => {    
-        const resColaboracion = await useApi(`/api/colaboraciones?where[autor][equals]=${authData.value.user.id}&where[idColaborador][equals]=${SalonStore.contextoId}`)
-        if(resColaboracion.docs.length > 0){
-            idColaboracion.value = resColaboracion.docs[0].id
-            estadoMostrarBtnColaborador.value = 2
-        }else{
-            estadoMostrarBtnColaborador.value = 1
-        }
-    })
+    const emit = defineEmits(['estadoColaboracion'])
+
+    const resColaboracion = await useApi(`/api/colaboraciones?where[autor][equals]=${authData.value.user.id}&where[idColaborador][equals]=${SalonStore.contextoId}`)
+    if(resColaboracion.docs.length > 0){
+        idColaboracion.value = resColaboracion.docs[0].id
+        estadoMostrarBtnColaborador.value = 2
+    }else{
+        estadoMostrarBtnColaborador.value = 1
+    }
+    emit('estadoColaboracion', estadoMostrarBtnColaborador.value)
+
 </script>

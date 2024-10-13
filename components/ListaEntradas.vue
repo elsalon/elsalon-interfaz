@@ -107,7 +107,6 @@ const FetchEntries = async () => {
 
 const FetchNewer = async () => {
   const newestEntryDate = entradas.value[0]?.createdAt || new Date().toISOString()
-  console.log("newestEntryDate", newestEntryDate)
   let apiUrl = `/api/entradas?depth=2&where[createdAt][greater_than]=${newestEntryDate}&sort=-createdAt&limit=100`
   if (props.overrideApiBase) {
     apiUrl = `${props.overrideApiBase}?createdGreaterThan=${newestEntryDate}`

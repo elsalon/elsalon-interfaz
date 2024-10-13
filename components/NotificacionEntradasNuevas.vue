@@ -66,15 +66,4 @@ defineExpose({
       cursor: pointer;
   }
 }
-
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-    transition: all 0.3s ease;
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-    transform: translateX(-50%) translateY(-100%);
-    opacity: 0;
-}
 </style>
