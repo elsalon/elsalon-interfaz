@@ -1,6 +1,6 @@
 <template>
     <div class="space-y-10">
-        <Entrada v-for="entrada in entradas" :key="entrada.id" :entrada="entrada" @eliminar="EliminarEntrada(entrada.id)" />
+        <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada" @eliminar="EliminarEntrada(entrada.id)" />
     </div>
     
     <div v-if="!hasNextPage" class="my-4 text-center text-gray-500 text-sm">No hay más entradas</div>
@@ -11,6 +11,7 @@
 <script setup>
     const { hooks } = useNuxtApp();
     const entradas = ref([]);
+    const entradasFijadas = ref([]);
     const idsEntradasFijadas = ref([]);
     const hasNextPage = ref(true);
     const page = ref(1);
@@ -32,7 +33,7 @@
       await CheckLlegoFinDePagina();
       window.addEventListener('scroll', CheckLlegoFinDePagina)
       
-      // Set up interval to check for new entries every 2 minutes
+      // Set up interval to check for new entries every 2 minutes: 120000
       checkNewEntriesInterval = setInterval(FetchNewer, 120000)
       removeOnCreateHook = hooks.hook('publicacion:creada', VolverAFetchear)
       removeOnFijar = hooks.hook('publicacion:fijada', VolverAFetchear)
@@ -77,8 +78,8 @@
       res.docs.forEach(item => {
         idsEntradasFijadas.value.push(item.entrada.id)
         item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
-      }) 
-      entradas.value = [...res.docs.map(item => item.entrada), ...entradas.value];
+      })
+      entradasFijadas.value = res.docs.map(item => item.entrada)
     }
 
     const FetchEntries = async () => {
@@ -95,13 +96,14 @@
       }
       const res = await useApi(apiUrl)
       hasNextPage.value = res.hasNextPage
-      const entradasNoFijadas = res.docs.filter(entrada => !idsEntradasFijadas.value.includes(entrada.id))
-      entradas.value = [...entradas.value, ...entradasNoFijadas]
+      const nuevasEntradas = res.docs.filter(entrada => !idsEntradasFijadas.value.includes(entrada.id)) // Filtro las entradas que ya están fijadas
+      entradas.value = [ ...entradas.value, ...nuevasEntradas];
       page.value++
     }
 
     const FetchNewer = async () => {
       const newestEntryDate = entradas.value[0]?.createdAt || new Date().toISOString()
+      console.log("newestEntryDate", newestEntryDate)
       let apiUrl = `/api/entradas?depth=2&where[createdAt][greater_than]=${newestEntryDate}&sort=-createdAt&limit=100`
       if(props.overrideApiBase) {
         apiUrl = `${props.overrideApiBase}?createdGreaterThan=${newestEntryDate}`
@@ -111,8 +113,12 @@
       }
       const res = await useApi(apiUrl)
       if (res.docs.length > 0) {
-        const entradasNoFijadas = res.docs.filter(entrada => !idsEntradasFijadas.value.includes(entrada.id))
-        entradas.value = [entradasNoFijadas, ...entradas.value] // ? esto puede quedar raro? Porque quedarian las fijas por debajo de las nuevas
+        const nuevasEntradas = res.docs.filter(entrada => !idsEntradasFijadas.value.includes(entrada.id)) // Filtro las entradas que ya están fijadas
+        entradas.value = [...nuevasEntradas, ...entradas.value];
       }
     }
+
+    const listaEntradas = computed(() => {
+      return [...entradasFijadas.value, ...entradas.value]
+  })
 </script>
