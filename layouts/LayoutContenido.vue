@@ -114,7 +114,13 @@
                     command: () => {
                         navigateTo('/opciones/grupos')
                     },
-                    separator: true
+                },
+                {
+                    label: 'Búsqueda',
+                    icon: PrimeIcons.SEARCH,
+                    command: () => {
+                        navigateTo('/busqueda')
+                    }
                 },
                 {
                     label: 'Opciones',
