@@ -1,5 +1,5 @@
 <template>
-    <div class="group/entrada">
+    <div class="group/entrada" :class="{entradaNueva: entrada.nueva}">
         <article :key="reloadkey">
             <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
             <div class="flex items-center pb-2">
