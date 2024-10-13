@@ -1,8 +1,6 @@
 <template>
   <NotificacionEntradasNuevas ref="notifEntradasNuevas"/>
 
-  <Button @click="showTemplate" label="View" />
-
   <div class="space-y-10">
     <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada"
       @eliminar="EliminarEntrada(entrada.id)" />
@@ -130,11 +128,5 @@ const FetchNewer = async () => {
 const listaEntradas = computed(() => {
   return [...entradasFijadas.value, ...entradas.value]
 })
-
-const showTemplate = () => {
-  console.log('showTemplate')
-  
-  notifEntradasNuevas.value.Mostrar();
-}
 
 </script>

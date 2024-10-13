@@ -31,14 +31,22 @@ const IrAEntradasRecientes = () => {
     Ocultar()
 }
 
-window.addEventListener('scroll', function() {
-    if (primeraEntradaNueva.value) {
-        const position = primeraEntradaNueva.value.getBoundingClientRect();
-        if(position.top < window.innerHeight && position.bottom >= 0) {
-          Ocultar();
-        }
+const handleScroll = () => {
+  if (primeraEntradaNueva.value) {
+    const position = primeraEntradaNueva.value.getBoundingClientRect();
+    if (position.top < window.innerHeight && position.bottom >= 0) {
+      Ocultar();
     }
-});
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+})
 
 defineExpose({
     Mostrar
@@ -47,16 +55,16 @@ defineExpose({
 </script>
 <style scoped>
 .entradasNuevasNotification {
-    @apply flex bg-primary-500 space-x-2 text-white text-xs px-2 py-1 rounded-full;
-    z-index: 9999;
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+  @apply flex bg-primary-500 space-x-2 text-white text-xs px-2 py-1 rounded-full;
+  z-index: 9999;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
 
-    &:hover {
-        cursor: pointer;
-    }
+  &:hover {
+      cursor: pointer;
+  }
 }
 
 .slide-fade-enter-active,
