@@ -9,9 +9,15 @@ interface Salon{
   color: string;
   slug: string;
 }
+interface Etiqueta{
+  id: string;
+  nombre: string;
+  slug: string;
+}
 
 export const useSalonStore = defineStore('salon', {
     state: () => ({
+      etiquetas: [] as Etiqueta[],
       salones: [] as Salon[],
       initialized: false,
       loading: false,
@@ -31,10 +37,18 @@ export const useSalonStore = defineStore('salon', {
           // return;
           const runtimeConfig = useRuntimeConfig().public
           const { data }: any  = await useFetch(runtimeConfig.apiBase + "/api/salones?sort=orden$limit=-1")
-          if(data.value.docs.length > 0){
-            this.salones = data.value.docs.sort((a: any, b: any) => a.orden - b.orden);
+          if(data.value?.docs.length > 0){
+            this.salones = data.value?.docs.sort((a: any, b: any) => a.orden - b.orden);
+          }
+          const {data: etiquetasRes}:any = await useFetch(runtimeConfig.apiBase + "/api/etiquetas")
+          
+          if(etiquetasRes.value?.docs.length > 0){
+            this.etiquetas = etiquetasRes.value?.docs;
+          }
+          if(this.salones.length > 0 && this.etiquetas.length > 0){
             this.initialized = true
           }
+
         } catch (error) {
           console.error('Failed to fetch config:', error)
         } finally {
