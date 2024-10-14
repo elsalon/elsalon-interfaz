@@ -15,12 +15,23 @@
             <input type="file" id="avatar" ref="avatarFileInput" class="w-full caja-input"/>
         </div>
 
-        <div class="flex gap-2 mb-4 flex-col md:flex-row">
+        <div class="flex gap-2 mb-10 flex-col md:flex-row">
             <label for="bio" class="font-semibold w-24">bio</label>
             <Textarea id="bio" class="w-full leading-normal" v-model="perfil.bio" autoResize rows="5" cols="30" />
         </div>
+
+        <div :class="{'opacity-50':password==''}">
+            <div class="text-sm mt-10">Si no querés cambiar tu contraseña, dejá estos campos vacíos</div>
+            
+                <label for="contraseña" class="font-semibold w-24">nueva contraseña</label>
+                <InputText id="contraseña" class="w-full" type="password" v-model="password" :required="password!=''"/>
+            
+                <label for="contraseña" class="font-semibold w-24">repetí contraseña</label>
+                <InputText id="contraseña" class="w-full" type="password" v-model="password2" :required="password!=''"/>
+            
+        </div>
         
-        <div class="text-right">
+        <div class="text-right mb-10">
             <Button type="submit" class="" label="Guardar" :loading="loading" />
         </div>
 
@@ -33,6 +44,9 @@ const toast = useToast();
 import { useToast } from "primevue/usetoast";
 const {data, getSession } = useAuth()
 const loading = ref(false)
+const password = ref('')
+const password2 = ref('')
+
 const perfil = ref({
     nombre: data.value.user.nombre,
     email: data.value.user.email,
@@ -52,6 +66,17 @@ const handleSubmit = async () => {
             // console.log(avatarRes)
             perfil.value.avatar = avatarRes.doc.id
         }
+
+        // Luego chequeamos si hay que cambiar la contraseña
+        if(password.value != ''){
+            if(password.value == password2.value){
+                perfil.value.password = password.value
+            }else{
+                toast.add({ severity: 'error', summary: 'Error', detail: 'Las contraseñas no coinciden', life: 3000});
+                return;
+            }
+        }
+        
 
         // Luego guardamos el perfil
         const userRes = await useApi(`/api/users/${data.value.user.id}`, perfil.value, 'PATCH');
