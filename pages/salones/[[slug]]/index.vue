@@ -4,13 +4,13 @@
             <LogoSala :salon="salon"/>
             <h1 class="text-3xl font-bold">{{ salon.nombre }}</h1>
             <div v-if="miembros" class="text-md text-muted-color">
-                <div>{{ miembros.totalDocs }} miembros</div>
+                <!-- <div>{{ miembros.totalDocs }} miembros</div> -->
                 <!-- Lista de avatares de miembros -->
                 <div class="flex justify-center space-x-2">
                     <NuxtLink v-for="miembro in miembros.docs" :key="miembro.id" :to="`/usuarios/${miembro.autor.slug}`" :title="miembro.autor.nombre">
                         <AvatarSalon :usuario="miembro.autor" size="small" imagesize="small"/>
                     </NuxtLink>
-                    <span v-if="miembros.totalDocs > miembros.docs.length" class="text-muted-color">y más</span>
+                    <span v-if="miembros.totalDocs > miembros.docs.length" class="text-muted-color">+{{ miembros.totalDocs - miembros.docs.length }}</span>
                 </div>
                 
             </div>
