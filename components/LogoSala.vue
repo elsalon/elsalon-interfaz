@@ -1,12 +1,8 @@
 <template>
     <div class="logoContainer relative inline-flex group/logosala" @click="LoadImage" >
         
-        <template v-if="salon?.avatar" :key="key">
-            <img :src="AvatarUrl()" class="select-none cursor-pointer" style="width: 100%; height: 100%; object-fit: cover;"/>
-        </template>
-        <template v-else>
-            <Avatar :label="salon?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: salon.color, color: '#fff'}" size="xlarge" shape=""/>
-        </template>
+        <Avatar v-if="salon?.avatar" :image="AvatarUrl()" size="xlarge" shape=""/>
+        <Avatar v-else :label="salon?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: salon.color, color: '#fff'}" size="xlarge" shape=""/>
 
         <div v-if="puedeEditar" class="absolute bottom-0 right-1 opacity-0 group-hover/logosala:opacity-100" style="font-size: .7rem;">
             <i class="pi pi-upload"></i>

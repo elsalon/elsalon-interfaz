@@ -35,7 +35,7 @@ export default {
     }),
     image: ({ props }) => ({
         class: [
-            'h-full w-full',
+            'h-full w-full object-cover',
             {
                 'rounded-lg': props.shape == 'square',
                 'rounded-full': props.shape == 'circle'
