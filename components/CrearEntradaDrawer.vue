@@ -62,7 +62,7 @@ const autoresOpciones =ref([])
 const {docs:gruposDelUsuario} = await useApi(`/api/grupos?where[integrantes][contains]=${authData.value?.user?.id}`);
 
 const Publicar = async () => {
-    const {html, imagenes, archivos} = await editor.value.parseEditorToUpload()
+    const {html, imagenes, archivos, mencionados, etiquetas} = await editor.value.parseEditorToUpload()
     if(html == ""){
         return;
     }
@@ -72,10 +72,12 @@ const Publicar = async () => {
     let method ='POST'
 	let data = {
 		contenido: html, 
-		imagenes: imagenes,
-        archivos: archivos,
 		sala: paginaActual.value.id,
 		autoriaGrupal: false,
+		imagenes,
+        archivos,
+        mencionados,
+        etiquetas,
 	}
 	// console.log("DATA", html, imagenes)	
 	let endpoint = '/api/entradas'

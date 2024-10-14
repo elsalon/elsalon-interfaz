@@ -145,7 +145,11 @@ form label{
   
 }
 .mention{
-  @apply text-sm text-gray-500 bg-gray-100 p-0.5;
+  color: blue;
+  &:hover{
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }
 .ql-mention-list-container{
   @apply bg-white p-1 border border-solid border-zinc-100;

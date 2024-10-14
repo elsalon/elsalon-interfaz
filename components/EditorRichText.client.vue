@@ -108,33 +108,40 @@
         }
 
         // Parse menciones y etiquetas
-        console.log("html", html)
         const tempDiv = document.createElement("div");
         tempDiv.innerHTML = html;
-        // Find all mention spans
-        const mentions = tempDiv.querySelectorAll('span.mention[data-denotation-char="@"]');
-        mentions.forEach(mention => {
-            // Extract the necessary attributes
-            const dataId = mention.getAttribute('data-id');
-            const dataValue = mention.getAttribute('data-value');
-            
-            // Create the replacement text in the desired format
-            const replacementText = `[${dataValue}](mention:${dataId})`;
 
-            // Replace the content of the mention span with the custom format
-            mention.outerHTML = replacementText;
-        });
+        let mencionados = [];
+        let etiquetas = [];
 
-        const etiquetas = tempDiv.querySelectorAll('span.mention[data-denotation-char="#"]');
-        etiquetas.forEach(etiqueta => {
-            const dataId = etiqueta.getAttribute('data-id');
-            const dataValue = etiqueta.getAttribute('data-value');
-            const replacementText = `[${dataValue}](etiqueta:${dataId})`;
-            etiqueta.outerHTML = replacementText;
-        });
+        // Función auxiliar para procesar tanto menciones como etiquetas
+        const processElements = (elements, type) => {
+            return [...elements].map(el => {
+                const dataId = el.getAttribute('data-id');
+                const dataValue = el.getAttribute('data-value');
+                // Crear el texto de reemplazo basado en el tipo
+                const replacementText = `[${dataValue}](${type}:${dataId})`;
+                el.outerHTML = replacementText; // Reemplazar con el formato personalizado
+                return dataId; // Devolver el ID para agregarlo al array correspondiente
+            });
+        };
+
+        // Procesar nuevas y viejas menciones
+        mencionados.push(
+            ...processElements(tempDiv.querySelectorAll('span.mention[data-denotation-char="@"]'), "mencion"),
+            ...processElements(tempDiv.querySelectorAll('.mencion-link'), "mencion")
+        );
+
+        // Procesar nuevas y viejas etiquetas
+        etiquetas.push(
+            ...processElements(tempDiv.querySelectorAll('span.mention[data-denotation-char="#"]'), "etiqueta"),
+            ...processElements(tempDiv.querySelectorAll('.etiqueta-link'), "etiqueta")
+        );
+
         html = tempDiv.innerHTML;
+        console.log("mencionados", mencionados, "etiquetas", etiquetas)
 
-        return {html, imagenes: attachedImages.value, archivos: archivos}
+        return {html, imagenes: attachedImages.value, archivos, mencionados, etiquetas}
     }
 
     
