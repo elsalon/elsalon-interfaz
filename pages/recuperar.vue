@@ -5,7 +5,7 @@
 		<form @submit.prevent="handleRecuperar" class="space-y-3">
       		
 			<div>
-                <label for="password" class="block text-900 font-medium mb-2">Contraseña</label>
+                <label for="password" class="block text-900 font-medium mb-2">Nueva Contraseña</label>
                 <InputText id="password" type="password" class="block w-full" v-model="password" required autofocus tabindex="1"/>
             </div>
 
@@ -18,13 +18,6 @@
 				<Button type="submit" label="Cambiar contraseña" class="block w-full mt-3" :loading="loading"></Button>
 			</div>
 		</form>
-<!--   
-		<p class="mt-10 text-center text-sm text-gray-500">También podés
-			<a href="/login" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">iniciar sesión</a>
-            o también 
-            <a href="/registrar" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">registrarte</a>
-  		</p> -->
-
   </NuxtLayout>
 </template>
   
