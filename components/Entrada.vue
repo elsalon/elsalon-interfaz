@@ -31,7 +31,7 @@
                 </div>
             </div>
             <DeferredContent @load="onEntradaLoaded">
-                <div class="prose prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2" @click="onEntradaClicked"
+                <div v-if="contenidoRendereado" class="prose prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2" @click="onEntradaClicked"
                     v-html="contenidoRendereado"></div>
                 <div class="sm:pl-[65px]" v-if="archivos.length">
                     <ListaArchivos :archivos="archivos" />
