@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="layout-contenido">
         <div class="text-center mb-2">
-            <Avatar :label="salon?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: salon.color, color: '#fff'}" size="large" shape=""/>
+            <LogoSala :salon="salon"/>
             <h1 class="text-3xl font-bold">{{ salon.nombre }}</h1>
             <div v-if="miembros" class="text-md text-muted-color">
                 <div>{{ miembros.totalDocs }} miembros</div>
@@ -47,7 +47,7 @@ const onEstadoColaboracion = (estado) => {
 
 const BuscarMiembros = async () => {
     miembros.value = await useApi(`/api/colaboraciones?where[idColaborador][equals]=${salon.value.id}`);
-    console.log(miembros.value)
+    // console.log(miembros.value)
 }
 
 // BuscarMiembros()

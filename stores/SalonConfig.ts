@@ -26,6 +26,12 @@ export const useSalonStore = defineStore('salon', {
   }),
 
   actions: {
+    async UpdateSala(salon: Salon) {
+      const i = this.salones.findIndex((s) => s.id === salon.id);
+      if (i >= 0) {
+        this.salones[i] = salon;
+      }
+    },
     async setContext(context: string, salon: string = '') {
       this.currContext = context;
       this.contextoId = salon;

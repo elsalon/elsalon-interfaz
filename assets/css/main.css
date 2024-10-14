@@ -200,3 +200,8 @@ form label{
 ol{
   list-style-type: unset !important;
 }
+
+.logoContainer{
+  max-width: 64px;
+  max-height: 64px;
+}
