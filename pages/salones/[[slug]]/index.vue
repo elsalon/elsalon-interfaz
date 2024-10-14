@@ -19,7 +19,6 @@ SalonStore.setContext('salon', salonId)
 const query = slug ? `where[sala.slug][equals]=${slug}` : ''
 
 const onEstadoColaboracion = (estado) => {
-    console.log('Estado colaboracion', estado)
     estadoColaboracion.value = estado
 }
 </script>
