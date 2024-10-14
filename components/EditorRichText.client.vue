@@ -18,9 +18,8 @@
 </template>
 
 <script setup>
-    // import { QuillEditor } from '@vueup/vue-quill'
-    // import '@vueup/vue-quill/dist/vue-quill.snow.css';
     import "quill-mention/autoregister";
+    const salonStore = useSalonStore();
 
     import Compressor from 'compressorjs';
     import formatBytes from '~/composables/useBytesDisplay';
@@ -108,8 +107,37 @@
             archivos.push({archivo: uploadedFile.id})
         }
 
+        // Parse menciones y etiquetas
+        console.log("html", html)
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = html;
+        // Find all mention spans
+        const mentions = tempDiv.querySelectorAll('span.mention[data-denotation-char="@"]');
+        mentions.forEach(mention => {
+            // Extract the necessary attributes
+            const dataId = mention.getAttribute('data-id');
+            const dataValue = mention.getAttribute('data-value');
+            
+            // Create the replacement text in the desired format
+            const replacementText = `[${dataValue}](mention:${dataId})`;
+
+            // Replace the content of the mention span with the custom format
+            mention.outerHTML = replacementText;
+        });
+
+        const etiquetas = tempDiv.querySelectorAll('span.mention[data-denotation-char="#"]');
+        etiquetas.forEach(etiqueta => {
+            const dataId = etiqueta.getAttribute('data-id');
+            const dataValue = etiqueta.getAttribute('data-value');
+            const replacementText = `[${dataValue}](etiqueta:${dataId})`;
+            etiqueta.outerHTML = replacementText;
+        });
+        html = tempDiv.innerHTML;
+
         return {html, imagenes: attachedImages.value, archivos: archivos}
     }
+
+    
 
     const uploadFile = async (file) => {
         const formData = new FormData()
@@ -220,16 +248,16 @@
                                 // ];
                                 if(searchTerm.length < 2) return
                                 const response = await useApi(`/api/users?where[nombre][contains]=${searchTerm}&limit=5`, null, 'GET');
-                                console.log(response.docs)
+                                // console.log(response.docs)
                                 values = response.docs.map(user => {
                                     return { id: user.id, value: user.nombre }
                                 })
-                            } else {
-                                values = [
-                                    { id: 1, value: 'popular' },
-                                    { id: 2, value: 'programming' },
-                                    { id: 3, value: 'javascript' }
-                                ];
+                            } else if(mentionChar === "#") {
+                                const etiquetas = salonStore.etiquetas.filter(etiqueta => 
+                                    etiqueta.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
+                                values = etiquetas.map(etiqueta => {
+                                    return { id: etiqueta.id, value: etiqueta.nombre }
+                                })
                             }
 
                             if (searchTerm.length === 0) {

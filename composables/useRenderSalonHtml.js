@@ -22,10 +22,10 @@ export default function useRenderSalonHtml(entrada){
         }
     }
 
-    // 2 Convierto <span class="mention" en <a href="/perfil/username" usando el campo entrada.menciones
+    // 2 Convierto menciones <span class="mention" en <a href="/perfil/username" usando el campo entrada.menciones
     const mentionRegex = /<span class="mention"[^>]*data-id="([^"]+)"[^>]*data-value="([^"]+)"[^>]*>(.*?)<\/span>/g;
     const mentionMatches = [...content.matchAll(mentionRegex)];
-    
+    console.log("****", mentionMatches)
     for (const match of mentionMatches) {
         const spanTag = match[0];
         const dataId = match[1];       // Extract the data-id
@@ -41,5 +41,7 @@ export default function useRenderSalonHtml(entrada){
         // Replace the <span> tag with the <a> tag
         content = content.replace(spanTag, mentionLink);
     }
+
+    // 3 Converit
     return content;
 }
