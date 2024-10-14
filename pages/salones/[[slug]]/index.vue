@@ -12,9 +12,9 @@
 const estadoColaboracion = ref(false)
 const route = useRoute()
 const slug = route.params?.slug
-const SalonStore = useSalonStore();
-const salonId = SalonStore.salones.find(salon => salon.slug === slug).id
-SalonStore.setContext('salon', salonId)
+const salonStore = useSalonStore();
+const salonId = salonStore.salones.find(salon => salon.slug === slug).id
+salonStore.setContext('salon', salonId)
 
 const query = slug ? `where[sala.slug][equals]=${slug}` : ''
 
