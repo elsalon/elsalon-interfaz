@@ -69,6 +69,8 @@ const handleSubmit = async () => {
 
         // Luego chequeamos si hay que cambiar la contraseña
         if(password.value != ''){
+            // TODO Pedir contraseña actual
+            // Pero en payload no encontré manera de validar la contraseña actual
             if(password.value == password2.value){
                 perfil.value.password = password.value
             }else{
