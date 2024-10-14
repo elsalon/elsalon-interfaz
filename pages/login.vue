@@ -8,9 +8,9 @@
   
       <div>
       <div class="flex items-center justify-between">
-        <label for="password1" class="block text-900 font-medium mb-2">Password</label>
+        <label for="password" class="block text-900 font-medium mb-2">Password</label>
         <div class="text-sm">
-          <a href="#" class="font-semibold text-surface-300 hover:text-surface-500" tabindex="5">¿Olvidaste tu contraseña?</a>
+          <a href="/olvide" class="font-semibold text-surface-300 hover:text-surface-500" tabindex="5">¿Olvidaste tu contraseña?</a>
         </div>
       </div>
       <InputText id="password" type="password" class="block w-full" v-model="password" required tabindex="2"/>

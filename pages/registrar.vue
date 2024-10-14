@@ -1,6 +1,6 @@
 <template>
 	<NuxtLayout name="layout-credenciales">
-		<template #cta>Darse de alta en El Salón</template>
+		<template #cta>Registrate en El Salón</template>
 
 		<form @submit.prevent="handleSignup" class="space-y-3">
       		<div>
