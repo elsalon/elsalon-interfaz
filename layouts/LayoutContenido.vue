@@ -4,14 +4,15 @@
             <!-- Fixed Nav -->
             <nav class="w-full flex flex-row justify-between items-center">
                 <!-- Logo Salon -->
-                
-                <Avatar :label="paginaActual?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape=""  @click="toggleSalonesMenu"/>
+                <Avatar v-if="paginaActual?.avatar" :image="AvatarUrl(paginaActual)" size="large" shape="" class="select-none cursor-pointer" @click="toggleSalonesMenu"/>
+                <Avatar v-else :label="paginaActual?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape="" @click="toggleSalonesMenu"/>
                 <Menu ref="salonesMenu" id="overlay_menu_salones" :model="elsalon.salones" :popup="true" class="select-none"> 
                     <template #item="{ item, props }">
                         <router-link v-if="item.slug" v-slot="{ href, navigate }" :to="GenerateUrl(item.slug)" custom>
                             <a v-ripple :href="href" v-bind="props.action" @click="navigate">
                                 <span class="mr-2">
-                                    <Avatar :label="item.siglas" :style="{backgroundColor: item.color, color: '#fff'}" shape="circle" />
+                                    <Avatar v-if="item?.avatar" :image="AvatarUrl(item)" shape="circle"/>
+                                    <Avatar v-else :label="item.siglas" :style="{backgroundColor: item.color, color: '#fff'}" shape="circle" />
                                 </span>
                                 <span>{{ item.nombre }}</span>                        
                             </a>
@@ -62,6 +63,7 @@
     const elsalon = useSalonStore();
     const notificacionesVisible = ref(false);
     const notificacionesDialog = ref();
+    const runtimeConfig = useRuntimeConfig().public;
 
     const toast = useToast();
     import { useToast } from "primevue/usetoast";
@@ -149,4 +151,8 @@
     const toggleSalonesMenu = (event) => {
         salonesMenu.value.toggle(event);
     };
+    
+    const AvatarUrl = (sala) => {
+        return runtimeConfig.apiBase + sala.avatar.sizes.medium.url;
+    }
 </script>

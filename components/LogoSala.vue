@@ -1,6 +1,6 @@
 <template>
-    <div class="logoContainer relative inline-flex group/logosala" @click="LoadImage" >
-        
+    <div class="logoContainer relative inline-flex group/logosala cursor-pointer" @click="LoadImage" >
+
         <Avatar v-if="salon?.avatar" :image="AvatarUrl()" size="xlarge" shape=""/>
         <Avatar v-else :label="salon?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: salon.color, color: '#fff'}" size="xlarge" shape=""/>
 
@@ -10,7 +10,7 @@
     </div>
 
     <form ref="form" class="hidden">
-        <input type="file" @change="onFileChange" ref="fileInput" accept="image/*" />
+        <input type="file" @change="onFileChange" ref="fileInput" accept=".jpg,.jpeg,.png*" />
     </form>
 
 </template>
@@ -24,7 +24,6 @@ const fileInput = ref()
 const { data: authData } = useAuth()
 const puedeEditar = authData.value?.user?.rol == 'docente' || authData.value?.user?.isAdmin;
 const salonStore = useSalonStore()
-const key = ref(0)
 
 const LoadImage = () => {
     if (!puedeEditar) return
@@ -47,7 +46,6 @@ const onFileChange = async (e) => {
         toast.add({severity: 'contrast', summary: 'Avatar actualizado', detail: 'El avatar de la sala ha sido actualizado'})
         salonStore.UpdateSala(salonRes.doc)
         props.salon.avatar = salonRes.doc.avatar; // Update the avatar field
-        key.value++; // Trigger re-render
     }
 }
 
