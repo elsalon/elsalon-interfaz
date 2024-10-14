@@ -10,7 +10,7 @@
                     <NuxtLink v-for="miembro in miembros.docs" :key="miembro.id" :to="`/usuarios/${miembro.autor.slug}`" :title="miembro.autor.nombre">
                         <AvatarSalon :usuario="miembro.autor" size="small" imagesize="small"/>
                     </NuxtLink>
-                    <!-- <AvatarSalon v-for="miembro in miembros.docs" :key="miembro.id" :usuario="miembro.autor" size="small" imagesize="small"/> -->
+                    <span v-if="miembros.totalDocs > miembros.docs.length" class="text-muted-color">y más</span>
                 </div>
                 
             </div>
