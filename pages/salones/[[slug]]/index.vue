@@ -36,7 +36,7 @@ const salon = ref(null)
 salon.value = salonStore.salones.find(salon => salon.slug === slug)
 salonStore.setContext('salon', salon.value.id)
 
-const query = slug ? `where[sala.slug][equals]=${slug}` : ''
+const query = slug ? `where[sala][equals]=${salon.value.id}` : ''
 
 const miembros = ref(null)
 
