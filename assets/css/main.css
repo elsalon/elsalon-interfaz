@@ -85,15 +85,18 @@
 }
 
 /* estilos links vieja escuela */
-.prose a{
+.prose a, .listaArchivos a{
   color: blue;
   text-decoration: none;
   font-weight: unset;
 }
-.prose a:hover{
+.prose a:hover, .listaArchivos a:hover{
   text-decoration: underline;
 }
-.prose a:visited{
+.listaArchivos a:hover>.filesize{
+  text-decoration: none;
+}
+.prose a:visited, .listaArchivos a:visited{
   color: purple;
 }
 
