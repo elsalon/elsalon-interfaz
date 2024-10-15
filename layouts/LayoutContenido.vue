@@ -6,10 +6,11 @@
                 <!-- Logo Salon -->
                 <Avatar v-if="paginaActual?.avatar" :image="paginaActual.avatar.sizes.medium.url" size="large" shape="" class="select-none cursor-pointer" @click="toggleSalonesMenu"/>
                 <Avatar v-else :label="paginaActual?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape="" @click="toggleSalonesMenu"/>
+
                 <Menu ref="salonesMenu" id="overlay_menu_salones" :model="elsalon.salones" :popup="true" class="select-none"> 
                     <template #item="{ item, props }">
                         <router-link v-if="item.slug" v-slot="{ href, navigate }" :to="GenerateUrl(item.slug)" custom>
-                            <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+                            <a :href="href" v-bind="props.action" @click="navigate">
                                 <span class="mr-2">
                                     <Avatar v-if="item?.avatar" :image="item.avatar.sizes.medium.url" shape="circle"/>
                                     <Avatar v-else :label="item.siglas" :style="{backgroundColor: item.color, color: '#fff'}" shape="circle" />

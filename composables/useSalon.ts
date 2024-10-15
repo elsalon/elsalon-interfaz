@@ -7,7 +7,7 @@ export default function useSalon() {
   const elsalon = useSalonStore()
 
   const slug = route.params?.slug || 'el-salon'
-  const paginaActual = ref(elsalon.salones.find(s => s.slug === slug) || 'el-salon')
+  const paginaActual = ref(elsalon.salones.find(s => s.slug === slug) || elsalon.salones.find(s => s.slug === 'el-salon'))
 
   return {
     slug,
