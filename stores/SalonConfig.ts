@@ -1,12 +1,20 @@
 import { defineStore } from 'pinia'
 import { useRuntimeConfig } from '#app'
 
+interface Archivo {
+  activar: Boolean;
+  frecuencia: String;
+  annoInicio: number;
+  periodos: Array<object>;
+}
+
 interface Salon {
   id: string;
   nombre: string;
   siglas: string;
   color: string;
   slug: string;
+  archivo: Archivo;
 }
 
 interface Etiqueta {
@@ -23,6 +31,10 @@ export const useSalonStore = defineStore('salon', {
     loading: false,
     currContext: null as String | null,
     contextoId: null as String | null,
+    comienzoCuatri1: '01-01', // mes / dia 1 enero
+    finCuatri1: '07-31', // mes / dia 31 julio
+    comienzoCuatri2: '08-01', // mes / dia 1 agosto (aunque sea mas tarde)
+    finCuatri2: '12-31', // mes / dia 31 diciembre
   }),
 
   actions: {
@@ -35,6 +47,37 @@ export const useSalonStore = defineStore('salon', {
     async setContext(context: string, salon: string = '') {
       this.currContext = context;
       this.contextoId = salon;
+    },
+    crearPeriodos(salon: Salon) {
+      if(salon.archivo.activar){
+        let periodos = []
+        for(let i = new Date().getFullYear(); i >= salon.archivo.annoInicio; i--){
+          if(salon.archivo.frecuencia == "anual"){
+            // Materias anuales tienen un solo periodo por año
+            periodos.push({
+              startDate: new Date(i + '-' + this.comienzoCuatri1),
+              endDate: new Date(i + '-' + this.finCuatri2),
+              nombre: i,
+              slug: `${i}`,
+            })
+          }else if(salon.archivo.frecuencia == "cuatrimestral"){
+            // Materias cuatrimestrales tienen dos periodos por año
+            periodos.push({
+              startDate: new Date(i + '-' + this.comienzoCuatri2),
+              endDate: new Date(i + '-' + this.finCuatri2),
+              nombre: i + ' C. 2',
+              slug: `${i}-2`,
+            })
+            periodos.push({
+              startDate: new Date(i + '-' + this.comienzoCuatri1),
+              endDate: new Date(i + '-' + this.finCuatri1),
+              nombre: i + ' C. 1',
+              slug: `${i}-1`,
+            })
+          }
+          salon.archivo.periodos = periodos;
+        }
+      }
     },
 
     async fetchConfig() {
@@ -55,6 +98,7 @@ export const useSalonStore = defineStore('salon', {
         const salonesData = salonesRes.data.value?.docs || [];
         if (salonesData.length > 0) {
           this.salones = salonesData.sort((a: any, b: any) => a.orden - b.orden);
+          this.salones.forEach((salon: Salon) => this.crearPeriodos(salon));
         }
 
         // Procesa la respuesta de etiquetas
