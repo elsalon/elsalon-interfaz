@@ -70,14 +70,14 @@ export const useSalonStore = defineStore('salon', {
               periodos.push({
                 startDate: new Date(i + '-' + this.comienzoCuatri2),
                 endDate: new Date(i + '-' + this.finCuatri2),
-                nombre: i + ' C. 2',
+                nombre: i + ' c. 2',
                 slug: `${i}-2`,
               })
             }
             periodos.push({
               startDate: new Date(i + '-' + this.comienzoCuatri1),
               endDate: new Date(i + '-' + this.finCuatri1),
-              nombre: i + ' C. 1',
+              nombre: i + ' c. 1',
               slug: `${i}-1`,
             })
           }

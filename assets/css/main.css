@@ -112,6 +112,9 @@
   img {
     max-width: 90% !important;
   }
+  img:hover{
+    cursor: unset;
+  }
   a{
     color: blue;
     text-decoration: none !important;
