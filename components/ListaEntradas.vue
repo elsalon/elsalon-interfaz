@@ -38,7 +38,7 @@ onMounted(async () => {
   window.addEventListener('scroll', CheckLlegoFinDePagina)
 
   // Set up interval to check for new entries every 2 minutes: 120000
-  checkNewEntriesInterval = setInterval(FetchNewer, 5000)
+  checkNewEntriesInterval = setInterval(FetchNewer, 120000)
   removeOnCreateHook = hooks.hook('publicacion:creada', VolverAFetchear)
   removeOnFijar = hooks.hook('publicacion:fijada', VolverAFetchear)
 })
@@ -98,6 +98,13 @@ const FetchEntries = async () => {
   if (props.endpointQuery != '') {
     apiUrl += `&${props.endpointQuery}`
   }
+
+  // Como filtrar entre dos fechas
+  // const startDate = encodeURIComponent(new Date('2024-10-10T00:00:00.000Z').toISOString());
+  // const endDate   = encodeURIComponent(new Date('2024-10-14T23:59:59.999Z').toISOString());
+  // const dateRangeQuery = `&where%5Band%5D%5B0%5D%5BcreatedAt%5D%5Bgreater_than_equal%5D=${startDate}&where%5Band%5D%5B1%5D%5BcreatedAt%5D%5Bless_than_equal%5D=${endDate}`
+  // apiUrl += dateRangeQuery
+
   const res = await useApi(apiUrl)
   hasNextPage.value = res.hasNextPage
   const nuevasEntradas = res.docs.filter(entrada => !idsEntradasFijadas.value.includes(entrada.id)) // Filtro las entradas que ya están fijadas
