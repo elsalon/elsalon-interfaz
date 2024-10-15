@@ -4,6 +4,7 @@
             <LogoSala :salon="salon"/>
             <h1 class="text-3xl font-bold">{{ salon.nombre }}</h1>
             <h2 class="text-xl font-bold">Archivo {{ periodo.nombre }}</h2>
+            <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon" />
 
 
             <!-- {{ periodo.startDate.toISOString() }} -->

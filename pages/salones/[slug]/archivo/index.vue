@@ -4,7 +4,7 @@
             <LogoSala :salon="salon"/>
             <h1 class="text-3xl font-bold">{{ salon.nombre }}</h1>
             <h2 class="text-xl font-bold">Archivo</h2>
-
+            
             <div v-for="periodo in periodosDisponibles" :key="periodo.id">
                 <NuxtLink :to="`/salones/${salon.slug}/archivo/${periodo.slug}`" :title="periodo.nombre">
                 	<div>{{ periodo.nombre }}</div>
