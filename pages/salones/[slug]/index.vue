@@ -4,9 +4,9 @@
             <LogoSala :salon="salon"/>
             <h1 class="text-3xl font-bold">{{ salon.nombre }}</h1>
 
-            <div class="flex justify-around items-center">
+            <div class="flex justify-around items-center my-5">
                 <!-- Lista de avatares de miembros -->
-                <div>
+                <div class="flex-1">
                     <div v-if="miembros" class="text-md text-muted-color">
                         <div class="flex justify-center space-x-2">
                             <NuxtLink v-for="miembro in miembros.docs" :key="miembro.id" :to="`/usuarios/${miembro.autor.slug}`" :title="miembro.autor.nombre">
@@ -18,8 +18,11 @@
                     <div v-else class="text-md text-muted-color">...</div>
                 </div>
 
+                <!-- Caja Aulas -->
+                <CajaAulas :salon="salon" class="flex-1"/>
+
                 <!-- Boton Archivo -->
-                <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon" />
+                <BtnListaArchivo v-if="salon.archivo.activar" class="flex-1" :salon="salon" />
                 
             </div>
         </div>

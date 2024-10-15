@@ -41,9 +41,9 @@ const onFileChange = async (e) => {
     // Ahora actualizo la sala
     const salonRes = await useApi(`/api/salones/${props.salon.id}`, {avatar: avatarRes.doc.id}, 'PATCH');
     if(salonRes.error){
-        toast.add({severity: 'error', summary: 'Error', detail: salonRes.error})
+        toast.add({severity: 'error', summary: 'Error', detail: salonRes.error, life: 3000})
     }else{
-        toast.add({severity: 'contrast', summary: 'Avatar actualizado', detail: 'El avatar de la sala ha sido actualizado'})
+        toast.add({severity: 'contrast', summary: 'Avatar actualizado', detail: 'El avatar de la sala ha sido actualizado', life: 3000})
         salonStore.UpdateSala(salonRes.doc)
         props.salon.avatar = salonRes.doc.avatar; // Update the avatar field
     }
