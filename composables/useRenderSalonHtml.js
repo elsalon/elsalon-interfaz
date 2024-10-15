@@ -17,13 +17,13 @@ export default function useRenderSalonHtml(entrada){
         // const imageId = match[1]
         const image = entrada.imagenes.find(img => img.imagen.id == imageId)
         if (image) {
-            const imgTag = `<img src="${runtimeConfig.apiBase}${image.imagen.url}" data-salonid="${imageId}" />`
+            const imgTag = `<img src="${image.imagen.sizes.medium.url}" data-salonid="${imageId}" />`
             content = content.replace(match[0], imgTag);
         }
     }
 
     // 2 y 3. Convierto menciones y etiquetas en HTML
-    
+
     // Función auxiliar para convertir menciones o etiquetas
     const convertToHtml = (content, regex, entrada, array, type, urlPath, className) => {
         const matches = [...content.matchAll(regex)];

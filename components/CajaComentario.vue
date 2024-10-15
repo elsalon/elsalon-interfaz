@@ -39,11 +39,11 @@ const ClearEditor = () => {
 }
 
 const Publicar = async () => {
+    uploading.value = true
     const {html, imagenes, archivos, mencionados, etiquetas} = await editor.value.parseEditorToUpload()
     if(html == ""){
         return;
     }
-    uploading.value = true
     // console.log('Publicar', props.entradaId, miComentario.value)
     let method ='POST'
 	let data = {

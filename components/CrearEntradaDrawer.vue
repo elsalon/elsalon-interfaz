@@ -62,11 +62,11 @@ const autoresOpciones =ref([])
 const {docs:gruposDelUsuario} = await useApi(`/api/grupos?where[integrantes][contains]=${authData.value?.user?.id}`);
 
 const Publicar = async () => {
+    uploading.value = true
     const {html, imagenes, archivos, mencionados, etiquetas} = await editor.value.parseEditorToUpload()
     if(html == ""){
         return;
     }
-    uploading.value = true
     const { paginaActual } = useSalon()
     
     let method ='POST'

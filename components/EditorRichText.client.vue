@@ -181,7 +181,7 @@
         return new Promise((resolve, reject) => {
             new Compressor(blob, {
             quality: 0.7,
-            maxWidth: 1920,
+            maxWidth: 2160,
             retainExif: true,
 
             success(result) {

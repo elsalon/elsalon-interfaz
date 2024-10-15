@@ -225,10 +225,9 @@ let galleryOptions = null;
 
 const onEntradaLoaded = () => {
     if (entrada.imagenes.length == 0) return;
-    const runtimeConfig = useRuntimeConfig().public;
     const dataSource = entrada.imagenes.map(img => {
         return {
-            src: runtimeConfig.apiBase + img.imagen.url,
+            src: img.imagen.url,
             w: img.imagen.width,
             h: img.imagen.height,
         }
