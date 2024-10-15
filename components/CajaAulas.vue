@@ -1,22 +1,25 @@
 <template>
-    <Inplace v-if="canEdit" @close="OnClose">
-        <template #display>
-            {{ aulas }}
-        </template>
-        <template #content="{ closeCallback }">
-            <span class="inline-flex items-center gap-2">
-                <InputText v-model="aulas" autofocus size="small" style="width: 150px; text-align: center;"/>
-                <Button icon="pi pi-check" text severity="contrast" @click="closeCallback" />
-            </span>
-        </template>
-    </Inplace>
-    <div v-else>{{aulas}}</div>
+    <div class="relative">
+        <div v-if="!editing" class="text-xs text-gray-400 absolute pointer-events-none" style="top: -12px; left:50%; transform: translate(-50%);">aula </div>
+        <Inplace v-if="canEdit" @open="OnOpen" @close="OnClose" class="block">
+            <template #display>
+                {{ aulas }}
+            </template>
+            <template #content="{ closeCallback }">
+                <span class="inline-flex items-center gap-2">
+                    <InputText v-model="aulas" autofocus size="small" style="width: 150px; text-align: center;"/>
+                    <Button icon="pi pi-check" text severity="contrast" @click="closeCallback" />
+                </span>
+            </template>
+        </Inplace>
+        <div v-else>{{aulas}}</div>
+    </div>
 </template>
 
 
 <script setup>
 const { data: authData } = useAuth()
-const canEdit = authData.value?.user?.role === 'docente' || authData.value?.user?.isAdmin
+const canEdit = authData.value?.user?.rol === 'docente' || authData.value?.user?.isAdmin
 const salonStore = useSalonStore()
 const toast = useToast();
 
@@ -26,9 +29,14 @@ const props = defineProps({
 });
 
 const aulas = ref(props.salon.aulas);
+const editing = ref(false);
 
+const OnOpen = () => {
+    editing.value = true;
+}
 const OnClose = async () =>{
     // console.log("Cerrando inplace")
+    editing.value = false;
     try{
         const salonRes = await useApi(`/api/salones/${props.salon.id}`, {aulas: aulas.value}, 'PUT')
         salonStore.UpdateSala(salonRes.doc)
