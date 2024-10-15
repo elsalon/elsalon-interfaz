@@ -131,13 +131,20 @@
                         navigateTo('/opciones/perfil')
                     }
                 },
+                authData?.value?.rol == 'docente' || authData?.value?.isAdmin ? {
+                    label: 'Admin El Salón',
+                    icon: PrimeIcons.WRENCH,
+                    command: () => {
+                        navigateTo('/admin')
+                    }
+                } : null,
                 {
                     label: 'Cerrar Sesión',
                     icon: PrimeIcons.SIGN_OUT,
                     command: () => {
                         signOut({ callbackUrl: '/login' })
                     }
-                }
+                },
             ]
         }
     ]);
