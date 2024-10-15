@@ -51,7 +51,10 @@ export const useSalonStore = defineStore('salon', {
     crearPeriodos(salon: Salon) {
       if(salon.archivo.activar){
         let periodos = []
-        for(let i = new Date().getFullYear(); i >= salon.archivo.annoInicio; i--){
+        let now = new Date();
+        let currentYear = now.getFullYear();
+        let currentMonth = now.getMonth();
+        for(let i = currentYear; i >= salon.archivo.annoInicio; i--){
           if(salon.archivo.frecuencia == "anual"){
             // Materias anuales tienen un solo periodo por año
             periodos.push({
@@ -62,12 +65,15 @@ export const useSalonStore = defineStore('salon', {
             })
           }else if(salon.archivo.frecuencia == "cuatrimestral"){
             // Materias cuatrimestrales tienen dos periodos por año
-            periodos.push({
-              startDate: new Date(i + '-' + this.comienzoCuatri2),
-              endDate: new Date(i + '-' + this.finCuatri2),
-              nombre: i + ' C. 2',
-              slug: `${i}-2`,
-            })
+            // Solo agrego el periodo 2 de este año si ya paso agosto
+            if (i !== currentYear || currentMonth >= 7) {
+              periodos.push({
+                startDate: new Date(i + '-' + this.comienzoCuatri2),
+                endDate: new Date(i + '-' + this.finCuatri2),
+                nombre: i + ' C. 2',
+                slug: `${i}-2`,
+              })
+            }
             periodos.push({
               startDate: new Date(i + '-' + this.comienzoCuatri1),
               endDate: new Date(i + '-' + this.finCuatri1),
