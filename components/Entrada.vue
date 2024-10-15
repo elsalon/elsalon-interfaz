@@ -77,9 +77,7 @@ const showCommentBox = ref('0');
 const ToggleCommentBox = () => {
     showCommentBox.value = showCommentBox.value == '0' ? '1' : '0';
 }
-
 const { $formatDate } = useNuxtApp()
-
 const identidad = ref();
 const identidadUrl = ref();
 const DefinirIdentidad = (doc = entrada) => {

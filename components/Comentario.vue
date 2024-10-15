@@ -5,6 +5,7 @@
                 <div class="flex items-center gap-2">
                     <AvatarSalon :usuario="comentario.autor" size="small" />
                     <span class="font-bold">{{ comentario.autor.nombre }}</span>
+                    <span class="text-gray-300 text-xs">{{ $formatDate(comentario.createdAt) }}</span>
                 </div>
             </NuxtLink>
         </template>
@@ -24,6 +25,7 @@
 
 <script setup>
     const toast = useToast();
+    const { $formatDate } = useNuxtApp()
     const { data : authData} = useAuth()
     const props = defineProps({
         comentario: {

@@ -1,13 +1,12 @@
 <template>
     <div>
         <DeferredContent @load="onComentarioScrolled">
-            <Comentario v-for="comentario in comentarios" :comentario="comentario" :key="comentario.id"  @eliminar="EliminarComentario(comentario.id)" />
-            
-            <div v-if="fetchingComentarios" class="my-4 w-full text-center text-gray-500 p-1 text-sm">Cargando comentarios...</div>
-
-            <button v-if="quedanMasComentarios && !fetchingComentarios" class="w-full my-4 text-gray-400 hover:text-gray-800 p-1 text-sm" @click="fetchComentarios">
-                Cargar más comentarios
+            <button v-if="quedanMasComentarios && !fetchingComentarios" class="w-full my-1 text-gray-400 hover:text-gray-800 p-1 text-sm" @click="fetchComentarios">
+                Cargar anteriores ({{ comentariosRestantes }})
             </button>
+            <div v-if="fetchingComentarios" class="my-1 w-full text-center text-gray-500 p-1 text-sm">Cargando comentarios...</div>
+
+            <Comentario v-for="comentario in comentarios" :comentario="comentario" :key="comentario.id"  @eliminar="EliminarComentario(comentario.id)" />
             
             <Accordion :value="showCommentBox">
                 <AccordionPanel value="1">
@@ -35,22 +34,26 @@
     })
     const page = ref(1)
     const quedanMasComentarios = ref(false)
+    const comentariosRestantes = ref(0)
     const comentarios = ref([])
     const newestCommentDate = ref(null)
     const cajaComentarioKey = ref(0)
     const fetchingComentarios = ref(true)
     const cajaComentario = ref(null)
+    
     const emit = defineEmits(['userPosted'])
     
     const fetchComentarios = async () => {
         fetchingComentarios.value = true
-        const res = await useApi(`/api/comentarios?where[entrada][equals]=${props.entradaId}&sort=createdAt&limit=5&page=${page.value}`)
-        const newComments = res.docs.filter(newComment => 
+        const res = await useApi(`/api/comentarios?where[entrada][equals]=${props.entradaId}&sort=-createdAt&limit=3&page=${page.value}`)
+        var newComments = res.docs.filter(newComment => 
             !comentarios.value.some(existingComment => existingComment.id === newComment.id)
         )
-        comentarios.value = [...comentarios.value, ...newComments]
+        newComments = newComments.reverse()
+        comentarios.value = [...newComments, ...comentarios.value]
         if(res.totalDocs > 0){
             quedanMasComentarios.value = res.totalDocs > comentarios.value.length
+            comentariosRestantes.value = res.totalDocs - comentarios.value.length
             page.value++
         }
         
