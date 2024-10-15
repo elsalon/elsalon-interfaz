@@ -230,6 +230,7 @@ const onEntradaLoaded = () => {
             src: img.imagen.url,
             w: img.imagen.width,
             h: img.imagen.height,
+            id: img.imagen.id,
         }
     });
 
@@ -245,17 +246,16 @@ const onEntradaLoaded = () => {
 
 const onEntradaClicked = (event) => {
     if (event.target.tagName === 'IMG') {
-        const imgSrc = event.target.src;
+        const imgSrc = event.target;
         handleImageClick(imgSrc);
     }
 }
 
-const handleImageClick = (src) => {
+const handleImageClick = (imgSrc) => {
     if (galleryPswp) {
         galleryPswp.close();  // or use galleryPswp.destroy() depending on the version
     }
-
-    galleryOptions.index = galleryOptions.dataSource.findIndex((img) => img.src === src);
+    galleryOptions.index = galleryOptions.dataSource.findIndex((img) => img.id === imgSrc.dataset.salonid);
     galleryPswp = new PhotoSwipe(galleryOptions);
     galleryPswp.init();
 }
