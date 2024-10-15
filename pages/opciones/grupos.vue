@@ -30,7 +30,7 @@
                     <template #chip="slotProps">
                         <div class="flex items-center">
                             <template v-if="slotProps.value.avatar">
-                                <Chip :label="slotProps.value.nombre " :image="runtimeConfig.apiBase + slotProps.value.avatar.sizes.thumbnail.url" removable @remove="itemRemoved(slotProps)"/>
+                                <Chip :label="slotProps.value.nombre " :image="slotProps.value.avatar.sizes.thumbnail.url" removable @remove="itemRemoved(slotProps)"/>
                             </template>
                             <template v-else>
                                 <Chip :label="slotProps.value.nombre" removable @remove="itemRemoved(slotProps)"/>
@@ -41,7 +41,7 @@
                     <template #option="slotProps">
                         <div class="flex items-center">
                             <template v-if="slotProps.option.avatar">
-                                <img :alt="slotProps.option.name" :src="runtimeConfig.apiBase + slotProps.option.avatar.sizes.thumbnail.url" class="w-6 h-6" />
+                                <img :alt="slotProps.option.name" :src="slotProps.option.avatar.sizes.thumbnail.url" class="w-6 h-6" />
                             </template>
                             <template v-else>
                                 <div class="w-6 h-6"></div>
@@ -66,7 +66,6 @@
     const visible = ref(false);
     const sugerenciasUsuarios = ref([]);
     const {data: authData} = useAuth()
-    const runtimeConfig = useRuntimeConfig().public;
     const nuevoGrupo = ref({
         nombre: '',
         usuarios: []

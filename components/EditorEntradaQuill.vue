@@ -83,7 +83,6 @@
 </template>
 
 <script setup>
-const runtimeConfig = useRuntimeConfig().public;
 import { ImageDrop } from 'quill-image-drop-module';
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
@@ -258,13 +257,13 @@ const loadExistingContent = async () => {
 
 onMounted(() => {
 	autoresOpciones.value.push({
-		avatar: authData.value.user.avatar ? runtimeConfig.apiBase + authData.value.user.avatar.sizes.thumbnail.url : null,
+		avatar: authData.value.user.avatar ? authData.value.user.avatar.sizes.thumbnail.url : null,
 		name: authData.value?.user?.nombre, 
 		id: authData.value?.user?.id 
 	});
 	gruposDelUsuario.forEach(grupo => {
 		autoresOpciones.value.push({ 
-			avatar: grupo.avatar ? runtimeConfig.apiBase + grupo.avatar.sizes.thumbnail.url : null,
+			avatar: grupo.avatar ? grupo.avatar.sizes.thumbnail.url : null,
 			name: grupo.nombre,
 			id: grupo.id
 		});

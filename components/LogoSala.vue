@@ -1,7 +1,7 @@
 <template>
     <div class="logoContainer relative inline-flex group/logosala cursor-pointer" @click="LoadImage" >
 
-        <Avatar v-if="salon?.avatar" :image="AvatarUrl()" size="xlarge" shape=""/>
+        <Avatar v-if="salon?.avatar" :image="props.salon.avatar.sizes.medium.url" size="xlarge" shape=""/>
         <Avatar v-else :label="salon?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: salon.color, color: '#fff'}" size="xlarge" shape=""/>
 
         <div v-if="puedeEditar" class="absolute bottom-0 right-1 opacity-0 group-hover/logosala:opacity-100" style="font-size: .7rem;">
@@ -30,8 +30,6 @@ const LoadImage = () => {
     fileInput.value.click()
 }
 
-const runtimeConfig = useRuntimeConfig().public;
-
 const onFileChange = async (e) => {
     // Subo la imagen a avatares
     const avatarFile = fileInput.value.files[0]
@@ -48,9 +46,4 @@ const onFileChange = async (e) => {
         props.salon.avatar = salonRes.doc.avatar; // Update the avatar field
     }
 }
-
-const AvatarUrl = () => {
-    return runtimeConfig.apiBase + props.salon.avatar.sizes.medium.url;
-}
-
 </script>

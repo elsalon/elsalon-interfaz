@@ -6,7 +6,6 @@
 <script setup>
     import { ref } from 'vue';
     import { useRuntimeConfig } from '#app';
-    const runtimeConfig = useRuntimeConfig().public;
 
     const props = defineProps({
         usuario: {
@@ -29,7 +28,7 @@
 
     if(tieneImagen){
         const imageUrl = props.imagesize == 'thumbnail' ? usuario.avatar.sizes.thumbnail.url : usuario.avatar.url
-        avatarUrl.value = runtimeConfig.apiBase + imageUrl;
+        avatarUrl.value = imageUrl;
     }else{
         iniciales.value = usuario?.nombre.split(' ').map(n => n[0]).join('');
         iniciales.value = iniciales.value.toUpperCase();

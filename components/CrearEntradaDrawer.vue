@@ -44,7 +44,6 @@
 
 <script setup>
 const {data: authData} = useAuth()
-const runtimeConfig = useRuntimeConfig().public;
 const editor = ref(null)
 const isEditing = ref(false)
 const uploading = ref(false)
@@ -110,13 +109,13 @@ const Publicar = async () => {
 
 onMounted(() => {
     autoresOpciones.value.push({
-		avatar: authData.value.user.avatar ? runtimeConfig.apiBase + authData.value.user.avatar.sizes.thumbnail.url : null,
+		avatar: authData.value.user.avatar ? authData.value.user.avatar.sizes.thumbnail.url : null,
 		name: authData.value?.user?.nombre, 
 		id: authData.value?.user?.id 
 	});
 	gruposDelUsuario.forEach(grupo => {
 		autoresOpciones.value.push({ 
-			avatar: grupo.avatar ? runtimeConfig.apiBase + grupo.avatar.sizes.thumbnail.url : null,
+			avatar: grupo.avatar ? grupo.avatar.sizes.thumbnail.url : null,
 			name: grupo.nombre,
 			id: grupo.id
 		});
