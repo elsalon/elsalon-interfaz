@@ -84,6 +84,17 @@
   display: flex;
 }
 
+.normalLink{
+  color: blue;
+  text-decoration: none;
+}
+.normalLink:hover{
+  text-decoration: underline;
+}
+.normalLink:visited{
+  color: purple;
+}
+
 /* estilos links vieja escuela */
 .prose a, .listaArchivos a{
   color: blue;
