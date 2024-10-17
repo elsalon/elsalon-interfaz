@@ -29,7 +29,8 @@ const notifEntradasNuevas = ref(null);
 // props
 const props = defineProps({
   endpointQuery: { type: String, default: '' },
-  overrideApiBase: { type: String, default: null }
+  overrideApiBase: { type: String, default: null },
+  overrideApiBaseQuery: {type: Array, default: []},
 })
 
 onMounted(async () => {
@@ -94,6 +95,7 @@ const FetchEntries = async () => {
   let apiUrl = `/api/entradas?depth=2&page=${page.value}&sort=-createdAt`
   if (props.overrideApiBase) {
     apiUrl = `${props.overrideApiBase}?page=${page.value}`
+    apiUrl += `&${props.overrideApiBaseQuery.join('&')}`
   }
   if (props.endpointQuery != '') {
     apiUrl += `&${props.endpointQuery}`
@@ -117,6 +119,7 @@ const FetchNewer = async () => {
   let apiUrl = `/api/entradas?depth=2&where[createdAt][greater_than]=${newestEntryDate}&sort=-createdAt&limit=100`
   if (props.overrideApiBase) {
     apiUrl = `${props.overrideApiBase}?createdGreaterThan=${newestEntryDate}`
+    apiUrl += `&${props.overrideApiBaseQuery.join('&')}`
   }
   if (props.endpointQuery != '') {
     apiUrl += `&${props.endpointQuery}`
