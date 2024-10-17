@@ -1,12 +1,9 @@
 <template>
-    <Avatar v-if="tieneImagen" :image="avatarUrl" :size="props.size" style="background-color: #fff" shape=""/>
-    <Avatar v-else :label="iniciales" :size="props.size" style="background-color: #000; color: #fff" shape=""/>
+    <Avatar v-if="tieneImagen" :image="avatarUrl" :size="props.size" style="background-color: #fff" shape="" :title="usuario?.nombre"/>
+    <Avatar v-else :label="iniciales" :size="props.size" style="background-color: #000; color: #fff" shape="" :title="usuario?.nombre"/>
 </template>
 
 <script setup>
-    import { ref } from 'vue';
-    import { useRuntimeConfig } from '#app';
-
     const props = defineProps({
         usuario: {
             type: Object,
@@ -30,10 +27,10 @@
         const imageUrl = props.imagesize == 'thumbnail' ? usuario.avatar.sizes.thumbnail.url : usuario.avatar.url
         avatarUrl.value = imageUrl;
     }else{
-        iniciales.value = usuario?.nombre.split(' ').map(n => n[0]).join('');
-        iniciales.value = iniciales.value.toUpperCase();
+        iniciales.value = usuario?.nombre?.split(' ').map(n => n[0]).join('');
+        iniciales.value = iniciales.value?.toUpperCase();
         // Max 3 iniciales
-        iniciales.value = iniciales.value.substring(0, 3);
+        iniciales.value = iniciales.value?.substring(0, 3);
     }
 
 </script>

@@ -3,8 +3,9 @@ export default {
         class: [
             // Font
             {
+                'text-xs': props.size == 'small',
                 'text-xl': props.size == 'large',
-                'text-2xl': props.size == 'xlarge'
+                'text-2xl': props.size == 'xlarge',
             },
 
             // Alignments
