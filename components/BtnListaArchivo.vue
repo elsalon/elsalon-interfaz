@@ -1,8 +1,6 @@
 <template>
-    <div>
-        <Button text type="button" label="Archivo" @click="archivoToggle" aria-haspopup="true" aria-controls="overlay_menu" />
-        <Menu ref="archivoMenu" id="overlay_menu" :model="archivoItems" :popup="true" />
-    </div>
+    <Button text type="button" label="Archivo" @click="archivoToggle" aria-haspopup="true" aria-controls="overlay_menu" />
+    <Menu ref="archivoMenu" id="overlay_menu" :model="archivoItems" :popup="true" />
 </template>
 
 <script setup>
@@ -19,7 +17,7 @@ const archivoItems = ref(periodosDisponibles.map(periodo => {
     return {
         label: periodo.nombre,
         command: () => {
-            router.push(`/salones/${props.salon.slug}/archivo/${periodo.slug}`);
+            router.push(`/salones/${props.salon.slug}/archivo-${periodo.slug}`);
         }
     }
 }));

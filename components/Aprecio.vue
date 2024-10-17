@@ -23,15 +23,15 @@ const docs = ref([]);
 const totalDocs = ref(0);
 const haApreciadoId = ref(null);
 
-const FetchApreciaciones = async () => {
-    const res = await useApi(`/api/apreciaciones/${props.entradaId}`);
+const FetchAprecio = async () => {
+    const res = await useApi(`/api/aprecio/${props.entradaId}`);
     docs.value = res.docs;
     totalDocs.value = res.totalDocs;
     haApreciadoId.value = res.haApreciado;
     haApreciado.value = haApreciadoId.value != false;
     // console.log(res)
 }
-FetchApreciaciones();
+FetchAprecio();
 
 const handleAprecioClicked = async () => {
     if(fetching.value){
@@ -42,16 +42,16 @@ const handleAprecioClicked = async () => {
         if(haApreciado.value){
             // Eliminio mi aprecio
             console.log('Eliminando aprecio', props.entradaId)
-            await useApi(`/api/apreciaciones/${haApreciadoId.value}`, {}, 'DELETE')
+            await useApi(`/api/aprecio/${haApreciadoId.value}`, {}, 'DELETE')
         }else{
             // Creo un aprecio
             console.log('Creando aprecio', props.entradaId)
-            await useApi(`/api/apreciaciones/`, {entrada:props.entradaId}, 'POST')
+            await useApi(`/api/aprecio/`, {entrada:props.entradaId}, 'POST')
         }
     }catch(e){
         console.log(e)
     }finally{
-        FetchApreciaciones();
+        FetchAprecio();
         fetching.value = false;
     }
 }

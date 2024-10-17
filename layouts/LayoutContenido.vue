@@ -131,7 +131,7 @@
                         navigateTo('/opciones/perfil')
                     }
                 },
-                authData?.value?.rol == 'docente' || authData?.value?.isAdmin ? {
+                authData?.value?.isAdmin ? {
                     label: 'Admin El Salón',
                     icon: PrimeIcons.WRENCH,
                     command: () => {

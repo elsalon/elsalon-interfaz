@@ -20,11 +20,8 @@
                 <div v-else class="text-md text-muted-color">...</div>
             </div>
 
-           
-
             <div class="flex-1 mb-4 md:w-1/2">
-                <Button text type="button" label="Comisiones"  aria-haspopup="true" aria-controls="overlay_menu" />
-                <Menu ref="archivoMenu" id="overlay_menu" :model="archivoItems" :popup="true" />
+                <BtnListaComisiones :salon="salon" />
             </div>
             
             <!-- Boton Archivo -->
