@@ -53,8 +53,8 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <Button type="button" :loading="postingNewGroup" label="Cancelar" severity="secondary" @click="visible = false"></Button>
-                <Button type="submit" :loading="postingNewGroup" label="Crear"></Button>
+                <Button type="button" :loading="creandoNuevoGrupo" label="Cancelar" severity="secondary" @click="visible = false"></Button>
+                <Button type="submit" :loading="creandoNuevoGrupo" label="Crear"></Button>
             </div>
         </form>
     </Dialog>
@@ -89,31 +89,31 @@
     fetchGrupos();
 
     const opcionesGrupo = ref([
-            {
-                label: 'Agregar integrantes',
-                icon: 'pi pi-user-plus',
-                command: (event) => {
-                    console.log('Agregar integrantes', event);
-                }
-            },
-            {
-                label: 'Editar',
-                icon: 'pi pi-pencil',
-                command: (event) => {
-                    console.log('Editar', event);
-                }
-            },
-            {
-                label: 'Dejar grupo',
-                icon: 'pi pi-sign-out',
-                command: (event) => {
-                    console.log('Dejar grupo', event);
-                }
+        {
+            label: 'Agregar integrantes',
+            icon: 'pi pi-user-plus',
+            command: (event) => {
+                console.log('Agregar integrantes', event);
             }
-        ]);
+        },
+        {
+            label: 'Editar',
+            icon: 'pi pi-pencil',
+            command: (event) => {
+                console.log('Editar', event);
+            }
+        },
+        {
+            label: 'Dejar grupo',
+            icon: 'pi pi-sign-out',
+            command: (event) => {
+                console.log('Dejar grupo', event);
+            }
+        }
+    ]);
 
     // LOGICA CREAR NUEVO GRUPO
-    const postingNewGroup = ref(false);
+    const creandoNuevoGrupo = ref(false);
     
     const busquedaUsuarios = async (event) => {
         if(event.query.length < 3){
@@ -146,7 +146,7 @@
         console.log('Creando grupo', nuevoGrupo.value);
         // Crear grupo
         try{
-            postingNewGroup.value = true;
+            creandoNuevoGrupo.value = true;
             const res = await useApi('/api/grupos', data, 'POST');
             console.log(res);
             toast.add({severity: 'contrast', summary: 'Grupo creado', detail: 'El grupo se creó correctamente', life: 3000});
@@ -154,7 +154,7 @@
             console.error(e);
             toast.add({severity: 'error', summary: 'Error', detail: 'No se pudo crear el grupo', life: 3000});
         }finally{
-            postingNewGroup.value = false;
+            creandoNuevoGrupo.value = false;
             visible.value = false;
             fetchGrupos();
         }

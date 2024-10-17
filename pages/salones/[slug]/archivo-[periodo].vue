@@ -4,6 +4,8 @@
             <LogoSala :salon="salon"/>
             <NuxtLink class="text-3xl font-bold" :to="`/salones/${salon.slug}`"><h1>{{ salon.nombre }}</h1></NuxtLink>
             <h2 class="text-xl font-bold">Archivo {{ periodo.nombre }}</h2>
+
+            <BtnListaComisiones :salon="salon" />
             <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon" />
 
 
