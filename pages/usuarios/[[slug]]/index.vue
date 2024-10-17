@@ -21,7 +21,6 @@ const route = useRoute()
 const slug = route.params?.slug
 const {data: authData} = useAuth()
 
-
 // Fetch the user data based on the slug
 const res = await useApi(`/api/users?where[slug][equals]=${slug}`)
 if (res.docs.length === 0) {
