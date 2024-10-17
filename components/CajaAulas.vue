@@ -1,9 +1,9 @@
 <template>
-    <div class="relative">
-        <div v-if="!editing" class="text-xs text-gray-400 absolute pointer-events-none" style="top: -12px; left:50%; transform: translate(-50%);">aula </div>
+    <div class="relative" title="Aulas">
+        <!-- <div v-if="!editing" class="text-xs text-gray-400 absolute pointer-events-none" style="top: -12px; left:50%; transform: translate(-50%);">AULA</div> -->
         <Inplace v-if="canEdit" @open="OnOpen" @close="OnClose" class="block">
             <template #display>
-                {{ aulas }}
+                <span class="font-bold">{{ aulas }}</span>
             </template>
             <template #content="{ closeCallback }">
                 <span class="inline-flex items-center gap-2">
@@ -12,7 +12,7 @@
                 </span>
             </template>
         </Inplace>
-        <div v-else>{{aulas}}</div>
+        <div v-else><span class="font-bold">{{ aulas }}</span></div>
     </div>
 </template>
 

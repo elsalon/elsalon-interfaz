@@ -31,10 +31,10 @@ module.exports = {
       padding: '1rem',
       screens: {
         sm: "640px",
-        md: "500px",
-        lg: "500px",
-        xl: "500px",
-        "2xl": "500px",
+        md: "640px",
+        lg: "640px",
+        xl: "640px",
+        "2xl": "640px",
       }
     }
   },

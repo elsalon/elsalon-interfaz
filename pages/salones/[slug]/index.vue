@@ -1,33 +1,45 @@
 <template>
-    <NuxtLayout name="layout-contenido">
+    <NuxtLayout name="layout-contenido">     
         <div class="text-center mb-2">
             <LogoSala :salon="salon"/>
-            <h1 class="text-3xl font-bold">{{ salon.nombre }}</h1>
-
-            <div class="flex justify-around items-center my-5">
-                <!-- Lista de avatares de miembros -->
-                <div class="flex-1">
-                    <div v-if="miembros" class="text-md text-muted-color">
-                        <div class="flex justify-center space-x-2">
-                            <NuxtLink v-for="miembro in miembros.docs" :key="miembro.id" :to="`/usuarios/${miembro.autor.slug}`" :title="miembro.autor.nombre">
-                                <AvatarSalon :usuario="miembro.autor" size="small" imagesize="small"/>
-                            </NuxtLink>
-                            <span v-if="miembros.totalDocs > miembros.docs.length" class="text-muted-color">+{{ miembros.totalDocs - miembros.docs.length }}</span>
-                        </div>    
-                    </div>
-                    <div v-else class="text-md text-muted-color">...</div>
+            <h1 class="text-3xl font-bold">{{ salon.nombre }} </h1>
+            <h2 class="text-xl"><CajaAulas :salon="salon"/></h2>
+        </div>
+        
+        <div class="text-center flex flex-wrap justify-around items-center w-full mb-10">
+            <!-- Lista de avatares de miembros -->
+            <div class="flex-1 mb-4 md:w-1/2">
+                <div v-if="miembros" class="text-md text-muted-color">
+                    <div class="flex justify-center space-x-2">
+                        <NuxtLink v-for="miembro in miembros.docs" :key="miembro.id" :to="`/usuarios/${miembro.autor.slug}`" :title="miembro.autor.nombre">
+                            <AvatarSalon :usuario="miembro.autor" size="small" imagesize="small"/>
+                        </NuxtLink>
+                        <span v-if="miembros.totalDocs > miembros.docs.length" class="text-muted-color">+{{ miembros.totalDocs - miembros.docs.length }}</span>
+                    </div>    
                 </div>
+                <div v-else class="text-md text-muted-color">...</div>
+            </div>
 
-                <!-- Caja Aulas -->
-                <CajaAulas :salon="salon" class="flex-1"/>
+           
 
-                <!-- Boton Archivo -->
-                <BtnListaArchivo v-if="salon.archivo.activar" class="flex-1" :salon="salon" />
-                
+            <div class="flex-1 mb-4 md:w-1/2">
+                <Button text type="button" label="Comisiones"  aria-haspopup="true" aria-controls="overlay_menu" />
+                <Menu ref="archivoMenu" id="overlay_menu" :model="archivoItems" :popup="true" />
+            </div>
+            
+            <!-- Boton Archivo -->
+            <div class="flex-1 mb-4 md:w-1/2">
+                <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon" />
+            </div>
+
+            <div class="flex-1 mb-4 md:w-1/2">
+                <BtnColaborar @estadoColaboracion="onEstadoColaboracion" />
             </div>
         </div>
 
-        <BtnColaborar @estadoColaboracion="onEstadoColaboracion"/>
+       
+
+        
         <CrearEntradaBtn v-if="estadoColaboracion == 2" />
         <!-- TODO Query -->
         <ListaEntradas :endpointQuery="query"/> 

@@ -1,7 +1,7 @@
 <template>
-    <div class="text-center mb-5" v-if="estadoMostrarBtnColaborador > 0">
+    <div class="text-center" v-if="estadoMostrarBtnColaborador > 0">
         <Button v-if="estadoMostrarBtnColaborador==1" @click="IniciarColaboracion" :loading="estadoColaboradorLoading" label="Colaborar" title="Al colaborar seguís los acontecimientos en El Salón (redactar)" size="small"/>
-        <Button v-if="estadoMostrarBtnColaborador==2" @click="DetenerColaboracion" :loading="estadoColaboradorLoading" severity="secondary" label="Dejar de colaborar" size="small"></Button>
+        <Button v-if="estadoMostrarBtnColaborador==2" @click="DetenerColaboracion" :loading="estadoColaboradorLoading" severity="secondary" label="No colaborar" size="small"></Button>
     </div>
 </template>
 

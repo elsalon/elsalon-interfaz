@@ -1,6 +1,6 @@
 <template>
     <NuxtLayout name="layout-contenido">
-        <div class="text-center mb-2">
+        <div class="text-center">
             <LogoSala :salon="salon"/>
             <NuxtLink class="text-3xl font-bold" :to="`/salones/${salon.slug}`"><h1>{{ salon.nombre }}</h1></NuxtLink>
             <h2 class="text-xl font-bold">Archivo</h2>
