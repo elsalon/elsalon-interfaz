@@ -28,7 +28,7 @@ const {docs: gruposUsuario} = await useApi(`/api/grupos?where[integrantes][conta
 
 const GenerarOpcionesBotones = () =>{
     // Individualmente
-    const usuarioPertence = props.comision.alumnos?.find(alumno => alumno.id == authData.value.user.id) || props.comision.docentes?.find(docente => docente.id == authData.value.user.id) || false;
+    const usuarioPertence = props.comision.integrantes?.find(alumno => alumno.id == authData.value.user.id) || props.comision.docentes?.find(docente => docente.id == authData.value.user.id) || false;
     // Como grupo
     const gruposUsuarioPertenecen = props.comision.grupos?.filter(grupo => grupo.integrantes.map(usuario => usuario.id).includes(authData.value.user.id)) || [];
     const gruposUsuarioNoPertenecen = gruposUsuario.filter(grupo => !gruposUsuarioPertenecen.map(grupo => grupo.id).includes(grupo.id));

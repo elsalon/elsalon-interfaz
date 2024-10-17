@@ -66,12 +66,16 @@ const Publicar = async () => {
     if(html == ""){
         return;
     }
-    const { paginaActual } = useSalon()
     
+    const {currContext} = useSalonStore()
+    const { paginaActual } = useSalon() // TODO ordenar estos dos que quedaron redundantes
+    const sala = currContext == "bitacora" ? null : paginaActual.value.id
+
+    console.log({paginaActual})
     let method ='POST'
 	let data = {
 		contenido: html, 
-		sala: paginaActual.value.id,
+		sala,
 		autoriaGrupal: false,
 		imagenes,
         archivos,

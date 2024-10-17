@@ -3,7 +3,7 @@
         <div class="text-center mb-2">
             <LogoSala :salon="salon"/>
             <NuxtLink class="text-3xl font-bold" :to="`/salones/${salon.slug}`"><h1>{{ salon.nombre }}</h1></NuxtLink>
-            <h2 class="text-xl font-bold">Comisión {{ comision.nombre }}</h2>
+            <h2 class="text-xl font-bold">Comisión <CajaNombreComision :comision="comision"/></h2>
                  
             <BtnListaComisiones :salon="salon" />
             <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon" />
@@ -28,7 +28,8 @@
             <BtnUnirmeComision :comision="comision" @UsuarioCambioInscripcion="RecargarComision" :key="unirmeKey"/>
         </div>
 
-        <ListaEntradas :endpointQuery="query"/>
+        <!-- <ListaEntradas :endpointQuery="query"/> -->
+        <ListaEntradas :overrideApiBase="`/api/comisiones/${comision.id}/feed`" :overrideApiBaseQuery="overrideApiBaseQuery"/>
     </NuxtLayout>
 </template>
 
@@ -50,15 +51,16 @@ const RecargarComision = async () => {
 }
 
 const idsIntegrantes = comision.value.integrantes?.map(integrante => integrante.id)
+console.log(comision.value.integrantes)
 
 // Filtro por el periodo actual
 const periodo = salon.value.archivo.periodos[0]
-const startDate = encodeURIComponent(periodo.startDate.toISOString());
-const endDate   = encodeURIComponent(periodo.endDate.toISOString());
-const dateRangeQuery = `&where%5Band%5D%5B0%5D%5BcreatedAt%5D%5Bgreater_than_equal%5D=${startDate}&where%5Band%5D%5B1%5D%5BcreatedAt%5D%5Bless_than_equal%5D=${endDate}`
+const startDate = periodo.startDate.toISOString();
+const endDate   = periodo.endDate.toISOString();
+// const dateRangeQuery = `&where%5Band%5D%5B0%5D%5BcreatedAt%5D%5Bgreater_than_equal%5D=${startDate}&where%5Band%5D%5B1%5D%5BcreatedAt%5D%5Bless_than_equal%5D=${endDate}`
 
 // De alumnos que son integrantes de la comisión y hayan creado entradas en esta sala
-const query = `where[sala][equals]=${salon.value.id}${dateRangeQuery}&where[autor][in]=${idsIntegrantes?.join(',')}`
-
-
+// const query = `where[sala][equals]=${salon.value.id}${dateRangeQuery}&where[autor][in]=${idsIntegrantes?.join(',')}`
+// const overrideApiBase = `/api/comisiones/${comision.value.id}/feed?startDate=${startDate}&endDate=${endDate}`
+const overrideApiBaseQuery= [`startDate=${startDate}`, `endDate=${endDate}`]
 </script>
