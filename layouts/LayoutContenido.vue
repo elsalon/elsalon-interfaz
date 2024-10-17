@@ -4,8 +4,8 @@
             <!-- Fixed Nav -->
             <nav class="w-full flex flex-row justify-between items-center">
                 <!-- Logo Salon -->
-                <Avatar v-if="paginaActual?.avatar" :image="paginaActual.avatar.sizes.medium.url" size="large" shape="" class="select-none cursor-pointer" @click="toggleSalonesMenu"/>
-                <Avatar v-else :label="paginaActual?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape="" @click="toggleSalonesMenu"/>
+                <Avatar v-if="paginaActual?.avatar" :image="paginaActual.avatar.sizes.medium.url" size="large" shape="" class="select-none cursor-pointer border border-white-500 -left-px" @click="toggleSalonesMenu"/>
+                <Avatar v-else :label="paginaActual?.siglas" class="select-none cursor-pointer border border-white-500 -left-px" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape="" @click="toggleSalonesMenu"/>
 
                 <Menu ref="salonesMenu" id="overlay_menu_salones" :model="elsalon.salones" :popup="true" class="select-none"> 
                     <template #item="{ item, props }">
@@ -26,12 +26,12 @@
                     <!-- Avatar Con notificationes -->
                     <template v-if="totalNotifications > 0">
                         <OverlayBadge :value="totalNotifications" size="small">
-                            <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
+                            <AvatarSalon :key="'avt'+myKey" class="border border-white-500 cursor-pointer -right-px" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
                         </OverlayBadge>
                     </template>
                     <!-- Avatar Sin notificationes -->
                     <template v-else>
-                        <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
+                        <AvatarSalon :key="'avt'+myKey" class="border border-white-500 cursor-pointer -right-px" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
                     </template>
                     
                     <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true"> 
@@ -131,13 +131,6 @@
                         navigateTo('/opciones/perfil')
                     }
                 },
-                authData?.value?.isAdmin ? {
-                    label: 'Admin El Salón',
-                    icon: PrimeIcons.WRENCH,
-                    command: () => {
-                        navigateTo('/admin')
-                    }
-                } : null,
                 {
                     label: 'Cerrar Sesión',
                     icon: PrimeIcons.SIGN_OUT,
@@ -148,6 +141,16 @@
             ]
         }
     ]);
+
+    if(authData?.value?.isAdmin){
+        itemsUserMenu.value[0].items.push({
+            label: 'Admin El Salón',
+            icon: PrimeIcons.WRENCH,
+            command: () => {
+                navigateTo('/admin')
+            }
+        })
+    }
 
     const toggleUserMenu = (event) => {
         userMenu.value.toggle(event);
