@@ -7,7 +7,7 @@
                 <Avatar v-if="paginaActual?.avatar" :image="paginaActual.avatar.sizes.medium.url" size="large" shape="" class="select-none cursor-pointer border border-white-500 -left-px" @click="toggleSalonesMenu"/>
                 <Avatar v-else :label="paginaActual?.siglas" class="select-none cursor-pointer border border-white-500 -left-px" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape="" @click="toggleSalonesMenu"/>
 
-                <Menu ref="salonesMenu" id="overlay_menu_salones" :model="elsalon.salones" :popup="true" class="select-none"> 
+                <Menu ref="salonesMenu" id="overlay_menu_salones" :model="salonStore.salones" :popup="true" class="select-none"> 
                     <template #item="{ item, props }">
                         <router-link v-if="item.slug" v-slot="{ href, navigate }" :to="GenerateUrl(item.slug)" custom>
                             <a :href="href" v-bind="props.action" @click="navigate">
@@ -61,17 +61,16 @@
     import { PrimeIcons } from '@primevue/core/api';
     // const authData = computed(() => useAuth().data)
     const { paginaActual } = useSalon()
-    const elsalon = useSalonStore();
+    const salonStore = useSalonStore();
     const notificacionesVisible = ref(false);
     const notificacionesDialog = ref();
 
     const toast = useToast();
     import { useToast } from "primevue/usetoast";
-    const route = useRoute();
 
     watchEffect(() => {
         const notifications = totalNotifications.value > 0 ? `(${totalNotifications.value}) ` : '';
-        const title = route.meta.title ?  `${route.meta.title} - Salón` : 'Salón';
+        const title = salonStore.pageTitle ?  `${salonStore.pageTitle} - Salón` : 'Salón';
         useHead({
             title: notifications + title
         });

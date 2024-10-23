@@ -52,6 +52,7 @@ const salonStore = useSalonStore();
 const salon = ref(null)
 salon.value = salonStore.salones.find(salon => salon.slug === slug)
 salonStore.setContext('salon', salon.value.id)
+salonStore.SetPageTitle(salon.value.nombre)
 
 var dateRangeQuery = '';
 // Si este espacio tiene archivo, filtro por el periodo actual

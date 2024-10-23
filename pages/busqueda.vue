@@ -67,6 +67,9 @@
 </template>
 
 <script setup>
+const salonStore = useSalonStore();
+salonStore.SetPageTitle(`Búsqueda`)
+
 const { $formatDate } = useNuxtApp()
 const router = useRouter()
 const searchQuery = ref('')

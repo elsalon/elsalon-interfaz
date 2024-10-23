@@ -13,9 +13,10 @@ definePageMeta({
     title: "Inicio"
 })
 
-const SalonStore = useSalonStore();
-const salonId = SalonStore.salones.find(salon => salon.slug === "el-salon").id
-SalonStore.setContext('salon', salonId)
+const salonStore = useSalonStore();
+const salonId = salonStore.salones.find(salon => salon.slug === "el-salon").id
+salonStore.setContext('salon', salonId)
+salonStore.SetPageTitle("Inicio")
 </script>
 
   

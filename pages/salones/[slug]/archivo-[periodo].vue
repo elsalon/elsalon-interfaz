@@ -23,8 +23,9 @@ const slug = route.params?.slug
 const salonStore = useSalonStore();
 const salon = ref(null)
 salon.value = salonStore.salones.find(salon => salon.slug === slug)
-salonStore.setContext('salon', salon.value.id)
 const periodo = salon.value.archivo.periodos.find(periodo => periodo.slug === route.params.periodo)
+salonStore.setContext('salon', salon.value.id)
+salonStore.SetPageTitle(`Archivo ${salon.value.nombre} ${periodo.nombre}`)
 
 const startDate = encodeURIComponent(periodo.startDate.toISOString());
 const endDate   = encodeURIComponent(periodo.endDate.toISOString());

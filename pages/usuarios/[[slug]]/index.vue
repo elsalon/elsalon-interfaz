@@ -30,7 +30,9 @@ if (res.docs.length === 0) {
     })
 }
 const usuario = ref(res.docs[0])
-useSalonStore().setContext('bitacora', usuario.value.id)
+const salonStore = useSalonStore()
+salonStore.SetPageTitle(usuario.value.nombre)
+salonStore.setContext('bitacora', usuario.value.id)
 const userIsMe = ref(usuario.value.id == authData.value?.user.id)
 const query = ref(`where[autor][equals]=${usuario.value.id}&where[autoriaGrupal][not_equals]=true`) // posts del usuario que no sean grupales
 

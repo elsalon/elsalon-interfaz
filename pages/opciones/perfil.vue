@@ -40,6 +40,9 @@
 </template>
 
 <script setup>
+const salonStore = useSalonStore();
+salonStore.SetPageTitle(`Perfil`)
+
 const toast = useToast();
 import { useToast } from "primevue/usetoast";
 const {data, getSession } = useAuth()

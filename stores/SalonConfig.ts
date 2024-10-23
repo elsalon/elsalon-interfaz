@@ -25,6 +25,7 @@ interface Etiqueta {
 
 export const useSalonStore = defineStore('salon', {
   state: () => ({
+    pageTitle: "Salón",
     etiquetas: [] as Etiqueta[],
     salones: [] as Salon[],
     initialized: false,
@@ -38,6 +39,9 @@ export const useSalonStore = defineStore('salon', {
   }),
 
   actions: {
+    SetPageTitle(title: string) {
+      this.pageTitle = title;
+    },
     async UpdateSala(salon: Salon) {
       const i = this.salones.findIndex((s) => s.id === salon.id);
       if (i >= 0) {

@@ -72,6 +72,8 @@
     });
     const grupos = ref([]);
     const fetching = ref(true)
+    const salonStore = useSalonStore();
+    salonStore.SetPageTitle(`Grupos`)
     
 
     const handleAbandonadoGrupo = (grupo) => {
