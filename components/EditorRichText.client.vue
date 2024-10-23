@@ -2,184 +2,186 @@
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
         <div ref="editorContainer" tabindex="0"></div>
         <div class="attachedFiled">
-            
+
             <div v-for="archivo in attachedFiles" class="text-sm bg-gray-100 text-gray-400 p-2 mb-1 font-mono">
                 <div class="flex items">
                     <div class="grow">
                         <span>{{ archivo.name }}</span>
                         <span> ({{ formatBytes(archivo.size) }})</span>
                     </div>
-                    <button @click="attachedFiles.splice(attachedFiles.indexOf(f), 1)" class="hover:text-gray-800">X</button>
+                    <button @click="attachedFiles.splice(attachedFiles.indexOf(f), 1)"
+                        class="hover:text-gray-800">X</button>
                 </div>
             </div>
         </div>
-        <input type="file"  accept=".zip,.rar,.7zip,.pdf,.tar" ref="fileInput" style="display: none;" @change="handleFileChange" />
+        <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar" ref="fileInput" style="display: none;"
+            @change="handleFileChange" />
     </ClientOnly>
 </template>
 
 <script setup>
-    import "quill-mention/autoregister";
-    const salonStore = useSalonStore();
+import "quill-mention/autoregister";
+const salonStore = useSalonStore();
 
-    import Compressor from 'compressorjs';
-    import formatBytes from '~/composables/useBytesDisplay';
-    // Generate a unique ID for each editor instance
-    // const editorId = ref(`editor-${Math.random().toString(36).substring(2, 9)}`)
-    const editorContainer = ref(null)
-    let quill = null
+import Compressor from 'compressorjs';
+import formatBytes from '~/composables/useBytesDisplay';
+// Generate a unique ID for each editor instance
+// const editorId = ref(`editor-${Math.random().toString(36).substring(2, 9)}`)
+const editorContainer = ref(null)
+let quill = null
 
-    // const myContent = ref('')
-    const attachedImages = ref([])
-    const attachedFiles = ref([])
-    const fileInput = ref(null)
+// const myContent = ref('')
+const attachedImages = ref([])
+const attachedFiles = ref([])
+const fileInput = ref(null)
 
-    const emit = defineEmits(['publishHotKey'])
-    const props = defineProps({
-        editingData: { type: Object, default: null }
-    })
-    
+const emit = defineEmits(['publishHotKey'])
+const props = defineProps({
+    editingData: { type: Object, default: null }
+})
 
-    const handleUploadFileClick = () => {
-        fileInput.value.click();
+
+const handleUploadFileClick = () => {
+    fileInput.value.click();
+}
+const handleFileChange = (e) => {
+    const files = e.target.files;
+    attachedFiles.value.push(files[0])
+}
+
+
+const handlePublishHotkey = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault()
+        console.log("Hotkey Publicar comentario")
+        emit('publishHotKey')
     }
-    const handleFileChange = (e) => {
-        const files = e.target.files;
-        attachedFiles.value.push(files[0])
-    }
+}
 
-    
-    const handlePublishHotkey = (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-            e.preventDefault()
-            console.log("Hotkey Publicar comentario")
-            emit('publishHotKey')
-        }
-    }
-    
-    const parseEditorToUpload = async () => {
-        const delta = quill.getContents()
-	    let html = quill.root.innerHTML
-        
-        // Procesar imagenes
-        // Busco todos los blobs de imagenes y las subo
-        // Los convierto a formato [image:id] para que el backend lo entienda
-        // Si payload cambia la url de la imagen no se pierde la imagen en el contenido
-        // Tambien guardo referencia a todas las imagenes del posteo en attachedImages
-        for (let op of delta.ops) {
-            if (op.insert && op.insert.image) {
-                const imageUrl = op.insert.image
-                if (imageUrl.startsWith('data:')) {
-                    console.log(op)
-                    // This is a base64 image, need to upload
-                    const file = await fetch(imageUrl).then(res => res.blob())
-                    const uploadedImage = await uploadImage(file)
-                    if (uploadedImage) {
-                        html = html.replace(imageUrl, `[image:${uploadedImage.id}]`)
-                        console.log("PUshing image", uploadedImage.id)
-                        attachedImages.value.push({imagen: uploadedImage.id})
-                    }
+const parseEditorToUpload = async () => {
+    const delta = quill.getContents()
+    let html = quill.root.innerHTML
+
+    // Procesar imagenes
+    // Busco todos los blobs de imagenes y las subo
+    // Los convierto a formato [image:id] para que el backend lo entienda
+    // Si payload cambia la url de la imagen no se pierde la imagen en el contenido
+    // Tambien guardo referencia a todas las imagenes del posteo en attachedImages
+    for (let op of delta.ops) {
+        if (op.insert && op.insert.image) {
+            const imageUrl = op.insert.image
+            if (imageUrl.startsWith('data:')) {
+                console.log(op)
+                // This is a base64 image, need to upload
+                const file = await fetch(imageUrl).then(res => res.blob())
+                const uploadedImage = await uploadImage(file)
+                if (uploadedImage) {
+                    html = html.replace(imageUrl, `[image:${uploadedImage.id}]`)
+                    console.log("PUshing image", uploadedImage.id)
+                    attachedImages.value.push({ imagen: uploadedImage.id })
                 }
             }
         }
-        html = html.replace(/<img src="(\[image:[^"]+\])">/g, '$1'); // remuevo los tags img que no necesito
+    }
+    html = html.replace(/<img src="(\[image:[^"]+\])">/g, '$1'); // remuevo los tags img que no necesito
 
-        // Ahora vuelvo a convertir <img src="" data-salonid="123"> en [image:123]
-        // Esto es en caso que estuviesemos editando una entrada ya existente
-        const imageRegex = /<img src="[^"]+" data-salonid="([^"]+)">/g;
-        const matches = [...html.matchAll(imageRegex)]
-        for (const match of matches) {
-            const tag = match[0]
-            const imageId = match[1]
-            html = html.replace(tag, `[image:${imageId}]`)
-        }
-
-        // Ahora subo los attachments
-        let archivos = []
-        console.log("Subiendo archivos", attachedFiles.value)
-        for (let file of attachedFiles.value) {
-            if(file.uploaded) {
-                console.log("Archivo ya subido", file)
-                console.log("Archivo ya subido", {archivo: file.id})
-                archivos.push({archivo: file.id})
-                continue
-            }
-            const uploadedFile = await uploadFile(file)
-            archivos.push({archivo: uploadedFile.id})
-        }
-
-        // Parse menciones y etiquetas
-        const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = html;
-
-        let mencionados = [];
-        let etiquetas = [];
-
-        // Función auxiliar para procesar tanto menciones como etiquetas
-        const processElements = (elements, type) => {
-            return [...elements].map(el => {
-                const dataId = el.getAttribute('data-id');
-                const dataValue = el.getAttribute('data-value');
-                // Crear el texto de reemplazo basado en el tipo
-                const replacementText = `[${dataValue}](${type}:${dataId})`;
-                el.outerHTML = replacementText; // Reemplazar con el formato personalizado
-                return dataId; // Devolver el ID para agregarlo al array correspondiente
-            });
-        };
-
-        // Procesar nuevas y viejas menciones
-        mencionados.push(
-            ...processElements(tempDiv.querySelectorAll('span.mention[data-denotation-char="@"]'), "mencion"),
-            ...processElements(tempDiv.querySelectorAll('.mencion-link'), "mencion")
-        );
-
-        // Procesar nuevas y viejas etiquetas
-        etiquetas.push(
-            ...processElements(tempDiv.querySelectorAll('span.mention[data-denotation-char="#"]'), "etiqueta"),
-            ...processElements(tempDiv.querySelectorAll('.etiqueta-link'), "etiqueta")
-        );
-
-        html = tempDiv.innerHTML;
-        console.log("mencionados", mencionados, "etiquetas", etiquetas)
-
-        return {html, imagenes: attachedImages.value, archivos, mencionados, etiquetas}
+    // Ahora vuelvo a convertir <img src="" data-salonid="123"> en [image:123]
+    // Esto es en caso que estuviesemos editando una entrada ya existente
+    const imageRegex = /<img src="[^"]+" data-salonid="([^"]+)">/g;
+    const matches = [...html.matchAll(imageRegex)]
+    for (const match of matches) {
+        const tag = match[0]
+        const imageId = match[1]
+        html = html.replace(tag, `[image:${imageId}]`)
     }
 
-    
-
-    const uploadFile = async (file) => {
-        const formData = new FormData()
-        formData.append('file', file, file.name)
-        try {
-            const {doc} = await useUploadFile('/api/archivos', formData);
-            console.log("Response:", doc)
-            return { id: doc.id, url: doc.url }
-        } catch (error) {
-            console.error('Error uploading file:', error)
-            // toast.add({ severity: 'error', summary: 'Error', detail: `No se puede subir el archivo ${file.name}`, life: 3000});
-            return null
+    // Ahora subo los attachments
+    let archivos = []
+    console.log("Subiendo archivos", attachedFiles.value)
+    for (let file of attachedFiles.value) {
+        if (file.uploaded) {
+            console.log("Archivo ya subido", file)
+            console.log("Archivo ya subido", { archivo: file.id })
+            archivos.push({ archivo: file.id })
+            continue
         }
+        const uploadedFile = await uploadFile(file)
+        archivos.push({ archivo: uploadedFile.id })
     }
 
-    const uploadImage = async (file) => {
-        const formData = new FormData()
-        const randFilename = useRandomFilenameBlob(file)
-        const imageFile = await CompressImage(file)
-        formData.append('file', imageFile, randFilename)
-        try {
-            const {doc} = await useUploadFile('/api/imagenes', formData);
-            console.log("Response:", doc)
-            return { id: doc.id, url: doc.url }
-        } catch (error) {
-            console.error('Error uploading image:', error)
-            toast.add({ severity: 'error', summary: 'Error', detail: 'No se puede subir esa imagen', life: 3000});
-            return null
-        }
+    // Parse menciones y etiquetas
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    let mencionados = [];
+    let etiquetas = [];
+
+    // Función auxiliar para procesar tanto menciones como etiquetas
+    const processElements = (elements, type) => {
+        return [...elements].map(el => {
+            const dataId = el.getAttribute('data-id');
+            const dataValue = el.getAttribute('data-value');
+            // Crear el texto de reemplazo basado en el tipo
+            const replacementText = `[${dataValue}](${type}:${dataId})`;
+            el.outerHTML = replacementText; // Reemplazar con el formato personalizado
+            return dataId; // Devolver el ID para agregarlo al array correspondiente
+        });
+    };
+
+    // Procesar nuevas y viejas menciones
+    mencionados.push(
+        ...processElements(tempDiv.querySelectorAll('span.mention[data-denotation-char="@"]'), "mencion"),
+        ...processElements(tempDiv.querySelectorAll('.mencion-link'), "mencion")
+    );
+
+    // Procesar nuevas y viejas etiquetas
+    etiquetas.push(
+        ...processElements(tempDiv.querySelectorAll('span.mention[data-denotation-char="#"]'), "etiqueta"),
+        ...processElements(tempDiv.querySelectorAll('.etiqueta-link'), "etiqueta")
+    );
+
+    html = tempDiv.innerHTML;
+    console.log("mencionados", mencionados, "etiquetas", etiquetas)
+
+    return { html, imagenes: attachedImages.value, archivos, mencionados, etiquetas }
+}
+
+
+
+const uploadFile = async (file) => {
+    const formData = new FormData()
+    formData.append('file', file, file.name)
+    try {
+        const { doc } = await useUploadFile('/api/archivos', formData);
+        console.log("Response:", doc)
+        return { id: doc.id, url: doc.url }
+    } catch (error) {
+        console.error('Error uploading file:', error)
+        // toast.add({ severity: 'error', summary: 'Error', detail: `No se puede subir el archivo ${file.name}`, life: 3000});
+        return null
     }
-    
-    const CompressImage = async(blob) => {
-        console.log("Compressing image")
-        return new Promise((resolve, reject) => {
-            new Compressor(blob, {
+}
+
+const uploadImage = async (file) => {
+    const formData = new FormData()
+    const randFilename = useRandomFilenameBlob(file)
+    const imageFile = await CompressImage(file)
+    formData.append('file', imageFile, randFilename)
+    try {
+        const { doc } = await useUploadFile('/api/imagenes', formData);
+        console.log("Response:", doc)
+        return { id: doc.id, url: doc.url }
+    } catch (error) {
+        console.error('Error uploading image:', error)
+        toast.add({ severity: 'error', summary: 'Error', detail: 'No se puede subir esa imagen', life: 3000 });
+        return null
+    }
+}
+
+const CompressImage = async (blob) => {
+    console.log("Compressing image")
+    return new Promise((resolve, reject) => {
+        new Compressor(blob, {
             quality: 0.7,
             maxWidth: 2160,
             retainExif: true,
@@ -191,132 +193,160 @@
                 console.log(err.message);
                 reject(err);
             },
-            });
         });
-    }
+    });
+}
 
-    const parseExistingContent = () => {
-        const { entrada, html } = props.editingData
-        console.log('parseExistingContent', entrada, html)
-        quill.root.innerHTML = html
-        attachedImages.value = []
-        attachedImages.value = entrada.imagenes.map(data => ({imagen: data.imagen.id}))
-        // console.log('adjuntos', entrada.archivos)
-        attachedFiles.value = []
-        attachedFiles.value = entrada.archivos.map(data => ({id: data.archivo.id, name: data.archivo.filename, size: data.archivo.filesize, uploaded: true}))
-    }
+const parseExistingContent = () => {
+    const { entrada, html } = props.editingData
+    console.log('parseExistingContent', entrada, html)
+    quill.root.innerHTML = html
+    attachedImages.value = []
+    attachedImages.value = entrada.imagenes.map(data => ({ imagen: data.imagen.id }))
+    // console.log('adjuntos', entrada.archivos)
+    attachedFiles.value = []
+    attachedFiles.value = entrada.archivos.map(data => ({ id: data.archivo.id, name: data.archivo.filename, size: data.archivo.filesize, uploaded: true }))
+}
 
-    onMounted(async () => {
-        if (process.client) {
+onMounted(async () => {
+    if (process.client) {
 
-            const { default: Quill } = await import('quill')
+        const { default: Quill } = await import('quill')
+        // Custom button definition
+        const AttachButton = Quill.import('ui/icons')
+        AttachButton['attach'] = '<i class="pi pi-file"></i>'
 
-            // Quill.register('modules/imageDrop', ImageDrop);
-            // Custom button definition
-            const AttachButton = Quill.import('ui/icons')
-            AttachButton['attach'] = '<i class="pi pi-file"></i>'
+        quill = new Quill(editorContainer.value, {
+            theme: 'snow',
+            modules: {
+                toolbar: {
+                    container: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'align': [] }],
+                        ['blockquote', 'code-block'],
+                        // [{ 'header': 1 }, { 'header': 2 }],
+                        [{ 'list': 'bullet' }],
+                        ['link', 'image', 'video', 'attach'],
+                        // [{ 'script': 'sub' }, { 'script': 'super' }],
+                        // [{ 'indent': '-1' }, { 'indent': '+1' }],
+                        // [{ 'direction': 'rtl' }],
+                        // [{ 'size': ['small', false, 'large', 'huge'] }],
+                        // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        // [{ 'color': [] }, { 'background': [] }],
+                        // [{ 'font': [] }],
+                        ['clean'],
+                        // ['image'],
+                        // ['link'],
+                    ],
+                    handlers: {
+                        attach: handleUploadFileClick
+                    }
+                },
+                mention: {
+                    allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+                    mentionDenotationChars: ["@", "#"],
+                    source: async function (searchTerm, renderList, mentionChar) {
+                        let values = [];
 
-            quill = new Quill(editorContainer.value, {
-                theme: 'snow',
-                modules: {
-                    toolbar: {
-                        container: [
-                            ['bold', 'italic', 'underline', 'strike'],
-                            [{ 'align': [] }],
-                            ['blockquote', 'code-block'],
-                            // [{ 'header': 1 }, { 'header': 2 }],
-                            [{ 'list': 'bullet' }],
-                            ['link', 'image', 'video', 'attach'],
-                            // [{ 'script': 'sub' }, { 'script': 'super' }],
-                            // [{ 'indent': '-1' }, { 'indent': '+1' }],
-                            // [{ 'direction': 'rtl' }],
-                            // [{ 'size': ['small', false, 'large', 'huge'] }],
-                            // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                            // [{ 'color': [] }, { 'background': [] }],
-                            // [{ 'font': [] }],
-                            ['clean'],
-                            // ['image'],
-                            // ['link'],
-                        ],
-                        handlers: {
-                            attach: handleUploadFileClick
+                        if (mentionChar === "@") {
+                            // values = [
+                            //     { id: 1, value: 'Fredrik Sundqvist' },
+                            //     { id: 2, value: 'Patrik Sjölin' }
+                            // ];
+                            if (searchTerm.length < 2) return
+                            const response = await useApi(`/api/users?where[nombre][contains]=${searchTerm}&limit=5`, null, 'GET');
+                            // console.log(response.docs)
+                            values = response.docs.map(user => {
+                                return { id: user.id, value: user.nombre }
+                            })
+                        } else if (mentionChar === "#") {
+                            const etiquetas = salonStore.etiquetas.filter(etiqueta =>
+                                etiqueta.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
+                            values = etiquetas.map(etiqueta => {
+                                return { id: etiqueta.id, value: etiqueta.nombre }
+                            })
+                        }
+
+                        if (searchTerm.length === 0) {
+                            renderList(values, searchTerm);
+                        } else {
+                            const matches = values.filter(item =>
+                                item.value.toLowerCase().includes(searchTerm.toLowerCase())
+                            );
+                            renderList(matches, searchTerm);
                         }
                     },
-                    mention: {
-                        allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
-                        mentionDenotationChars: ["@", "#"],
-                        source: async function (searchTerm, renderList, mentionChar) {
-                            let values = [];
+                },
+            }
+        })
 
-                            if (mentionChar === "@") {
-                                // values = [
-                                //     { id: 1, value: 'Fredrik Sundqvist' },
-                                //     { id: 2, value: 'Patrik Sjölin' }
-                                // ];
-                                if(searchTerm.length < 2) return
-                                const response = await useApi(`/api/users?where[nombre][contains]=${searchTerm}&limit=5`, null, 'GET');
-                                // console.log(response.docs)
-                                values = response.docs.map(user => {
-                                    return { id: user.id, value: user.nombre }
-                                })
-                            } else if(mentionChar === "#") {
-                                const etiquetas = salonStore.etiquetas.filter(etiqueta => 
-                                    etiqueta.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
-                                values = etiquetas.map(etiqueta => {
-                                    return { id: etiqueta.id, value: etiqueta.nombre }
-                                })
-                            }
+        // Detectar URLs de youtube y vimeo y convertir en iframes
+        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const vimeoRegex = /https?:\/\/(www\.)?vimeo.com\/(\d+)/;
+        quill.on('text-change', (delta, oldDelta, source) => {
+            // Loop through the delta operations
+            delta.ops.forEach((op) => {
+                // Check if this operation is an insert operation
+                if (op.insert && typeof op.insert === 'string') {
+                    const text = op.insert;
+                    // Check for YouTube URLs
+                    const youtubeMatch = text.match(youtubeRegex);
+                    if (youtubeMatch) {
+                        const videoId = youtubeMatch[1];
+                        const iframe = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                        // Update the Quill editor with the iframe
+                        const index = quill.getLength() - text.length - 1; // Get the current length to replace
+                        quill.deleteText(index, text.length); // Remove the original text
+                        // quill.insert("hola")
+                        quill.clipboard.dangerouslyPasteHTML(index, iframe)
+                        // quill.insertEmbed(index, 'html', iframe); // Insert the iframe
+                    }
 
-                            if (searchTerm.length === 0) {
-                                renderList(values, searchTerm);
-                            } else {
-                                const matches = values.filter(item =>
-                                    item.value.toLowerCase().includes(searchTerm.toLowerCase())
-                                );
-                                renderList(matches, searchTerm);
-                            }
-                        },
-                    },
+                    // Check for Vimeo URLs
+                    const vimeoMatch = text.match(vimeoRegex);
+                    if (vimeoMatch) {
+                        const videoId = vimeoMatch[2];
+                        const iframe = `<iframe src="https://player.vimeo.com/video/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                        // Update the Quill editor with the iframe
+                        const index = quill.getLength() - text.length - 1; // Get the current length to replace
+                        quill.deleteText(index, text.length); // Remove the original text
+                        quill.clipboard.dangerouslyPasteHTML(index, iframe)
+                    }
                 }
-            })
+            });
+        });
 
-            // quill.root.innerHTML = props.value
-
-            quill.on('text-change', () => {
-                // emit('update:value', quill.root.innerHTML)
-            })
-
-            editorContainer.value.firstChild.onfocus = () => {
-                window.addEventListener('keydown', handlePublishHotkey)
-            }
-            editorContainer.value.firstChild.onblur = () => {
-                window.removeEventListener('keydown', handlePublishHotkey)
-            }
+        editorContainer.value.firstChild.onfocus = () => {
+            window.addEventListener('keydown', handlePublishHotkey)
         }
-        
-        if (props.editingData) {
-            // isEditing.value = true
-            // myContent.value = props.editingData
-            parseExistingContent()
-        }        
-    })
-
-    onBeforeUnmount(() => {
-        if (quill) {
-            quill.off('text-change')
+        editorContainer.value.firstChild.onblur = () => {
+            window.removeEventListener('keydown', handlePublishHotkey)
         }
-    })
-
-    const clear = () => {
-        quill.root.innerHTML = ''
-        attachedImages.value = []
-        attachedFiles.value = []
     }
-    // Expose the function so the parent can access it
-    defineExpose({
-        parseEditorToUpload,
-        clear
-    })
+
+    if (props.editingData) {
+        // isEditing.value = true
+        // myContent.value = props.editingData
+        parseExistingContent()
+    }
+})
+
+onBeforeUnmount(() => {
+    if (quill) {
+        quill.off('text-change')
+    }
+})
+
+const clear = () => {
+    quill.root.innerHTML = ''
+    attachedImages.value = []
+    attachedFiles.value = []
+}
+// Expose the function so the parent can access it
+defineExpose({
+    parseEditorToUpload,
+    clear
+})
 </script>
 
 <style>
