@@ -31,6 +31,9 @@ definePageMeta({
       navigateAuthenticatedTo: '/'
     }
 })
+useHead({
+  title: 'Olvidé - Salón',
+})
 
 const email = ref('')
 const loading = ref(false)

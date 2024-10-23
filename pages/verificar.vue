@@ -10,6 +10,9 @@ definePageMeta({
       navigateAuthenticatedTo: '/'
     }
 })
+useHead({
+  title: 'Verificar - Salón',
+})
 
 const route = useRoute()
 const router = useRouter()

@@ -40,11 +40,14 @@
 <script setup>
 // Permito que se pueda acceder a la página sin autenticación
 definePageMeta({
-    auth: {
-      unauthenticatedOnly: true,
-      navigateAuthenticatedTo: '/'
-    }
-  })
+  auth: {
+    unauthenticatedOnly: true,
+    navigateAuthenticatedTo: '/'
+  }
+})
+useHead({
+  title: 'Registrar - Salón',
+})
 
 import { ref } from 'vue'
 

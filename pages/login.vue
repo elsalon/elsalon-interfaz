@@ -34,8 +34,12 @@ definePageMeta({
   auth: {
     unauthenticatedOnly: true,
     navigateAuthenticatedTo: '/'
-  }
+  },
 })
+useHead({
+  title: 'Ingresar - Salón',
+})
+
 import { ref } from 'vue'
 import { useAuth } from '#imports'
 const toast = useToast();

@@ -29,6 +29,9 @@ definePageMeta({
       navigateAuthenticatedTo: '/'
     }
 })
+useHead({
+  title: 'Recuperar - Salón',
+})
 
 const password = ref('')
 const password2 = ref('')

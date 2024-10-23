@@ -67,6 +67,15 @@
 
     const toast = useToast();
     import { useToast } from "primevue/usetoast";
+    const route = useRoute();
+
+    watchEffect(() => {
+        const notifications = totalNotifications.value > 0 ? `(${totalNotifications.value}) ` : '';
+        const title = route.meta.title ?  `${route.meta.title} - Salón` : 'Salón';
+        useHead({
+            title: notifications + title
+        });
+    });
 
     // listen for totalNotifications change
     let firstRun = true;
