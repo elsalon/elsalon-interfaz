@@ -212,6 +212,7 @@ onMounted(async () => {
     if (process.client) {
 
         const { default: Quill } = await import('quill')
+
         // Custom button definition
         const AttachButton = Quill.import('ui/icons')
         AttachButton['attach'] = '<i class="pi pi-file"></i>'
@@ -280,40 +281,82 @@ onMounted(async () => {
             }
         })
 
-        // Detectar URLs de youtube y vimeo y convertir en iframes
-        const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-        const vimeoRegex = /https?:\/\/(www\.)?vimeo.com\/(\d+)/;
-        quill.on('text-change', (delta, oldDelta, source) => {
-            // Loop through the delta operations
-            delta.ops.forEach((op) => {
-                // Check if this operation is an insert operation
-                if (op.insert && typeof op.insert === 'string') {
-                    const text = op.insert;
-                    // Check for YouTube URLs
-                    const youtubeMatch = text.match(youtubeRegex);
-                    if (youtubeMatch) {
-                        const videoId = youtubeMatch[1];
-                        const iframe = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                        // Update the Quill editor with the iframe
-                        const index = quill.getLength() - text.length - 1; // Get the current length to replace
-                        quill.deleteText(index, text.length); // Remove the original text
-                        // quill.insert("hola")
-                        quill.clipboard.dangerouslyPasteHTML(index, iframe)
-                        // quill.insertEmbed(index, 'html', iframe); // Insert the iframe
-                    }
 
-                    // Check for Vimeo URLs
-                    const vimeoMatch = text.match(vimeoRegex);
-                    if (vimeoMatch) {
-                        const videoId = vimeoMatch[2];
-                        const iframe = `<iframe src="https://player.vimeo.com/video/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                        // Update the Quill editor with the iframe
-                        const index = quill.getLength() - text.length - 1; // Get the current length to replace
-                        quill.deleteText(index, text.length); // Remove the original text
-                        quill.clipboard.dangerouslyPasteHTML(index, iframe)
-                    }
-                }
-            });
+        quill.on('text-change', (delta) => {
+            const ops = delta.ops;
+
+            // Check if the delta has relevant operations
+            if (!ops || ops.length < 1 || ops.length > 2) {
+                return;
+            }
+
+            const lastOp = ops[ops.length - 1];
+
+            // Check if the last operation is a string insert and if it includes whitespace
+            if (!lastOp.insert || typeof lastOp.insert !== 'string' || !lastOp.insert.match(/\s/)) {
+                return;
+            }
+
+            // Get the selection and current leaf node
+            const sel = quill.getSelection();
+            if (!sel) {
+                return;
+            }
+
+            const [leaf] = quill.getLeaf(sel.index);
+            const leafIndex = quill.getIndex(leaf);
+
+            if (!leaf.text) {
+                return;
+            }
+
+            // Determine the relevant text length until the cursor position
+            const relevantLength = sel.index - leafIndex;
+            const text = leaf.text.slice(0, relevantLength);
+
+            // Only proceed if the text is not part of a link
+            if (leaf.parent.domNode.localName === 'a') {
+                return;
+            }
+
+            // Check if we are at the end of the text and whether it ends with whitespace
+            const nextLetter = leaf.text[relevantLength];
+            if (nextLetter != null && nextLetter.match(/\S/)) {
+                return;
+            }
+
+            const urlRegex = /\bhttps?:\/\/[^\s<]+(?![^<]*<\/a>)/;
+            const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const vimeoRegex = /(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com\/)(\d+)/;
+
+            const urlMatch = text.match(urlRegex);
+            const youtubeMatch = text.match(youtubeRegex);
+            const vimeoMatch = text.match(vimeoRegex);
+
+            // If a URL is matched
+            if (urlMatch) {
+                console.log('URL:', urlMatch[0]);
+                const url = urlMatch[0];
+                const link = `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+                quill.deleteText(leafIndex, relevantLength); // Remove the original text
+                quill.clipboard.dangerouslyPasteHTML(leafIndex, link); // Insert the link
+            }
+
+            // If a YouTube URL is matched
+            if (youtubeMatch) {
+                const videoId = youtubeMatch[1];
+                const iframe = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                quill.deleteText(leafIndex, relevantLength); // Remove the original text
+                quill.clipboard.dangerouslyPasteHTML(leafIndex, iframe); // Insert the iframe
+            }
+
+            // If a Vimeo URL is matched
+            if (vimeoMatch) {
+                const videoId = vimeoMatch[1];
+                const iframe = `<iframe src="https://player.vimeo.com/video/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                quill.deleteText(leafIndex, relevantLength); // Remove the original text
+                quill.clipboard.dangerouslyPasteHTML(leafIndex, iframe); // Insert the iframe
+            }
         });
 
         editorContainer.value.firstChild.onfocus = () => {
