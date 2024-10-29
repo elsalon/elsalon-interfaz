@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:4000',
+      apiBase: 'http://localhost:3000',
       configApi: '/api/config',
       entradasApi: '/api/entradas',
     }
@@ -32,7 +32,6 @@ export default defineNuxtConfig({
   // *****
   auth: {
     // https://auth.sidebase.io/guide/local/quick-start
-    baseURL: 'http://localhost:4000/',
     provider: {
       type: 'local',
       endpoints: {
