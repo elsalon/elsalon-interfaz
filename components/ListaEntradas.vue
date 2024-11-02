@@ -118,7 +118,7 @@ const CheckLlegoFinDePagina = async () => {
 
 const FetchFijadas = async () => {
   try{
-    let apiUrl = `http://localhost:3000/api/fijadas?depth=3&where[contexto][equals]=${SalonStore.contextoId}&sort=-createdAt&limit=10`
+    let apiUrl = `/api/fijadas?depth=3&where[contexto][equals]=${SalonStore.contextoId}&sort=-createdAt&limit=10`
     const res = await useAPI(apiUrl)
     console.log("--->", res)
     idsEntradasFijadas.value = [] // = res.docs.map(fijada => fijada.entrada.id)

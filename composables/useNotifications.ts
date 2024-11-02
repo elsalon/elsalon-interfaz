@@ -28,16 +28,7 @@ export function useNotifications() {
     sharedState.error.value = null
 
     try {
-      // const { $api } = useNuxtApp()
-      // const { data, status, error } = await useAsyncData('notificaciones', () => $api('http://localhost:3000/api/notificaciones?where[leida][not_equals]=true&limit=1'))
-      // const { data, status, error, refresh, clear } = await useAPI('/api/notificaciones?where[leida][not_equals]=true&limit=1');
-      // console.log("*",data.value, status.value, error.value)
-
       const { docs: newNotifications, totalDocs: totalNotifications } = await useAPI('/api/notificaciones?where[leida][not_equals]=true&limit=1')
-      // const test = await useAPI('/api/notificaciones?where[leida][not_equals]=true&limit=1')
-      // console.log("*****", test)
-    
-      
       console.log('Fetched notifications:', newNotifications, totalNotifications)
       sharedState.totalNotifications.value = totalNotifications
       
@@ -45,11 +36,6 @@ export function useNotifications() {
       const newOnes = newNotifications.filter(notification => 
         !sharedState.notifications.value.some(existing => existing.id === notification.id)
       )
-      
-      // if (!firstFetch && newOnes.length > 0) {
-      //   showToast(`You have ${newOnes.length} new notification(s)`)
-      // }
-      // firstFetch = false;
       
       sharedState.notifications.value = newNotifications
       sharedState.lastFetchTime.value = now
