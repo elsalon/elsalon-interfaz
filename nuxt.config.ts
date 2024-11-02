@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   plugins: [
+    '~/plugins/api.ts',
     '~/plugins/SalonConfig.ts',
   ],
   modules: [
@@ -32,6 +33,7 @@ export default defineNuxtConfig({
   // *****
   auth: {
     // https://auth.sidebase.io/guide/local/quick-start
+    baseURL: process.env.NUXT_PUBLIC_API_BASE + "/",
     provider: {
       type: 'local',
       endpoints: {
