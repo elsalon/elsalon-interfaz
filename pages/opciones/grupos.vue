@@ -84,7 +84,7 @@
 
     const fetchGrupos = async () => {
         fetching.value = true;
-        const {docs} = await useApi(`/api/grupos?where[integrantes][contains]=${authData.value.user.id}&limit=10`);
+        const {docs} = await useAPI(`/api/grupos?where[integrantes][contains]=${authData.value.user.id}&limit=10`);
         grupos.value = docs;
         fetching.value = false;
     }
@@ -123,7 +123,7 @@
             return;
         }
         console.log("Buscando", event.query);
-        const {docs} = await useApi(`/api/users?where[nombre][contains]=${event.query}&limit=10`); // contains o like ? -> doc: https://payloadcms.com/docs/queries/overview#operators
+        const {docs} = await useAPI(`/api/users?where[nombre][contains]=${event.query}&limit=10`); // contains o like ? -> doc: https://payloadcms.com/docs/queries/overview#operators
         sugerenciasUsuarios.value = docs;
     }
 
@@ -137,19 +137,20 @@
             toast.add({severity: 'error', summary: 'Error', detail: 'Tenés que seleccionar al menos un integrante', life: 3000});
             return;
         }
-        let data = {
+        let body = {
             nombre: nuevoGrupo.value.nombre,
             integrantes: nuevoGrupo.value.usuarios.map((usuario) => usuario.id)
         }
         // Chequeo que el usuario actual esté en el grupo
         if(!nuevoGrupo.value.usuarios.find((usuario) => usuario.id == authData.value.user.id)){
-            data.integrantes.push(authData.value.user.id);
+            body.integrantes.push(authData.value.user.id);
         }
         console.log('Creando grupo', nuevoGrupo.value);
         // Crear grupo
         try{
             creandoNuevoGrupo.value = true;
-            const res = await useApi('/api/grupos', data, 'POST');
+            const method = 'POST';
+            const res = await useAPI('/api/grupos', {body, method});
             console.log(res);
             toast.add({severity: 'contrast', summary: 'Grupo creado', detail: 'El grupo se creó correctamente', life: 3000});
         }catch(e){

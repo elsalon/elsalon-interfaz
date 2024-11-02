@@ -45,7 +45,7 @@
     
     const fetchComentarios = async () => {
         fetchingComentarios.value = true
-        const res = await useApi(`/api/comentarios?where[entrada][equals]=${props.entradaId}&sort=-createdAt&limit=3&page=${page.value}`)
+        const res = await useAPI(`/api/comentarios?where[entrada][equals]=${props.entradaId}&sort=-createdAt&limit=3&page=${page.value}`)
         var newComments = res.docs.filter(newComment => 
             !comentarios.value.some(existingComment => existingComment.id === newComment.id)
         )
@@ -70,7 +70,7 @@
             return
         }
         fetchingComentarios.value = true
-        const res = await useApi(`/api/comentarios?where[entrada][equals]=${props.entradaId}&where[createdAt][greater_than]=${newestCommentDate.value}&sort=createdAt`)
+        const res = await useAPI(`/api/comentarios?where[entrada][equals]=${props.entradaId}&where[createdAt][greater_than]=${newestCommentDate.value}&sort=createdAt`)
         const newComments = res.docs.filter(newComment => 
         !comentarios.value.some(existingComment => existingComment.id === newComment.id)
         )

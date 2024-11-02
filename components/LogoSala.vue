@@ -37,7 +37,7 @@ const onFileChange = async (e) => {
     formData.append('file', avatarFile)
     const avatarRes = await useUploadFile('/api/avatares', formData);
     // Ahora actualizo la sala
-    const salonRes = await useApi(`/api/salones/${props.salon.id}`, {avatar: avatarRes.doc.id}, 'PATCH');
+    const salonRes = await useAPI(`/api/salones/${props.salon.id}`, {avatar: avatarRes.doc.id}, 'PATCH');
     if(salonRes.error){
         toast.add({severity: 'error', summary: 'Error', detail: salonRes.error, life: 3000})
     }else{

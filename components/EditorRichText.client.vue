@@ -28,7 +28,8 @@ import formatBytes from '~/composables/useBytesDisplay';
 // Generate a unique ID for each editor instance
 // const editorId = ref(`editor-${Math.random().toString(36).substring(2, 9)}`)
 const editorContainer = ref(null)
-let quill = null
+let quill = null;
+const toast = useToast();
 
 // const myContent = ref('')
 const attachedImages = ref([])
@@ -146,13 +147,11 @@ const parseEditorToUpload = async () => {
     return { html, imagenes: attachedImages.value, archivos, mencionados, etiquetas }
 }
 
-
-
 const uploadFile = async (file) => {
     const formData = new FormData()
     formData.append('file', file, file.name)
     try {
-        const { doc } = await useUploadFile('/api/archivos', formData);
+        const {doc} = await useUploadFile('/api/archivos', formData);
         console.log("Response:", doc)
         return { id: doc.id, url: doc.url }
     } catch (error) {
@@ -168,8 +167,7 @@ const uploadImage = async (file) => {
     const imageFile = await CompressImage(file)
     formData.append('file', imageFile, randFilename)
     try {
-        const { doc } = await useUploadFile('/api/imagenes', formData);
-        console.log("Response:", doc)
+        const {doc} = await useUploadFile('/api/imagenes', formData);
         return { id: doc.id, url: doc.url }
     } catch (error) {
         console.error('Error uploading image:', error)
@@ -255,7 +253,7 @@ onMounted(async () => {
                             //     { id: 2, value: 'Patrik Sjölin' }
                             // ];
                             if (searchTerm.length < 2) return
-                            const response = await useApi(`/api/users?where[nombre][contains]=${searchTerm}&limit=5`, null, 'GET');
+                            const response = await useAPI(`/api/users?where[nombre][contains]=${searchTerm}&limit=5`, null, 'GET');
                             // console.log(response.docs)
                             values = response.docs.map(user => {
                                 return { id: user.id, value: user.nombre }

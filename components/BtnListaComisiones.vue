@@ -67,7 +67,7 @@ const comisionesToggle = (event) => {
 };
 
 const crearComisionVisible = ref(false);
-const comisiones = await useApi(`/api/comisiones?where[or][0][and][0][contexto][equals]=${props.salon.id}`, null, 'GET');
+const comisiones = await useAPI(`/api/comisiones?where[or][0][and][0][contexto][equals]=${props.salon.id}`, null, 'GET');
 // TODO filtrar solo las comisiones creadas en este periodo actual. De esta forma tambien podemos acceder a comisiones de distintos periodos
 // Tambien implica (y esta bien) que en cada periodo nuevo hay que re generar las comisiones
 const comisionesItems = ref(comisiones.docs.map(comision => {
@@ -107,7 +107,7 @@ const busquedaDocentes = async (event) => {
             return;
         }
         console.log("Buscando", event.query);
-        const {docs} = await useApi(`/api/users?where[nombre][contains]=${event.query}&where[rol][equals]=docente&limit=10`); // contains o like ? -> doc: https://payloadcms.com/docs/queries/overview#operators
+        const {docs} = await useAPI(`/api/users?where[nombre][contains]=${event.query}&where[rol][equals]=docente&limit=10`); // contains o like ? -> doc: https://payloadcms.com/docs/queries/overview#operators
         sugerenciasDocentes.value = docs;
     }
 
@@ -121,16 +121,17 @@ const busquedaDocentes = async (event) => {
             toast.add({severity: 'error', summary: 'Error', detail: 'Tenés que seleccionar al menos un integrante', life: 3000});
             return;
         }
-        let data = {
+        const body = {
             nombre: nuevaComision.value.nombre,
             docentes: nuevaComision.value.docentes.map((usuario) => usuario.id),
             contexto: props.salon.id,
         }
+        const method = 'POST';
         console.log('Creando comision', nuevaComision.value);
         // Crear comision
         try{
             creandoNuevaComision.value = true;
-            const res = await useApi('/api/comisiones', data, 'POST');
+            const res = await useAPI('/api/comisiones', {body, method});
             console.log(res);
             toast.add({severity: 'contrast', summary: 'Comisión creada', detail: 'La comisión se creó correctamente', life: 3000});
             router.push(`/salones/${props.salon.slug}/comision-${res.doc.slug}`);

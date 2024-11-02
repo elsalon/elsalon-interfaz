@@ -10,5 +10,5 @@ const elsalon = useSalonStore();
 elsalon.setContext('entrada')
 const route = useRoute()
 const entradaId = route.params?.id
-const entrada = await useApi(`/api/entradas/${entradaId}`)
+const entrada = await useAPI(`/api/entradas/${entradaId}`)
 </script>

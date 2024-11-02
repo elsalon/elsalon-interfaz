@@ -216,13 +216,13 @@ const Publicar = async () => {
 	const { paginaActual } = useSalon()
 	const html = await ProcesarContenido();
 	let method ='POST'
-	let data = {
+	let body = {
 		contenido: html, 
 		imagenes: attachedImages.value, 
 		sala: paginaActual.value.id,
 		autoriaGrupal: false,
 	}
-	// console.log("DATA", data)	
+	// console.log("body", body)	
 	let endpoint = '/api/entradas'
 	if(isEditing.value){
 		method = 'PATCH';
@@ -230,11 +230,12 @@ const Publicar = async () => {
 	}
 	// Autoria grupal
 	if(autorSeleccionado.value.id != authData.value.user.id){
-		data.autoriaGrupal = true
-		data.grupo = autorSeleccionado.value.id
+		body.autoriaGrupal = true
+		body.grupo = autorSeleccionado.value.id
 	}
 	try{
-		const response = await useApi(endpoint, data, method);
+		console.log(endpoint,{ body, method})
+		const response = await useAPI(endpoint,{ body, method});
 		console.log("Publicacion creada:", response)
 		useNuxtApp().callHook("publicacion:creada", {resultado:"ok"})
 	}catch{
@@ -246,7 +247,7 @@ const Publicar = async () => {
 
 const autorSeleccionado = ref();
 const autoresOpciones = ref([]);
-const {docs:gruposDelUsuario} = await useApi(`/api/grupos?where[integrantes][contains]=${authData.value?.user?.id}`);
+const {docs:gruposDelUsuario} = await useAPI(`/api/grupos?where[integrantes][contains]=${authData.value?.user?.id}`);
 console.log(gruposDelUsuario)
 const loadExistingContent = async () => {
 	const { entrada, html } = props.postEdit

@@ -40,13 +40,13 @@ const salonStore = useSalonStore();
 const salon = ref(null)
 salon.value = salonStore.salones.find(salon => salon.slug === slug)
 const slugComision = route.params?.slugcomision
-const res = await useApi(`/api/comisiones?where[or][0][and][0][slug][equals]=${slugComision}`, null, 'GET');
+const res = await useAPI(`/api/comisiones?where[or][0][and][0][slug][equals]=${slugComision}`, null, 'GET');
 const comision = ref(res.docs[0])
 const unirmeKey = ref(0)
 salonStore.setContext('salon', salon.value.id)
 salonStore.SetPageTitle(`Comisión ${comision.value.nombre}`)
 const RecargarComision = async () => {
-    const res = await useApi(`/api/comisiones?where[or][0][and][0][slug][equals]=${slugComision}`, null, 'GET');
+    const res = await useAPI(`/api/comisiones?where[or][0][and][0][slug][equals]=${slugComision}`, null, 'GET');
     comision.value = res.docs[0]
     unirmeKey.value++;
 }

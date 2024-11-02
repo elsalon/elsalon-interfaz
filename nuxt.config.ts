@@ -4,7 +4,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   plugins: [
     '~/plugins/api.ts',
-    '~/plugins/SalonConfig.ts',
   ],
   modules: [
     '@sidebase/nuxt-auth',
@@ -14,9 +13,8 @@ export default defineNuxtConfig({
   
   runtimeConfig: {
     public: {
-      apiBase: 'http://localhost:3000',
-      configApi: '/api/config',
-      entradasApi: '/api/entradas',
+      // baseURL: process.env.NUXT_APP_BASE_URL || 'http://localhost:3000',
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3000',
     }
   },
   // *****

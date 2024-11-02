@@ -24,7 +24,7 @@ const totalDocs = ref(0);
 const haApreciadoId = ref(null);
 
 const FetchAprecio = async () => {
-    const res = await useApi(`/api/aprecio/${props.entradaId}`);
+    const res = await useAPI(`/api/aprecio/${props.entradaId}`);
     docs.value = res.docs;
     totalDocs.value = res.totalDocs;
     haApreciadoId.value = res.haApreciado;
@@ -42,11 +42,14 @@ const handleAprecioClicked = async () => {
         if(haApreciado.value){
             // Eliminio mi aprecio
             console.log('Eliminando aprecio', props.entradaId)
-            await useApi(`/api/aprecio/${haApreciadoId.value}`, {}, 'DELETE')
+            const method = 'DELETE'
+            await useAPI(`/api/aprecio/${haApreciadoId.value}`, {method})
         }else{
             // Creo un aprecio
             console.log('Creando aprecio', props.entradaId)
-            await useApi(`/api/aprecio/`, {entrada:props.entradaId}, 'POST')
+            const body = {entrada:props.entradaId}
+            const method = 'POST'
+            await useAPI(`/api/aprecio/`, {body, method})
         }
     }catch(e){
         console.log(e)

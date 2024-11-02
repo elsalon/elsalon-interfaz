@@ -1,57 +1,55 @@
 <template>
-    <DataLoader>
-        <header class="sticky top-0 flex h-16 items-center z-50 px-4 md:px-6">
-            <!-- Fixed Nav -->
-            <nav class="w-full flex flex-row justify-between items-center">
-                <!-- Logo Salon -->
-                <Avatar v-if="paginaActual?.avatar" :image="paginaActual.avatar.sizes.medium.url" size="large" shape="" class="select-none cursor-pointer border border-white-500 -left-px" @click="toggleSalonesMenu"/>
-                <Avatar v-else :label="paginaActual?.siglas" class="select-none cursor-pointer border border-white-500 -left-px" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape="" @click="toggleSalonesMenu"/>
+    <header class="sticky top-0 flex h-16 items-center z-50 px-4 md:px-6">
+        <!-- Fixed Nav -->
+        <nav class="w-full flex flex-row justify-between items-center">
+            <!-- Logo Salon -->
+            <Avatar v-if="paginaActual?.avatar" :image="paginaActual.avatar.sizes.medium.url" size="large" shape="" class="select-none cursor-pointer border border-white-500 -left-px" @click="toggleSalonesMenu"/>
+            <Avatar v-else :label="paginaActual?.siglas" class="select-none cursor-pointer border border-white-500 -left-px" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape="" @click="toggleSalonesMenu"/>
 
-                <Menu ref="salonesMenu" id="overlay_menu_salones" :model="salonStore.salones" :popup="true" class="select-none"> 
+            <Menu ref="salonesMenu" id="overlay_menu_salones" :model="salonStore.salones" :popup="true" class="select-none"> 
+                <template #item="{ item, props }">
+                    <router-link v-if="item.slug" v-slot="{ href, navigate }" :to="GenerateUrl(item.slug)" custom>
+                        <a :href="href" v-bind="props.action" @click="navigate">
+                            <span class="mr-2">
+                                <Avatar v-if="item?.avatar" :image="item.avatar.sizes.medium.url" shape="circle"/>
+                                <Avatar v-else :label="item.siglas" :style="{backgroundColor: item.color, color: '#fff'}" shape="circle" />
+                            </span>
+                            <span>{{ item.nombre }}</span>                        
+                        </a>
+                    </router-link>
+                </template>
+            </Menu>
+            
+            <!-- Avatar Usuario -->
+            <client-only>
+                <!-- Avatar Con notificationes -->
+                <template v-if="totalNotifications > 0">
+                    <OverlayBadge :value="totalNotifications" size="small">
+                        <AvatarSalon :key="'avt'+myKey" class="border border-white-500 cursor-pointer -right-px" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
+                    </OverlayBadge>
+                </template>
+                <!-- Avatar Sin notificationes -->
+                <template v-else>
+                    <AvatarSalon :key="'avt'+myKey" class="border border-white-500 cursor-pointer -right-px" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
+                </template>
+                
+                <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true"> 
                     <template #item="{ item, props }">
-                        <router-link v-if="item.slug" v-slot="{ href, navigate }" :to="GenerateUrl(item.slug)" custom>
-                            <a :href="href" v-bind="props.action" @click="navigate">
-                                <span class="mr-2">
-                                    <Avatar v-if="item?.avatar" :image="item.avatar.sizes.medium.url" shape="circle"/>
-                                    <Avatar v-else :label="item.siglas" :style="{backgroundColor: item.color, color: '#fff'}" shape="circle" />
-                                </span>
-                                <span>{{ item.nombre }}</span>                        
-                            </a>
-                        </router-link>
+                        <a class="flex items-center" v-bind="props.action">
+                            <span :class="item.icon" class="mr-2" />
+                            <span>{{ item.label }} </span>
+                            <Badge size="small" v-if="item.badge > 0" class="ml-auto" :value="item.badge" />
+                            <span v-if="item.shortcut" class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{ item.shortcut }}</span>
+                        </a>
                     </template>
                 </Menu>
-                
-                <!-- Avatar Usuario -->
-                <client-only>
-                    <!-- Avatar Con notificationes -->
-                    <template v-if="totalNotifications > 0">
-                        <OverlayBadge :value="totalNotifications" size="small">
-                            <AvatarSalon :key="'avt'+myKey" class="border border-white-500 cursor-pointer -right-px" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
-                        </OverlayBadge>
-                    </template>
-                    <!-- Avatar Sin notificationes -->
-                    <template v-else>
-                        <AvatarSalon :key="'avt'+myKey" class="border border-white-500 cursor-pointer -right-px" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
-                    </template>
-                    
-                    <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true"> 
-                        <template #item="{ item, props }">
-                            <a class="flex items-center" v-bind="props.action">
-                                <span :class="item.icon" class="mr-2" />
-                                <span>{{ item.label }} </span>
-                                <Badge size="small" v-if="item.badge > 0" class="ml-auto" :value="item.badge" />
-                                <span v-if="item.shortcut" class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{ item.shortcut }}</span>
-                            </a>
-                        </template>
-                    </Menu>
-                </client-only>
-            </nav>
-        </header>
-        <main class="container mx-auto">
-            <slot />
-        </main>
-        <NotificacionesDialog v-model:visible="notificacionesVisible" ref="notificacionesDialog" />
-    </DataLoader>
+            </client-only>
+        </nav>
+    </header>
+    <main class="container mx-auto">
+        <slot />
+    </main>
+    <!-- <NotificacionesDialog v-model:visible="notificacionesVisible" ref="notificacionesDialog" /> -->
 </template>
 
 <script setup>

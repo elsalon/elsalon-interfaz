@@ -84,7 +84,7 @@ const handleSubmit = async () => {
         
 
         // Luego guardamos el perfil
-        const userRes = await useApi(`/api/users/${data.value.user.id}`, perfil.value, 'PATCH');
+        const userRes = await useAPI(`/api/users/${data.value.user.id}`, perfil.value, 'PATCH');
         console.log(userRes)
 
         // clear file input

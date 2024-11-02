@@ -91,11 +91,12 @@ export const useSalonStore = defineStore('salon', {
     },
 
     async fetchConfig() {
-      if (this.initialized) return;
+      if (this.initialized || this.loading) return;
 
       this.loading = true;
 
       try {
+        console.log('Fetching El Salon config');
         const runtimeConfig = useRuntimeConfig().public;
 
         // Realiza ambas peticiones en paralelo
@@ -117,10 +118,8 @@ export const useSalonStore = defineStore('salon', {
           this.etiquetas = etiquetasData;
         }
 
-        // Establece 'initialized' solo si ambos conjuntos de datos se cargan correctamente
-        if (this.salones.length > 0 && this.etiquetas.length > 0) {
-          this.initialized = true;
-        }
+        this.initialized = true;
+        // console.log("**", this.salones)
 
       } catch (error) {
         console.error('Failed to fetch config:', error);

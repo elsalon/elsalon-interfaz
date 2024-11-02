@@ -61,7 +61,7 @@ const Publicar = async () => {
 		endpoint = `/api/comentarios/${props.commentEdit.entrada.id}`
 	}
 	try{
-		const response = await useApi(endpoint, data, method);
+		const response = await useAPI(endpoint, data, method);
 		console.log("Comentario creado:", response)
 		useNuxtApp().callHook("comentario:creado", {resultado:"ok"})
         toast.add({ severity: 'contrast', detail: 'Comentario publicado', life: 3000});   

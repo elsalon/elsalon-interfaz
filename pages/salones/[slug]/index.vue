@@ -73,7 +73,7 @@ const onEstadoColaboracion = (estado) => {
 }
 
 const BuscarMiembros = async () => {
-    miembros.value = await useApi(`/api/colaboraciones?where[idColaborador][equals]=${salon.value.id}`);
+    miembros.value = await useAPI(`/api/colaboraciones?where[idColaborador][equals]=${salon.value.id}`);
     // console.log(miembros.value)
 }
 

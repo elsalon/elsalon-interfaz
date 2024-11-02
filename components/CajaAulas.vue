@@ -37,7 +37,7 @@ const OnClose = async () =>{
     // console.log("Cerrando inplace")
     editing.value = false;
     try{
-        const salonRes = await useApi(`/api/salones/${props.salon.id}`, {aulas: aulas.value}, 'PUT')
+        const salonRes = await useAPI(`/api/salones/${props.salon.id}`, {aulas: aulas.value}, 'PUT')
         salonStore.UpdateSala(salonRes.doc)
         toast.add({severity: 'contrast', detail: 'Aula actualizada', life: 3000})
     }catch(e){

@@ -143,7 +143,7 @@ const opcionDestacar = {
     label: !entrada.destacada ? 'Destacar en El Salón' : 'Quitar destacado en El Salón',
     command: async () => {
         // console.log('Destacar');
-        await useApi(`/api/entradas/${entrada.id}`, { destacada: !entrada.destacada }, 'PATCH');
+        await useAPI(`/api/entradas/${entrada.id}`, { destacada: !entrada.destacada }, 'PATCH');
         useNuxtApp().callHook("publicacion:fijada");
     }
 }
@@ -156,9 +156,12 @@ const opcionFijar = {
     label: !entrada.fijada ? 'Fijar' : 'Quitar Fijado',
     command: async () => {
         if (entrada.fijada) {
-            await useApi(`/api/fijadas/${entrada.fijada}`, {}, 'DELETE');
+            const method = 'DELETE';
+            await useAPI(`/api/fijadas/${entrada.fijada}`, {method});
         } else {
-            await useApi(`/api/fijadas`, { contexto: salonStore.contextoId, entrada: entrada.id }, 'POST');
+            const method = 'POST';
+            const body = { contexto: salonStore.contextoId, entrada: entrada.id };
+            await useAPI(`/api/fijadas`, {body, method});
         }
         useNuxtApp().callHook("publicacion:fijada");
     }
@@ -181,7 +184,7 @@ const archivos = ref(entrada.archivos)
 
 const EliminarEntrada = async () => {
     try {
-        const response = await useApi(`/api/entradas/${entrada.id}`, {}, 'DELETE');
+        const response = await useAPI(`/api/entradas/${entrada.id}`, {}, 'DELETE');
         console.log("Entrada eliminada:", response)
         emit('eliminar');
         toast.add({ severity: 'contrast', detail: 'Entrada eliminada', life: 3000 });

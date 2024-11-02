@@ -58,7 +58,7 @@ const props = defineProps(
 
 const autorSeleccionado = ref(null)
 const autoresOpciones =ref([])
-const {docs:gruposDelUsuario} = await useApi(`/api/grupos?where[integrantes][contains]=${authData.value?.user?.id}`);
+const {docs:gruposDelUsuario} = await useAPI(`/api/grupos?where[integrantes][contains]=${authData.value?.user?.id}`);
 
 const Publicar = async () => {
     uploading.value = true
@@ -73,7 +73,7 @@ const Publicar = async () => {
 
     console.log({paginaActual})
     let method ='POST'
-	let data = {
+	let body = {
 		contenido: html, 
 		sala,
 		autoriaGrupal: false,
@@ -82,7 +82,7 @@ const Publicar = async () => {
         mencionados,
         etiquetas,
 	}
-	// console.log("DATA", html, imagenes)	
+	// console.log("body", html, imagenes)	
 	let endpoint = '/api/entradas'
 	if(isEditing.value){
 		method = 'PATCH';
@@ -90,17 +90,18 @@ const Publicar = async () => {
 	}
 	// Autoria grupal
 	if(autorSeleccionado.value.id != authData.value.user.id){
-		data.autoriaGrupal = true
-		data.grupo = autorSeleccionado.value.id
+		body.autoriaGrupal = true
+		body.grupo = autorSeleccionado.value.id
 	}
 	try{
-		const response = await useApi(endpoint, data, method);
+		const response = await useAPI(endpoint, {body, method});
 		console.log("Publicacion creada:", response)
         if(isEditing.value){
             useNuxtApp().callHook("publicacion:editada", {resultado:"ok", entrada: response.doc})
         }else{
             useNuxtApp().callHook("publicacion:creada", {resultado:"ok"})
         }
+        
 	}catch{
         if(isEditing.value){
             useNuxtApp().callHook("publicacion:editada", {resultado:"error"})
@@ -108,7 +109,7 @@ const Publicar = async () => {
 		    useNuxtApp().callHook("publicacion:creada", {resultado:"error"})
         }
 	}
-	uploading.value = false;
+    uploading.value = false;
 }
 
 onMounted(() => {

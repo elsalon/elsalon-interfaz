@@ -93,12 +93,12 @@ const closeDialog = () => {
 const MarcarLeida = async (notification) => {
     console.log('Marcar leida', notification.id)
     notification.leida = true
-    await useApi(`/api/notificaciones/${notification.id}`, {leida:true} ,'PATCH')
+    await useAPI(`/api/notificaciones/${notification.id}`, {leida:true} ,'PATCH')
     totalNotifications.value--
 }
 const MarcarTodasLeidas = async () => {
     console.log('Marcar todas leidas')
-    await useApi(`/api/notificaciones/todasleidas`, {} ,'PATCH')
+    await useAPI(`/api/notificaciones/todasleidas`, {} ,'PATCH')
     notificaciones.value.forEach(n => n.leida = true)
     totalNotifications.value = 0
 }
@@ -109,7 +109,7 @@ const onEndReached = () => {
 }
 
 const FetchNotifications = async() => {
-    const res = await useApi(`/api/notificaciones?limit=5&page=${page.value}`)
+    const res = await useAPI(`/api/notificaciones?limit=5&page=${page.value}`)
     notificaciones.value = [...notificaciones.value, ...res.docs]
     hasNextPage.value = res.hasNextPage;
     console.log('FetchNotifications', res)

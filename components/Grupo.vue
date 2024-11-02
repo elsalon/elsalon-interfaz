@@ -100,7 +100,7 @@ const AbandonarDialog = () => {
         },
         accept: async () => {
             try {
-                await useApi(
+                await useAPI(
                     `/api/grupos/${props.grupo.id}`,
                     {
                         integrantes: props.grupo.integrantes.filter((i) => i.id != authData.value.user.id).map((i) => i.id) // envio los ids de los integrantes menos el mio

@@ -113,7 +113,7 @@ const Buscar = async () => {
     });
 
     try {
-        const res = await useApi(`/api/busqueda?query=${searchQuery.value}&categorias=${selectedCategories.value.join(',')}`)
+        const res = await useAPI(`/api/busqueda?query=${searchQuery.value}&categorias=${selectedCategories.value.join(',')}`)
         console.log('Resultados:', res)
         searchResults.entradas = res.entradas?.docs || [];
         searchResults.usuarios = res.usuarios?.docs || [];

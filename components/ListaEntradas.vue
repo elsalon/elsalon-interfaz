@@ -1,19 +1,58 @@
 <template>
   <NotificacionEntradasNuevas ref="notifEntradasNuevas"/>
 
-  <div class="space-y-10">
-    <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada"
-      @eliminar="EliminarEntrada(entrada.id)" />
-  </div>
+  <!-- Loading State -->
+  <div v-if="loading" class="my-4 text-center text-gray-500 text-sm">
+      Cargando...
+    </div>
+
+    <!-- Empty State -->
+    <div 
+      v-else-if="listaEntradas.length === 0" 
+      class="text-center text-gray-500 text-sm"
+    >
+      No hay entradas
+    </div>
+
+    <!-- Content -->
+    <div v-else class="space-y-10">
+      <Entrada 
+        v-for="entrada in listaEntradas" 
+        :key="entrada.id" 
+        :entrada="entrada"
+        @eliminar="EliminarEntrada(entrada.id)" 
+      />
+      
+      <!-- Pagination Status -->
+      <div 
+        v-if="!hasNextPage" 
+        class="my-4 text-center text-gray-500 text-sm"
+      >
+        No hay más entradas
+      </div>
+    </div>
+
+<!-- 
+  <template v-if="listaEntradas.length == 0">
+    <div v-if="!loading" class="text-center text-gray-500 text-sm">No hay entradas</div>
+  </template>
+  <template v-else>
+    <div class="space-y-10">
+      <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada"
+        @eliminar="EliminarEntrada(entrada.id)" />
+    </div>
+  </template>
 
   <div v-if="!hasNextPage" class="my-4 text-center text-gray-500 text-sm">No hay más entradas</div>
-  <div v-else class="my-4 text-center text-gray-500 text-sm">Cargando...</div>
+  
+  <div v-else-if="loading" class="my-4 text-center text-gray-500 text-sm">Cargando...</div> -->
 </template>
 
 
 <script setup>
 const { hooks } = useNuxtApp();
 const entradas = ref([]);
+const loading = ref(false);
 const entradasFijadas = ref([]);
 const idsEntradasFijadas = ref([]);
 const hasNextPage = ref(true);
@@ -34,6 +73,7 @@ const props = defineProps({
 })
 
 onMounted(async () => {
+  loading.value = true
   await FetchFijadas();
   await CheckLlegoFinDePagina();
   window.addEventListener('scroll', CheckLlegoFinDePagina)
@@ -71,20 +111,26 @@ const CheckLlegoFinDePagina = async () => {
   if (window.innerHeight + window.scrollY >= document.body.offsetHeight - scrollEndOffset) {
     if (hasNextPage.value) {
       await FetchEntries()
+      loading.value = false
     }
   }
 }
 
 const FetchFijadas = async () => {
-  let apiUrl = `/api/fijadas?depth=3&where[contexto][equals]=${SalonStore.contextoId}&sort=-createdAt&limit=10`
-  const res = await useApi(apiUrl)
-  idsEntradasFijadas.value = [] // = res.docs.map(fijada => fijada.entrada.id)
-
-  res.docs.forEach(item => {
-    idsEntradasFijadas.value.push(item.entrada.id)
-    item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
-  })
-  entradasFijadas.value = res.docs.map(item => item.entrada)
+  try{
+    let apiUrl = `http://localhost:3000/api/fijadas?depth=3&where[contexto][equals]=${SalonStore.contextoId}&sort=-createdAt&limit=10`
+    const res = await useAPI(apiUrl)
+    console.log("--->", res)
+    idsEntradasFijadas.value = [] // = res.docs.map(fijada => fijada.entrada.id)
+  
+    res.docs.forEach(item => {
+      idsEntradasFijadas.value.push(item.entrada.id)
+      item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
+    })
+    entradasFijadas.value = res.docs.map(item => item.entrada)
+  }catch(e){
+    console.error(e)
+  }
 }
 
 const FetchEntries = async () => {
@@ -107,7 +153,7 @@ const FetchEntries = async () => {
   // const dateRangeQuery = `&where%5Band%5D%5B0%5D%5BcreatedAt%5D%5Bgreater_than_equal%5D=${startDate}&where%5Band%5D%5B1%5D%5BcreatedAt%5D%5Bless_than_equal%5D=${endDate}`
   // apiUrl += dateRangeQuery
 
-  const res = await useApi(apiUrl)
+  const res = await useAPI(apiUrl)
   hasNextPage.value = res.hasNextPage
   const nuevasEntradas = res.docs.filter(entrada => !idsEntradasFijadas.value.includes(entrada.id)) // Filtro las entradas que ya están fijadas
   entradas.value = [...entradas.value, ...nuevasEntradas];
@@ -124,7 +170,7 @@ const FetchNewer = async () => {
   if (props.endpointQuery != '') {
     apiUrl += `&${props.endpointQuery}`
   }
-  const res = await useApi(apiUrl)
+  const res = await useAPI(apiUrl)
   if (res.docs.length > 0) {
     const nuevasEntradas = res.docs.filter(entrada => !idsEntradasFijadas.value.includes(entrada.id)) // Filtro las entradas que ya están fijadas
     nuevasEntradas.forEach(e => e.nueva = true)
