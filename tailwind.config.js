@@ -1,5 +1,3 @@
-import datepicker from './primevue-presets/aura/datepicker'
-
 /** @type {import('tailwindcss').Config} */
 const colors = require('tailwindcss/colors')
 
