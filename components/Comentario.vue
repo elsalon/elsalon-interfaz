@@ -82,7 +82,7 @@
     const EliminarComentario = async () => {
         console.log('Eliminar entrada');
         try{
-            const response = await useAPI(`/api/comentarios/${comentario.id}`, {}, 'DELETE');
+            const response = await useAPI(`/api/comentarios/${comentario.id}`, {method: 'DELETE'});
             console.log("Comentario eliminado:", response)
             emit('eliminar');
             toast.add({ severity: 'contrast', detail: 'Comentario eliminado', life: 3000});

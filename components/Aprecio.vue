@@ -42,8 +42,7 @@ const handleAprecioClicked = async () => {
         if(haApreciado.value){
             // Eliminio mi aprecio
             console.log('Eliminando aprecio', props.entradaId)
-            const method = 'DELETE'
-            await useAPI(`/api/aprecio/${haApreciadoId.value}`, {method})
+            await useAPI(`/api/aprecio/${haApreciadoId.value}`, {method: 'DELETE'})
         }else{
             // Creo un aprecio
             console.log('Creando aprecio', props.entradaId)

@@ -156,8 +156,7 @@ const opcionFijar = {
     label: !entrada.fijada ? 'Fijar' : 'Quitar Fijado',
     command: async () => {
         if (entrada.fijada) {
-            const method = 'DELETE';
-            await useAPI(`/api/fijadas/${entrada.fijada}`, {method});
+            await useAPI(`/api/fijadas/${entrada.fijada}`, {method: 'DELETE'});
         } else {
             const method = 'POST';
             const body = { contexto: salonStore.contextoId, entrada: entrada.id };
@@ -184,7 +183,7 @@ const archivos = ref(entrada.archivos)
 
 const EliminarEntrada = async () => {
     try {
-        const response = await useAPI(`/api/entradas/${entrada.id}`, {}, 'DELETE');
+        const response = await useAPI(`/api/entradas/${entrada.id}`, {method: 'DELETE'});
         console.log("Entrada eliminada:", response)
         emit('eliminar');
         toast.add({ severity: 'contrast', detail: 'Entrada eliminada', life: 3000 });

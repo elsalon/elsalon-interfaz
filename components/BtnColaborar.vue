@@ -37,7 +37,7 @@
     const DetenerColaboracion = async () =>{
         try{
             estadoColaboradorLoading.value = true;
-            await useAPI(`/api/colaboraciones/${idColaboracion.value}`, null, 'DELETE')
+            await useAPI(`/api/colaboraciones/${idColaboracion.value}`, {method: 'DELETE'})
             estadoMostrarBtnColaborador.value = 1
             emit('estadoColaboracion', estadoMostrarBtnColaborador.value)
         }catch(e){
