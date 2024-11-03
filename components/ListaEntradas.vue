@@ -1,6 +1,5 @@
 <template>
   <NotificacionEntradasNuevas ref="notifEntradasNuevas"/>
-
   <!-- Loading State -->
   <div v-if="loading" class="my-4 text-center text-gray-500 text-sm">
       Cargando...
@@ -9,8 +8,7 @@
     <!-- Empty State -->
     <div 
       v-else-if="listaEntradas.length === 0" 
-      class="text-center text-gray-500 text-sm"
-    >
+      class="text-center text-gray-500 text-sm">
       No hay entradas
     </div>
 
@@ -20,39 +18,21 @@
         v-for="entrada in listaEntradas" 
         :key="entrada.id" 
         :entrada="entrada"
-        @eliminar="EliminarEntrada(entrada.id)" 
-      />
+        @eliminar="EliminarEntrada(entrada.id)" />
       
       <!-- Pagination Status -->
       <div 
         v-if="!hasNextPage" 
-        class="my-4 text-center text-gray-500 text-sm"
-      >
+        class="my-4 text-center text-gray-500 text-sm">
         No hay más entradas
       </div>
     </div>
-
-<!-- 
-  <template v-if="listaEntradas.length == 0">
-    <div v-if="!loading" class="text-center text-gray-500 text-sm">No hay entradas</div>
-  </template>
-  <template v-else>
-    <div class="space-y-10">
-      <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada"
-        @eliminar="EliminarEntrada(entrada.id)" />
-    </div>
-  </template>
-
-  <div v-if="!hasNextPage" class="my-4 text-center text-gray-500 text-sm">No hay más entradas</div>
-  
-  <div v-else-if="loading" class="my-4 text-center text-gray-500 text-sm">Cargando...</div> -->
 </template>
-
 
 <script setup>
 const { hooks } = useNuxtApp();
 const entradas = ref([]);
-const loading = ref(false);
+const loading = ref(true);
 const entradasFijadas = ref([]);
 const idsEntradasFijadas = ref([]);
 const hasNextPage = ref(true);
@@ -112,6 +92,7 @@ const CheckLlegoFinDePagina = async () => {
     if (hasNextPage.value) {
       await FetchEntries()
       loading.value = false
+      console.log('finished fetch entries')
     }
   }
 }
