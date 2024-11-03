@@ -1,8 +1,8 @@
 <template>
     <NuxtLayout name="layout-contenido">        
+        <template #header>{{ grupo.nombre }}</template>  
         <div class="text-center">
             <AvatarSalon :usuario="grupo" size="xlarge" imagesize="large"/>
-            <h1 class="text-3xl font-bold">{{ grupo.nombre }}</h1>
         </div>
         
         <!-- Group Members -->

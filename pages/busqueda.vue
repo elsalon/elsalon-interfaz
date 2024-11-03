@@ -1,5 +1,6 @@
 <template>
     <NuxtLayout name="layout-contenido">
+        <template #header>Búsqueda</template>
         <form @submit.prevent="Buscar">
 
             <InputText v-model="searchQuery" type="text" size="large" placeholder="Búsqueda" class="block w-full" />

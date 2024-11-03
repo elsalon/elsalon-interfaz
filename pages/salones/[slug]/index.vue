@@ -1,8 +1,8 @@
 <template>
-    <NuxtLayout name="layout-contenido">     
+    <NuxtLayout name="layout-contenido">   
+        <template #header>{{ salon.nombre }}</template>  
         <div class="text-center mb-2">
             <LogoSala :salon="salon"/>
-            <h1 class="text-3xl font-bold">{{ salon.nombre }} </h1>
             <h2 class="text-xl"><CajaAulas :salon="salon"/></h2>
         </div>
         

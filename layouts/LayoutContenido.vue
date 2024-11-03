@@ -1,5 +1,6 @@
 <template>
-    <header class="bg-white sticky top-0 flex h-16 items-center z-50 px-4 md:px-6">
+    <header class="bg-white sticky top-0 flex h-16 items-center z-50 px-4 md:px-6 transition-transform duration-300" 
+    :class="{ '-translate-y-full': !isHeaderVisible }">
         <!-- Fixed Nav -->
         <nav class="w-full flex flex-row justify-between items-center">
             <!-- Logo Salon -->
@@ -19,6 +20,12 @@
                     </router-link>
                 </template>
             </Menu>
+            
+            <div class="flex items-center">
+                <h1 class="text-lg font-semibold text-gray-800">
+                    <slot name="header" />
+                </h1>
+            </div>
             
             <!-- Avatar Usuario -->
             <client-only>
@@ -53,6 +60,7 @@
 </template>
 
 <script setup>
+    const { isHeaderVisible } = useScrollDirection(75)
     const { totalNotifications } = useNotifications()
     const { authData, myKey } = useReactiveAuth()
     const {signOut} = useAuth()

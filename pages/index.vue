@@ -1,5 +1,6 @@
 <template>
     <NuxtLayout name="layout-contenido">
+        <template #header>El Salón</template>
         <CrearEntradaBtn />
         <!-- TODO QUery -->
         <ListaEntradas overrideApiBase="/api/salones/feed"/>

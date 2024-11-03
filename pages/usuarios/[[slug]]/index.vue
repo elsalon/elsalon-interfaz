@@ -1,8 +1,9 @@
 <template>
-    <NuxtLayout name="layout-contenido">        
+    <NuxtLayout name="layout-contenido">    
+        <template #header>{{ usuario.nombre }}</template>
+
         <div class="text-center">
             <AvatarSalon :usuario="usuario" size="xlarge" imagesize="large" :class="{'cursor-zoom-in':usuario.avatar?.url}" @click="OpenAvatar"/>
-            <h1 class="text-3xl font-bold">{{ usuario.nombre }}</h1>
         </div>
         <div class="text-md my-5">{{ usuario.bio }}</div>
 

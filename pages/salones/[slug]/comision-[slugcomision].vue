@@ -1,9 +1,11 @@
 <template>
     <NuxtLayout name="layout-contenido">
+        <template #header>Comisión<CajaNombreComision :comision="comision"/></template>
+
         <div class="text-center mb-2">
             <LogoSala :salon="salon"/>
             <NuxtLink class="text-3xl font-bold" :to="`/salones/${salon.slug}`"><h1>{{ salon.nombre }}</h1></NuxtLink>
-            <h2 class="text-xl font-bold">Comisión <CajaNombreComision :comision="comision"/></h2>
+            <!-- <h2 class="text-xl font-bold"></h2> -->
                  
             <BtnListaComisiones :salon="salon" />
             <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon" />

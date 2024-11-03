@@ -1,8 +1,6 @@
 <template>
     <NuxtLayout name="layout-contenido">
-        <div class="text-center">
-            <h1 class="text-3xl font-bold">#{{ etiqueta?.nombre }}</h1>
-        </div>
+        <template #header>#{{ etiqueta?.nombre }}</template>  
         <ListaEntradas :endpointQuery="query"/> 
     </NuxtLayout>
 </template>
