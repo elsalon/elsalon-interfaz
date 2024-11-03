@@ -10,4 +10,5 @@ services:
     environment:
       - HOST=0.0.0.0  # Ensure Nuxt listens on all network interfaces
       - PORT=3000     # Set Nuxt’s internal port to 3000
+      - NUXT_PUBLIC_API_BASE=${NUXT_PUBLIC_API_BASE:-http://localhost:3000}  # Use a fallback directly
     restart: unless-stopped
