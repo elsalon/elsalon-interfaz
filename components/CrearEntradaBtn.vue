@@ -1,10 +1,18 @@
 <template>
     <Button id="btnEscribir" label="+ Escribir" @click="AbrirEditor" />
 
-    <Drawer v-model:visible="visible" header="Escribir" position="full">
-        <!-- <EditorEntradaQuill :postEdit="editContent"/> -->
+    <!-- <Drawer v-model:visible="visible" header="Escribir" position="full">
         <CrearEntradaDrawer :entryEdit="editContent"/>
-    </Drawer>
+    </Drawer> -->
+    <Dialog
+        ref="maxDialog"
+        v-model:visible="visible"
+        maximizable
+        :header="editContent ? 'Editar' : 'Escribir'"
+        class="w-full md:w-5/6 bg-white"
+        @show="biggifyDialog">
+        <CrearEntradaDrawer :entryEdit="editContent"/>
+    </Dialog>
 </template>
 
 <script setup>
@@ -16,6 +24,12 @@ const editContent = ref(null);
 let removeOnCreateHook = null;
 let removeOnEditHook = null;
 let removeOnEditFinishHook = null;
+
+const maxDialog = ref();
+
+function biggifyDialog() {
+    maxDialog.value.maximized = true;
+}
 
 const AbrirEditor = () => {
     editContent.value = null;
