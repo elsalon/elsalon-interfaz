@@ -120,7 +120,6 @@ const FetchFijadas = async () => {
   try{
     let apiUrl = `/api/fijadas?depth=3&where[contexto][equals]=${SalonStore.contextoId}&sort=-createdAt&limit=10`
     const res = await useAPI(apiUrl)
-    console.log("--->", res)
     idsEntradasFijadas.value = [] // = res.docs.map(fijada => fijada.entrada.id)
   
     res.docs.forEach(item => {

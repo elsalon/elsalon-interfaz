@@ -54,7 +54,7 @@ const Salon = definePreset(Aura, {
 export default {
     preset: Salon,
     options: {
-        darkModeSelector: '.p-dark'
+        darkModeSelector: none;
     }
 };
 

@@ -96,7 +96,6 @@ export const useSalonStore = defineStore('salon', {
       this.loading = true;
 
       try {
-        console.log('Fetching El Salon config');
         const runtimeConfig = useRuntimeConfig().public;
 
         // Realiza ambas peticiones en paralelo

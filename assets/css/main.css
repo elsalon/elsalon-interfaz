@@ -50,31 +50,16 @@
   --p-text-hover-muted-color: var(--p-surface-600);
 }
 
-/* 
-* Dark Mode
-* Change the .p-dark to match the darkMode in tailwind.config.
-* For example; 
-*  darkMode: ['selector', '[class*="app-dark"]'] 
-*  should match;
-* :root.app-dark
-*/
-:root.p-dark {
-  --p-primary-color: var(--p-primary-400);
-  --p-primary-contrast-color: var(--p-surface-900);
-  --p-primary-hover-color: var(--p-primary-300);
-  --p-primary-active-color: var(--p-primary-200);
-  --p-content-border-color: var(--p-surface-700);
-  --p-content-hover-background: var(--p-surface-800);
-  --p-content-hover-color: var(--p-surface-0);
-  --p-highlight-background: color-mix(in srgb, var(--p-primary-400), transparent 84%);
-  --p-highlight-color: rgba(255,255,255,.87);
-  --p-highlight-focus-background: color-mix(in srgb, var(--p-primary-400), transparent 76%);
-  --p-highlight-focus-color: rgba(255,255,255,.87);
-  --p-text-color: var(--p-surface-0);
-  --p-text-hover-color: var(--p-surface-0);
-  --p-text-muted-color: var(--p-surface-400);
-  --p-text-hover-muted-color: var(--p-surface-300);
+:root {
+  color-scheme: light;
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+      color-scheme: light;
+  }
+}
+
 
 .focus\:ring-surface-500:focus{
   --tw-ring-opacity: 0 !important;
@@ -150,7 +135,7 @@
 }
 
 .caja-input{
-  @apply leading-none m-0 py-2 px-3 rounded-md text-surface-800 dark:text-white/80 placeholder:text-surface-400 dark:placeholder:text-surface-500 bg-surface-0 dark:bg-surface-950 border border-surface-300 dark:border-surface-700 invalid:focus:ring-red-200 invalid:hover:border-red-500 hover:border-surface-400 dark:hover:border-surface-600 focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 dark:focus:ring-primary-400 focus:z-10 appearance-none transition-colors duration-200;
+  @apply leading-none m-0 py-2 px-3 rounded-md text-surface-800 placeholder:text-surface-400  bg-surface-0 border border-surface-300 invalid:focus:ring-red-200 invalid:hover:border-red-500 hover:border-surface-400 focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 focus:z-10 appearance-none transition-colors duration-200;
 }
 
 form label{

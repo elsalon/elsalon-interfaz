@@ -1,7 +1,10 @@
+import datepicker from './primevue-presets/aura/datepicker'
+
 /** @type {import('tailwindcss').Config} */
 const colors = require('tailwindcss/colors')
 
 module.exports = {
+  darkMode:  'dark',
   content: [
     "./primevue-presets/**/*.{js,vue,ts}",
     "./components/**/*.{js,vue,ts}",
