@@ -49,7 +49,7 @@
     <main class="container mx-auto">
         <slot />
     </main>
-    <!-- <NotificacionesDialog v-model:visible="notificacionesVisible" ref="notificacionesDialog" /> -->
+    <NotificacionesDialog v-model:visible="notificacionesVisible" ref="notificacionesDialog" />
 </template>
 
 <script setup>
