@@ -1,5 +1,5 @@
 <template>
-    <Panel :toggleable="false" class="p-0 border-surface-0 background-red text-sm group/comentario panelComentario">
+    <Panel :toggleable="false" class="border-surface-0 background-red text-sm group/comentario panelComentario">
         <template #header>
             <NuxtLink :to="'/usuarios/' + comentario.autor.slug">
                 <div class="flex items-center gap-2">

@@ -3,8 +3,7 @@
         <template #header>{{ usuario.nombre }}</template>
 
         <div class="user-info mb-5">
-            
-            <div class="text-center">
+            <div class="text-center mb-2">
                 <AvatarSalon :usuario="usuario" size="xlarge" imagesize="large" :class="{'cursor-zoom-in':usuario.avatar?.url}" @click="OpenAvatar"/>
                 <div v-if="tieneLink">
                     <a  class="link" :href="linkAbsoluta" target="_blank">{{ linkSimplificada }}</a>

@@ -28,16 +28,19 @@
             </div>
             
             <!-- Avatar Usuario -->
+            <div style="width:48px">
             <client-only>
-                <!-- Avatar Con notificationes -->
-                <template v-if="totalNotifications > 0">
-                    <OverlayBadge :value="totalNotifications" size="small">
-                        <AvatarSalon :key="'avt'+myKey" class="cursor-pointer -right-px" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
-                    </OverlayBadge>
-                </template>
-                <!-- Avatar Sin notificationes -->
-                <template v-else>
-                    <AvatarSalon :key="'avt'+myKey" class="cursor-pointer -right-px" v-if="authData" :usuario="authData" @click="toggleUserMenu"/>
+                <template v-if="authData">
+                    <!-- Avatar Con notificationes -->
+                    <template v-if="totalNotifications > 0">
+                        <OverlayBadge :value="totalNotifications" size="small">
+                            <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" :usuario="authData" @click="toggleUserMenu"/>
+                        </OverlayBadge>
+                    </template>
+                    <!-- Avatar Sin notificationes -->
+                    <template v-else>
+                        <AvatarSalon :key="'avt'+myKey" class="cursor-pointer -right-px" :usuario="authData" @click="toggleUserMenu"/>
+                    </template>
                 </template>
                 
                 <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true"> 
@@ -51,6 +54,7 @@
                     </template>
                 </Menu>
             </client-only>
+            </div>
         </nav>
     </header>
     <main class="container mx-auto">
