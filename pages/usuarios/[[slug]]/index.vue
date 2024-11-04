@@ -6,9 +6,11 @@
             
             <div class="text-center">
                 <AvatarSalon :usuario="usuario" size="xlarge" imagesize="large" :class="{'cursor-zoom-in':usuario.avatar?.url}" @click="OpenAvatar"/>
+                <div v-if="tieneLink">
+                    <a  class="link" :href="linkAbsoluta" target="_blank">{{ linkSimplificada }}</a>
+                </div>
             </div>
             <div class="text-md">{{ usuario.bio }}</div>
-            <a v-if="tieneLink" class="link" :href="linkAbsoluta" target="_blank">{{ linkSimplificada }}</a>
         </div>
 
         <BtnColaborar v-if="!userIsMe"/>
