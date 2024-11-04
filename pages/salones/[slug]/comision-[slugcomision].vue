@@ -55,9 +55,12 @@ const RecargarComision = async () => {
 
 
 // Filtro por el periodo actual
-const periodo = salon.value.archivo.periodos[0]
-const startDate = periodo.startDate.toISOString();
-const endDate   = periodo.endDate.toISOString();
-
-const overrideApiBaseQuery= [`startDate=${startDate}`, `endDate=${endDate}`]
+let overrideApiBaseQuery = []
+if(salon.value.archivo.activar){
+    const periodo = salon.value.archivo.periodos[0]
+    const startDate = periodo.startDate.toISOString();
+    const endDate   = periodo.endDate.toISOString();
+    
+    overrideApiBaseQuery = [`startDate=${startDate}`, `endDate=${endDate}`]
+}
 </script>
