@@ -20,6 +20,11 @@
             <Textarea id="bio" class="w-full leading-normal" v-model="perfil.bio" autoResize rows="5" cols="30" />
         </div>
 
+        <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
+            <label for="link" class="font-semibold w-24">link</label>
+            <InputText id="link" class="w-full" type="link" v-model="perfil.link"/>
+        </div>
+
         <div :class="{'opacity-50':password==''}">
             <div class="text-sm mt-10">Si no querés cambiar tu contraseña, dejá estos campos vacíos</div>
             
@@ -54,6 +59,7 @@ const perfil = ref({
     nombre: data.value.user.nombre,
     email: data.value.user.email,
     bio: data.value.user.bio,
+    link: data.value.user.link,
 })
 const avatarFileInput = ref()
 

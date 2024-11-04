@@ -69,14 +69,14 @@
   display: flex;
 }
 
-.normalLink{
+.link{
   color: blue;
   text-decoration: none;
 }
-.normalLink:hover{
+.link:hover{
   text-decoration: underline;
 }
-.normalLink:visited{
+.link:visited{
   color: purple;
 }
 

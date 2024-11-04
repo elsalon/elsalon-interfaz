@@ -2,10 +2,14 @@
     <NuxtLayout name="layout-contenido">    
         <template #header>{{ usuario.nombre }}</template>
 
-        <div class="text-center">
-            <AvatarSalon :usuario="usuario" size="xlarge" imagesize="large" :class="{'cursor-zoom-in':usuario.avatar?.url}" @click="OpenAvatar"/>
+        <div class="user-info mb-5">
+            
+            <div class="text-center">
+                <AvatarSalon :usuario="usuario" size="xlarge" imagesize="large" :class="{'cursor-zoom-in':usuario.avatar?.url}" @click="OpenAvatar"/>
+            </div>
+            <div class="text-md">{{ usuario.bio }}</div>
+            <a v-if="tieneLink" class="link" :href="linkAbsoluta" target="_blank">{{ linkSimplificada }}</a>
         </div>
-        <div class="text-md my-5">{{ usuario.bio }}</div>
 
         <BtnColaborar v-if="!userIsMe"/>
         
@@ -36,6 +40,15 @@ salonStore.SetPageTitle(usuario.value.nombre)
 salonStore.setContext('bitacora', usuario.value.id)
 const userIsMe = ref(usuario.value.id == authData.value?.user.id)
 const query = ref(`where[autor][equals]=${usuario.value.id}&where[autoriaGrupal][not_equals]=true`) // posts del usuario que no sean grupales
+
+const tieneLink = ref(usuario.value.link != null && usuario.value.link != '');
+const linkSimplificada = ref(null);
+const linkAbsoluta = ref(null);
+if(tieneLink.value){
+    linkSimplificada.value = usuario.value.link.replace(/(^\w+:|^)\/\//, '');
+    linkAbsoluta.value = usuario.value.link.includes('http') ? usuario.value.link : `https://${usuario.value.link}`;
+}
+
 
 let galleryPswp = null;
 let galleryOptions = null;
