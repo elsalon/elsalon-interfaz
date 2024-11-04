@@ -15,7 +15,7 @@
             <Menu :ref="el => menuCommentRefs[comentario.id] = el" id="overlay_menu_comment" :model="opcionesComment" :popup="true" class="text-xs" /> 
         </template>
 
-        <DeferredContent @load="onCommentLoaded">
+        <DeferredContent>
             <div v-if="!editandoComentario" class="prose prose-headings:my-1 leading-normal text-sm" v-html="contenidoRendereado" :key="commentFoceRender"></div>
             <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos"/>
             <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit" @userPosted="handleUserEditedComment"/>

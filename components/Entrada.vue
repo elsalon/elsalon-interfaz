@@ -1,6 +1,6 @@
 <template>
     <div class="group/entrada" :class="{entradaNueva: entrada.nueva}">
-        <article :key="reloadkey">
+        <article>
             <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
             <div class="flex items-center pb-2">
                 <NuxtLink :to="identidadUrl">
@@ -30,9 +30,10 @@
                         :popup="true" class="text-xs" />
                 </div>
             </div>
-            <DeferredContent @load="onEntradaLoaded">
-                <div v-if="contenidoRendereado" class="prose prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2" @click="onEntradaClicked"
-                    v-html="contenidoRendereado"></div>
+            <DeferredContent>
+                <div class="prose prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2">
+                    <ContenidoRendereado ref="contenidoRender" :contenido="entrada"/>
+                </div>
                 <div class="sm:pl-[65px]" v-if="archivos.length">
                     <ListaArchivos :archivos="archivos" />
                 </div>
@@ -55,12 +56,7 @@
 </template>
 
 <script setup>
-import PhotoSwipe from 'photoswipe';
-import 'photoswipe/style.css';
-
 const salonStore = useSalonStore()
-
-import useRenderSalonHtml from '~/composables/useRenderSalonHtml';
 const { hooks } = useNuxtApp();
 const toast = useToast();
 const { data: authData } = useAuth()
@@ -71,6 +67,7 @@ const props = defineProps({
     },
 });
 const reloadkey = ref(0);
+const contenidoRender = ref() 
 const { entrada } = props;
 const emit = defineEmits(['eliminar']);
 const showCommentBox = ref('0');
@@ -112,7 +109,7 @@ if (UsuarioTieneAutoridad()) {
             label: 'Editar',
             command: () => {
                 console.log('Editar');
-                useNuxtApp().callHook("publicacion:editar", { entrada, html: contenidoRendereado.value })
+                useNuxtApp().callHook("publicacion:editar", { entrada, html: contenidoRender.value.contenidoRendereado })
             }
         },
         {
@@ -178,7 +175,6 @@ const ToggleArticleOptions = (event) => {
     }
 };
 
-const contenidoRendereado = ref('')
 const archivos = ref(entrada.archivos)
 
 const EliminarEntrada = async () => {
@@ -198,11 +194,12 @@ let removeOnEditHook = null;
 const handlePublicacionEditada = async (data) => {
     if (data.resultado == "ok" && data.entrada.id == entrada.id) {
         entrada.value = data.entrada
-        contenidoRendereado.value = await useRenderSalonHtml(data.entrada);
         archivos.value = data.entrada.archivos
-        console.log("autoriaGrupal", entrada.autoriaGrupal, data.entrada.autoriaGrupal)
+        // console.log("autoriaGrupal", entrada.autoriaGrupal, data.entrada.autoriaGrupal)
         DefinirIdentidad(data.entrada)
+        console.log("asked to reload")
         reloadkey.value++
+        contenidoRender.value.ReloadContent(data.entrada);
     }
     // // Publicacion exitosa. Cierro el dialogo y muestro un toast
     // toast.add({ severity: 'contrast', detail: 'Entrada editada', life: 3000});   
@@ -213,55 +210,14 @@ const handlePublicacionEditada = async (data) => {
 }
 
 onMounted(async () => {
-    contenidoRendereado.value = await useRenderSalonHtml(entrada);
     removeOnEditHook = hooks.hook('publicacion:editada', handlePublicacionEditada)
 });
 onUnmounted(() => {
     if (removeOnEditHook) removeOnEditHook()
 })
 
-let galleryPswp = null;
-let galleryOptions = null;
-
-const onEntradaLoaded = () => {
-    if (entrada.imagenes.length == 0) return;
-    const dataSource = entrada.imagenes.map(img => {
-        return {
-            src: img.imagen.url,
-            w: img.imagen.width,
-            h: img.imagen.height,
-            id: img.imagen.id,
-        }
-    });
-
-    galleryOptions = {
-        dataSource,
-        showHideAnimationType: 'none',
-        initialZoomLevel: 'fit',
-        secondaryZoomLevel: 1.5,
-        maxZoomLevel: 4,
-    };
-    galleryOptions.index = 0; // defines start slide index        
-}
-
-const onEntradaClicked = (event) => {
-    if (event.target.tagName === 'IMG') {
-        const imgSrc = event.target;
-        handleImageClick(imgSrc);
-    }
-}
-
-const handleImageClick = (imgSrc) => {
-    if (galleryPswp) {
-        galleryPswp.close();  // or use galleryPswp.destroy() depending on the version
-    }
-    galleryOptions.index = galleryOptions.dataSource.findIndex((img) => img.id === imgSrc.dataset.salonid);
-    galleryPswp = new PhotoSwipe(galleryOptions);
-    galleryPswp.init();
-}
 
 const UserCommented = () => {
-    console.log("*** UserCommented ***")
     showCommentBox.value = '0';
 }
 

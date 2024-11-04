@@ -197,7 +197,7 @@ const CompressImage = async (blob) => {
 
 const parseExistingContent = () => {
     const { entrada, html } = props.editingData
-    console.log('parseExistingContent', entrada, html)
+    // console.log('parseExistingContent', entrada, html)
     quill.root.innerHTML = html
     attachedImages.value = []
     attachedImages.value = entrada.imagenes.map(data => ({ imagen: data.imagen.id }))

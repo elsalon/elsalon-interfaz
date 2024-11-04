@@ -207,3 +207,9 @@ ol{
   max-width: 64px;
   max-height: 64px;
 }
+
+/* Imagen de galery */
+.pswp__img{
+  /* En caso de png con transparencia le aplico fondo blanco */
+  background: #fff;
+}
