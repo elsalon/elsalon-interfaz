@@ -67,7 +67,7 @@ const comisionesToggle = (event) => {
 };
 
 const crearComisionVisible = ref(false);
-const comisiones = await useAPI(`/api/comisiones?where[or][0][and][0][contexto][equals]=${props.salon.id}`, null, 'GET');
+const comisiones = await useAPI(`/api/comisiones?where[or][0][and][0][contexto][equals]=${props.salon.id}`, {method: 'GET'});
 // TODO filtrar solo las comisiones creadas en este periodo actual. De esta forma tambien podemos acceder a comisiones de distintos periodos
 // Tambien implica (y esta bien) que en cada periodo nuevo hay que re generar las comisiones
 const comisionesItems = ref(comisiones.docs.map(comision => {

@@ -142,8 +142,8 @@ if (salonStore.currContext == "grupo") {
 const opcionDestacar = {
     label: !entrada.destacada ? 'Destacar en El Salón' : 'Quitar destacado en El Salón',
     command: async () => {
-        // console.log('Destacar');
-        await useAPI(`/api/entradas/${entrada.id}`, { destacada: !entrada.destacada }, 'PATCH');
+        const body = { destacada: !entrada.destacada };
+        await useAPI(`/api/entradas/${entrada.id}`, {body, method: "PATCH" });
         useNuxtApp().callHook("publicacion:fijada");
     }
 }

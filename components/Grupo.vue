@@ -100,13 +100,10 @@ const AbandonarDialog = () => {
         },
         accept: async () => {
             try {
-                await useAPI(
-                    `/api/grupos/${props.grupo.id}`,
-                    {
-                        integrantes: props.grupo.integrantes.filter((i) => i.id != authData.value.user.id).map((i) => i.id) // envio los ids de los integrantes menos el mio
-                    },
-                    'PATCH'
-                );
+                const body = {
+                    integrantes: props.grupo.integrantes.filter((i) => i.id != authData.value.user.id).map((i) => i.id) // envio los ids de los integrantes menos el mio
+                }
+                await useAPI(`/api/grupos/${props.grupo.id}`, {body, method: "PATCH"});
                 toast.add({ severity: 'contrast', summary: 'Grupos', detail: `Abandonaste el grupo "${props.grupo.nombre}"`, life: 3000 });
                 emit('abandonadoGrupo', props.grupo.id);
             } catch (e) {

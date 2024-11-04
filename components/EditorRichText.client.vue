@@ -253,7 +253,7 @@ onMounted(async () => {
                             //     { id: 2, value: 'Patrik Sjölin' }
                             // ];
                             if (searchTerm.length < 2) return
-                            const response = await useAPI(`/api/users?where[nombre][contains]=${searchTerm}&limit=5`, null, 'GET');
+                            const response = await useAPI(`/api/users?where[nombre][contains]=${searchTerm}&limit=5`);
                             // console.log(response.docs)
                             values = response.docs.map(user => {
                                 return { id: user.id, value: user.nombre }

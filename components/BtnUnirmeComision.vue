@@ -19,7 +19,7 @@ const usuarioPertenece = props.comision.integrantes?.some(integrante => integran
 const UnirmeComisionIndividuo = async () =>{
     try{
         loading.value = true;
-        const res = await useAPI(`/api/comisiones/${props.comision.id}/unirme`, null, 'PATCH')
+        const res = await useAPI(`/api/comisiones/${props.comision.id}/unirme`, {method: 'PATCH'})
         if(res.error){
             toast.add({severity: 'error', detail: res.error, life:3000});
         }else{
@@ -36,7 +36,7 @@ const UnirmeComisionIndividuo = async () =>{
 const AbandonarComisionIndividuo = async () =>{
     try{
         loading.value = true;
-        await useAPI(`/api/comisiones/${props.comision.id}/abandonar`, null, 'PATCH')
+        await useAPI(`/api/comisiones/${props.comision.id}/abandonar`, {method: 'PATCH'})
         emit('UsuarioCambioInscripcion');
         toast.add({severity: 'contrast', detail: 'Abandonaste la comisión', life:3000});
     }catch(e){

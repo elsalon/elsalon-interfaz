@@ -35,7 +35,8 @@ const OnClose = async () =>{
     // console.log("Cerrando inplace")
     editing.value = false;
     try{
-        await useAPI(`/api/comisiones/${props.comision.id}`, {nombre: nombre.value}, 'PUT')
+        const body = {nombre: nombre.value}
+        await useAPI(`/api/comisiones/${props.comision.id}`, {body, method: "PUT"})
         toast.add({severity: 'contrast', detail: 'Comisión actualizada', life: 3000})
     }catch(e){
         console.log(e)

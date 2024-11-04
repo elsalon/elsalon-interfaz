@@ -93,12 +93,13 @@ const closeDialog = () => {
 const MarcarLeida = async (notification) => {
     console.log('Marcar leida', notification.id)
     notification.leida = true
-    await useAPI(`/api/notificaciones/${notification.id}`, {leida:true} ,'PATCH')
+    const body = {leida:true}
+    await useAPI(`/api/notificaciones/${notification.id}`, {body, method:'PATCH'})
     totalNotifications.value--
 }
 const MarcarTodasLeidas = async () => {
     console.log('Marcar todas leidas')
-    await useAPI(`/api/notificaciones/todasleidas`, {} ,'PATCH')
+    await useAPI(`/api/notificaciones/todasleidas`, {method:'PATCH'})
     notificaciones.value.forEach(n => n.leida = true)
     totalNotifications.value = 0
 }
