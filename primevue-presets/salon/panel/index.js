@@ -65,7 +65,7 @@ export default {
     content: {
         class: [
             // Spacing
-            'p-[1.125rem] pt-0',
+            'pt-0',
 
             // Shape
             'border-0 border-t-0 last:rounded-br-md last:rounded-bl-md',

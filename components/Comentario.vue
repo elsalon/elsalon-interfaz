@@ -1,5 +1,5 @@
 <template>
-    <Panel :toggleable="false" class="border-surface-0 background-red text-sm group/comentario panelComentario">
+    <Panel :toggleable="false" class="p-0 border-surface-0 background-red text-sm group/comentario panelComentario">
         <template #header>
             <NuxtLink :to="'/usuarios/' + comentario.autor.slug">
                 <div class="flex items-center gap-2">
@@ -15,7 +15,7 @@
             <Menu :ref="el => menuCommentRefs[comentario.id] = el" id="overlay_menu_comment" :model="opcionesComment" :popup="true" class="text-xs" /> 
         </template>
 
-        <DeferredContent>
+        <DeferredContent @load="onCommentLoaded">
             <div v-if="!editandoComentario" class="prose prose-headings:my-1 leading-normal text-sm" v-html="contenidoRendereado" :key="commentFoceRender"></div>
             <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos"/>
             <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit" @userPosted="handleUserEditedComment"/>

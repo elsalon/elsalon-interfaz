@@ -47,7 +47,7 @@
                 <Aprecio :entradaId="entrada.id" />
             </div>
             <ListaComentarios :entradaId="entrada.id" :showCommentBox="showCommentBox"
-                @userPosted="showCommentBox='0'" />
+                @userPosted="UserCommented" />
         </div>
     </div>
 
@@ -258,6 +258,11 @@ const handleImageClick = (imgSrc) => {
     galleryOptions.index = galleryOptions.dataSource.findIndex((img) => img.id === imgSrc.dataset.salonid);
     galleryPswp = new PhotoSwipe(galleryOptions);
     galleryPswp.init();
+}
+
+const UserCommented = () => {
+    console.log("*** UserCommented ***")
+    showCommentBox.value = '0';
 }
 
 </script>

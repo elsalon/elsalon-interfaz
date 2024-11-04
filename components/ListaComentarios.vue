@@ -85,7 +85,7 @@
     const handleUserPostedComment = async () => {
         console.log('User posted comment')
         await fetchNewerComments()
-        // emit('userPosted'); // lo vuelvo a emitir a "Entrada" para que cierre el accordion
+        emit('userPosted'); // lo vuelvo a emitir a "Entrada" para que cierre el accordion
         cajaComentario.value.ClearEditor();
     }
     
