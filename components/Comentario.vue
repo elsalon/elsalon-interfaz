@@ -21,6 +21,7 @@
             </div>
             <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos"/>
             <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit" @userPosted="handleUserEditedComment"/>
+            <Aprecio :contenidoid="comentario.id" contenidotipo="comentario" />
         </DeferredContent>
     </Panel>
 </template>

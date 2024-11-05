@@ -45,7 +45,7 @@
             <!-- Comentarios -->
             <div class="actions">
                 <Button link class="my-2 text-xs text-surface-500" label="Comentar" @click="ToggleCommentBox" />
-                <Aprecio :entradaId="entrada.id" />
+                <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" />
             </div>
             <ListaComentarios :entradaId="entrada.id" :showCommentBox="showCommentBox"
                 @userPosted="UserCommented" />

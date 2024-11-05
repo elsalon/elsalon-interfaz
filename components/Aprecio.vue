@@ -12,7 +12,11 @@
 
 <script setup>
 const props = defineProps({
-    entradaId: {
+    contenidoid: {
+        type: String,
+        required: true,
+    },
+    contenidotipo: {
         type: String,
         required: true,
     },
@@ -24,7 +28,7 @@ const totalDocs = ref(0);
 const haApreciadoId = ref(null);
 
 const FetchAprecio = async () => {
-    const res = await useAPI(`/api/aprecio/${props.entradaId}`);
+    const res = await useAPI(`/api/aprecio/${props.contenidoid}`);
     docs.value = res.docs;
     totalDocs.value = res.totalDocs;
     haApreciadoId.value = res.haApreciado;
@@ -41,12 +45,12 @@ const handleAprecioClicked = async () => {
     try{
         if(haApreciado.value){
             // Eliminio mi aprecio
-            console.log('Eliminando aprecio', props.entradaId)
+            console.log('Eliminando aprecio', props.contenidoid)
             await useAPI(`/api/aprecio/${haApreciadoId.value}`, {method: 'DELETE'})
         }else{
             // Creo un aprecio
-            console.log('Creando aprecio', props.entradaId)
-            const body = {entrada:props.entradaId}
+            console.log('Creando aprecio', props.contenidoid)
+            const body = {contenidoid: props.contenidoid, contenidotipo: props.contenidotipo}
             const method = 'POST'
             await useAPI(`/api/aprecio/`, {body, method})
         }
