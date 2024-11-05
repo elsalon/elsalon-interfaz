@@ -42,8 +42,7 @@ const handleImageClick = (imgSrc) => {
 
 onMounted(() => {
     contenidoRendereado.value = useRenderSalonHtml(props.contenido);
-    console.log("mount !")
-
+    
     if (props.contenido.imagenes.length == 0) return;
     const dataSource = props.contenido.imagenes.map(img => {
         return {

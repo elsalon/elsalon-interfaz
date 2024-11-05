@@ -3,7 +3,7 @@
         <Button link class="my-2 text-xs text-surface-500" :class="{'opacity-30':fetching}" style="padding: 0" :label="tooltipText"  v-tooltip.notrigger="{ html:tooltipText, autoHide: false }" @click="handleAprecioClicked" />
         <div  v-if="totalDocs>0" class="absolute bottom-7 z-50 left-0 bg-surface-0 border text-sm text-slate-400 border-surface-200 border-solid p-2 invisible group-hover/aprecio:visible" >
             <template v-for="aprecio in docs">
-                <div>{{aprecio.autor.nombre}}</div>
+                <div class="whitespace-nowrap">{{aprecio.autor.nombre}}</div>
             </template>
             <div v-if="totalDocs>docs.length">Y {{ totalDocs-docs.length }} más</div>
         </div>
