@@ -16,7 +16,9 @@
         </template>
 
         <DeferredContent>
-            <div v-if="!editandoComentario" class="prose prose-headings:my-1 leading-normal text-sm" v-html="contenidoRendereado" :key="commentFoceRender"></div>
+            <div v-show="!editandoComentario" class="prose prose-headings:my-1 leading-normal text-sm">
+                <ContenidoRendereado ref="contenidoRender" :contenido="comentario"/>
+            </div>
             <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos"/>
             <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit" @userPosted="handleUserEditedComment"/>
         </DeferredContent>
@@ -37,31 +39,30 @@
     const archivos = ref(comentario.archivos)
     const emit = defineEmits(['eliminar']);
 
-    const contenidoRendereado = ref('')
+    const contenidoRender = ref()
     // const comentario = ref(props.comentario)
     const commentEdit = ref(null)
     const editandoComentario = ref(false);
-    const commentFoceRender = ref(0);
     const opcionesComment = ref([]);
     if(comentario.autor.id == authData.value.user.id){
         opcionesComment.value = [
-        ...opcionesComment.value,
-        {
-            label: 'Editar',
-            command: () => {
-                console.log('Editar Comment');
-                commentEdit.value = {entrada: comentario, html:contenidoRendereado.value}
-                editandoComentario.value = true;
-            }
-        },
-        {
-            label: 'Eliminar',
-            command: () => {
-                EliminarComentario();
-            }
-        },
-    ];
-}
+            ...opcionesComment.value,
+            {
+                label: 'Editar',
+                command: () => {
+                    console.log('Editar Comment');
+                    commentEdit.value = {entrada: comentario, html: contenidoRender.value.contenidoRendereado}
+                    editandoComentario.value = true;
+                }
+            },
+            {
+                label: 'Eliminar',
+                command: () => {
+                    EliminarComentario();
+                }
+            },
+        ];
+    }
 
     const menuCommentRefs = ref({})
     const ToggleCommentOptions = (event) => {
@@ -76,7 +77,7 @@
         editandoComentario.value = false;
         comentario.value = doc
         archivos.value = doc.archivos
-        contenidoRendereado.value = await useRenderSalonHtml(doc)
+        contenidoRender.value.ReloadContent(doc);
     }
 
     const EliminarComentario = async () => {
@@ -91,8 +92,4 @@
             toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el comentario', life: 3000});
         }
     }
-
-    onMounted(async () => {
-        contenidoRendereado.value = await useRenderSalonHtml(comentario)
-    })
 </script>

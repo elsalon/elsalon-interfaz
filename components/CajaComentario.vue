@@ -65,6 +65,7 @@ const Publicar = async () => {
 		console.log("Comentario creado:", response)
 		useNuxtApp().callHook("comentario:creado", {resultado:"ok"})
         toast.add({ severity: 'contrast', detail: 'Comentario publicado', life: 3000});   
+        console.log("emit userPosted", response.doc)
         emit('userPosted', response.doc)
         
 	}catch{

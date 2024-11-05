@@ -66,7 +66,6 @@ const props = defineProps({
         required: true,
     },
 });
-const reloadkey = ref(0);
 const contenidoRender = ref() 
 const { entrada } = props;
 const emit = defineEmits(['eliminar']);
@@ -197,8 +196,6 @@ const handlePublicacionEditada = async (data) => {
         archivos.value = data.entrada.archivos
         // console.log("autoriaGrupal", entrada.autoriaGrupal, data.entrada.autoriaGrupal)
         DefinirIdentidad(data.entrada)
-        console.log("asked to reload")
-        reloadkey.value++
         contenidoRender.value.ReloadContent(data.entrada);
     }
     // // Publicacion exitosa. Cierro el dialogo y muestro un toast

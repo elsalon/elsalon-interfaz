@@ -17,10 +17,9 @@ let galleryPswp = null;
 let galleryOptions = null;
 
 const contenidoRendereado = ref(null);
-const updateKey = ref(0);
-
 
 const ReloadContent = async (entrada) => {
+    console.log("ReloadContent", entrada)
     contenidoRendereado.value = useRenderSalonHtml(entrada)   
 }
 
