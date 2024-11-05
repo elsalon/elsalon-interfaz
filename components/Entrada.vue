@@ -7,13 +7,14 @@
                     <AvatarSalon :usuario="identidad" />
                 </NuxtLink>
 
+                <!-- Metadata entrada -->
                 <div class="ml-4">
                     <NuxtLink :to="identidadUrl">
                         <h2 class="font-bold text-gray-700">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
-                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2" :to="`/salones/${entrada.sala.slug}`">{{
-            entrada.sala.nombre }}</NuxtLink>
+                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2" :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
+                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2" :to="identidadUrl">Bitácora</NuxtLink>
                         <p class="text-gray-400 text-sm">{{ $formatDate(entrada.createdAt) }}</p>
                         <!-- Entrada Fijada -->
                         <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"
@@ -23,7 +24,8 @@
                             title="Entrada Destacada"></i>
                     </div>
                 </div>
-                <!-- Ajustes entrada -->
+
+                <!-- Menú ajustes entrada -->
                 <div class="flex-grow invisible group-hover/entrada:visible text-right">
                     <Button text @click="ToggleArticleOptions">...</Button>
                     <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo"
