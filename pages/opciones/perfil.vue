@@ -1,37 +1,42 @@
 <template>
     <form @submit.prevent="handleSubmit" class="space-y-3">
         <div class="flex gap-2 mb-4 flex-col md:flex-row">
-            <label for="username" class="font-semibold w-24">nombre</label>
+            <label for="username" class="font-semibold w-1/4">nombre</label>
             <InputText id="username" class="w-full" v-model="perfil.nombre" required minlength="3" autofocus />
         </div>
 
-        <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
-            <label for="email" class="font-semibold w-24">email</label>
-            <InputText id="email" class="w-full" type="email" v-model="perfil.email" required/>
-        </div>
-
         <div class="flex gap-2 mb-4 flex-col md:flex-row">
-            <label for="avatar" class="font-semibold w-24">autorretrato</label>
+            <label for="avatar" class="font-semibold w-1/4">autorretrato</label>
             <input type="file" id="avatar" ref="avatarFileInput" class="w-full caja-input"/>
         </div>
 
-        <div class="flex gap-2 mb-10 flex-col md:flex-row">
-            <label for="bio" class="font-semibold w-24">bio</label>
-            <Textarea id="bio" class="w-full leading-normal" v-model="perfil.bio" autoResize rows="5" cols="30" />
+        <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
+            <label for="email" class="font-semibold w-1/4">email</label>
+            <InputText id="email" class="w-full" type="email" v-model="perfil.email" required/>
         </div>
 
         <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
-            <label for="link" class="font-semibold w-24">link</label>
+            <label for="mostrarEmail" class="font-semibold w-1/4">mostrar email</label>
+            <Checkbox id="mostrarEmail" class="w-full" v-model="perfil.mostrarEmail" binary />
+        </div>
+
+        <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
+            <label for="link" class="font-semibold w-1/4">link</label>
             <InputText id="link" class="w-full" type="link" v-model="perfil.link"/>
+        </div>
+
+        <div class="flex gap-2 mb-10 flex-col md:flex-row">
+            <label for="bio" class="font-semibold w-1/4">bio</label>
+            <Textarea id="bio" class="w-full leading-normal" v-model="perfil.bio" autoResize rows="5" cols="30" />
         </div>
 
         <div :class="{'opacity-50':password==''}">
             <div class="text-sm mt-10">Si no querés cambiar tu contraseña, dejá estos campos vacíos</div>
             
-            <label for="contraseña" class="font-semibold w-24">nueva contraseña</label>
+            <label for="contraseña" class="font-semibold w-1/4">nueva contraseña</label>
             <InputText id="contraseña" class="w-full" type="password" v-model="password" :required="password!=''"/>
         
-            <label for="contraseña" class="font-semibold w-24">repetí contraseña</label>
+            <label for="contraseña" class="font-semibold w-1/4">repetí contraseña</label>
             <InputText id="contraseña" class="w-full" type="password" v-model="password2" :required="password!=''"/>
         </div>
         
@@ -59,6 +64,7 @@ const perfil = ref({
     email: data.value.user.email,
     bio: data.value.user.bio,
     link: data.value.user.link,
+    mostrarEmail: data.value.user.mostrarEmail,
 })
 const avatarFileInput = ref()
 
@@ -87,7 +93,6 @@ const handleSubmit = async () => {
             }
         }
         
-
         // Luego guardamos el perfil
         const userRes = await useAPI(`/api/users/${data.value.user.id}`, {body: perfil.value, method: 'PATCH'});
         console.log(userRes)

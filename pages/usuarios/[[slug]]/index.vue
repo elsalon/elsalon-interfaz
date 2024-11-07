@@ -8,6 +8,9 @@
                 <div v-if="tieneLink">
                     <a  class="link" :href="linkAbsoluta" target="_blank">{{ linkSimplificada }}</a>
                 </div>
+                <div v-if="usuario.mostrarEmail">
+                    <a class="link" :href="'mailto:'+usuario.email">{{ usuario.email }}</a>
+                </div>
             </div>
             <div class="text-md">{{ usuario.bio }}</div>
         </div>
