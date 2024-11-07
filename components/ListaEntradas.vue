@@ -1,32 +1,23 @@
 <template>
-  <NotificacionEntradasNuevas ref="notifEntradasNuevas"/>
+  <NotificacionEntradasNuevas ref="notifEntradasNuevas" />
   <!-- Loading State -->
   <div v-if="loading" class="my-4 text-center text-gray-500 text-sm">
-      Cargando...
-    </div>
+    Cargando...
+  </div>
 
-    <!-- Empty State -->
-    <div 
-      v-else-if="listaEntradas.length === 0" 
-      class="text-center text-gray-500 text-sm">
-      No hay entradas
-    </div>
+  <!-- Empty State -->
+  <div v-else-if="listaEntradas.length === 0" class="text-center text-gray-500 text-sm">
+    No hay entradas
+  </div>
 
-    <!-- Content -->
-    <div v-else class="space-y-10">
-      <Entrada 
-        v-for="entrada in listaEntradas" 
-        :key="entrada.id" 
-        :entrada="entrada"
-        @eliminar="EliminarEntrada(entrada.id)" />
-      
-      <!-- Pagination Status -->
-      <div 
-        v-if="!hasNextPage" 
-        class="my-4 text-center text-gray-500 text-sm">
-        No hay más entradas
-      </div>
-    </div>
+  <!-- Content -->
+  <div v-else class="space-y-10">
+    <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada"
+      @eliminar="EliminarEntrada(entrada.id)" />
+
+    <!-- Pagination Status -->
+    <div v-if="!hasNextPage" class="h-10 text-center text-gray-500 text-sm">No hay más entradas</div>
+  </div>
 </template>
 
 <script setup>
@@ -49,7 +40,7 @@ const notifEntradasNuevas = ref(null);
 const props = defineProps({
   endpointQuery: { type: String, default: '' },
   overrideApiBase: { type: String, default: null },
-  overrideApiBaseQuery: {type: Array, default: []},
+  overrideApiBaseQuery: { type: Array, default: [] },
 })
 
 onMounted(async () => {
@@ -98,16 +89,16 @@ const CheckLlegoFinDePagina = async () => {
 }
 
 const FetchFijadas = async () => {
-  try{
+  try {
     const res = await useAPI(`/api/fijadas?depth=3&where[contexto][equals]=${SalonStore.contextoId}&sort=-createdAt&limit=10`)
     idsEntradasFijadas.value = [] // = res.docs.map(fijada => fijada.entrada.id)
-  
+
     res.docs.forEach(item => {
       idsEntradasFijadas.value.push(item.entrada.id)
       item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
     })
     entradasFijadas.value = res.docs.map(item => item.entrada)
-  }catch(e){
+  } catch (e) {
     console.error(e)
   }
 }

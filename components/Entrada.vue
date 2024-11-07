@@ -33,7 +33,7 @@
                 </div>
             </div>
             <DeferredContent>
-                <div class="prose prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2">
+                <div class="prose prose-headings:text-xl prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2">
                     <ContenidoRendereado ref="contenidoRender" :contenido="entrada"/>
                 </div>
                 <div class="sm:pl-[65px]" v-if="archivos.length">
