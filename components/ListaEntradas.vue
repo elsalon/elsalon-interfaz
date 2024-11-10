@@ -21,6 +21,8 @@
 </template>
 
 <script setup>
+import { red } from 'tailwindcss/colors';
+
 const { hooks } = useNuxtApp();
 const entradas = ref([]);
 const loading = ref(true);
@@ -90,13 +92,16 @@ const CheckLlegoFinDePagina = async () => {
 
 const FetchFijadas = async () => {
   try {
-    const res = await useAPI(`/api/fijadas?depth=3&where[contexto][equals]=${SalonStore.contextoId}&sort=-createdAt&limit=10`)
+    var res = await useAPI(`/api/fijadas?depth=4&where[contexto][equals]=${SalonStore.contextoId}&sort=-createdAt&limit=10`)
     idsEntradasFijadas.value = [] // = res.docs.map(fijada => fijada.entrada.id)
 
     res.docs.forEach(item => {
-      idsEntradasFijadas.value.push(item.entrada.id)
-      item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
+      if (item.entrada.id != undefined){
+        idsEntradasFijadas.value.push(item.entrada.id)
+        item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
+      }
     })
+    res.docs = res.docs.filter(item => item.entrada.id != undefined)
     entradasFijadas.value = res.docs.map(item => item.entrada)
   } catch (e) {
     console.error(e)

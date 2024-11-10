@@ -13,7 +13,7 @@
                         <a :href="href" v-bind="props.action" @click="navigate">
                             <span class="mr-2">
                                 <Avatar v-if="item?.avatar" :image="item.avatar.sizes.medium.url" shape="circle"/>
-                                <Avatar v-else :label="item.siglas" :style="{backgroundColor: item.color, color: '#fff'}" shape="circle" />
+                                <Avatar v-else :label="item.siglas" :style="{backgroundColor: item.color || '#000', color: '#fff'}" shape="circle" />
                             </span>
                             <span>{{ item.nombre }}</span>                        
                         </a>

@@ -100,7 +100,7 @@ export const useSalonStore = defineStore('salon', {
 
         // Realiza ambas peticiones en paralelo
         const [salonesRes, etiquetasRes] = await Promise.all([
-          useFetch(runtimeConfig.apiBase + "/api/salones?sort=orden&limit=-1"),
+          useFetch(runtimeConfig.apiBase + "/api/salones?sort=orden&limit=0"),
           useFetch(runtimeConfig.apiBase + "/api/etiquetas"),
         ]);
 
