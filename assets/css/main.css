@@ -213,3 +213,13 @@ ol{
   /* En caso de png con transparencia le aplico fondo blanco */
   background: #fff;
 }
+
+/* styles.css */
+.fade-in {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+
+.fade-in.loaded {
+  opacity: 1;
+}

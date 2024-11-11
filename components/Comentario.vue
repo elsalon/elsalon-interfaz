@@ -16,7 +16,7 @@
         </template>
 
         <DeferredContent>
-            <div v-show="!editandoComentario" class="prose prose-headings:my-1 leading-normal text-sm">
+            <div v-show="!editandoComentario" class="prose prose-headings:my-1 leading-normal text-sm break-words">
                 <ContenidoRendereado ref="contenidoRender" :contenido="comentario"/>
             </div>
             <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos"/>
