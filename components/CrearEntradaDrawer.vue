@@ -36,7 +36,7 @@
                 </Select>
 
                 <!-- Boton Publicar -->
-                <Button @click="Publicar" :loading="uploading" :label="isEditing ? 'Guardar' : 'Publicar'"></Button>
+                <Button @click="Publicar" :loading="uploading" :label="isEditing ? 'Guardar' : publicarLabel"></Button>
             </div>
         </div>
     </ClientOnly>
@@ -47,6 +47,8 @@ const {data: authData} = useAuth()
 const editor = ref(null)
 const isEditing = ref(false)
 const uploading = ref(false)
+const {currContext} = useSalonStore()
+const { paginaActual } = useSalon()
 const props = defineProps(
     {
         entryEdit: {
@@ -55,6 +57,10 @@ const props = defineProps(
         }
     }
 )
+const publicarLabel = ref("Publicar *")
+const sala = currContext == "bitacora" ? "Bitácora" : paginaActual.value.nombre
+publicarLabel.value = sala ? `Publicar en ${sala}` : "Publicar"
+
 
 const autorSeleccionado = ref(null)
 const autoresOpciones =ref([])
