@@ -62,7 +62,7 @@ const {docs:gruposDelUsuario} = await useAPI(`/api/grupos?where[integrantes][con
 
 const Publicar = async () => {
     uploading.value = true
-    const {html, imagenes, archivos, mencionados, etiquetas} = await editor.value.parseEditorToUpload()
+    const {html, imagenes, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo} = await editor.value.parseEditorToUpload()
     if(html == ""){
         return;
     }
@@ -81,6 +81,8 @@ const Publicar = async () => {
         archivos,
         mencionados,
         etiquetas,
+        embedsYoutube, 
+        embedsVimeo,
 	}
 	// console.log("body", html, imagenes)	
 	let endpoint = '/api/entradas'

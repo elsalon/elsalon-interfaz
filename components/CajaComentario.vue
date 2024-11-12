@@ -40,7 +40,7 @@ const ClearEditor = () => {
 
 const Publicar = async () => {
     uploading.value = true
-    const {html, imagenes, archivos, mencionados, etiquetas} = await editor.value.parseEditorToUpload()
+    const {html, imagenes, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo} = await editor.value.parseEditorToUpload()
     if(html == ""){
         return;
     }
@@ -53,6 +53,8 @@ const Publicar = async () => {
         archivos,
         mencionados,
         etiquetas,
+        embedsYoutube, 
+        embedsVimeo,
 	}
 	// console.log("DATA", data)	
 	let endpoint = '/api/comentarios'

@@ -41,6 +41,9 @@ const props = defineProps({
     editingData: { type: Object, default: null }
 })
 
+const urlRegex = /\bhttps?:\/\/[^\s<]+(?![^<]*<\/a>)/;
+const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+const vimeoRegex = /(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com\/)(\d+)/;
 
 const handleUploadFileClick = () => {
     fileInput.value.click();
@@ -63,12 +66,30 @@ const parseEditorToUpload = async () => {
     const delta = quill.getContents()
     let html = quill.root.innerHTML
 
+    var embedsYoutube = [];
+    var embedsVimeo = [];
     // Procesar imagenes
     // Busco todos los blobs de imagenes y las subo
     // Los convierto a formato [image:id] para que el backend lo entienda
     // Si payload cambia la url de la imagen no se pierde la imagen en el contenido
     // Tambien guardo referencia a todas las imagenes del posteo en attachedImages
     for (let op of delta.ops) {
+        if (op.insert && op.insert.video) {
+            // Guardo array de ids videos
+            const link = op.insert.video;
+            const youtubeMatch = link.match(youtubeRegex);
+            const vimeoMatch = link.match(vimeoRegex);
+
+            // If a YouTube URL is matched
+            if (youtubeMatch) {
+                const videoId = youtubeMatch[1];
+                embedsYoutube.push(videoId);
+            }
+            if(vimeoMatch){
+                const videoId = vimeoMatch[1];
+                embedsVimeo.push(videoId);
+            }
+        }
         if (op.insert && op.insert.image) {
             const imageUrl = op.insert.image
             if (imageUrl.startsWith('data:')) {
@@ -144,7 +165,10 @@ const parseEditorToUpload = async () => {
     html = tempDiv.innerHTML;
     console.log("mencionados", mencionados, "etiquetas", etiquetas)
 
-    return { html, imagenes: attachedImages.value, archivos, mencionados, etiquetas }
+    embedsYoutube = embedsYoutube.join(",");
+    embedsVimeo = embedsVimeo.join(",");
+
+    return { html, imagenes: attachedImages.value, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo }
 }
 
 const uploadFile = async (file) => {
@@ -307,6 +331,7 @@ onMounted(async () => {
             if (!leaf.text) {
                 return;
             }
+            console.log()
 
             // Determine the relevant text length until the cursor position
             const relevantLength = sel.index - leafIndex;
@@ -323,10 +348,6 @@ onMounted(async () => {
                 return;
             }
 
-            const urlRegex = /\bhttps?:\/\/[^\s<]+(?![^<]*<\/a>)/;
-            const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-            const vimeoRegex = /(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com\/)(\d+)/;
-
             const urlMatch = text.match(urlRegex);
             const youtubeMatch = text.match(youtubeRegex);
             const vimeoMatch = text.match(vimeoRegex);
@@ -342,6 +363,7 @@ onMounted(async () => {
 
             // If a YouTube URL is matched
             if (youtubeMatch) {
+                console.log('YouTube:', youtubeMatch[1])
                 const videoId = youtubeMatch[1];
                 const iframe = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
                 quill.deleteText(leafIndex, relevantLength); // Remove the original text
