@@ -5,7 +5,7 @@
              
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
             <div class="flex justify-end mt-4 flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
-                <Select v-model="autorSeleccionado"  :options="autoresOpciones" optionLabel="name" placeholder="Autoría" class="w-full md:w-56" >
+                <Select v-model="autorSeleccionado" :options="autoresOpciones" optionLabel="name" placeholder="Autoría" class="w-full md:w-56" >
                     <template #value="slotProps">
                         <!-- Seleccionado -->
                         <div v-if="slotProps.value" class="flex items-center">
@@ -13,9 +13,9 @@
                                 <img v-if="slotProps.value.avatar" :alt="slotProps.value.label" :src="slotProps.value.avatar" :class="`mr-2`" style="width: 18px" />
                             </template>
                             <template v-else>
-                                <div class="w-6 h-6"></div>
+                                <AvatarSalon :usuario="slotProps.value" class="w-5 h-5 mr-2 text-xs" />
                             </template>
-                            <div class="flex-grow">{{ slotProps.value.name }}</div>
+                            <div class="flex-grow">{{ slotProps.value.nombre }}</div>
                         </div>
                         <span v-else>
                             {{ slotProps.placeholder }}
@@ -28,9 +28,9 @@
                                 <img v-if="slotProps.option.avatar !=null" :alt="slotProps.option.label" :src="slotProps.option.avatar" class="mr-2" style="width: 18px" />
                             </template>
                             <template v-else>
-                                <div class="w-6 h-6"></div>
+                                <AvatarSalon :usuario="slotProps.option" class="w-5 h-5 mr-2 text-xs" />
                             </template>
-                            <div class="flex-grow">{{ slotProps.option.name }}</div>
+                            <div class="flex-grow">{{ slotProps.option.nombre }}</div>
                         </div>
                     </template>
                     <template #footer>
@@ -128,13 +128,13 @@ const Publicar = async () => {
 onMounted(() => {
     autoresOpciones.value.push({
 		avatar: authData.value.user.avatar ? authData.value.user.avatar.sizes.thumbnail.url : null,
-		name: authData.value?.user?.nombre, 
+		nombre: authData.value?.user?.nombre, 
 		id: authData.value?.user?.id 
 	});
 	gruposDelUsuario.forEach(grupo => {
 		autoresOpciones.value.push({ 
 			avatar: grupo.avatar ? grupo.avatar.sizes.thumbnail.url : null,
-			name: grupo.nombre,
+			nombre: grupo.nombre,
 			id: grupo.id
 		});
 	});
