@@ -7,19 +7,17 @@
             <Avatar v-if="paginaActual?.avatar" :image="paginaActual.avatar.sizes.medium.url" size="large" shape="" class="select-none cursor-pointer" @click="toggleSalonesMenu"/>
             <Avatar v-else :label="paginaActual?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape="" @click="toggleSalonesMenu"/>
 
-            <Menu ref="salonesMenu" id="overlay_menu_salones" :model="salonStore.salones" :popup="true" class="select-none"> 
-                <template #item="{ item, props }">
-                    <router-link v-if="item.slug" v-slot="{ href, navigate }" :to="GenerateUrl(item.slug)" custom>
-                        <a :href="href" v-bind="props.action" @click="navigate">
-                            <span class="mr-2">
-                                <Avatar v-if="item?.avatar" :image="item.avatar.sizes.medium.url" shape="circle"/>
-                                <Avatar v-else :label="item.siglas" :style="{backgroundColor: item.color || '#000', color: '#fff'}" shape="circle" />
-                            </span>
-                            <span>{{ item.nombre }}</span>                        
-                        </a>
-                    </router-link>
-                </template>
-            </Menu>
+            <Drawer v-model:visible="menuSalonesVisible" class="!w-full md:!w-80 lg:!w-[30rem]">
+                <div v-for="item in salonStore.salones" class="ml-1">
+                    <NuxtLink :to="GenerateUrl(item.slug)" class="flex items-center mb-1">
+                        <span class="mr-2">
+                            <Avatar v-if="item?.avatar" :image="item.avatar.sizes.medium.url" shape=""/>
+                            <Avatar v-else :label="item.siglas" :style="{backgroundColor: item.color || '#000', color: '#fff'}" shape="" />
+                        </span>
+                        <span>{{ item.nombre }}</span>
+                    </NuxtLink>
+                </div>
+            </Drawer>
             
             <div class="flex items-center">
                 <h1 class="text-lg font-semibold text-gray-800">
@@ -170,13 +168,16 @@
         })
     }
 
+    const menuSalonesVisible = ref(false)
+
     const toggleUserMenu = (event) => {
         userMenu.value.toggle(event);
     };
-
-
+    
+    
     const salonesMenu = ref();
     const toggleSalonesMenu = (event) => {
-        salonesMenu.value.toggle(event);
+        menuSalonesVisible.value = true;
+        // salonesMenu.value.toggle(event);
     };
 </script>
