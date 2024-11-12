@@ -38,7 +38,6 @@
 </template>
 
 <script setup>
-const listaUsuarios = ref([]);
     const toast = useToast();
     import { useToast } from "primevue/usetoast";
     const visible = ref(false);
