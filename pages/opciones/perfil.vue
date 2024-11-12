@@ -7,7 +7,7 @@
 
         <div class="flex gap-2 mb-4 flex-col md:flex-row">
             <label for="avatar" class="font-semibold w-1/4">autorretrato</label>
-            <input type="file" id="avatar" ref="avatarFileInput" class="w-full caja-input"/>
+            <input type="file" id="avatar" ref="avatarFileInput" accept="image/png, image/gif, image/jpeg"  class="w-full caja-input"/>
         </div>
 
         <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">

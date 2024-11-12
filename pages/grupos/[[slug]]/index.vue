@@ -1,8 +1,14 @@
 <template>
     <NuxtLayout name="layout-contenido">        
         <template #header>{{ grupo.nombre }}</template>  
-        <div class="text-center">
-            <AvatarSalon :usuario="grupo" size="xlarge" imagesize="large"/>
+        <div class="user-info mb-5">
+            <div class="text-center mb-2">
+                <AvatarSalon :usuario="grupo" size="xlarge" imagesize="large"/>
+                <div v-if="tieneLink">
+                    <a  class="link" :href="linkAbsoluta" target="_blank">{{ linkSimplificada }}</a>
+                </div>
+            </div>
+            <div class="text-md">{{ grupo.desc }}</div>
         </div>
         
         <!-- Group Members -->
@@ -39,5 +45,14 @@ const elsalon = useSalonStore();
 elsalon.setContext('grupo', grupo.value.id)
 const userIsInGroup = ref(grupo.value.integrantes.some(i => i.id == authData.value?.user.id))
 const query = ref(`where[grupo][equals]=${grupo.value.id}`)
+
+const tieneLink = ref(grupo.value.link != null && grupo.value.link != '');
+const linkSimplificada = ref(null);
+const linkAbsoluta = ref(null);
+if(tieneLink.value){
+    linkSimplificada.value = grupo.value.link.replace(/(^\w+:|^)\/\//, '');
+    linkAbsoluta.value = grupo.value.link.includes('http') ? grupo.value.link : `https://${grupo.value.link}`;
+}
+
 
 </script>

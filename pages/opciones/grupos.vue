@@ -13,7 +13,7 @@
     </template>
 
 
-    <Grupo v-for="grupo in grupos" :key="grupo.id" :grupo="grupo" @abandonadoGrupo="handleAbandonadoGrupo"/>
+    <Grupo v-for="grupo in grupos" :key="grupo.id" :grupo="grupo" @abandonadoGrupo="handleAbandonadoGrupo" @editadoGrupo="handleEditadoGrupo"/>
 
     <!-- DIALOG CREAR NUEVO GRUPO -->
     <Dialog v-model:visible="visible" modal header="Nuevo grupo" style="min-width: 35vw;">
@@ -80,6 +80,11 @@
     const handleAbandonadoGrupo = (grupo) => {
         console.log('Abandonado grupo', grupo);
         // grupos.value = grupos.value.filter((g) => g.id != grupo.id);
+        fetchGrupos();
+    }
+
+    const handleEditadoGrupo = (grupo) => {
+        console.log('Grupo editado', grupo);
         fetchGrupos();
     }
 
