@@ -25,13 +25,18 @@
                         <!-- Lista opciones -->
                         <div class="flex items-center">
                             <template v-if="slotProps.option.avatar">
-                                <img v-if="slotProps.option.avatar !=null" :alt="slotProps.option.label" :src="slotProps.option.avatar" :class="`mr-2`" style="width: 18px" />
+                                <img v-if="slotProps.option.avatar !=null" :alt="slotProps.option.label" :src="slotProps.option.avatar" class="mr-2" style="width: 18px" />
                             </template>
                             <template v-else>
                                 <div class="w-6 h-6"></div>
                             </template>
                             <div class="flex-grow">{{ slotProps.option.name }}</div>
                         </div>
+                    </template>
+                    <template #footer>
+                        <NuxtLink to="/opciones/grupos" target="_blank" v-if="gruposDelUsuario.length == 0">
+                            <div class="px-3 py-1 text-gray-400 hover:underline text-sm">Aprendé cómo postear como grupo</div>
+                        </NuxtLink>
                     </template>
                 </Select>
 
@@ -63,7 +68,7 @@ publicarLabel.value = sala ? `Publicar en ${sala}` : "Publicar"
 
 
 const autorSeleccionado = ref(null)
-const autoresOpciones =ref([])
+const autoresOpciones = ref([])
 const {docs:gruposDelUsuario} = await useAPI(`/api/grupos?where[integrantes][contains]=${authData.value?.user?.id}`);
 
 const Publicar = async () => {
