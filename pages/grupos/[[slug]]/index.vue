@@ -22,7 +22,7 @@
         </div>
         
         <BtnColaborar v-if="!userIsInGroup"/>
-        
+        <CrearEntradaBtn v-if="userIsInGroup" />
         <ListaEntradas :endpointQuery="query" />
     </NuxtLayout>
 </template>
@@ -41,8 +41,11 @@ if (res.docs.length === 0) {
     })
 }
 const grupo = ref(res.docs[0])
-const elsalon = useSalonStore();
-elsalon.setContext('grupo', grupo.value.id)
+
+const salonStore = useSalonStore()
+salonStore.setContext('grupo', grupo.value.id)
+salonStore.SetPageTitle(grupo.value.nombre)
+
 const userIsInGroup = ref(grupo.value.integrantes.some(i => i.id == authData.value?.user.id))
 const query = ref(`where[grupo][equals]=${grupo.value.id}`)
 
