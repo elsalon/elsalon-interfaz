@@ -9,12 +9,12 @@
 
             <Drawer v-model:visible="menuSalonesVisible" class="!w-full md:!w-80 lg:!w-[30rem]">
                 <div v-for="item in salonStore.salones" class="ml-1">
-                    <NuxtLink :to="GenerateUrl(item.slug)" class="flex items-center mb-1">
+                    <NuxtLink :to="GenerateUrl(item.slug)" class="flex items-center mb-1 hover:font-bold">
                         <span class="mr-2">
-                            <Avatar v-if="item?.avatar" :image="item.avatar.sizes.medium.url" shape=""/>
-                            <Avatar v-else :label="item.siglas" :style="{backgroundColor: item.color || '#000', color: '#fff'}" shape="" />
+                            <Avatar v-if="item?.avatar" :image="item.avatar.sizes.medium.url" shape="" class="md:w-12 md:h-12"/>
+                            <Avatar v-else :label="item.siglas" :style="{backgroundColor: item.color || '#000', color: '#fff'}" shape="" class="md:w-12 md:h-12"/>
                         </span>
-                        <span>{{ item.nombre }}</span>
+                        <span class="md:text-lg">{{ item.nombre }}</span>
                     </NuxtLink>
                 </div>
             </Drawer>
