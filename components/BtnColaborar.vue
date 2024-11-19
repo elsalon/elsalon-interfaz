@@ -26,6 +26,7 @@
             const method = 'POST'
             const res = await useAPI('/api/colaboraciones', {body, method})
             estadoMostrarBtnColaborador.value = 2
+            idColaboracion.value = res.doc.id
             emit('estadoColaboracion', estadoMostrarBtnColaborador.value)
         }catch(e){
             console.log(e)
