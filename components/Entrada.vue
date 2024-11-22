@@ -2,7 +2,7 @@
     <div class="group/entrada" :class="{entradaNueva: entrada.nueva}">
         <article>
             <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
-            <div class="flex items-center pb-2">
+            <div class="flex pb-2">
                 <NuxtLink :to="identidadUrl">
                     <AvatarSalon :usuario="identidad" />
                 </NuxtLink>
