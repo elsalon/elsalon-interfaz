@@ -61,7 +61,13 @@ const DescEntradaOComentarioDelUsuario = async () => {
         case 'comentarios':
             const entrada = await useAPI(`/api/entradas/${props.notificacion.sourceDocument.value.entrada}`)
             linkNotificacion.value = `/entradas/${entrada.id}`
-            return `tu entrada "${entrada.extracto}"` // referencia a la entrada de este comentario
+            if(entrada.autoriaGrupal){
+                // Entrada grupal
+                return `tu entrada grupal con ${entrada.grupo.nombre}: "${entrada.extracto}"`
+            }else{
+                // Entrada hecha por el usuario
+                return `tu entrada "${entrada.extracto}"` // referencia a la entrada de este comentario
+            }
     }        
 }
 
