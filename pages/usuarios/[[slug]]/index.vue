@@ -15,6 +15,14 @@
             <div class="text-md">{{ usuario.bio }}</div>
         </div>
 
+        <!-- GRUPOS DEL USUARIO -->
+        <div v-if="grupos.length" class="flex space-x-4 mb-5">
+            <NuxtLink v-for="grupo in grupos" :to="`/grupos/${grupo.slug}`" :key="grupo.id" class="flex items-center">
+                <AvatarSalon :usuario="grupo" class="w-8 h-8 mr-1" />
+                <span class="text-sm text-gray-700">{{ grupo.nombre }}</span>
+            </NuxtLink>
+        </div>
+
         <BtnColaborar v-if="!userIsMe"/>
         
         <CrearEntradaBtn v-if="userIsMe" />
@@ -80,4 +88,8 @@ const OpenAvatar = () => {
     galleryPswp = new PhotoSwipe(galleryOptions);
     galleryPswp.init();
 }
+
+const grupos = ref([])
+const resGrupos = await useAPI(`/api/grupos?where[integrantes][contains]=${usuario.value.id}`)
+grupos.value = resGrupos.docs
 </script>
