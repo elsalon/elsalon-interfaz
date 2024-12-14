@@ -1,5 +1,5 @@
 <template>
-    <Button v-if="!usuarioPertenece" class="h-12" type="button" label="Unirme" severity="secondary" @click="UnirmeComisionIndividuo" aria-haspopup="true" aria-controls="unirMenu" :loading="loading" />
+    <Button v-if="!usuarioPertenece" class="h-12" type="button" label="Unirme" severity="secondary" @click="UnirmeComisionIndividuo" aria-haspopup="true" aria-controls="unirMenu" :disabled="loading" />
     <Button v-if="usuarioPertenece" class="h-12" type="button" label="Abandonar" severity="secondary" @click="AbandonarComisionIndividuo" aria-haspopup="true" aria-controls="abandonarMenu" :loading="loading" />
 </template>
 

@@ -162,13 +162,11 @@ const opcionFijar = {
     label: !entrada.fijada ? 'Fijar' : 'Quitar Fijado',
     command: async () => {
         if (entrada.fijada) {
+            // TODO Dialog de confirmacion
             await useAPI(`/api/fijadas/${entrada.fijada}`, {method: 'DELETE'});
+            toast.add({summary:'Entrada desfijada', severity: 'contrast', life: 3000});
         } else {
-            useNuxtApp().callHook("entrada:fijar", { entrada });
-            // const method = 'POST';
-            // const body = { contexto: salonStore.contextoId, entrada: entrada.id };
-            // await useAPI(`/api/fijadas`, {body, method});
-            
+            useNuxtApp().callHook("entrada:fijar", { entrada }); // Este hook llama al componente FijarEntrada
         }
     }
 }

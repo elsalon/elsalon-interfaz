@@ -23,12 +23,14 @@ const { hooks } = useNuxtApp();
 const visible = ref(false);
 let removeFijar = null;
 const loading = ref(false)
+const salonStore = useSalonStore();
+const toast = useToast();
 
 const opciones = [
     { label: '24 horas', value: 'dia' },
     { label: '7 dias', value: 'semana' },
     { label: '30 días', value: 'mes' },
-    { label: 'Fin de año', value: 'anno' },
+    { label: 'Todo este año', value: 'anno' },
 ];
 const opcionSeleccionada = ref(opciones[0].value);
 const entrada = ref(null);
@@ -40,9 +42,18 @@ const Open = (data) => {
 }
 
 const Fijar = async () => {
-    console.log(entrada.value.id, opcionSeleccionada.value);
-
+    loading.value = true;
+    console.log("Fijando entrada", entrada.value.id, opcionSeleccionada.value);
+    const method = 'POST';
+    const body = { contexto: salonStore.contextoId, entrada: entrada.value.id, duracion: opcionSeleccionada.value};
+    const res = await useAPI(`/api/fijadas`, {body, method});
+    if (res.doc.id) {
+        toast.add({summary:'Entrada fijada', severity: 'contrast', life: 3000});
+    } else {
+        toast.add({summary:'Error al fijar entrada', severity: 'error', life: 3000});
+    }
     visible.value = false;
+    loading.value = false;
 }
 
 onMounted(() => {
