@@ -27,6 +27,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       
       onRequest: async ({ request, options }) => {
         console.log("on request options", options)

@@ -21,8 +21,6 @@
 </template>
 
 <script setup>
-import { red } from 'tailwindcss/colors';
-
 const { hooks } = useNuxtApp();
 const entradas = ref([]);
 const loading = ref(true);

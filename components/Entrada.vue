@@ -58,6 +58,8 @@
 </template>
 
 <script setup>
+import message from '~/primevue-presets/aura/message';
+
 const salonStore = useSalonStore()
 const { hooks } = useNuxtApp();
 const toast = useToast();
@@ -149,18 +151,25 @@ if (usuarioEsAdminODocente) {
     opcionesArticulo.value = [...opcionesArticulo.value, opcionDestacar];
 }
 
-// // FIJAR
+
+import { markRaw, defineAsyncComponent } from 'vue';
+import { useDialog } from 'primevue/usedialog';
+import { useToast } from 'primevue/usetoast';
+import Button from 'primevue/button';
+
+// FIJAR
 const opcionFijar = {
     label: !entrada.fijada ? 'Fijar' : 'Quitar Fijado',
     command: async () => {
         if (entrada.fijada) {
             await useAPI(`/api/fijadas/${entrada.fijada}`, {method: 'DELETE'});
         } else {
-            const method = 'POST';
-            const body = { contexto: salonStore.contextoId, entrada: entrada.id };
-            await useAPI(`/api/fijadas`, {body, method});
+            useNuxtApp().callHook("entrada:fijar", { entrada });
+            // const method = 'POST';
+            // const body = { contexto: salonStore.contextoId, entrada: entrada.id };
+            // await useAPI(`/api/fijadas`, {body, method});
+            
         }
-        useNuxtApp().callHook("publicacion:fijada");
     }
 }
 if (puedeFijar) {
