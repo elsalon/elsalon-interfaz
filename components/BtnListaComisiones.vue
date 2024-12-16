@@ -1,6 +1,6 @@
 <template>
-    <Button v-if="!noHayComisiones" text type="button" label="Comisiones" @click="comisionesToggle" aria-haspopup="true" aria-controls="overlay_menu" />
-    <Button v-else text type="button" label="Comisiones" disabled />
+    <Button v-if="!noHayComisiones" text type="button" label="Ver Comisión" @click="comisionesToggle" aria-haspopup="true" aria-controls="overlay_menu" />
+    <Button v-else text type="button" label="Ver Comisión" disabled/>
     <Menu ref="comisionesMenu" id="overlay_menu" :model="comisionesItems" :popup="true" />
 
 

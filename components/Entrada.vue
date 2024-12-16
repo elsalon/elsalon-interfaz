@@ -4,13 +4,13 @@
             <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
             <div class="flex pb-2">
                 <NuxtLink :to="identidadUrl">
-                    <AvatarSalon :usuario="identidad" />
+                    <AvatarSalon :usuario="identidad" :title="tituloIdentidad"/>
                 </NuxtLink>
 
                 <!-- Metadata entrada -->
                 <div class="ml-4">
                     <NuxtLink :to="identidadUrl">
-                        <h2 class="font-bold text-gray-700">{{ identidad.nombre }}</h2>
+                        <h2 class="font-bold text-gray-700" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
                         <NuxtLink v-if="entrada.sala" class="text-sm mr-2" :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
@@ -58,8 +58,6 @@
 </template>
 
 <script setup>
-import message from '~/primevue-presets/aura/message';
-
 const salonStore = useSalonStore()
 const { hooks } = useNuxtApp();
 const toast = useToast();
@@ -80,8 +78,10 @@ const ToggleCommentBox = () => {
 const { $formatDate } = useNuxtApp()
 const identidad = ref();
 const identidadUrl = ref();
+const tituloIdentidad = ref("")
 const DefinirIdentidad = (doc = entrada) => {
     identidad.value = doc.autoriaGrupal ? doc.grupo : doc.autor;
+    tituloIdentidad.value = doc.autoriaGrupal ? doc.grupo.integrantes.map(x => x.nombre).join(", ") : doc.autor.nombre;
     identidadUrl.value = doc.autoriaGrupal ? `/grupos/${identidad.value.slug}` : `/usuarios/${identidad.value.slug}`;
 }
 DefinirIdentidad();

@@ -1,6 +1,6 @@
 <template>
     <!-- <DeferredContent @load="ContenidoCargado" -->
-    <div v-html="contenidoRendereado" v-animateonscroll="{ enterClass: 'animate-fadein'}" @click="onContenidoClicked"></div>
+    <div v-html="contenidoRendereado" @click="onContenidoClicked"></div>
 </template>
 
 <script setup>
