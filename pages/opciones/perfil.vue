@@ -17,7 +17,7 @@
 
         <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
             <label for="mostrarEmail" class="font-semibold w-1/4">mostrar email</label>
-            <Checkbox id="mostrarEmail" class="w-full" v-model="perfil.mostrarEmail" binary />
+            <Checkbox inputId="mostrarEmail" id="mostrarEmail" class="w-full" v-model="perfil.mostrarEmail" binary />
         </div>
 
         <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
