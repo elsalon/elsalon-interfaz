@@ -77,6 +77,8 @@ const searchQuery = ref('')
 let lastQuery = ""
 const isSearching = ref(false)
 
+
+
 const categories = ref([
     { name: "Entradas", key: "entradas" },
     { name: "Usuarios", key: "usuarios" },
@@ -114,7 +116,7 @@ const Buscar = async () => {
     });
 
     try {
-        const res = await useAPI(`/api/busqueda?query=${searchQuery.value}&categorias=${selectedCategories.value.join(',')}`)
+        const res = await useAPI(`/api/busqueda?query=${searchQuery.value}&categorias=${selectedCategories.value.join(',')}`, { method: 'GET' }, )
         console.log('Resultados:', res)
         searchResults.entradas = res.entradas?.docs || [];
         searchResults.usuarios = res.usuarios?.docs || [];
@@ -133,4 +135,12 @@ const SinResultado = computed(() => {
     if (nuncaBusco.value) return false;
     return searchResults.entradas.length === 0 && searchResults.usuarios.length === 0 && searchResults.grupos.length === 0
 })
+
+// Si hay query params, buscar
+const queryParams = router.currentRoute.value.query
+if(queryParams.query){
+    searchQuery.value = queryParams.query
+    selectedCategories.value = queryParams.categorias.split(',')
+    Buscar();
+}
 </script>
