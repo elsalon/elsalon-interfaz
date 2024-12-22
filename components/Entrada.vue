@@ -32,14 +32,14 @@
                         :popup="true" class="text-xs" />
                 </div>
             </div>
-            <DeferredContent>
-                <div class="prose prose-headings:text-xl prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2 break-words">
-                    <ContenidoRendereado ref="contenidoRender" :contenido="entrada"/>
-                </div>
-                <div class="sm:pl-[65px]" v-if="archivos.length">
-                    <ListaArchivos :archivos="archivos" />
-                </div>
-            </DeferredContent>
+            
+            <div class="prose prose-headings:text-xl prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2 break-words">
+                <ContenidoRendereado ref="contenidoRender" :contenido="entrada"/>
+            </div>
+            <div class="sm:pl-[65px]" v-if="archivos.length">
+                <ListaArchivos :archivos="archivos" />
+            </div>
+        
 
         </article>
         <div class="despues-entrada sm:pl-[65px]">
@@ -151,9 +151,6 @@ if (usuarioEsAdminODocente) {
     opcionesArticulo.value = [...opcionesArticulo.value, opcionDestacar];
 }
 
-
-import { markRaw, defineAsyncComponent } from 'vue';
-import { useDialog } from 'primevue/usedialog';
 import { useToast } from 'primevue/usetoast';
 import Button from 'primevue/button';
 

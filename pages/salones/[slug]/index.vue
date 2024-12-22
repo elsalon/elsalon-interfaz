@@ -34,12 +34,10 @@
             </div>
         </div>
 
-       
-
-        
+ 
         <CrearEntradaBtn v-if="estadoColaboracion == 2" />
         <!-- TODO Query -->
-        <ListaEntradas :endpointQuery="query"/> 
+        <ListaEntradas :endpointQuery="query" :cacheKey="cacheKey"/> 
     </NuxtLayout>
 </template>
 
@@ -53,17 +51,20 @@ const salon = ref(null)
 salon.value = salonStore.salones.find(salon => salon.slug === slug)
 salonStore.setContext('salon', salon.value.id)
 salonStore.SetPageTitle(salon.value.nombre)
+const cacheKey = ref(`entradas-${salon.value.id}`)
 
 var dateRangeQuery = '';
+var query = {"where[sala][equals]": salon.value.id}
+
 // Si este espacio tiene archivo, filtro por el periodo actual
 if(salon.value.archivo.activar){
     const periodo = salon.value.archivo.periodos[0]
     const startDate = encodeURIComponent(periodo.startDate.toISOString());
     const endDate   = encodeURIComponent(periodo.endDate.toISOString());
-    dateRangeQuery = `&where%5Band%5D%5B0%5D%5BcreatedAt%5D%5Bgreater_than_equal%5D=${startDate}&where%5Band%5D%5B1%5D%5BcreatedAt%5D%5Bless_than_equal%5D=${endDate}`
+    query = {...query, "where%5Band%5D%5B0%5D%5BcreatedAt%5D%5Bgreater_than_equal%5D": startDate, "where%5Band%5D%5B1%5D%5BcreatedAt%5D%5Bless_than_equal%5D": endDate}
+    // dateRangeQuery = `&=${startDate}&=${endDate}`
 }
 
-const query = `where[sala][equals]=${salon.value.id}${dateRangeQuery}`
 
 const miembros = ref(null)
 

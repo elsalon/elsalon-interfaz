@@ -20,7 +20,7 @@ export const useAPI = <T>(
 export default defineNuxtPlugin((nuxtApp) => {
     const { status, token } = useAuth()
     const config = useRuntimeConfig()
-    
+
     const api = $fetch.create({
       baseURL: config.public.apiBase,
       headers: {
