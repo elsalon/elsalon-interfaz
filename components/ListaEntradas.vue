@@ -43,6 +43,7 @@ const props = defineProps({
   query: { type: Object, default: {} },
   apiUrl: { type: String, default: '/api/entradas' },
   cacheKey: { type: String, default: null },
+  saltearFijadas: { type: Boolean, default: false },
 });
 
 // States
@@ -67,24 +68,27 @@ entradasPaginadas.value = entradas.value.docs;
 hasNextPage.value = entradas.value.hasNextPage;
 
 // Fetch inicial de fijadas
-const cacheKey = `${props.cacheKey}:fijadas`;
-const { data: entradasFijadasRes } = await useAsyncData(cacheKey, () => useAPI('/api/fijadas', {
-  params: {
-    depth: 4,
-    "where[contexto][equals]=": SalonStore.contextoId,
-    sort: '-createdAt',
-    limit: 10
-  }
-}))
-idsEntradasFijadas.value = [];
-entradasFijadasRes.value.docs.forEach(item => {
-  if (item.entrada.id != undefined){
-    idsEntradasFijadas.value.push(item.entrada.id)
-    item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
-  }
-})
-// console.log(entradasFijadasRes.value)
-entradasFijadas.value = entradasFijadasRes.value.docs.map(item => item.entrada);
+
+if(!props.saltearFijadas){
+  const cacheKey = `${props.cacheKey}:fijadas`;
+  const { data: entradasFijadasRes } = await useAsyncData(cacheKey, () => useAPI('/api/fijadas', {
+    params: {
+      depth: 4,
+      "where[contexto][equals]=": SalonStore.contextoId,
+      sort: '-createdAt',
+      limit: 10
+    }
+  }))
+  idsEntradasFijadas.value = [];
+  entradasFijadasRes.value.docs.forEach(item => {
+    if (item.entrada.id != undefined){
+      idsEntradasFijadas.value.push(item.entrada.id)
+      item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
+    }
+  })
+  // console.log(entradasFijadasRes.value)
+  entradasFijadas.value = entradasFijadasRes.value.docs.map(item => item.entrada);
+}
 
 const listaEntradas = computed(() => {
   if (!entradasFijadas.value || !entradasPaginadas.value) return [];

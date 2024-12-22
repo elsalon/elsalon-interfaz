@@ -10,7 +10,7 @@
             <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon"/>
 
         </div>
-        <ListaEntradas :query="query" :cacheKey="cacheKey"/> 
+        <ListaEntradas :query="query" :cacheKey="cacheKey" :saltearFijadas="true"/> 
     </NuxtLayout>
 </template>
 
