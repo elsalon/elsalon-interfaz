@@ -26,7 +26,7 @@
         <BtnColaborar v-if="!userIsMe"/>
         
         <CrearEntradaBtn v-if="userIsMe" />
-        <ListaEntradas :endpointQuery="query" />
+        <ListaEntradas :query="query" />
     </NuxtLayout>
 </template>
 

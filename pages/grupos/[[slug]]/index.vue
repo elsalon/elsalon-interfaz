@@ -23,7 +23,7 @@
         
         <BtnColaborar v-if="!userIsInGroup"/>
         <CrearEntradaBtn v-if="userIsInGroup" />
-        <ListaEntradas :endpointQuery="query" />
+        <ListaEntradas :query="query" :cacheKey="cacheKey" />
     </NuxtLayout>
 </template>
 
@@ -32,6 +32,7 @@ const route = useRoute()
 const slug = route.params?.slug
 const {data: authData} = useAuth()
 
+const cacheKey = ref(`grupos-${slug}`)
 // Fetch the user data based on the slug
 const res = await useAPI(`/api/grupos?where[slug][equals]=${slug}`)
 if (res.docs.length === 0) {
@@ -47,7 +48,15 @@ salonStore.setContext('grupo', grupo.value.id)
 salonStore.SetPageTitle(grupo.value.nombre)
 
 const userIsInGroup = ref(grupo.value.integrantes.some(i => i.id == authData.value?.user.id))
-const query = ref(`where[grupo][equals]=${grupo.value.id}`)
+// const query = { "where[grupo][equals]" : grupo.value.id }
+const query = {
+    where: {
+        and: [
+            { grupo: { equals: grupo.value.id } },
+        ]
+
+    }
+}
 
 const tieneLink = ref(grupo.value.link != null && grupo.value.link != '');
 const linkSimplificada = ref(null);

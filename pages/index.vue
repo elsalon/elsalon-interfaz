@@ -3,17 +3,16 @@
         <template #header>El Salón</template>
         <CrearEntradaBtn />
         <!-- TODO QUery -->
-        <ListaEntradas overrideApiBase="/api/salones/feed"/>
+        <ListaEntradas apiUrl="/api/salones/feed" :cacheKey="cacheKey"/>
     </NuxtLayout>
 </template>
-
-
 
 <script setup>
 definePageMeta({
     title: "Inicio",
 })
-
+const {data: authData} = useAuth();
+const cacheKey = ref(`elsalon-${authData.value.user.id}`)
 const salonStore = useSalonStore();
 const elsalon = salonStore.salones.find(salon => salon.slug === "el-salon")
 if(!elsalon){

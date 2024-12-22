@@ -32,6 +32,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useAsyncData } from "#app";
+import qs from 'qs';
 const notifEntradasNuevas = ref(null);
 const scrollEndOffset = 300;
 const SalonStore = useSalonStore();
@@ -39,9 +40,8 @@ const hasNextPage = ref(false);
 
 // Props
 const props = defineProps({
-  endpointQuery: { type: Object, default: {} },
-  overrideApiBase: { type: String, default: null },
-  overrideApiBaseQuery: { type: Array, default: [] },
+  query: { type: Object, default: {} },
+  apiUrl: { type: String, default: '/api/entradas' },
   cacheKey: { type: String, default: null },
 });
 
@@ -54,20 +54,20 @@ const loading = ref(false);
 const observerTarget = ref(null)
 
 // Fetch inicial de entradas
-var cacheKey = `${props.cacheKey}:page${page.value}`;
-const { data: entradas } = await useAsyncData(cacheKey, () => useAPI('/api/entradas', {
-  params: {
-    depth: 2,
-    page: page.value,
-    sort: '-createdAt',
-    ...props.endpointQuery
-  },
-}))
+const queryParams = qs.stringify({
+  depth: 2,
+  page: page.value,
+  sort: '-createdAt',
+  ...props.query,
+}, { encode: false })
+console.log(props.query)
+console.log("**", queryParams)
+const { data: entradas } = await useAsyncData(props.cacheKey, () => useAPI(`${props.apiUrl}?${queryParams}`))
 entradasPaginadas.value = entradas.value.docs;
 hasNextPage.value = entradas.value.hasNextPage;
 
 // Fetch inicial de fijadas
-cacheKey = `${props.cacheKey}:fijadas`;
+const cacheKey = `${props.cacheKey}:fijadas`;
 const { data: entradasFijadasRes } = await useAsyncData(cacheKey, () => useAPI('/api/fijadas', {
   params: {
     depth: 4,
@@ -96,18 +96,14 @@ const listaEntradas = computed(() => {
 // Fetch paginated entries
 const fetchItems = async (pageNum) => {
   loading.value = true
-  console.log('Fetching items:', pageNum)
+  const queryParams = qs.stringify({
+  depth: 2,
+  page: page.value,
+  sort: '-createdAt',
+  ...props.query,
+}, { encode: false })
   try {
-    // Replace with your API endpoint
-    cacheKey = `${props.cacheKey}:page${pageNum}`;
-    const res = await useAPI('/api/entradas', {
-      params: {
-        depth: 2,
-        page: pageNum,
-        sort: '-createdAt',
-        ...props.endpointQuery
-      }
-    })
+    const res = await useAPI(`${props.apiUrl}?${queryParams}`)
     console.log('Fetched items:', res)
     hasNextPage.value = res.hasNextPage
 

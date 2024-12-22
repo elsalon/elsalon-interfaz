@@ -35,8 +35,6 @@ const docs = ref([]);
 const totalDocs = ref(0);
 const haApreciadoId = ref(null);
 
-
-
 watch(
     () => props.aprecioIniciales,
     () => {

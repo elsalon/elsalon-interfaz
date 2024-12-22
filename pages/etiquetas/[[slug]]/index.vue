@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="layout-contenido">
         <template #header>#{{ etiqueta?.nombre }}</template>  
-        <ListaEntradas :endpointQuery="query"/> 
+        <ListaEntradas :query="query"/> 
     </NuxtLayout>
 </template>
 
@@ -11,7 +11,7 @@ const slug = route.params?.slug
 const salonStore = useSalonStore();
 const etiqueta = ref(null)
 etiqueta.value = salonStore.etiquetas.find(etiqueta => etiqueta.slug === slug)
-const query = slug ? `where[etiquetas][contains]=${etiqueta.value.id}` : ''
+const query = {"where[etiquetas][contains]" : etiqueta.value.id}
 
 // TODO tambien buscar comentarios que tengan la etiqueta y agregarlos al feed ?
 </script>

@@ -30,8 +30,8 @@
             </div>
         </div>
 
-        <!-- <ListaEntradas :endpointQuery="query"/> -->
-        <ListaEntradas :overrideApiBase="`/api/comisiones/${comision.id}/feed`" :overrideApiBaseQuery="overrideApiBaseQuery" :key="unirmeKey"/>
+        <!-- <ListaEntradas :query="query"/> -->
+        <ListaEntradas :apiUrl="`/api/comisiones/${comision.id}/feed`" :query="query" :key="unirmeKey"/>
     </NuxtLayout>
 </template>
 
@@ -55,12 +55,12 @@ const RecargarComision = async () => {
 
 
 // Filtro por el periodo actual
-let overrideApiBaseQuery = []
+let query = []
 if(salon.value.archivo.activar){
     const periodo = salon.value.archivo.periodos[0]
     const startDate = periodo.startDate.toISOString();
     const endDate   = periodo.endDate.toISOString();
     
-    overrideApiBaseQuery = [`startDate=${startDate}`, `endDate=${endDate}`]
+    query = [`startDate=${startDate}`, `endDate=${endDate}`]
 }
 </script>
