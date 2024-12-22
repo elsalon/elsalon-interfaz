@@ -83,7 +83,7 @@ entradasFijadasRes.value.docs.forEach(item => {
     item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
   }
 })
-console.log(entradasFijadasRes.value)
+// console.log(entradasFijadasRes.value)
 entradasFijadas.value = entradasFijadasRes.value.docs.map(item => item.entrada);
 
 const listaEntradas = computed(() => {
@@ -108,6 +108,7 @@ const fetchItems = async (pageNum) => {
         ...props.endpointQuery
       }
     })
+    console.log('Fetched items:', res)
     hasNextPage.value = res.hasNextPage
 
     // Append new items to existing array
