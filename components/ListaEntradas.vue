@@ -129,6 +129,19 @@ const handleIntersect = async (entries) => {
   }
 }
 
+const FetchBatchAprecios = async (entradas) => {
+  const ids = entradas.map(entrada => entrada.id).join(',')
+  const aprecios = await useAPI('/api/aprecio/batch', {
+    params: { ids }
+  })
+  console.log('Fetched batch aprecios:', aprecios)
+  aprecios.forEach(aprecio => {
+    const entrada = entradas.find(item => item.id === aprecio.contenidoid)
+    if (entrada) {
+      entrada.aprecioIniciales = aprecio
+    }
+  })
+}
 
 // Set up Intersection Observer
 let observer
@@ -142,6 +155,8 @@ onMounted(() => {
   if (observerTarget.value) {
     observer.observe(observerTarget.value)
   }
+  console.log("lista de entradas", listaEntradas.value)
+  FetchBatchAprecios(listaEntradas.value);
 })
 
 // Clean up
