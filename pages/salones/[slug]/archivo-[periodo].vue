@@ -26,7 +26,6 @@ salonStore.setContext('salon', salon.value.id)
 salonStore.SetPageTitle(`Archivo ${salon.value.nombre} ${periodo.nombre}`)
 
 const cacheKey = `archivo-${salon.value.id}-${periodo.slug}`
-console.log(cacheKey.value)
 
 const startDate = encodeURIComponent(periodo.startDate.toISOString());
 const endDate   = encodeURIComponent(periodo.endDate.toISOString());

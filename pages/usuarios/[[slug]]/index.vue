@@ -26,7 +26,7 @@
         <BtnColaborar v-if="!userIsMe"/>
         
         <CrearEntradaBtn v-if="userIsMe" />
-        <ListaEntradas :query="query" />
+        <ListaEntradas :query="query" :cacheKey="cacheKey"/>
     </NuxtLayout>
 </template>
 
@@ -51,7 +51,8 @@ const salonStore = useSalonStore()
 salonStore.SetPageTitle(usuario.value.nombre)
 salonStore.setContext('bitacora', usuario.value.id)
 const userIsMe = ref(usuario.value.id == authData.value?.user.id)
-const query = ref(`where[autor][equals]=${usuario.value.id}&where[autoriaGrupal][not_equals]=true`) // posts del usuario que no sean grupales
+const query = {where: { autor : { equals : usuario.value.id }, autoriaGrupal : { not_equals : true } }}
+const cacheKey = `bitacora-${usuario.value.id}`
 
 const tieneLink = ref(usuario.value.link != null && usuario.value.link != '');
 const linkSimplificada = ref(null);
