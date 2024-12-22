@@ -61,7 +61,7 @@ const handleAprecioClicked = async () => {
                     "where[and][1][autor][equals]": authData.value.user.id,
                 }
             }, )
-            console.log("Eliminado aprecio", res)
+            console.log(res.message)
         }else{
             // Creo un aprecio
             console.log('Creando aprecio', props.contenidoid)
