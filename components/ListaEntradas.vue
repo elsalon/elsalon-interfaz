@@ -150,13 +150,20 @@ const FetchBatchAprecios = async (entradas) => {
 const FetchNewerFromDate = async (date) => {
   console.log('Fetching newer items from:', date)
   loading.value = true
-  const queryParams = qs.stringify({
+  let newerItemsQuery = props.query || {}
+  newerItemsQuery = {
+    ...newerItemsQuery,
     depth: 2,
     sort: '-createdAt',
     where: {
-      createdAt: { greater_than: date }
+      ...newerItemsQuery?.where,
     }
-  }, { encode: false })
+  }
+  if(date){
+    newerItemsQuery.where.createdAt = { greater_than: date }
+  }
+
+  const queryParams = qs.stringify(newerItemsQuery, { encode: false })
   const res = await useAPI(`${props.apiUrl}?${queryParams}`)
   console.log('Fetched newer items:', res)
   entradasPaginadas.value = [...res.docs, ...entradasPaginadas.value]
@@ -166,8 +173,7 @@ const FetchNewerFromDate = async (date) => {
 const handlePublicacionCreada = (data) => {
   if (data.resultado == "ok") {
     // Publicacion exitosa. Cargo entradas nuevas
-    const newestEntryDate = listaEntradas.value[0].createdAt;
-    FetchNewerFromDate(newestEntryDate)
+    FetchNewerFromDate(listaEntradas.value[0]?.createdAt || null)
     
   } else {
     console.error('Error al publicar la entrada:', data)
