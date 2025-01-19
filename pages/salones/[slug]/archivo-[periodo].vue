@@ -9,7 +9,7 @@
             <LogoSala :salon="salon"/>
             <NuxtLink class="text-3xl font-bold" :to="`/salones/${salon.slug}`"><h1>{{ salon.nombre }}</h1></NuxtLink>
             
-            <BtnListaComisiones :salon="salon" />
+            <BtnListaComisiones :salon="salon" :periodo="periodo"/>
             <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon"/>
 
         </div>

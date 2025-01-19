@@ -1,13 +1,17 @@
 <template>
     <NuxtLayout name="layout-contenido">
-        <template #header>Comisión<CajaNombreComision :comision="comision"/></template>
+        <template #header>
+            <NuxtLink :to="`/salones/${salon.slug}`" class="link">{{ salon.nombre }}</NuxtLink> /
+            <CajaNombreComision :comision="comision"/>
+        </template>
+        
 
         <div class="text-center mb-2">
             <LogoSala :salon="salon"/>
             <NuxtLink class="text-3xl font-bold" :to="`/salones/${salon.slug}`"><h1>{{ salon.nombre }}</h1></NuxtLink>
             <!-- <h2 class="text-xl font-bold"></h2> -->
                  
-            <BtnListaComisiones :salon="salon" />
+            <BtnListaComisiones :salon="salon" :periodo="periodo" />
             <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon" />
         </div>
         
@@ -31,7 +35,7 @@
         </div>
 
         <!-- <ListaEntradas :query="query"/> -->
-        <ListaEntradas :apiUrl="`/api/comisiones/${comision.id}/feed`" :query="query" :key="unirmeKey"/>
+        <ListaEntradas :apiUrl="`/api/comisiones/${comision.id}/feed`" :query="query" :key="unirmeKey" :cacheKey="cacheKey"/>
     </NuxtLayout>
 </template>
 
@@ -55,12 +59,19 @@ const RecargarComision = async () => {
 
 
 // Filtro por el periodo actual
-let query = []
+let query = {}
+const periodo = salon.value.archivo.periodos[0]
+const cacheKey = `archivo-${salon.value.id}-${periodo.slug}`
 if(salon.value.archivo.activar){
-    const periodo = salon.value.archivo.periodos[0]
-    const startDate = periodo.startDate.toISOString();
-    const endDate   = periodo.endDate.toISOString();
-    
-    query = [`startDate=${startDate}`, `endDate=${endDate}`]
+    const startDate = encodeURIComponent(periodo.startDate.toISOString());
+    const endDate = encodeURIComponent(periodo.endDate.toISOString());
+    query = {
+        where: {
+            and: [
+                { createdAt: { greater_than_equal: startDate } },
+                { createdAt: { less_than_equal: endDate } },
+            ]
+        }
+    }
 }
 </script>

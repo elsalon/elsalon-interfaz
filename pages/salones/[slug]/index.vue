@@ -26,7 +26,7 @@
             </div>
 
             <div class="flex-1 mb-4 md:w-1/2">
-                <BtnListaComisiones :salon="salon" />
+                <BtnListaComisiones :salon="salon" :periodo="periodo" />
             </div>
 
             <!-- Boton Archivo -->
@@ -63,13 +63,12 @@ var query = {
         and: [
             { sala: { equals: salon.value.id } },
         ]
-
     }
 }
 
 // Si este espacio tiene archivo, filtro por el periodo actual
+const periodo = salon.value.archivo.periodos[0]
 if (salon.value.archivo.activar) {
-    const periodo = salon.value.archivo.periodos[0]
     const startDate = encodeURIComponent(periodo.startDate.toISOString());
     const endDate = encodeURIComponent(periodo.endDate.toISOString());
     query.where.and.push({ createdAt: { greater_than_equal: startDate } })

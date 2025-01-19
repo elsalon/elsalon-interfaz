@@ -4,10 +4,8 @@
   <!-- Empty State -->
   <div v-if="listaEntradas.length === 0" class="text-center text-gray-500 text-sm">
     <!-- CTA Primera publicacion -->
-    <div v-if="!props.saltearFijadas" class="mb-4">
       <p class="my-10 text-gray-500">Todavía no hay entradas en esta sala</p>
       <!-- <Button label="+ Escribir primera entrada" @click="visible=true" class="mb-10"/> -->
-    </div>
   </div>
 
   <!-- Content -->
@@ -68,8 +66,6 @@ const queryParams = qs.stringify({
   sort: '-createdAt',
   ...props.query,
 }, { encode: false })
-console.log(props.query)
-console.log("**", queryParams)
 const { data: entradas } = await useAsyncData(props.cacheKey, () => useAPI(`${props.apiUrl}?${queryParams}`))
 entradasPaginadas.value = entradas.value.docs;
 hasNextPage.value = entradas.value.hasNextPage;
