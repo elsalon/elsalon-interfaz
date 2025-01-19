@@ -34,7 +34,6 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useAsyncData } from "#app";
 import qs from 'qs';
 const notifEntradasNuevas = ref(null);
-const scrollEndOffset = 300;
 const SalonStore = useSalonStore();
 const hasNextPage = ref(false);
 
@@ -53,6 +52,10 @@ const entradasFijadas = ref([]);
 const entradasPaginadas = ref([]);
 const loading = ref(false);
 const observerTarget = ref(null)
+
+// Hooks
+const { hooks } = useNuxtApp()
+let OnCreateEntryHook = null;
 
 // Fetch inicial de entradas
 const queryParams = qs.stringify({
@@ -143,6 +146,33 @@ const FetchBatchAprecios = async (entradas) => {
   })
 }
 
+const FetchNewerFromDate = async (date) => {
+  console.log('Fetching newer items from:', date)
+  loading.value = true
+  const queryParams = qs.stringify({
+    depth: 2,
+    sort: '-createdAt',
+    where: {
+      createdAt: { greater_than: date }
+    }
+  }, { encode: false })
+  const res = await useAPI(`${props.apiUrl}?${queryParams}`)
+  console.log('Fetched newer items:', res)
+  entradasPaginadas.value = [...res.docs, ...entradasPaginadas.value]
+  loading.value = false
+}
+
+const handlePublicacionCreada = (data) => {
+  if (data.resultado == "ok") {
+    // Publicacion exitosa. Cargo entradas nuevas
+    const newestEntryDate = listaEntradas.value[0].createdAt;
+    FetchNewerFromDate(newestEntryDate)
+    
+  } else {
+    console.error('Error al publicar la entrada:', data)
+  }
+}
+
 // Set up Intersection Observer
 let observer
 onMounted(() => {
@@ -157,6 +187,8 @@ onMounted(() => {
   }
   console.log("lista de entradas", listaEntradas.value)
   FetchBatchAprecios(listaEntradas.value);
+
+  OnCreateEntryHook = hooks.hook('publicacion:creada', handlePublicacionCreada)
 })
 
 // Clean up
@@ -164,6 +196,7 @@ onUnmounted(() => {
   if (observer) {
     observer.disconnect()
   }
+  if (OnCreateEntryHook) OnCreateEntryHook()
 })
 
 </script>

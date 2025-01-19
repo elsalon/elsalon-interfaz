@@ -48,13 +48,11 @@ salonStore.setContext('grupo', grupo.value.id)
 salonStore.SetPageTitle(grupo.value.nombre)
 
 const userIsInGroup = ref(grupo.value.integrantes.some(i => i.id == authData.value?.user.id))
-// const query = { "where[grupo][equals]" : grupo.value.id }
 const query = {
     where: {
         and: [
             { grupo: { equals: grupo.value.id } },
         ]
-
     }
 }
 
@@ -65,6 +63,4 @@ if(tieneLink.value){
     linkSimplificada.value = grupo.value.link.replace(/(^\w+:|^)\/\//, '');
     linkAbsoluta.value = grupo.value.link.includes('http') ? grupo.value.link : `https://${grupo.value.link}`;
 }
-
-
 </script>

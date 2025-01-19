@@ -153,7 +153,7 @@ const Publicar = async () => {
         if(isEditing.value){
             useNuxtApp().callHook("publicacion:editada", {resultado:"ok", entrada: response.doc})
         }else{
-            useNuxtApp().callHook("publicacion:creada", {resultado:"ok"})
+            useNuxtApp().callHook("publicacion:creada", {resultado:"ok", entrada: response.doc})
         }
         
 	}catch{
