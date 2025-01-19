@@ -1,6 +1,9 @@
 <template>
     <NuxtLayout name="layout-contenido">
-        <template #header>Archivo {{ periodo.nombre }}</template>
+        <template #header>
+            <NuxtLink :to="`/salones/${salon.slug}`" class="link">{{ salon.nombre }}</NuxtLink> /
+            Archivo {{ periodo.nombre }}
+        </template>
 
         <div class="text-center mb-2">
             <LogoSala :salon="salon"/>
