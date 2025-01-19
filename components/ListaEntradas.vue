@@ -11,7 +11,7 @@
   <!-- Content -->
   <div v-else class="space-y-10">
     <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada"
-      @eliminar="eliminarEntrada(entrada.id)" />
+      @eliminar="EliminarEntrada(entrada.id)" />
 
     <!-- Loading Indicator -->
   <div
@@ -177,6 +177,16 @@ const handlePublicacionCreada = (data) => {
     
   } else {
     console.error('Error al publicar la entrada:', data)
+  }
+}
+
+const EliminarEntrada = async (id) => {
+  try {
+    // Puede estar en fijadas o en paginadas. Lo saco de ambos
+    entradasFijadas.value = entradasFijadas.value.filter(entrada => entrada.id !== id)
+    entradasPaginadas.value = entradasPaginadas.value.filter(entrada => entrada.id !== id)
+  } catch (e) {
+    console.warn(e);
   }
 }
 
