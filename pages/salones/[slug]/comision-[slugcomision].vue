@@ -66,12 +66,8 @@ if(salon.value.archivo.activar){
     const startDate = encodeURIComponent(periodo.startDate.toISOString());
     const endDate = encodeURIComponent(periodo.endDate.toISOString());
     query = {
-        where: {
-            and: [
-                { createdAt: { greater_than_equal: startDate } },
-                { createdAt: { less_than_equal: endDate } },
-            ]
-        }
+        startDate,
+        endDate,
     }
 }
 </script>
