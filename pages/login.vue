@@ -13,7 +13,9 @@
           <a href="/olvide" class="font-semibold text-surface-300 hover:text-surface-500" tabindex="5">¿Olvidaste tu contraseña?</a>
         </div>
       </div>
-      <InputText id="password" type="password" class="block w-full" v-model="password" required tabindex="2"/>
+      <!-- <InputText id="password" type="password" class="block w-full" v-model="password" required tabindex="2"/> -->
+      <Password v-model="password" class="block w-full" inputClass="w-full" tabindex="2" toggleMask  :feedback="false" />
+
     </div>
       
         <div>
