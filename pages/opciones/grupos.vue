@@ -9,7 +9,7 @@
     <template v-else>
         <div class="text-center mt-10">
             <p class="my-10 text-gray-500">Podés crear grupos de trabajo con tus compañerxs para postear colectivamente y compartir una bitácora de progeso</p>
-            <Button label="Crear primer grupo" size="large" @click="visible=true" class="mb-10"/>
+            <Button label="Crear primer grupo" @click="visible=true" class="mb-10"/>
         </div>
     </template>
     

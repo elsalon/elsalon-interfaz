@@ -3,7 +3,11 @@
 
   <!-- Empty State -->
   <div v-if="listaEntradas.length === 0" class="text-center text-gray-500 text-sm">
-    No hay entradas
+    <!-- CTA Primera publicacion -->
+    <div v-if="!props.saltearFijadas" class="mb-4">
+      <p class="my-10 text-gray-500">Todavía no hay entradas en esta sala</p>
+      <!-- <Button label="+ Escribir primera entrada" @click="visible=true" class="mb-10"/> -->
+    </div>
   </div>
 
   <!-- Content -->
@@ -133,6 +137,7 @@ const handleIntersect = async (entries) => {
 }
 
 const FetchBatchAprecios = async (entradas) => {
+  if(entradas.length === 0) return
   const ids = entradas.map(entrada => entrada.id).join(',')
   const aprecios = await useAPI('/api/aprecio/batch', {
     params: { ids }
