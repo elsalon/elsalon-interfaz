@@ -3,7 +3,7 @@
     <form @submit.prevent="handleSubmit" class="space-y-3">
       <div>
         <label for="email" class="block text-900 font-medium mb-2">Email</label>
-        <InputText id="email" type="email" class="block w-full" v-model="email" required autofocus tabindex="1"/>
+        <InputText id="email" type="email" fluid v-model="email" required autofocus tabindex="1"/>
       </div>
   
       <div>
@@ -13,9 +13,7 @@
           <a href="/olvide" class="font-semibold text-surface-300 hover:text-surface-500" tabindex="5">¿Olvidaste tu contraseña?</a>
         </div>
       </div>
-      <!-- <InputText id="password" type="password" class="block w-full" v-model="password" required tabindex="2"/> -->
-      <Password v-model="password" class="block w-full" inputClass="w-full" tabindex="2" toggleMask  :feedback="false" />
-
+      <Password v-model="password" inputProps="" fluid toggleMask :input-props="{ tabindex: 2 }" :feedback="false" />
     </div>
       
         <div>
