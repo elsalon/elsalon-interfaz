@@ -38,7 +38,10 @@ const page = ref(2)
 const hasNextPage = ref(false)
 const comentariosRestantes = ref(0)
 const comentarios = ref([])
-const newestCommentDate = ref(null)
+// computed property newestCommentDate
+const newestCommentDate = computed(() => comentarios.value.length > 0 ? comentarios.value[comentarios.value.length-1].createdAt : null)
+
+
 const cajaComentarioKey = ref(0)
 const fetchingComentarios = ref(false)
 const cajaComentario = ref(null)
@@ -52,6 +55,7 @@ comentariosRestantes.value = props.comentariosIniciales.totalDocs - comentarios.
 
 const fetchComentarios = async () => {
     fetchingComentarios.value = true
+    console.log("Fetch comentarios", page.value)
     const res = await useAPI(`/api/comentarios`, {
         params: {
             "where[entrada][equals]": props.entradaId,
@@ -84,10 +88,9 @@ const fetchNewerComments = async () => {
         return
     }
     fetchingComentarios.value = true
+    console.log("Fetwching newer than", newestCommentDate.value)
     const res = await useAPI(`/api/comentarios?where[entrada][equals]=${props.entradaId}&where[createdAt][greater_than]=${newestCommentDate.value}&sort=createdAt`)
-    const newComments = res.docs.filter(newComment => 
-    !comentarios.value.some(existingComment => existingComment.id === newComment.id)
-    )
+    const newComments = res.docs.filter(newComment => !comentarios.value.some(existingComment => existingComment.id === newComment.id))
     comentarios.value = [...comentarios.value, ...newComments]
     
     if (newComments.length > 0) {
