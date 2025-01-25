@@ -56,7 +56,15 @@ identidad.value = comentario.autoriaGrupal ? comentario.grupo : comentario.autor
 tituloIdentidad.value = comentario.autoriaGrupal ? comentario.grupo.integrantes.map(x => x.nombre).join(", ") : comentario.autor.nombre;
 identidadUrl.value = comentario.autoriaGrupal ? `/grupos/${identidad.value.slug}` : `/usuarios/${identidad.value.slug}`;
 
-if (comentario.autor.id == authData.value.user.id) {
+const UsuarioTieneAutoridad = () => {
+    if (comentario.autoriaGrupal) {
+        return comentario.grupo?.integrantes.find(i => i.id == authData.value.user.id)
+    } else {
+        return comentario.autor.id == authData.value.user.id
+    }
+}
+
+if (UsuarioTieneAutoridad()) {
     opcionesComment.value = [
         ...opcionesComment.value,
         {

@@ -108,7 +108,7 @@ onMounted(async() => {
 
         if(props.commentEdit.entrada.autoriaGrupal){
             await salonStore.FetchGruposDelUsuario();
-            autorSeleccionado.value = salonStore.gruposDelUsuario.find(grupo => grupo.id == props.entryEdit.entrada.grupo.id)
+            autorSeleccionado.value = salonStore.gruposDelUsuario.find(grupo => grupo.id == props.commentEdit.entrada.grupo.id)
             console.log("Autor seleccionado", autorSeleccionado.value)
         }
     }
