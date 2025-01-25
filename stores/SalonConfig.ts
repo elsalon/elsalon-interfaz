@@ -131,11 +131,10 @@ export const useSalonStore = defineStore('salon', {
     async FetchGruposDelUsuario(force = false) {
       if (!this.gruposDelUsuario || force) {
         this.gruposDelUsuarioFetching = true;
-        console.log("Fetching grupos")
         const {docs: gruposDelUsuario} = await useAPI(`/api/grupos/me`);
-        console.log("***", gruposDelUsuario)
         this.gruposDelUsuario = gruposDelUsuario;
         this.gruposDelUsuarioFetching = false;
+        console.log("Fetched grupos", gruposDelUsuario);
       }
     }
   },
