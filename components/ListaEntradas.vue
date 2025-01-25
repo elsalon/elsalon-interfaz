@@ -14,10 +14,7 @@
       @eliminar="EliminarEntrada(entrada.id)" />
 
     <!-- Loading Indicator -->
-  <div
-    v-if="loading"
-    class="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-gray-500 text-sm flex items-center"
-  >
+  <div v-if="loading" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-gray-500 text-sm flex items-center">
     <span class="spinner mr-2"></span> Cargando...
   </div>
     <!-- Pagination Status -->

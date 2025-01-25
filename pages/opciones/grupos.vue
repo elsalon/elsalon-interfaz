@@ -1,9 +1,9 @@
 <template>
     
-    <template v-if="fetching">
+    <template v-if="salonStore.gruposDelUsuarioFetching">
         <div class="my-4 text-center text-gray-500 text-sm">Cargando...</div>
     </template>
-    <template v-else-if="grupos.length">
+    <template v-else-if="salonStore.gruposDelUsuario.length">
         <Button label="Nuevo grupo" @click="visible=true" class="mb-10"/>
     </template>
     <template v-else>
@@ -13,7 +13,7 @@
         </div>
     </template>
     
-    <Grupo v-for="grupo in grupos" :key="grupo.id" :grupo="grupo" @abandonadoGrupo="handleAbandonadoGrupo" @editadoGrupo="handleEditadoGrupo"/>
+    <Grupo v-for="grupo in salonStore.gruposDelUsuario" :key="grupo.id" :grupo="grupo" @abandonadoGrupo="handleAbandonadoGrupo" @editadoGrupo="handleEditadoGrupo"/>
 
     <!-- DIALOG CREAR NUEVO GRUPO -->
     <Dialog v-model:visible="visible" modal header="Nuevo grupo" style="min-width: 35vw;">
@@ -40,13 +40,13 @@
 <script setup>
     const toast = useToast();
     import { useToast } from "primevue/usetoast";
+import salon from "~/primevue-presets/salon";
     const visible = ref(false);
     const {data: authData} = useAuth()
     const nuevoGrupo = ref({
         nombre: '',
         usuarios: []
     });
-    const grupos = ref([]);
     const fetching = ref(true)
     const salonStore = useSalonStore();
     salonStore.SetPageTitle(`Grupos`)
@@ -54,22 +54,15 @@
 
     const handleAbandonadoGrupo = (grupo) => {
         console.log('Abandonado grupo', grupo);
-        // grupos.value = grupos.value.filter((g) => g.id != grupo.id);
-        fetchGrupos();
+        salonStore.FetchGruposDelUsuario(true)
     }
 
     const handleEditadoGrupo = (grupo) => {
         console.log('Grupo editado', grupo);
-        fetchGrupos();
+        salonStore.FetchGruposDelUsuario(true)
     }
 
-    const fetchGrupos = async () => {
-        fetching.value = true;
-        const {docs} = await useAPI(`/api/grupos?where[integrantes][contains]=${authData.value.user.id}&limit=10`);
-        grupos.value = docs;
-        fetching.value = false;
-    }
-    fetchGrupos();
+    salonStore.FetchGruposDelUsuario();
 
     // LOGICA CREAR NUEVO GRUPO
     const creandoNuevoGrupo = ref(false);
@@ -101,7 +94,7 @@
         }finally{
             creandoNuevoGrupo.value = false;
             visible.value = false;
-            fetchGrupos();
+            salonStore.FetchGruposDelUsuario(true)
         }
     }
 </script>

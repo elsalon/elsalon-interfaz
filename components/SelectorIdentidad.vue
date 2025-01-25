@@ -1,5 +1,8 @@
 <template>
-    <Select v-model="selectedValue" :options="autoresOpciones" optionLabel="name" placeholder="Autoría"
+    <div v-if="salonStore.gruposDelUsuarioFetching" class="text-gray-500 text-xs flex items-center justify-center">
+        <div>Cargando...</div>
+    </div>
+    <Select v-else v-model="selectedValue" :options="autoresOpciones" optionLabel="name" placeholder="Autoría"
         class="w-full md:w-56" :disabled="disableSelectorIdentidad">
         <template #value="slotProps">
             <!-- Seleccionado -->
@@ -39,12 +42,10 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted } from 'vue';
 
-const {data: authData} = useAuth() // TODO no desustructurar stores porque pierde reactividad. Corregir en todos lados !!!
+const { data: authData } = useAuth();
 const salonStore = useSalonStore();
-
-await salonStore.FetchGruposDelUsuario(); // Fetches only if empty
-
 const props = defineProps({
     modelValue: {
         type: Object,
@@ -53,7 +54,7 @@ const props = defineProps({
 });
 
 const autoresOpciones = ref([]);
-const disableSelectorIdentidad = ref(false)
+const disableSelectorIdentidad = ref(false);
 
 const emit = defineEmits(["update:modelValue"]);
 
@@ -66,29 +67,33 @@ const selectedValue = computed({
     },
 });
 
-autoresOpciones.value.push({
-    avatar: authData.value.user.avatar ? authData.value.user.avatar.sizes.thumbnail.url : null,
-    nombre: authData.value?.user?.nombre, 
-    id: authData.value?.user?.id 
-});
+onMounted(async () => {
+    await salonStore.FetchGruposDelUsuario();
 
-salonStore.gruposDelUsuario.forEach(grupo => {
-    autoresOpciones.value.push({ 
-        avatar: grupo.avatar ? grupo.avatar.sizes.thumbnail.url : null,
-        nombre: grupo.nombre,
-        id: grupo.id
+    autoresOpciones.value.push({
+        avatar: authData.value.user.avatar ? authData.value.user.avatar.sizes.thumbnail.url : null,
+        nombre: authData.value?.user?.nombre,
+        id: authData.value?.user?.id
     });
+
+    salonStore.gruposDelUsuario.forEach(grupo => {
+        autoresOpciones.value.push({
+            avatar: grupo.avatar ? grupo.avatar.sizes.thumbnail.url : null,
+            nombre: grupo.nombre,
+            id: grupo.id
+        });
+    });
+
+    if (!selectedValue.value && autoresOpciones.value.length > 0) {
+        selectedValue.value = autoresOpciones.value[0];
+    }
+
+    if (salonStore.currContext == "bitacora") {
+        selectedValue.value = autoresOpciones.value.find(autor => autor.id == authData.value.user.id);
+        disableSelectorIdentidad.value = true;
+    } else if (salonStore.currContext == "grupo") {
+        selectedValue.value = autoresOpciones.value.find(autor => autor.id == contextoId);
+        disableSelectorIdentidad.value = true;
+    }
 });
-
-if(!selectedValue.value && autoresOpciones.value.length > 0){
-    selectedValue.value = autoresOpciones.value[0];
-}
-
-if(salonStore.currContext == "bitacora"){
-    selectedValue.value = autoresOpciones.value.find(autor => autor.id == authData.value.user.id)
-    disableSelectorIdentidad.value = true
-}else if(salonStore.currContext == "grupo"){
-    selectedValue.value = autoresOpciones.value.find(autor => autor.id == contextoId)
-    disableSelectorIdentidad.value = true
-}
 </script>

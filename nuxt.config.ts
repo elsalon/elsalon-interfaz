@@ -10,7 +10,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@primevue/nuxt-module'
   ],
-  
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE,

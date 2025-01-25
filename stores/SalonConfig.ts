@@ -37,6 +37,7 @@ export const useSalonStore = defineStore('salon', {
     comienzoCuatri2: '08-01', // mes / dia 1 agosto (aunque sea mas tarde)
     finCuatri2: '12-31', // mes / dia 31 diciembre
     gruposDelUsuario: null as null | any[],
+    gruposDelUsuarioFetching: false,
   }),
 
   actions: {
@@ -127,12 +128,14 @@ export const useSalonStore = defineStore('salon', {
         this.loading = false;
       }
     },
-    async FetchGruposDelUsuario() {
-      if (!this.gruposDelUsuario) {
+    async FetchGruposDelUsuario(force = false) {
+      if (!this.gruposDelUsuario || force) {
+        this.gruposDelUsuarioFetching = true;
         console.log("Fetching grupos")
         const {docs: gruposDelUsuario} = await useAPI(`/api/grupos/me`);
         console.log("***", gruposDelUsuario)
         this.gruposDelUsuario = gruposDelUsuario;
+        this.gruposDelUsuarioFetching = false;
       }
     }
   },
