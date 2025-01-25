@@ -7,6 +7,8 @@
                 <!-- <QuillEditor placeholder="Comentario" v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/> -->
             </div>
             <div class="text-right mt-2 flex justify-end flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
+                <!-- Btn Cancelar -->
+                <Button text @click="CancelComment" class="mr-auto" size="small" label="Cancelar" />
                 <!-- Selector Identidad -->
                 <SelectorIdentidad v-model="autorSeleccionado" :esComentario="true"/>
                 <!-- Btn Publica -->
@@ -18,6 +20,7 @@
 
 <script setup>
 const {data: authData} = useAuth()
+const salonStore = useSalonStore()
 const toast = useToast();
 
 const editor = ref(null)
@@ -32,11 +35,15 @@ const props = defineProps({
     commentEdit: { type: Object, default: null } // If provided, we're in edit mode
 })
 
-const emit = defineEmits(['userPosted'])
+const emit = defineEmits(['userPosted', 'cancelComment'])
 
 const userEdited = computed(() => {
     return miComentario.value !== ''
 })
+const CancelComment = () => {
+    miComentario.value = ''
+    emit('cancelComment')
+}
 
 const ClearEditor = () => {
     editor.value.clear()
@@ -95,9 +102,15 @@ const handleHotkey = (e) => {
     }
 }
 
-onMounted(() => {
+onMounted(async() => {
     if (props.commentEdit) {
         isEditing.value = true
+
+        if(props.commentEdit.entrada.autoriaGrupal){
+            await salonStore.FetchGruposDelUsuario();
+            autorSeleccionado.value = salonStore.gruposDelUsuario.find(grupo => grupo.id == props.entryEdit.entrada.grupo.id)
+            console.log("Autor seleccionado", autorSeleccionado.value)
+        }
     }
 })
 

@@ -10,7 +10,7 @@
         <Accordion :value="showCommentBox">
             <AccordionPanel value="1">
                 <AccordionContent>
-                <CajaComentario v-if="showCommentBox=='1'"  :entradaId="entradaId" @userPosted="handleUserPostedComment" :key="cajaComentarioKey" ref="cajaComentario"/>
+                <CajaComentario v-if="showCommentBox=='1'"  :entradaId="entradaId" @userPosted="handleUserPostedComment" @cancelComment="handleUserCancelComment" :key="cajaComentarioKey" ref="cajaComentario"/>
             </AccordionContent>
         </AccordionPanel>
     </Accordion>
@@ -104,6 +104,11 @@ const handleUserPostedComment = async () => {
     await fetchNewerComments()
     emit('userPosted'); // lo vuelvo a emitir a "Entrada" para que cierre el accordion
     cajaComentario.value.ClearEditor();
+}
+
+const handleUserCancelComment = () => {
+    console.log('User canceled comment')
+    emit('userPosted'); // lo vuelvo a emitir a "Entrada" para que cierre el accordion
 }
 
 const EliminarComentario = (id) => {

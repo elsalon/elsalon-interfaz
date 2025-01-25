@@ -22,7 +22,7 @@
             </div>
             <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos" />
             <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit"
-                @userPosted="handleUserEditedComment" />
+                @userPosted="handleUserEditedComment" @cancelComment="handleUserCancelComment" />
             <Aprecio :contenidoid="comentario.id" contenidotipo="comentario" />
         </DeferredContent>
     </Panel>
@@ -90,6 +90,10 @@ const handleUserEditedComment = async (doc) => {
     comentario.value = doc
     archivos.value = doc.archivos
     contenidoRender.value.ReloadContent(doc);
+}
+const handleUserCancelComment = () => {
+    console.log('User canceled edit comment');
+    editandoComentario.value = false;
 }
 
 const EliminarComentario = async () => {
