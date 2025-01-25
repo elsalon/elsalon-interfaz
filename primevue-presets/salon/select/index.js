@@ -5,8 +5,8 @@ export default {
             'inline-flex',
             'relative',
             // Shape
-            { 'rounded-md': parent.instance.$name !== 'InputGroup' },
-            { 'first:rounded-l-md rounded-none last:rounded-r-md': parent.instance.$name == 'InputGroup' },
+            // { 'rounded-md': parent.instance.$name !== 'InputGroup' },
+            // { 'first:rounded-l-md rounded-none last:rounded-r-md': parent.instance.$name == 'InputGroup' },
             { 'border-0 border-y border-l last:border-r': parent.instance.$name == 'InputGroup' },
             { 'first:ml-0 ml-[-1px]': parent.instance.$name == 'InputGroup' && !props.showButtons },
 
@@ -92,7 +92,7 @@ export default {
             'w-12',
 
             // Shape
-            'rounded-r-md'
+            // 'rounded-r-md'
         ]
     },
     overlay: {
@@ -103,7 +103,7 @@ export default {
 
             // Shape
             'border border-surface-300 dark:border-surface-700',
-            'rounded-md',
+            // 'rounded-md',
             'shadow-md'
         ]
     },
@@ -132,7 +132,7 @@ export default {
             'first:mt-0 mt-[2px]',
 
             // Shape
-            'border-0 rounded',
+            'border-0',
 
             // Colors
             {
@@ -191,8 +191,8 @@ export default {
 
             //Shape
             'border-b-0',
-            'rounded-tl-md',
-            'rounded-tr-md',
+            // 'rounded-tl-md',
+            // 'rounded-tr-md',
 
             // Color
             'text-surface-700 dark:text-white/80',
