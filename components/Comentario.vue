@@ -1,11 +1,11 @@
 <template>
     <Panel :toggleable="false" class="mb-3 border-surface-0 background-red text-sm group/comentario panelComentario">
         <template #header>
-            <NuxtLink :to="'/usuarios/' + comentario.autor.slug">
+            <NuxtLink :to="identidadUrl">
                 <div class="flex items-center gap-2">
-                    <AvatarSalon :usuario="comentario.autor" size="small" />
-                    <span class="font-bold">{{ comentario.autor.nombre }}</span>
-                    <span class="text-gray-300 text-xs">{{ $formatDate(comentario.createdAt) }}</span>
+                    <AvatarSalon :usuario="identidad" size="small" :title="tituloIdentidad" />
+                    <span class="font-bold" :title="tituloIdentidad">{{ identidad.nombre }}</span>
+                    <span class="text-gray-300 text-xs" >{{ $formatDate(comentario.createdAt) }}</span>
                 </div>
             </NuxtLink>
         </template>
@@ -47,6 +47,15 @@ const contenidoRender = ref()
 const commentEdit = ref(null)
 const editandoComentario = ref(false);
 const opcionesComment = ref([]);
+
+const identidad = ref();
+const identidadUrl = ref();
+const tituloIdentidad = ref("")
+
+identidad.value = comentario.autoriaGrupal ? comentario.grupo : comentario.autor;
+tituloIdentidad.value = comentario.autoriaGrupal ? comentario.grupo.integrantes.map(x => x.nombre).join(", ") : comentario.autor.nombre;
+identidadUrl.value = comentario.autoriaGrupal ? `/grupos/${identidad.value.slug}` : `/usuarios/${identidad.value.slug}`;
+
 if (comentario.autor.id == authData.value.user.id) {
     opcionesComment.value = [
         ...opcionesComment.value,

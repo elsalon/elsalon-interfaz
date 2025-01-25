@@ -5,7 +5,7 @@
              
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
             <div class="flex justify-end mt-4 flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
-                <SelectorIdentidad v-model="autorSeleccionado" class="w-full md:w-56" />
+                <SelectorIdentidad v-model="autorSeleccionado" />
 
                 <!-- Boton Publicar -->
                 <Button @click="Publicar" :loading="uploading" :label="isEditing ? 'Guardar' : publicarLabel"></Button>
@@ -27,7 +27,7 @@ const props = defineProps(
             type: Object,
             default: null
         }
-    }
+    },
 )
 const autorSeleccionado = ref(null)
 const publicarLabel = ref("Publicar *")

@@ -6,7 +6,10 @@
                 <EditorRichText ref="editor" :editingData="props.commentEdit" @publishHotKey="Publicar"/>
                 <!-- <QuillEditor placeholder="Comentario" v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/> -->
             </div>
-            <div class="text-right mt-2">
+            <div class="text-right mt-2 flex justify-end flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
+                <!-- Selector Identidad -->
+                <SelectorIdentidad v-model="autorSeleccionado" :esComentario="true"/>
+                <!-- Btn Publica -->
                 <Button  @click="Publicar" :loading="uploading" size="small" :label="isEditing ? 'Guardar' : 'Comentar'"></Button>
             </div>
         </div>
@@ -14,14 +17,15 @@
 </template>
 
 <script setup>
+const {data: authData} = useAuth()
 const toast = useToast();
 
 const editor = ref(null)
 const miComentario = ref('')
-// const mostrarExtras = ref(false)
 const uploading = ref(false)
 const isEditing = ref(false);
 
+const autorSeleccionado = ref(null)
 
 const props = defineProps({
     entradaId: { type: String},
@@ -49,6 +53,7 @@ const Publicar = async () => {
 	let body = {
         entrada: props.entradaId,
 		contenido: html, 
+        autoriaGrupal: false,
 		imagenes,
         archivos,
         mencionados,
@@ -61,6 +66,11 @@ const Publicar = async () => {
 	if(isEditing.value){
 		method = 'PATCH';
 		endpoint = `/api/comentarios/${props.commentEdit.entrada.id}`
+	}
+    // Autoria grupal
+	if(autorSeleccionado.value.id != authData.value.user.id){
+		body.autoriaGrupal = true
+		body.grupo = autorSeleccionado.value.id
 	}
 	try{
 		const response = await useAPI(endpoint, {body, method});
