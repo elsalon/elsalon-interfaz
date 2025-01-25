@@ -94,6 +94,12 @@ switch(props.notificacion.tipoNotificacion){
     case 'comentario':
         body.value += `comentó ${await DescEntradaOComentarioDelUsuario()}`
         break;
+    case 'comentario-grupal':
+        body.value += `comentó como grupo <strong>${props.notificacion.sourceDocument.value.grupo.nombre}</strong>: "${props.notificacion.sourceDocument.value.extracto}"`
+        break;
+    case 'entrada-grupal':
+        body.value += `publicó una entrada grupal con <strong>${props.notificacion.sourceDocument.value.grupo.nombre}</strong>: "${props.notificacion.sourceDocument.value.extracto}"`
+        break;
     case 'mencion':
         body.value += `te mencionó ${DescEntradaOComentarioDesconocida()}`
         break;

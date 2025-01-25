@@ -18,7 +18,7 @@
             <template #footer>
                 
                 <Button v-if="hasNextPage" label="Cargar más" @click="FetchNotifications" size="small" />
-                <Button v-if="notificaciones.length>0" label="Marcas todas leídas" outlined severity="secondary" @click="MarcarTodasLeidas" size="small"/>
+                <Button v-if="mostrarBtnMarcarLeidas" label="Marcas todas leídas" outlined severity="secondary" @click="MarcarTodasLeidas" size="small"/>
             </template>
 
             <DeferredContent @load="onEndReached"/>
@@ -36,6 +36,8 @@ const props = defineProps({
         required: true
     }
 })
+
+const mostrarBtnMarcarLeidas = computed(() => notificaciones.value.some(n => !n.leida))
 
 const fetching = ref(false)
 const hasNextPage = ref(true);
