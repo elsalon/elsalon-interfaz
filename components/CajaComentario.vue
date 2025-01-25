@@ -6,13 +6,13 @@
                 <EditorRichText ref="editor" :editingData="props.commentEdit" @publishHotKey="Publicar"/>
                 <!-- <QuillEditor placeholder="Comentario" v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/> -->
             </div>
-            <div class="text-right mt-2 flex justify-end flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
+            <div class="text-right mt-2 flex justify-end  space-y-1 flex-row md:space-y-0 md:space-x-1">
                 <!-- Btn Cancelar -->
-                <Button text @click="CancelComment" class="mr-auto" size="small" label="Cancelar" />
+                <Button text @click="CancelComment" class="mr-auto " size="small" label="Cancelar" />
                 <!-- Selector Identidad -->
-                <SelectorIdentidad v-model="autorSeleccionado" :esComentario="true"/>
+                <SelectorIdentidad v-model="autorSeleccionado" :esComentario="true" class="w-1/3 md:w-auto"/>
                 <!-- Btn Publica -->
-                <Button  @click="Publicar" :loading="uploading" size="small" :label="isEditing ? 'Guardar' : 'Comentar'"></Button>
+                <Button  @click="Publicar" :loading="uploading" size="small" :label="isEditing ? 'Guardar' : 'Comentar'" class="w-2/3 md:w-auto"></Button>
             </div>
         </div>
     </ClientOnly>
