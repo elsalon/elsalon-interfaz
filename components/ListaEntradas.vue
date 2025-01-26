@@ -176,18 +176,26 @@ const FetchBatchAprecios = async (entradas) => {
 const FetchNewerFromDate = async (date) => {
   console.log('Fetching newer items from:', date)
   loading.value = true
-  let newerItemsQuery = props.query || {}
-  newerItemsQuery = {
-    ...newerItemsQuery,
+
+  // Query original y le saco el createdAt
+  let queryWhere = props.query?.where?.and.filter(item => !item.createdAt) || {};
+  const createdAtCondition = { createdAt: { greater_than: date } };
+  
+  if (queryWhere?.where) {
+    // If there's an existing `where` clause, merge it with the new condition
+    if (queryWhere.where.and) {
+      queryWhere.where.and.push(createdAtCondition);
+    }
+  } else {
+    // If no `where` clause exists, create one
+    queryWhere.where = createdAtCondition;
+  }
+    
+  let newerItemsQuery = {  
     depth: 2,
     sort: '-createdAt',
-    where: {
-      ...newerItemsQuery?.where,
-    }
-  }
-  if(date){
-    newerItemsQuery.where.createdAt = { greater_than: date };
-    newerItemsQuery.createdGreaterThan = date; // Para el feed de El Salon que tiene un query diferente
+    createdGreaterThan: date, // Para feed de El Salon que no tiene query nativo de payloadcms 
+    where: queryWhere
   }
 
   const queryParams = qs.stringify(newerItemsQuery, { encode: false })
@@ -200,7 +208,7 @@ const FetchNewerFromDate = async (date) => {
 const handlePublicacionCreada = async (data) => {
   if (data.resultado == "ok") {
     // Publicacion exitosa. Cargo entradas nuevas
-    await FetchNewerFromDate(entradasPaginadas.value[0]?.createdAt || null)
+    await FetchNewerFromDate(entradasPaginadas.value[0]?.createdAt || Date.now())
     // Resalto la entrada nueva
     entradaRefs.value[data.entrada.id].ResaltarEntrada();
   } else {

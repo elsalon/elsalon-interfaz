@@ -34,7 +34,6 @@
             </div>
         </div>
 
-        <!-- <ListaEntradas :query="query"/> -->
         <ListaEntradas :apiUrl="`/api/comisiones/${comision.id}/feed`" :query="query" :key="unirmeKey" :cacheKey="cacheKey"/>
     </NuxtLayout>
 </template>
