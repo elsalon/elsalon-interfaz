@@ -7,11 +7,11 @@ on:
       - test
 
 jobs:
-  deploy-production:
+  deploy-prod:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Production
+      - name: Deploy to Prod
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -28,11 +28,11 @@ jobs:
             npm run build
             pm2 restart salon-interfaz-prod
 
-  deploy-staging:
+  deploy-test:
     if: github.ref == 'refs/heads/test'
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Staging
+      - name: Deploy to Test
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
