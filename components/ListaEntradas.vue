@@ -11,7 +11,7 @@
   <!-- Content -->
   <div v-else class="space-y-10">
     <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada"
-      @eliminar="EliminarEntrada(entrada.id)" />
+      @eliminar="EliminarEntrada(entrada.id)" :ref="(el) => setEntradaRef(el, entrada.id)" />
 
     <!-- Loading Indicator -->
   <div v-if="loading" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-gray-500 text-sm flex items-center">
@@ -52,6 +52,13 @@ const entradasPaginadas = ref([]);
 const loading = ref(false);
 const observerTarget = ref(null)
 
+const entradaRefs = ref({});
+
+function setEntradaRef(el, id) {
+  if (el) {
+    entradaRefs.value[id] = el;
+  }
+}
 // Hooks
 const { hooks } = useNuxtApp()
 let OnCreateEntryHook = null;
@@ -167,11 +174,12 @@ const FetchNewerFromDate = async (date) => {
   loading.value = false
 }
 
-const handlePublicacionCreada = (data) => {
+const handlePublicacionCreada = async (data) => {
   if (data.resultado == "ok") {
     // Publicacion exitosa. Cargo entradas nuevas
-    FetchNewerFromDate(listaEntradas.value[0]?.createdAt || null)
-    
+    await FetchNewerFromDate(listaEntradas.value[0]?.createdAt || null)
+    // Resalto la entrada nueva
+    entradaRefs.value[data.entrada.id].ResaltarEntrada();
   } else {
     console.error('Error al publicar la entrada:', data)
   }
