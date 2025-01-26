@@ -22,9 +22,11 @@ jobs:
             git fetch --all
             git reset --hard origin/main
             git pull origin main
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh   
             npm install
             npm run build
-            pm2 restart all
+            pm2 restart salon-interfaz-prod
 
   deploy-staging:
     if: github.ref == 'refs/heads/test'
@@ -41,6 +43,8 @@ jobs:
             git fetch --all
             git reset --hard origin/test
             git pull origin test
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh   
             npm install
             npm run build
-            pm2 restart all
+            pm2 restart salon-interfaz-test
