@@ -1,4 +1,4 @@
-name: Deploy to Droplet
+name: Interfaz Deploy a Droplet
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Prod
+      - name: Deploy a Prod
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -32,7 +32,7 @@ jobs:
     if: github.ref == 'refs/heads/test'
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Test
+      - name: Deploy a Test
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
