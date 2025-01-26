@@ -223,7 +223,6 @@ const ResaltarEntrada = () => {
         resaltar.value = false;
     }, 1200);
 }
-
 onMounted(async () => {
     removeOnEditHook = hooks.hook('publicacion:editada', handlePublicacionEditada)
 });
