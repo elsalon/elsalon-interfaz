@@ -45,7 +45,6 @@ const props = defineProps({
 });
 
 // States
-const page = ref(1);
 const idsEntradasFijadas = ref([]);
 const entradasFijadas = ref([]);
 const entradasPaginadas = ref([]);
@@ -66,7 +65,6 @@ let OnCreateEntryHook = null;
 // Fetch inicial de entradas
 const queryParams = qs.stringify({
   depth: 2,
-  page: page.value,
   sort: '-createdAt',
   ...props.query,
 }, { encode: false })
@@ -105,14 +103,39 @@ const listaEntradas = computed(() => {
 
 
 // Fetch paginated entries
-const fetchItems = async (pageNum) => {
+const fetchNextItems = async () => {
   loading.value = true
-  const queryParams = qs.stringify({
-  depth: 2,
-  page: page.value,
-  sort: '-createdAt',
-  ...props.query,
-}, { encode: false })
+
+  // Get the last item's createdAt timestamp
+  const lastItem = entradasPaginadas.value[entradasPaginadas.value.length - 1];
+  const lastCreatedAt = lastItem ? lastItem.createdAt : null;
+  // Build the base query
+  const baseQuery = {
+    depth: 2,
+    sort: '-createdAt',
+    createdLessThan: lastCreatedAt,
+    ...props.query,
+  };
+
+  // Add the createdAt condition if there's a last item
+  if (lastCreatedAt) {
+    const createdAtCondition = { createdAt: { less_than: lastCreatedAt } };
+
+    if (baseQuery.where) {
+      // If there's an existing `where` clause, merge it with the new condition
+      if (baseQuery.where.and) {
+        baseQuery.where.and.push(createdAtCondition);
+      } else {
+        baseQuery.where = { and: [baseQuery.where, createdAtCondition] };
+      }
+    } else {
+      // If no `where` clause exists, create one
+      baseQuery.where = createdAtCondition;
+    }
+  }
+
+  const queryParams = qs.stringify(baseQuery, { encode: false });
+
   try {
     const res = await useAPI(`${props.apiUrl}?${queryParams}`)
     console.log('Fetched items:', res)
@@ -131,8 +154,7 @@ const fetchItems = async (pageNum) => {
 const handleIntersect = async (entries) => {
   const entry = entries[0]
   if (entry.isIntersecting && hasNextPage.value && !loading.value) {
-    page.value++
-    await fetchItems(page.value)
+    await fetchNextItems()
   }
 }
 
