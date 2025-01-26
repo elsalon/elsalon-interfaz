@@ -164,7 +164,8 @@ const FetchNewerFromDate = async (date) => {
     }
   }
   if(date){
-    newerItemsQuery.where.createdAt = { greater_than: date }
+    newerItemsQuery.where.createdAt = { greater_than: date };
+    newerItemsQuery.createdGreaterThan = date; // Para el feed de El Salon que tiene un query diferente
   }
 
   const queryParams = qs.stringify(newerItemsQuery, { encode: false })
@@ -177,7 +178,7 @@ const FetchNewerFromDate = async (date) => {
 const handlePublicacionCreada = async (data) => {
   if (data.resultado == "ok") {
     // Publicacion exitosa. Cargo entradas nuevas
-    await FetchNewerFromDate(listaEntradas.value[0]?.createdAt || null)
+    await FetchNewerFromDate(entradasPaginadas.value[0]?.createdAt || null)
     // Resalto la entrada nueva
     entradaRefs.value[data.entrada.id].ResaltarEntrada();
   } else {
