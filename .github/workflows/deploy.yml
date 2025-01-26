@@ -1,0 +1,46 @@
+name: Deploy to Droplet
+
+on:
+  push:
+    branches:
+      - main
+      - test
+
+jobs:
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Production
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/v2/elsalon-interfaz
+            git fetch --all
+            git reset --hard origin/main
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart all
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/test'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Staging
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/v2-test/elsalon-interfaz
+            git fetch --all
+            git reset --hard origin/test
+            git pull origin test
+            npm install
+            npm run build
+            pm2 restart all
