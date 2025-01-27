@@ -1,5 +1,5 @@
 // // plugins/fadeInObserver.js
-// export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin(() => {
 //     const applyFadeInEffect = (element) => {
 //       element.classList.add('fade-in');
 //       if (element.complete || element.readyState === 4) {
@@ -31,5 +31,5 @@
 //         observer.observe(appContainer, { childList: true, subtree: true });
 //       }
 //     });
-//   });
+  });
   
