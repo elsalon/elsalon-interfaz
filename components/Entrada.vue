@@ -9,13 +9,13 @@
 
                 <!-- Metadata entrada -->
                 <div class="ml-4">
-                    <NuxtLink :to="identidadUrl">
+                    <NuxtLink :to="identidadUrl" class="hover:underline">
                         <h2 class="font-bold text-gray-700" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
-                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2" :to="`/salones/${entrada.sala.slug}`">{{entrada.sala.nombre }}</NuxtLink>
-                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2" :to="identidadUrl">Bitácora</NuxtLink>
-                        <p class="text-gray-400 text-sm">{{ $formatDate(entrada.createdAt) }}</p>
+                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline" :to="`/salones/${entrada.sala.slug}`">{{entrada.sala.nombre }}</NuxtLink>
+                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline" :to="identidadUrl">Bitácora</NuxtLink>
+                        <NuxtLink class="text-gray-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">{{ $formatDate(entrada.createdAt) }}</NuxtLink>
                         <!-- Entrada Fijada -->
                         <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"
                             title="Entrada Fijada"></i>
