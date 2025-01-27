@@ -53,7 +53,7 @@ const DescEntradaOComentarioDelUsuario = async () => {
             // La entrada puede ser propia o grupal
             if(props.notificacion.sourceDocument.value.autoriaGrupal){
                 // Entrada grupal
-                return `tu entrada grupal con ${props.notificacion.sourceDocument.value.grupo.nombre}: "${props.notificacion.sourceDocument.value.extracto}"`
+                return `tu entrada grupal con <strong>${props.notificacion.sourceDocument.value.grupo.nombre}</strong>: "${props.notificacion.sourceDocument.value.extracto}"`
             }else{
                 // Entrada hecha por el usuario
                 return `tu entrada "${props.notificacion.sourceDocument.value.extracto}"`
@@ -63,7 +63,7 @@ const DescEntradaOComentarioDelUsuario = async () => {
             linkNotificacion.value = `/entradas/${entrada.id}`
             if(entrada.autoriaGrupal){
                 // Entrada grupal
-                return `tu entrada grupal con ${entrada.grupo.nombre}: "${entrada.extracto}"`
+                return `tu entrada grupal con <strong>${entrada.grupo.nombre}</strong>: "${entrada.extracto}"`
             }else{
                 // Entrada hecha por el usuario
                 return `tu entrada "${entrada.extracto}"` // referencia a la entrada de este comentario
