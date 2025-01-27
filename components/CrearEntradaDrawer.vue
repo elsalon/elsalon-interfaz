@@ -19,7 +19,7 @@ const {data: authData} = useAuth()
 const editor = ref(null)
 const isEditing = ref(false)
 const uploading = ref(false)
-const {currContext, contextoId, gruposDelUsuario} = useSalonStore()
+const salonStore = useSalonStore()
 const { paginaActual } = useSalon()
 const props = defineProps(
     {
@@ -31,26 +31,23 @@ const props = defineProps(
 )
 const autorSeleccionado = ref(null)
 const publicarLabel = ref("Publicar *")
-const sala = currContext == "bitacora" ? "Bitácora" : paginaActual.value.nombre
+const sala = salonStore.currContext == "bitacora" ? "Bitácora" : paginaActual.value.nombre
 publicarLabel.value = sala ? `Publicar en ${sala}` : "Publicar";
-
-	
-
-	
 
 if (props.entryEdit) {
     console.log("Editando entrada", props.entryEdit)
     if(props.entryEdit.entrada.autoriaGrupal){
-        autorSeleccionado.value = useSalonStore().gruposDelUsuario.find(grupo => grupo.id == props.entryEdit.entrada.grupo.id)
+        await salonStore.FetchGruposDelUsuario();
+        autorSeleccionado.value = salonStore.gruposDelUsuario.find(grupo => grupo.id == props.entryEdit.entrada.grupo.id)
         console.log("Autor seleccionado", autorSeleccionado.value)
     }
     isEditing.value = true
 }
 
 
-if(currContext == "bitacora"){
+if(salonStore.currContext == "bitacora"){
     publicarLabel.value = "Publicar en bitácora"
-}else if(currContext == "grupo"){
+}else if(salonStore.currContext == "grupo"){
     publicarLabel.value = "Publicar en bitácora grupal"
 }
 
@@ -64,9 +61,8 @@ const Publicar = async () => {
         return;
     }
     
-    const {currContext} = useSalonStore()
     const { paginaActual } = useSalon() // TODO ordenar estos dos que quedaron redundantes
-    const sala = currContext == "bitacora" ? null : paginaActual.value.id
+    const sala = salonStore.currContext == "bitacora" ? null : paginaActual.value.id
 
     console.log({paginaActual})
     let method ='POST'
@@ -80,6 +76,7 @@ const Publicar = async () => {
         etiquetas,
         embedsYoutube, 
         embedsVimeo,
+        _status: "published"
 	}
 	// console.log("body", html, imagenes)	
 	let endpoint = '/api/entradas'
