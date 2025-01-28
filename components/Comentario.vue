@@ -23,7 +23,11 @@
             <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos" />
             <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit"
                 @userPosted="handleUserEditedComment" @cancelComment="handleUserCancelComment" />
-            <Aprecio :contenidoid="comentario.id" contenidotipo="comentario" />
+            
+                <div class="actions">
+                    <Button v-show="isLast" link class="my-2 text-xs text-surface-500" label="Comentar" @click="ToggleComment"  />
+                    <Aprecio :contenidoid="comentario.id" contenidotipo="comentario" />
+                </div>
         </DeferredContent>
     </Panel>
 </template>
@@ -37,13 +41,17 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    isLast: {
+        type: Boolean,
+        default: false,
+    }
 });
 
 const comentarioDom = ref(); 
 const resaltar = ref(false)
 const { comentario } = props;
 const archivos = ref(comentario.archivos)
-const emit = defineEmits(['eliminar']);
+const emit = defineEmits(['eliminar', 'toggleCommentBox']);
 
 const loading = ref(false);
 const contenidoRender = ref()
@@ -60,6 +68,7 @@ identidad.value = comentario.autoriaGrupal ? comentario.grupo : comentario.autor
 tituloIdentidad.value = comentario.autoriaGrupal ? comentario.grupo.integrantes.map(x => x.nombre).join(", ") : comentario.autor.nombre;
 identidadUrl.value = comentario.autoriaGrupal ? `/grupos/${identidad.value.slug}` : `/usuarios/${identidad.value.slug}`;
 
+const ToggleComment = () => { emit('toggleCommentBox');}
 const UsuarioTieneAutoridad = () => {
     if (comentario.autoriaGrupal) {
         return comentario.grupo?.integrantes.find(i => i.id == authData.value.user.id)

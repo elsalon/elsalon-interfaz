@@ -45,12 +45,17 @@
             <!-- <Divider /> -->
             <!-- Comentarios -->
             <div class="actions">
-                <Button link class="my-2 text-xs text-surface-500" label="Comentar" @click="ToggleCommentBox" />
+                <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
+                <Button v-show="!entrada.comentarios.docs.length > 0" link class="my-2 text-xs text-surface-500" label="Comentar" @click="ToggleCommentBox"  />
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada"
                     :aprecioIniciales="entrada.aprecioIniciales" />
             </div>
-            <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
-                :showCommentBox="showCommentBox" @userPosted="UserCommented" />
+            <ListaComentarios 
+                :entradaId="entrada.id"
+                :comentariosIniciales="entrada.comentarios"
+                :showCommentBox="showCommentBox" 
+                @userPosted="UserCommented"
+                ref="listaComentarios" />
         </div>
     </div>
 
@@ -76,9 +81,12 @@ const contenidoRender = ref()
 const { entrada } = props;
 const emit = defineEmits(['eliminar']);
 const showCommentBox = ref('0');
+const listaComentarios = ref()
+
 const ToggleCommentBox = () => {
-    showCommentBox.value = showCommentBox.value == '0' ? '1' : '0';
+    listaComentarios.value.ToggleNewComment();
 }
+
 const { $formatDate } = useNuxtApp()
 const identidad = ref();
 const identidadUrl = ref();
@@ -234,7 +242,7 @@ onUnmounted(() => {
 
 
 const UserCommented = () => {
-    showCommentBox.value = '0';
+    listaComentarios.value.HideCommentbox();
 }
 
 

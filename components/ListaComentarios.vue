@@ -5,12 +5,18 @@
         </button>
         <div v-if="fetchingComentarios" class="my-1 w-full text-center text-gray-500 p-1 text-sm">Cargando comentarios...</div>
 
-        <Comentario v-for="comentario in comentarios" :comentario="comentario" :key="comentario.id"  @eliminar="EliminarComentario(comentario.id)" :ref="(el) => setComentarioRef(el, comentario.id)" />
+        <Comentario v-for="(comentario, index) in comentarios" 
+            :comentario="comentario" 
+            :key="comentario.id"  
+            @eliminar="EliminarComentario(comentario.id)" 
+            @toggleCommentBox="ToggleNewComment"
+            :ref="(el) => setComentarioRef(el, comentario.id)" 
+            :isLast="index === comentarios.length - 1"/>
         
         <Accordion :value="showCommentBox">
             <AccordionPanel value="1">
                 <AccordionContent>
-                <CajaComentario v-if="showCommentBox=='1'"  :entradaId="entradaId" @userPosted="handleUserPostedComment" @cancelComment="handleUserCancelComment" :key="cajaComentarioKey" ref="cajaComentario"/>
+                <CajaComentario v-if="showCommentBox" :entradaId="entradaId" @userPosted="handleUserPostedComment" @cancelComment="handleUserCancelComment" :key="cajaComentarioKey" ref="cajaComentario"/>
             </AccordionContent>
         </AccordionPanel>
     </Accordion>
@@ -26,10 +32,10 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    showCommentBox: {
-        type: String,
-        default: '0',
-    },
+    // showCommentBox: {
+    //     type: String,
+    //     default: '0',
+    // },
     comentariosIniciales:{
         type: Object,
         required: true,
@@ -42,11 +48,20 @@ const comentarios = ref([])
 const newestCommentDate = computed(() => comentarios.value.length > 0 ? comentarios.value[comentarios.value.length-1].createdAt : null)
 const oldestCommentDate = computed(() => comentarios.value.length > 0 ? comentarios.value[0].createdAt : null)
 
+const showCommentBox = ref("0")
+
 const cajaComentarioKey = ref(0)
 const fetchingComentarios = ref(false)
 const cajaComentario = ref(null)
 
 const emit = defineEmits(['userPosted'])
+
+const ToggleNewComment = () => {
+    showCommentBox.value = showCommentBox.value == '0' ? '1' : '0';
+}
+const HideCommentbox = () => {
+    showCommentBox.value = '0';
+}
 
 comentarios.value = props.comentariosIniciales.docs;
 hasNextPage.value = props.comentariosIniciales.hasNextPage;
@@ -133,4 +148,6 @@ const handleUserCancelComment = () => {
 const EliminarComentario = (id) => {
     comentarios.value = comentarios.value.filter(comentario => comentario.id != id)  
 }
+
+defineExpose({ ToggleNewComment, HideCommentbox })
 </script>

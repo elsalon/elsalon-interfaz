@@ -174,11 +174,11 @@ form label{
   }
 }
 
-.despues-entrada > .actions{
+.actions{
   @apply flex flex-row items-center justify-start;  
 }
 
-.despues-entrada > .actions > button:first-child{
+.actions > button:first-child{
   @apply pl-0;
 }
 .panelComentario > div{
