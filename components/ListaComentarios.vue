@@ -77,15 +77,18 @@ function setComentarioRef(el, id) {
 
 const fetchComentarios = async () => {
     fetchingComentarios.value = true
-    const query = {
+    let query = {
         where: {
             and: [
                 {entrada: {equals: props.entradaId}},
-                {createdAt: {less_than: oldestCommentDate.value}}
             ]
         },
         sort: '-createdAt',
         limit: 3,
+    }
+    // Si ya hay comentarios, fetch los anterior al mas viejo de la lista
+    if(oldestCommentDate.value){
+        query.where.and.push({createdAt: {less_than: oldestCommentDate.value}})
     }
     console.log("Fetch comentarios", query)
     const queryParams = qs.stringify(query, { encode: false });
