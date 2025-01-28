@@ -76,7 +76,6 @@ const Publicar = async () => {
         etiquetas,
         embedsYoutube, 
         embedsVimeo,
-        _status: "published"
 	}
 	// console.log("body", html, imagenes)	
 	let endpoint = '/api/entradas'
