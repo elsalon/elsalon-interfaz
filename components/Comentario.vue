@@ -1,5 +1,5 @@
 <template>
-    <Panel :toggleable="false" class="mb-3 border-surface-0 background-red text-sm group/comentario panelComentario">
+    <Panel :toggleable="false" class="mb-3 border-surface-0 text-sm group/comentario panelComentario transition-all duration-500 ease-in-out" :class="{'opacity-30': loading, 'bg-orange-50': resaltar}" ref="comentarioDom">
         <template #header>
             <NuxtLink :to="identidadUrl">
                 <div class="flex items-center gap-2">
@@ -11,7 +11,7 @@
         </template>
 
         <template #icons v-if="opcionesComment.length">
-            <Button text @click="ToggleCommentOptions" class="invisible group-hover/comentario:visible">...</Button>
+            <Button text @click="ToggleCommentOptions" class="md:invisible group-hover/comentario:visible">...</Button>
             <Menu :ref="el => menuCommentRefs[comentario.id] = el" id="overlay_menu_comment" :model="opcionesComment"
                 :popup="true" class="text-xs" />
         </template>
@@ -38,10 +38,14 @@ const props = defineProps({
         required: true,
     },
 });
+
+const comentarioDom = ref(); 
+const resaltar = ref(false)
 const { comentario } = props;
 const archivos = ref(comentario.archivos)
 const emit = defineEmits(['eliminar']);
 
+const loading = ref(false);
 const contenidoRender = ref()
 // const comentario = ref(props.comentario)
 const commentEdit = ref(null)
@@ -98,15 +102,26 @@ const handleUserEditedComment = async (doc) => {
     comentario.value = doc
     archivos.value = doc.archivos
     contenidoRender.value.ReloadContent(doc);
+    ResaltarComentario();
 }
+
+const ResaltarComentario = () => {
+    console.log('Resaltar comentario');
+    resaltar.value = true;
+    setTimeout(() => {
+        resaltar.value = false;
+    }, 3000);
+}
+
 const handleUserCancelComment = () => {
     console.log('User canceled edit comment');
     editandoComentario.value = false;
 }
 
 const EliminarComentario = async () => {
-    console.log('Eliminar entrada');
+    console.log('Eliminar comentario');
     try {
+        loading.value = true;
         const response = await useAPI(`/api/comentarios/${comentario.id}`, { method: 'DELETE' });
         console.log("Comentario eliminado:", response)
         emit('eliminar');
@@ -114,6 +129,9 @@ const EliminarComentario = async () => {
     } catch (e) {
         console.warn(e);
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el comentario', life: 3000 });
+        loading.value = false;
     }
 }
+
+defineExpose({ ResaltarComentario });
 </script>

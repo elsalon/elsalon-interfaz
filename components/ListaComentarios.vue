@@ -5,7 +5,7 @@
         </button>
         <div v-if="fetchingComentarios" class="my-1 w-full text-center text-gray-500 p-1 text-sm">Cargando comentarios...</div>
 
-        <Comentario v-for="comentario in comentarios" :comentario="comentario" :key="comentario.id"  @eliminar="EliminarComentario(comentario.id)" />
+        <Comentario v-for="comentario in comentarios" :comentario="comentario" :key="comentario.id"  @eliminar="EliminarComentario(comentario.id)" :ref="(el) => setComentarioRef(el, comentario.id)" />
         
         <Accordion :value="showCommentBox">
             <AccordionPanel value="1">
@@ -18,6 +18,7 @@
   </template>
   
 <script setup>
+import qs from 'qs';
 import CajaComentario from './CajaComentario.vue';
 
 const props = defineProps({
@@ -34,13 +35,12 @@ const props = defineProps({
         required: true,
     }
 })
-const page = ref(2)
 const hasNextPage = ref(false)
 const comentariosRestantes = ref(0)
 const comentarios = ref([])
 // computed property newestCommentDate
 const newestCommentDate = computed(() => comentarios.value.length > 0 ? comentarios.value[comentarios.value.length-1].createdAt : null)
-
+const oldestCommentDate = computed(() => comentarios.value.length > 0 ? comentarios.value[0].createdAt : null)
 
 const cajaComentarioKey = ref(0)
 const fetchingComentarios = ref(false)
@@ -52,44 +52,61 @@ comentarios.value = props.comentariosIniciales.docs;
 hasNextPage.value = props.comentariosIniciales.hasNextPage;
 comentariosRestantes.value = props.comentariosIniciales.totalDocs - comentarios.value.length
 
+const comentarioRefs = ref({});
+
+function setComentarioRef(el, id) {
+  if (el) {
+    comentarioRefs.value[id] = el;
+  }
+}
 
 const fetchComentarios = async () => {
     fetchingComentarios.value = true
-    console.log("Fetch comentarios", page.value)
-    const res = await useAPI(`/api/comentarios`, {
-        params: {
-            "where[entrada][equals]": props.entradaId,
-            sort: '-createdAt',
-            limit: 3,
-            page: page.value
-        }
-    })
+    const query = {
+        where: {
+            and: [
+                {entrada: {equals: props.entradaId}},
+                {createdAt: {less_than: oldestCommentDate.value}}
+            ]
+        },
+        sort: '-createdAt',
+        limit: 3,
+    }
+    console.log("Fetch comentarios", query)
+    const queryParams = qs.stringify(query, { encode: false });
+    const res = await useAPI(`/api/comentarios?${queryParams}`)
+
     var newComments = res.docs.filter(newComment => 
         !comentarios.value.some(existingComment => existingComment.id === newComment.id)
     )
     newComments = newComments.reverse()
     comentarios.value = [...newComments, ...comentarios.value]
-    if(res.totalDocs > 0){
-        hasNextPage.value = res.totalDocs > comentarios.value.length
-        comentariosRestantes.value = res.totalDocs - comentarios.value.length
-        page.value++
-    }
+    hasNextPage.value = res.hasNextPage;
+    comentariosRestantes.value = res.totalDocs - res.docs.length
     
-    if (comentarios.value.length > 0 && !newestCommentDate.value) {
-        newestCommentDate.value = comentarios.value[0].createdAt
-    }
     fetchingComentarios.value = false
 }
 
 const fetchNewerComments = async () => {
     // Si no hay comentarios, fetch el primer set de comentarios
     if (!newestCommentDate.value) {
+        console.log("No hay comentarios, fetchComentarios")
         await fetchComentarios()
         return
     }
     fetchingComentarios.value = true
-    console.log("Fetwching newer than", newestCommentDate.value)
-    const res = await useAPI(`/api/comentarios?where[entrada][equals]=${props.entradaId}&where[createdAt][greater_than]=${newestCommentDate.value}&sort=createdAt`)
+    console.log("Fetwching nwer than", newestCommentDate.value)
+    const query = {
+        where: {
+            and: [
+                {entrada: {equals: props.entradaId}},
+                {createdAt: {greater_than: newestCommentDate.value}}
+            ]
+        },
+        sort: 'createdAt',
+    }
+    const queryParams = qs.stringify(query, { encode: false });
+    const res = await useAPI(`/api/comentarios?${queryParams}`)
     const newComments = res.docs.filter(newComment => !comentarios.value.some(existingComment => existingComment.id === newComment.id))
     comentarios.value = [...comentarios.value, ...newComments]
     
@@ -99,11 +116,13 @@ const fetchNewerComments = async () => {
     fetchingComentarios.value = false
 }
 
-const handleUserPostedComment = async () => {
-    console.log('User posted comment')
+const handleUserPostedComment = async (comentario) => {
+    console.log('User posted comment', comentario)
     await fetchNewerComments()
     emit('userPosted'); // lo vuelvo a emitir a "Entrada" para que cierre el accordion
     cajaComentario.value.ClearEditor();
+
+    comentarioRefs.value[comentario.id].ResaltarComentario();
 }
 
 const handleUserCancelComment = () => {

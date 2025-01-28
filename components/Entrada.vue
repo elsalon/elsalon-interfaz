@@ -196,6 +196,7 @@ const EliminarEntrada = async () => {
     } catch (e) {
         console.warn(e);
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la entrada', life: 3000 });
+        loading.value = false;
     }
 }
 
