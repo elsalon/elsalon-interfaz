@@ -62,7 +62,6 @@ const handleSubmit = async () => {
   } catch (error) {
     console.error('Login failed:', error)
     toast.add({ severity: 'error', summary: 'Error', detail: 'Usuario o contraseña incorrectas', life: 3000});
-  } finally{
     loading.value = false
   }
 }
