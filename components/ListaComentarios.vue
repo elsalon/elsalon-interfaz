@@ -16,7 +16,7 @@
         <Accordion :value="showCommentBox">
             <AccordionPanel value="1">
                 <AccordionContent>
-                <CajaComentario v-if="showCommentBox" :entradaId="entradaId" @userPosted="handleUserPostedComment" @cancelComment="handleUserCancelComment" :key="cajaComentarioKey" ref="cajaComentario"/>
+                <CajaComentario v-if="showCommentBox == '1'" :entradaId="entradaId" @userPosted="handleUserPostedComment" @cancelComment="handleUserCancelComment" :key="cajaComentarioKey" ref="cajaComentario"/>
             </AccordionContent>
         </AccordionPanel>
     </Accordion>

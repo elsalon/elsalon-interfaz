@@ -26,7 +26,7 @@
             
                 <div class="actions">
                     <Button v-show="isLast" link class="my-2 text-xs text-surface-500" label="Comentar" @click="ToggleComment"  />
-                    <Aprecio :contenidoid="comentario.id" contenidotipo="comentario" />
+                    <Aprecio :contenidoid="comentario.id" contenidotipo="comentario":aprecioIniciales="comentario.aprecios" />
                 </div>
         </DeferredContent>
     </Panel>
