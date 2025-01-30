@@ -39,9 +39,9 @@ const handleImageClick = (imgSrc) => {
     galleryPswp.init();
 }
 
+contenidoRendereado.value = useRenderSalonHtml(props.contenido);
 
 onMounted(() => {
-    contenidoRendereado.value = useRenderSalonHtml(props.contenido);
     
     if (props.contenido.imagenes.length == 0) return;
     const dataSource = props.contenido.imagenes.map(img => {
