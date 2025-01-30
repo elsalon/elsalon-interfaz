@@ -1,5 +1,6 @@
 <template>
-    <div class="group/entrada transition-all duration-500 ease-in-out"  :class="{ entradaNueva: entrada.nueva, 'opacity-30': loading, 'bg-orange-50': resaltar  }" ref="entradaDom" >
+    <div class="group/entrada transition-all duration-500 ease-in-out"
+        :class="{ entradaNueva: entrada.nueva, 'opacity-30': loading, 'bg-orange-50': resaltar }" ref="entradaDom">
         <article>
             <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
             <div class="flex pb-2">
@@ -13,9 +14,12 @@
                         <h2 class="font-bold text-gray-700" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
-                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline" :to="`/salones/${entrada.sala.slug}`">{{entrada.sala.nombre }}</NuxtLink>
-                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline" :to="identidadUrl">Bitácora</NuxtLink>
-                        <NuxtLink class="text-gray-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">{{ $formatDate(entrada.createdAt) }}</NuxtLink>
+                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline"
+                            :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
+                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline" :to="identidadUrl">Bitácora
+                        </NuxtLink>
+                        <NuxtLink class="text-gray-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">{{
+            $formatDate(entrada.createdAt) }}</NuxtLink>
                         <!-- Entrada Fijada -->
                         <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"
                             title="Entrada Fijada"></i>
@@ -46,16 +50,12 @@
             <!-- Comentarios -->
             <div class="actions">
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
-                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 text-xs text-surface-500" label="Comentar" @click="ToggleCommentBox"  />
-                <Aprecio :contenidoid="entrada.id" contenidotipo="entrada"
-                    :aprecioIniciales="entrada.aprecios" />
+                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 text-xs text-surface-500"
+                    label="Comentar" @click="ToggleCommentBox" />
+                <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
             </div>
-            <ListaComentarios 
-                :entradaId="entrada.id"
-                :comentariosIniciales="entrada.comentarios"
-                :showCommentBox="showCommentBox" 
-                @userPosted="UserCommented"
-                ref="listaComentarios" />
+            <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
+                :showCommentBox="showCommentBox" @userPosted="UserCommented" ref="listaComentarios" />
         </div>
     </div>
 
@@ -64,6 +64,9 @@
 </template>
 
 <script setup>
+import { useConfirm } from "primevue/useconfirm";
+const confirm = useConfirm();
+
 const salonStore = useSalonStore()
 const { hooks } = useNuxtApp();
 const toast = useToast();
@@ -196,11 +199,28 @@ const archivos = ref(entrada.archivos)
 
 const EliminarEntrada = async () => {
     try {
-        loading.value = true;
-        const response = await useAPI(`/api/entradas/${entrada.id}`, { method: 'DELETE' });
-        console.log("Entrada eliminada:", response)
-        emit('eliminar');
-        toast.add({ severity: 'contrast', detail: 'Entrada eliminada', life: 3000 });
+        confirm.require({
+            message: 'Estás seguro de borrar esta entrada?',
+            header: 'Borrar entrada',
+            rejectProps: {
+                label: 'Cancelar',
+                severity: 'secondary',
+                outlined: true
+            },
+            acceptProps: {
+                label: 'Borrar'
+            },
+            reject: () => {
+                console.log('Borrar entrada cancelada');
+            },
+            accept: async () => {
+                loading.value = true;
+                const response = await useAPI(`/api/entradas/${entrada.id}`, { method: 'DELETE' });
+                console.log("Entrada eliminada:", response)
+                emit('eliminar');
+                toast.add({ severity: 'contrast', detail: 'Entrada borrada', life: 3000 });
+            },
+        });
     } catch (e) {
         console.warn(e);
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar la entrada', life: 3000 });

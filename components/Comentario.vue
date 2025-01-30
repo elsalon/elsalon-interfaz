@@ -1,11 +1,13 @@
 <template>
-    <Panel :toggleable="false" class="mb-3 border-surface-0 text-sm group/comentario panelComentario transition-all duration-500 ease-in-out" :class="{'opacity-30': loading, 'bg-orange-50': resaltar}" ref="comentarioDom">
+    <Panel :toggleable="false"
+        class="mb-3 border-surface-0 text-sm group/comentario panelComentario transition-all duration-500 ease-in-out"
+        :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" ref="comentarioDom">
         <template #header>
             <NuxtLink :to="identidadUrl">
                 <div class="flex items-center gap-2">
                     <AvatarSalon :usuario="identidad" size="small" :title="tituloIdentidad" />
                     <span class="font-bold" :title="tituloIdentidad">{{ identidad.nombre }}</span>
-                    <span class="text-gray-300 text-xs" >{{ $formatDate(comentario.createdAt) }}</span>
+                    <span class="text-gray-300 text-xs">{{ $formatDate(comentario.createdAt) }}</span>
                 </div>
             </NuxtLink>
         </template>
@@ -16,23 +18,28 @@
                 :popup="true" class="text-xs" />
         </template>
 
+        <div v-show="!editandoComentario" class="prose prose-sm prose-headings:my-1 leading-none break-words">
+            <ContenidoRendereado ref="contenidoRender" :contenido="comentario" />
+        </div>
+
+        <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos" />
         <DeferredContent>
-            <div v-show="!editandoComentario" class="prose prose-sm prose-headings:my-1 leading-none break-words">
-                <ContenidoRendereado ref="contenidoRender" :contenido="comentario" />
-            </div>
-            <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos" />
-            <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit"
-                @userPosted="handleUserEditedComment" @cancelComment="handleUserCancelComment" />
-            
-                <div class="actions">
-                    <Button v-show="isLast" link class="my-2 text-xs text-surface-500" label="Comentar" @click="ToggleComment"  />
-                    <Aprecio :contenidoid="comentario.id" contenidotipo="comentario":aprecioIniciales="comentario.aprecios" />
-                </div>
+        <CajaComentario v-if="editandoComentario" :commentEdit="commentEdit" @userPosted="handleUserEditedComment"
+            @cancelComment="handleUserCancelComment" />
         </DeferredContent>
+
+        <div class="actions">
+            <Button v-show="isLast" link class="my-2 text-xs text-surface-500" label="Comentar"
+                @click="ToggleComment" />
+            <Aprecio :contenidoid="comentario.id" contenidotipo="comentario"
+                :aprecioIniciales="comentario.aprecios" />
+        </div>
     </Panel>
 </template>
 
 <script setup>
+import { useConfirm } from "primevue/useconfirm";
+const confirm = useConfirm();
 const toast = useToast();
 const { $formatDate } = useNuxtApp()
 const { data: authData } = useAuth()
@@ -47,7 +54,7 @@ const props = defineProps({
     }
 });
 
-const comentarioDom = ref(); 
+const comentarioDom = ref();
 const resaltar = ref(false)
 const { comentario } = props;
 const archivos = ref(comentario.archivos)
@@ -68,7 +75,7 @@ identidad.value = comentario.autoriaGrupal ? comentario.grupo : comentario.autor
 tituloIdentidad.value = comentario.autoriaGrupal ? comentario.grupo.integrantes.map(x => x.nombre).join(", ") : comentario.autor.nombre;
 identidadUrl.value = comentario.autoriaGrupal ? `/grupos/${identidad.value.slug}` : `/usuarios/${identidad.value.slug}`;
 
-const ToggleComment = () => { emit('toggleCommentBox');}
+const ToggleComment = () => { emit('toggleCommentBox'); }
 const UsuarioTieneAutoridad = () => {
     if (comentario.autoriaGrupal) {
         return comentario.grupo?.integrantes.find(i => i.id == authData.value.user.id)
@@ -128,13 +135,29 @@ const handleUserCancelComment = () => {
 }
 
 const EliminarComentario = async () => {
-    console.log('Eliminar comentario');
     try {
-        loading.value = true;
-        const response = await useAPI(`/api/comentarios/${comentario.id}`, { method: 'DELETE' });
-        console.log("Comentario eliminado:", response)
-        emit('eliminar');
-        toast.add({ severity: 'contrast', detail: 'Comentario eliminado', life: 3000 });
+        confirm.require({
+            message: 'Estás seguro de borrar este comentario?',
+            header: 'Borrar comentario',
+            rejectProps: {
+                label: 'Cancelar',
+                severity: 'secondary',
+                outlined: true
+            },
+            acceptProps: {
+                label: 'Borrar'
+            },
+            reject: () => {
+                console.log('Borrar comentario cancelada');
+            },
+            accept: async () => {
+                loading.value = true;
+                const response = await useAPI(`/api/comentarios/${comentario.id}`, { method: 'DELETE' });
+                console.log("Comentario eliminado:", response)
+                emit('eliminar');
+                toast.add({ severity: 'contrast', detail: 'Comentario borrado', life: 3000 });
+            },
+        });
     } catch (e) {
         console.warn(e);
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el comentario', life: 3000 });

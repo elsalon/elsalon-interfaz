@@ -5,10 +5,12 @@
         <!-- Btn Cantidad -->
         <span v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs text-surface-500" :class="{'opacity-30':fetching}" >(0)</span>
         
-        <Button v-show="totalDocs>0" :title="userNamesTooltip" link class="my-2 text-xs text-surface-500" :class="{'opacity-30':fetching}" style="padding: 0" :label="`(${totalDocs})`" @click="handleAprecioClicked" />
+        <Button v-show="totalDocs>0" :title="userNamesTooltip" link class="my-2 text-xs text-surface-500" :class="{'opacity-30':fetching}" style="padding: 0" :label="`(${totalDocs})`" @click="mostrarTodosAprecios=true" />
         
             <!-- {{ aprecioIniciales }} -->
-        
+        <Dialog v-model:visible="mostrarTodosAprecios" modal header="Aprecios" :style="{ width: '25rem' }">
+            hola
+        </Dialog>
         <!-- tooltipText -->
         <!-- <div  v-if="totalDocs > 0" class="absolute bottom-7 z-50 left-0 bg-surface-0 border text-sm text-slate-400 border-surface-200 border-solid p-2 invisible group-hover/aprecio:visible" > -->
             <!-- <template v-for="aprecio in docs">
@@ -45,16 +47,7 @@ const totalDocs = ref(props.aprecioIniciales.totalDocs || 0);
 const haApreciado = ref(false);
 const haApreciadoId = ref(null);
 
-// watch(
-//     () => props.aprecioIniciales,
-//     () => {
-//         console.log(props.aprecioIniciales)
-//       totalDocs.value = props.aprecioIniciales.totalDocs;
-//       haApreciado.value = props.aprecioIniciales.haApreciado;
-//       docs.value = props.aprecioIniciales.docs;
-//       fetching.value = false;
-//   }
-// )
+const mostrarTodosAprecios = ref(false);
 
 const CheckUserHaApreciado = () => {
     haApreciadoId.value = docs.value?.find(doc => doc.autor.id == authData.value.user.id);

@@ -64,6 +64,7 @@ let OnCreateEntryHook = null;
 
 // Fetch inicial de entradas
 const queryParams = qs.stringify({
+  populate: 'entradas,comentarios', // custom query param
   depth: 2,
   sort: '-createdAt',
   ...props.query,
@@ -76,14 +77,16 @@ hasNextPage.value = entradas.value.hasNextPage;
 
 if(!props.saltearFijadas){
   const cacheKey = `${props.cacheKey}:fijadas`;
-  const { data: entradasFijadasRes } = await useAsyncData(cacheKey, () => useAPI('/api/fijadas', {
-    params: {
-      depth: 4,
-      "where[contexto][equals]=": SalonStore.contextoId,
-      sort: '-createdAt',
-      limit: 10
+  const queryParams = qs.stringify({
+    populate: 'entradas,comentarios', // custom query param
+    depth: 4,
+    sort: '-createdAt',
+    limit: 10,
+    where: {
+      "contexto": { equals: SalonStore.contextoId }
     }
-  }))
+  }, { encode: false })
+  const { data: entradasFijadasRes } = await useAsyncData(cacheKey, () => useAPI(`/api/fijadas?${queryParams}` ))
   idsEntradasFijadas.value = [];
   entradasFijadasRes.value.docs.forEach(item => {
     if (item.entrada.id != undefined){
@@ -133,6 +136,7 @@ const fetchNextItems = async () => {
       baseQuery.where = createdAtCondition;
     }
   }
+  baseQuery.populate = 'entradas,comentarios'; // custom query param
 
   const queryParams = qs.stringify(baseQuery, { encode: false });
 
@@ -178,6 +182,7 @@ const FetchNewerFromDate = async (date) => {
   }
     
   let newerItemsQuery = {  
+    populate: 'entradas,comentarios', // custom query param
     depth: 2,
     sort: '-createdAt',
     createdGreaterThan: date, // Para feed de El Salon que no tiene query nativo de payloadcms 
