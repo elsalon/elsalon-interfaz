@@ -20,7 +20,8 @@ const contenidoRendereado = ref(null);
 
 const ReloadContent = async (entrada) => {
     console.log("ReloadContent", entrada)
-    contenidoRendereado.value = useRenderSalonHtml(entrada)   
+    contenidoRendereado.value = useRenderSalonHtml(entrada)
+    LoadGallery(entrada);
 }
 
 const onContenidoClicked = (event) => {
@@ -41,10 +42,9 @@ const handleImageClick = (imgSrc) => {
 
 contenidoRendereado.value = useRenderSalonHtml(props.contenido);
 
-onMounted(() => {
-    
-    if (props.contenido.imagenes.length == 0) return;
-    const dataSource = props.contenido.imagenes.map(img => {
+const LoadGallery = (contenido) => {
+    if (contenido.imagenes.length == 0) return;
+    const dataSource = contenido.imagenes.map(img => {
         return {
             src: img.imagen.url,
             w: img.imagen.width,
@@ -60,7 +60,11 @@ onMounted(() => {
         secondaryZoomLevel: 1.5,
         maxZoomLevel: 4,
     };
-    galleryOptions.index = 0; // defines start slide index        
+    galleryOptions.index = 0; // defines start slide index       
+}
+
+onMounted(() => {
+    LoadGallery(props.contenido);
 });
 
 
