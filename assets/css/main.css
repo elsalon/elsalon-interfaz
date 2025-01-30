@@ -101,6 +101,10 @@
 }
 .prose img{
   @apply w-full;
+  @media (min-width: 640px) {
+    max-height: 50vh;
+    object-fit: contain;
+  }
 }
 .prose img:hover{
   @apply cursor-zoom-in;
