@@ -23,7 +23,7 @@
             </NuxtLink>
         </div>
 
-        <BtnColaborar v-if="!userIsMe"/>
+        <BtnColaborar class="mb-5" v-if="!userIsMe"/>
         
         <CrearEntradaBtn v-if="userIsMe" />
         <ListaEntradas :query="query" :cacheKey="cacheKey"/>

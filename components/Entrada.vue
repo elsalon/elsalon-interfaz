@@ -48,7 +48,7 @@
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
                 <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 text-xs text-surface-500" label="Comentar" @click="ToggleCommentBox"  />
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada"
-                    :aprecioIniciales="entrada.aprecioIniciales" />
+                    :aprecioIniciales="entrada.aprecios" />
             </div>
             <ListaComentarios 
                 :entradaId="entrada.id"
