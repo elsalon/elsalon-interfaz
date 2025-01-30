@@ -152,5 +152,5 @@ const EliminarComentario = (id) => {
     comentarios.value = comentarios.value.filter(comentario => comentario.id != id)  
 }
 
-defineExpose({ ToggleNewComment, HideCommentbox })
+defineExpose({ ToggleNewComment, HideCommentbox, comentarios })
 </script>
