@@ -25,6 +25,9 @@
         ¿No tenés usuario?
         <a href="/registrar" class="font-semibold leading-6 text-surface-600 hover:text-surface-500" tabindex="4">Registrate</a>
       </p>
+
+      <Message v-if="mostrarAvisoRecuperar" severity="secondary" class="mt-6">Si ya tenías una cuenta en elsalon.org tenés que <a href="/olvide" class="link">recuperar tu contraseña</a></Message>
+
   </NuxtLayout>
  
 </template>
@@ -48,6 +51,7 @@ import { useToast } from "primevue/usetoast";
 const email = ref('')
 const password = ref('')
 const loading = ref(false)
+const mostrarAvisoRecuperar = ref(false)
 const { signIn } = useAuth()
 
 const handleSubmit = async () => {
@@ -65,4 +69,8 @@ const handleSubmit = async () => {
     loading.value = false
   }
 }
+
+ onMounted(() => {
+  mostrarAvisoRecuperar.value = location.origin == 'https://elsalon.org'
+})
 </script>
