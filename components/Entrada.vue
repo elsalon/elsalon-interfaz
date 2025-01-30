@@ -173,13 +173,16 @@ import Button from 'primevue/button';
 const opcionFijar = {
     label: !entrada.fijada ? 'Fijar' : 'Quitar Fijado',
     command: async () => {
+        loading.value = true;
         if (entrada.fijada) {
             // TODO Dialog de confirmacion
             await useAPI(`/api/fijadas/${entrada.fijada}`, { method: 'DELETE' });
             toast.add({ summary: 'Entrada desfijada', severity: 'contrast', life: 3000 });
+            useNuxtApp().callHook("entrada:desfijada", { entrada });
         } else {
             useNuxtApp().callHook("entrada:fijar", { entrada }); // Este hook llama al componente FijarEntrada
         }
+        loading.value = false;
     }
 }
 if (puedeFijar) {

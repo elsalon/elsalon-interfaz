@@ -49,6 +49,7 @@ const Fijar = async () => {
     const res = await useAPI(`/api/fijadas`, {body, method});
     if (res.doc.id) {
         toast.add({summary:'Entrada fijada', severity: 'contrast', life: 3000});
+        useNuxtApp().callHook("entrada:fijada", { entrada:entrada.value, fijada: res.doc });
     } else {
         toast.add({summary:'Error al fijar entrada', severity: 'error', life: 3000});
     }

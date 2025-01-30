@@ -61,6 +61,8 @@ function setEntradaRef(el, id) {
 // Hooks
 const { hooks } = useNuxtApp()
 let OnCreateEntryHook = null;
+let OnEntradaFijadaHook = null;
+let OnEntradaDesfijadaHook = null;
 
 // Fetch inicial de entradas
 const queryParams = qs.stringify({
@@ -229,9 +231,22 @@ onMounted(() => {
   if (observerTarget.value) {
     observer.observe(observerTarget.value)
   }
-  console.log("lista de entradas", listaEntradas.value)
+  // console.log("lista de entradas", listaEntradas.value)
 
   OnCreateEntryHook = hooks.hook('publicacion:creada', handlePublicacionCreada)
+  OnEntradaFijadaHook = hooks.hook('entrada:fijada', ({entrada, fijada}) => {
+    entrada.fijada = fijada.id
+    idsEntradasFijadas.value.push(entrada.id)
+    entradasFijadas.value.unshift(entrada)
+    nextTick(() => {
+      entradaRefs.value[entrada.id].ResaltarEntrada();
+    })
+  })
+  OnEntradaDesfijadaHook = hooks.hook('entrada:desfijada', ({entrada, fijada}) => {
+    entrada.fijada = null
+    idsEntradasFijadas.value = idsEntradasFijadas.value.filter(id => id !== entrada.id)
+    entradasFijadas.value = entradasFijadas.value.filter(item => item.id !== entrada.id)
+  })
 })
 
 // Clean up
@@ -240,6 +255,7 @@ onUnmounted(() => {
     observer.disconnect()
   }
   if (OnCreateEntryHook) OnCreateEntryHook()
+  if(OnEntradaFijadaHook) OnEntradaFijadaHook()
 })
 
 </script>
