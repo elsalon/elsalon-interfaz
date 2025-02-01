@@ -57,7 +57,7 @@
             </div>
         </nav>
     </header>
-    <main class="container mx-auto">
+    <main class="small-container">
         <slot />
     </main>
     <NotificacionesDialog v-model:visible="notificacionesVisible" ref="notificacionesDialog" />

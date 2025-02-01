@@ -60,6 +60,10 @@
   }
 }
 
+.small-container{
+  max-width: 640px;
+  @apply px-4 md:px-0 mx-auto;
+}
 
 .focus\:ring-surface-500:focus{
   --tw-ring-opacity: 0 !important;

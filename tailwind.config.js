@@ -30,13 +30,13 @@ module.exports = {
     container:{
       center: true,
       padding: '1rem',
-      screens: {
-        sm: "640px",
-        md: "640px",
-        lg: "640px",
-        xl: "640px",
-        "2xl": "640px",
-      }
+      // screens: {
+      //   sm: "640px",
+      //   md: "640px",
+      //   lg: "640px",
+      //   xl: "640px",
+      //   "2xl": "640px",
+      // }
     }
   },
   plugins: [
