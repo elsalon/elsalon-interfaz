@@ -11,7 +11,7 @@
                 <div class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-words">
                     <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
                 </div>
-                <div class="sm:pl-[65px]" v-if="entrada.archivos.length">
+                <div v-if="entrada.archivos.length">
                     <ListaArchivos :archivos="entrada.archivos" />
                 </div>
             </div>
