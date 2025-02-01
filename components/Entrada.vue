@@ -53,6 +53,23 @@ const CopiarLink = () => {
     toast.add({ severity: 'contrast', detail: 'Link copiado', life: 3000 });
 }
 
+const DestacarEntrada = async () => {
+    loading.value = true;
+    try{
+        const body = { destacada: !entrada.destacada };
+        const res = await useAPI(`/api/entradas/${props.entrada.id}`, { body, method: "PATCH" });
+        const destacada = res.doc.destacada;
+        const message = destacada ? 'Entrada destacada' : 'Destacado eliminado';
+        entrada.destacada = destacada;
+        toast.add({ severity: 'contrast', detail: message, life: 3000 });
+    }catch(e){
+        console.warn(e);
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error destacando la entrada', life: 3000 });
+    }finally{
+        loading.value = false;
+    }
+}
+
 const FijarEntrada = async () => {
         loading.value = true;
         if (props.entrada.fijada) {
@@ -145,6 +162,7 @@ defineExpose({ ResaltarEntrada });
         :EliminarEntrada="EliminarEntrada"
         :FijarEntrada="FijarEntrada"
         :CopiarLink="CopiarLink"
+        :DestacarEntrada="DestacarEntrada"
         :resaltar="resaltar"
         />
 </template>

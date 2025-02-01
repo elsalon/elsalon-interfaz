@@ -82,6 +82,7 @@ const props = defineProps({
     EliminarEntrada: Function,
     FijarEntrada: Function,
     UserCommented: Function,
+    DestacarEntrada: Function,
     // Refs
     UsuarioTieneAutoridad: Boolean,
     usuarioEsAdminODocente: Boolean,
@@ -162,11 +163,7 @@ if (puedeFijar) {
 // DESTACAR
 const opcionDestacar = {
     label: !props.entrada.destacada ? 'Destacar en El Salón' : 'Quitar destacado en El Salón',
-    command: async () => {
-        const body = { destacada: !props.entrada.destacada };
-        await useAPI(`/api/entradas/${props.entrada.id}`, { body, method: "PATCH" });
-        useNuxtApp().callHook("publicacion:fijada");
-    }
+    command: async () => props.DestacarEntrada()
 }
 if (props.usuarioEsAdminODocente) {
     opcionesArticulo.value = [...opcionesArticulo.value, opcionDestacar];
