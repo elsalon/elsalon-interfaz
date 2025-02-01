@@ -1,15 +1,14 @@
 <template>
-    
     <template v-if="salonStore.gruposDelUsuarioFetching">
         <div class="my-4 text-center text-gray-500 text-sm">Cargando...</div>
     </template>
     <template v-else-if="salonStore.gruposDelUsuario.length">
-        <Button label="Nuevo grupo" @click="visible=true" class="mb-10"/>
+        <Button label="Nuevo grupo" @click="AbrirModalNuevoGrupo()" class="mb-10"/>
     </template>
     <template v-else>
         <div class="text-center mt-10">
             <p class="my-10 text-gray-500">Podés crear grupos de trabajo con tus compañerxs para postear colectivamente y compartir una bitácora de progeso</p>
-            <Button label="Crear primer grupo" @click="visible=true" class="mb-10"/>
+            <Button label="Crear primer grupo" @click="AbrirModalNuevoGrupo()" class="mb-10"/>
         </div>
     </template>
     
@@ -30,7 +29,7 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <Button type="button" :loading="creandoNuevoGrupo" label="Cancelar" severity="secondary" @click="visible = false"></Button>
+                <Button type="button" :disabled="creandoNuevoGrupo" label="Cancelar" severity="secondary" @click="visible = false"></Button>
                 <Button type="submit" :loading="creandoNuevoGrupo" label="Crear"></Button>
             </div>
         </form>
@@ -40,17 +39,23 @@
 <script setup>
     const toast = useToast();
     import { useToast } from "primevue/usetoast";
-import salon from "~/primevue-presets/salon";
     const visible = ref(false);
     const {data: authData} = useAuth()
     const nuevoGrupo = ref({
         nombre: '',
         usuarios: []
     });
-    const fetching = ref(true)
+    
     const salonStore = useSalonStore();
     salonStore.SetPageTitle(`Grupos`)
     
+    const AbrirModalNuevoGrupo = () => {
+        nuevoGrupo.value = {
+            nombre: '',
+            usuarios: []
+        }
+        visible.value = true;
+    }
 
     const handleAbandonadoGrupo = (grupo) => {
         console.log('Abandonado grupo', grupo);
@@ -62,7 +67,7 @@ import salon from "~/primevue-presets/salon";
         salonStore.FetchGruposDelUsuario(true)
     }
 
-    salonStore.FetchGruposDelUsuario();
+    salonStore.FetchGruposDelUsuario(true);
 
     // LOGICA CREAR NUEVO GRUPO
     const creandoNuevoGrupo = ref(false);
@@ -87,7 +92,7 @@ import salon from "~/primevue-presets/salon";
             const method = 'POST';
             const res = await useAPI('/api/grupos', {body, method});
             console.log(res);
-            toast.add({severity: 'contrast', summary: 'Grupo creado', detail: 'El grupo se creó correctamente', life: 3000});
+            toast.add({severity: 'contrast', summary: 'Grupo creado', detail: 'Se creó un nuevo grupo', life: 3000});
         }catch(e){
             console.error(e);
             toast.add({severity: 'error', summary: 'Error', detail: 'No se pudo crear el grupo', life: 3000});

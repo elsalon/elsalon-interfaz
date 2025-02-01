@@ -132,6 +132,7 @@ const opcionesGrupo = ref([
     {
         label: 'Agregar integrantes',
         command: () => {
+            nuevosIntegrantes.value = [];
             agregarIntegrantesVisible.value = true;
         }
     },
