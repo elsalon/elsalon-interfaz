@@ -5,21 +5,20 @@
         <!-- Btn Cantidad -->
         <span v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs text-surface-500" :class="{'opacity-30':fetching}" >(0)</span>
         
-        <Button v-show="totalDocs>0" :title="userNamesTooltip" link class="my-2 text-xs text-surface-500" :class="{'opacity-30':fetching}" style="padding: 0" :label="`(${totalDocs})`" @click="mostrarTodosAprecios=true" />
+        <Button v-show="totalDocs>0" :title="userNamesTooltip" link class="my-2 text-xs text-surface-500" :class="{'opacity-30':fetching}" style="padding: 0" :label="`(${totalDocs})`" @click="AbrirTodosLosAprecios()" />
         
             <!-- {{ aprecioIniciales }} -->
-        <Dialog v-model:visible="mostrarTodosAprecios" modal header="Aprecios" :style="{ width: '25rem' }">
-            hola
+        <Dialog v-model:visible="mostrarTodosAprecios" modal header="Aprecian" :style="{ width: '25rem' }">
+            <template v-if="fetching" class="text-center">Cargando...</template>
+            <template v-else>
+                <div class="space-y-1">
+                    <div v-for="doc in docs" :key="doc.id" class="flex items-center">
+                        <AvatarSalon :usuario="doc.autor" />
+                        <NuxtLink :to="`/usuarios/${doc.autor.slug}`" class="ml-2">{{ doc.autor.nombre }}</NuxtLink>
+                    </div>
+                </div>
+            </template>
         </Dialog>
-        <!-- tooltipText -->
-        <!-- <div  v-if="totalDocs > 0" class="absolute bottom-7 z-50 left-0 bg-surface-0 border text-sm text-slate-400 border-surface-200 border-solid p-2 invisible group-hover/aprecio:visible" > -->
-            <!-- <template v-for="aprecio in docs">
-                <NuxtLink :to="`/usuarios/${aprecio.autor.slug}`">
-                    <div class="whitespace-nowrap hover:underline">{{aprecio.autor.nombre}}</div>
-                </NuxtLink>
-            </template> -->
-            <!-- <div v-if="totalDocs>docs.length">Y {{ totalDocs-docs.length }} más</div> -->
-        <!-- </div> -->
     </div>
 </template>
 
@@ -48,6 +47,7 @@ const haApreciado = ref(false);
 const haApreciadoId = ref(null);
 
 const mostrarTodosAprecios = ref(false);
+
 
 const CheckUserHaApreciado = () => {
     haApreciadoId.value = docs.value?.find(doc => doc.autor.id == authData.value.user.id);
@@ -94,22 +94,6 @@ const handleAprecioClicked = async () => {
     }
 }
 
-const FetchAprecio = async () => {
-    fetching.value = true;
-    try{
-        console.log('Fetching aprecio', props.contenidoid)
-        const res = await useAPI(`/api/aprecio/${props.contenidoid}`);
-        console.log(res)
-        docs.value = res.docs;
-        totalDocs.value = res.totalDocs;
-    }catch(e){
-        console.warn(e)
-    }finally{
-        CheckUserHaApreciado();
-        fetching.value = false;
-    }
-}
-
 // Computed
 const tooltipText = computed(() => {
     if(haApreciado.value){
@@ -130,5 +114,29 @@ const userNamesTooltip = computed(() => {
     txt += " aprecian esto";
     return txt;
 })
+
+const AbrirTodosLosAprecios = async () => {
+    mostrarTodosAprecios.value = true;
+    if(totalDocs.value != docs.value.length){
+        await FetchAllAprecios();
+    }
+}
+
+const FetchAllAprecios = async () => {
+    console.log("FetchAllAprecios")
+    fetching.value = true;
+    try{
+        console.log('Fetching aprecio', props.contenidoid)
+        const res = await useAPI(`/api/aprecio/${props.contenidoid}?limit=0`);
+        console.log(res)
+        docs.value = res.docs;
+        totalDocs.value = res.totalDocs;
+    }catch(e){
+        console.warn(e)
+    }finally{
+        CheckUserHaApreciado();
+        fetching.value = false;
+    }
+}
 
 </script>
