@@ -1,73 +1,20 @@
-<template>
-    <div class="group/entrada transition-all duration-500 ease-in-out"
-        :class="{ entradaNueva: entrada.nueva, 'opacity-30': loading, 'bg-orange-50': resaltar }" ref="entradaDom">
-        <article>
-            <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
-            <div class="flex pb-2">
-                <NuxtLink :to="identidadUrl">
-                    <AvatarSalon :usuario="identidad" :title="tituloIdentidad" />
-                </NuxtLink>
-
-                <!-- Metadata entrada -->
-                <div class="ml-4">
-                    <NuxtLink :to="identidadUrl" class="hover:underline">
-                        <h2 class="font-bold text-gray-700" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
-                    </NuxtLink>
-                    <div class="flex items-center">
-                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline"
-                            :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
-                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline" :to="identidadUrl">Bitácora
-                        </NuxtLink>
-                        <NuxtLink class="text-gray-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">{{
-            $formatDate(entrada.createdAt) }}</NuxtLink>
-                        <!-- Entrada Fijada -->
-                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"
-                            title="Entrada Fijada"></i>
-                        <!-- Entrada Destacada -->
-                        <i v-if="entrada.destacada" class="pi pi-star text-gray-400 ml-2" style="font-size: .7rem"
-                            title="Entrada Destacada"></i>
-                    </div>
-                </div>
-
-                <!-- Menú ajustes entrada -->
-                <div class="flex-grow md:invisible group-hover/entrada:visible text-right">
-                    <Button text @click="ToggleArticleOptions">...</Button>
-                    <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo"
-                        :popup="true" class="text-xs" />
-                </div>
-            </div>
-
-            <div
-                class="prose prose-headings:text-xl prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2 break-words">
-                <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
-            </div>
-            <div class="sm:pl-[65px]" v-if="archivos.length">
-                <ListaArchivos :archivos="archivos" />
-            </div>
-        </article>
-        <div class="despues-entrada sm:pl-[65px]">
-            <!-- <Divider /> -->
-            <!-- Comentarios -->
-            <div class="actions">
-                <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
-                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 text-xs text-surface-500"
-                    label="Comentar" @click="ToggleCommentBox" />
-                <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
-            </div>
-            <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
-                :showCommentBox="showCommentBox" @userPosted="UserCommented" ref="listaComentarios" />
-        </div>
-    </div>
-
-
-
-</template>
 
 <script setup>
+const entradaVariant = ref('default');
+const entradaRenderComponent = computed(() => {
+  if (typeof entradaVariant.value === 'string') {
+    return {
+      default: resolveComponent('EntradaDefault'),
+      library: resolveComponent('EntradaLibrary')
+    }[entradaVariant.value];
+  }
+  return entradaVariant.value;
+});
+
 import { useConfirm } from "primevue/useconfirm";
+import { useToast } from 'primevue/usetoast';
 const confirm = useConfirm();
 
-const salonStore = useSalonStore()
 const { hooks } = useNuxtApp();
 const toast = useToast();
 const { data: authData } = useAuth()
@@ -80,125 +27,44 @@ const props = defineProps({
 const entradaDom = ref();
 const resaltar = ref(false)
 const loading = ref(false);
-const contenidoRender = ref()
 const { entrada } = props;
 const emit = defineEmits(['eliminar']);
-const showCommentBox = ref('0');
-const listaComentarios = ref()
 
-const ToggleCommentBox = () => {
-    listaComentarios.value.ToggleNewComment();
-}
 
-const { $formatDate } = useNuxtApp()
-const identidad = ref();
-const identidadUrl = ref();
-const tituloIdentidad = ref("")
-const DefinirIdentidad = (doc = entrada) => {
-    identidad.value = doc.autoriaGrupal ? doc.grupo : doc.autor;
-    tituloIdentidad.value = doc.autoriaGrupal ? doc.grupo.integrantes.map(x => x.nombre).join(", ") : doc.autor.nombre;
-    identidadUrl.value = doc.autoriaGrupal ? `/grupos/${identidad.value.slug}` : `/usuarios/${identidad.value.slug}`;
-}
-DefinirIdentidad();
+const identidad = computed(() => {
+    return entrada.autoriaGrupal ? entrada.grupo : entrada.autor;
+})
+const tituloIdentidad = computed(() => {
+    return entrada.autoriaGrupal ? entrada.grupo.integrantes.map(x => x.nombre).join(", ") : entrada.autor.nombre;
+})
+const identidadUrl = computed(() => {
+    return entrada.autoriaGrupal ? `/grupos/${identidad.value.slug}` : `/usuarios/${identidad.value.slug}`;
+})
 
-const UsuarioTieneAutoridad = () => {
-    if (entrada.autoriaGrupal) {
-        return entrada.grupo?.integrantes.find(i => i.id == authData.value.user.id)
-    } else {
-        return entrada.autor.id == authData.value.user.id
-    }
-}
+const UsuarioTieneAutoridad = entrada.autoriaGrupal
+    ? entrada.grupo?.integrantes.some(i => i.id == authData.value.user.id)
+    : entrada.autor.id == authData.value.user.id;
 
-const opcionesArticulo = ref([
-    {
-        label: 'Copiar Link',
-        command: () => {
-            const url = `${window.location.origin}/entradas/${entrada.id}`;
-            navigator.clipboard.writeText(url);
-            toast.add({ severity: 'contrast', detail: 'Link copiado', life: 3000 });
-        }
-    },
-]);
-// Opciones si el usuario es el autor o parte del grupo
-if (UsuarioTieneAutoridad()) {
-    opcionesArticulo.value = [
-        ...opcionesArticulo.value,
-        {
-            label: 'Editar',
-            command: () => {
-                console.log('Editar');
-                useNuxtApp().callHook("publicacion:editar", { entrada, html: contenidoRender.value.contenidoRendereado })
-            }
-        },
-        {
-            label: 'Eliminar',
-            command: () => {
-                EliminarEntrada();
-            }
-        },
-    ];
-}
-// Opciones si el usuario es admin o docente
-// console.log(salonStore.currContext, salonStore.contextoId)
-// console.log("Fijada: ", entrada.fijada)
 const usuarioEsAdminODocente = authData.value.user.isAdmin || authData.value.user.rol == "docente";
-let puedeFijar = false;
-if (salonStore.currContext == "salon") {
-    puedeFijar = usuarioEsAdminODocente; // si la entrada es un salon y el usuario es admin o docente
-}
-if (salonStore.currContext == "bitacora" && entrada.autor.id == authData.value.user.id) {
-    puedeFijar = true; // si estamos en la bitacora del usuario actual
-}
-if (salonStore.currContext == "grupo") {
-    puedeFijar = UsuarioTieneAutoridad(); // si estamos en un grupo y el usuario es parte del grupo
+
+const CopiarLink = () => {
+    const url = `${window.location.origin}/entradas/${entrada.id}`;
+    navigator.clipboard.writeText(url);
+    toast.add({ severity: 'contrast', detail: 'Link copiado', life: 3000 });
 }
 
-// DESTACAR
-const opcionDestacar = {
-    label: !entrada.destacada ? 'Destacar en El Salón' : 'Quitar destacado en El Salón',
-    command: async () => {
-        const body = { destacada: !entrada.destacada };
-        await useAPI(`/api/entradas/${entrada.id}`, { body, method: "PATCH" });
-        useNuxtApp().callHook("publicacion:fijada");
-    }
-}
-if (usuarioEsAdminODocente) {
-    opcionesArticulo.value = [...opcionesArticulo.value, opcionDestacar];
-}
-
-import { useToast } from 'primevue/usetoast';
-import Button from 'primevue/button';
-
-// FIJAR
-const opcionFijar = {
-    label: !entrada.fijada ? 'Fijar' : 'Quitar Fijado',
-    command: async () => {
+const FijarEntrada = async () => {
         loading.value = true;
-        if (entrada.fijada) {
+        if (props.entrada.fijada) {
             // TODO Dialog de confirmacion
-            await useAPI(`/api/fijadas/${entrada.fijada}`, { method: 'DELETE' });
+            await useAPI(`/api/fijadas/${props.entrada.fijada}`, { method: 'DELETE' });
             toast.add({ summary: 'Entrada desfijada', severity: 'contrast', life: 3000 });
-            useNuxtApp().callHook("entrada:desfijada", { entrada });
+            useNuxtApp().callHook("entrada:desfijada", { entrada:props.entrada });
         } else {
-            useNuxtApp().callHook("entrada:fijar", { entrada }); // Este hook llama al componente FijarEntrada
+            useNuxtApp().callHook("entrada:fijar", { entrada:props.entrada }); // Este hook llama al componente FijarEntrada
         }
         loading.value = false;
     }
-}
-if (puedeFijar) {
-    opcionesArticulo.value = [...opcionesArticulo.value, opcionFijar];
-}
-
-
-const menuRefs = ref({})
-const ToggleArticleOptions = (event) => {
-    const menu = menuRefs.value[entrada.id]
-    if (menu && menu.toggle) {
-        menu.toggle(event)
-    }
-};
-
-const archivos = ref(entrada.archivos)
 
 const EliminarEntrada = async () => {
     try {
@@ -235,21 +101,16 @@ let removeOnEditHook = null;
 
 const handlePublicacionEditada = async (data) => {
     if (data.resultado == "ok" && data.entrada.id == entrada.id) {
-        entrada.value = data.entrada
-        archivos.value = data.entrada.archivos
-        // console.log("autoriaGrupal", entrada.autoriaGrupal, data.entrada.autoriaGrupal)
-        DefinirIdentidad(data.entrada)
-        contenidoRender.value.ReloadContent(data.entrada);
         ResaltarEntrada();
     }
 }
 
 const ResaltarEntrada = () => {
     resaltar.value = true;
-    console.log("Resaltando entrada", entrada.id);
-    const rect = entradaDom.value.getBoundingClientRect();
+    console.log("Resaltando entrada");
+    const rect = entradaDom.value.$el.getBoundingClientRect();
     if (rect.top < 0 || rect.bottom > window.innerHeight) {
-        entradaDom.value.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        entradaDom.value.$el.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     setTimeout(() => {
         resaltar.value = false;
@@ -263,12 +124,28 @@ onUnmounted(() => {
     if (removeOnEditHook) removeOnEditHook()
 })
 
-
-const UserCommented = () => {
-    listaComentarios.value.HideCommentbox();
-}
-
-
 defineExpose({ ResaltarEntrada });
 
 </script>
+
+<template>
+    <component
+        ref="entradaDom"
+        v-if="identidad?.nombre"
+        :is="entradaRenderComponent"
+        :key="entrada.id"
+
+        :loading="loading"
+        :entrada="entrada"
+        :identidadUrl="identidadUrl"
+        :identidad="identidad"
+        :tituloIdentidad="tituloIdentidad"
+        :UsuarioTieneAutoridad="UsuarioTieneAutoridad"
+        :usuarioEsAdminODocente="usuarioEsAdminODocente"
+        :EliminarEntrada="EliminarEntrada"
+        :FijarEntrada="FijarEntrada"
+        :CopiarLink="CopiarLink"
+        :resaltar="resaltar"
+        />
+</template>
+

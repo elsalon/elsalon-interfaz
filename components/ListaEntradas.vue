@@ -83,7 +83,7 @@ if(!props.saltearFijadas){
     populate: 'entradas,comentarios', // custom query param
     depth: 4,
     sort: '-createdAt',
-    limit: 10,
+    limit: 12,
     where: {
       "contexto": { equals: SalonStore.contextoId }
     }
