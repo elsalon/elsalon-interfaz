@@ -4,21 +4,23 @@
   <!-- Empty State -->
   <div v-if="listaEntradas.length === 0" class="text-center text-gray-500 text-sm">
     <!-- CTA Primera publicacion -->
-      <p class="my-10 text-gray-500">Todavía no hay entradas en esta sala</p>
-      <!-- <Button label="+ Escribir primera entrada" @click="visible=true" class="mb-10"/> -->
+    <p class="my-10 text-gray-500">Todavía no hay entradas en esta sala</p>
+    <!-- <Button label="+ Escribir primera entrada" @click="visible=true" class="mb-10"/> -->
   </div>
 
   <!-- Content -->
-  <div v-else class="space-y-10">
+  <div v-else :class="entradaContainerClass">
     <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada"
-      @eliminar="EliminarEntrada(entrada.id)" :ref="(el) => setEntradaRef(el, entrada.id)" />
-
-    <!-- Loading Indicator -->
-  <div v-if="loading" class="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-gray-500 text-sm flex items-center">
-    <span class="spinner mr-2"></span> Cargando...
+      @eliminar="EliminarEntrada(entrada.id)" :ref="(el) => setEntradaRef(el, entrada.id)" :theme="entradaTheme" />
   </div>
+  <div>
+    <!-- Loading Indicator -->
+    <div v-if="loading"
+      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-gray-500 text-sm flex items-center">
+      <span class="spinner mr-2"></span> Cargando...
+    </div>
     <!-- Pagination Status -->
-    <div v-show="!hasNextPage" class="h-10 text-center text-gray-500 text-sm">
+    <div v-show="!hasNextPage" class="mt-10 h-10 text-center text-gray-500 text-sm">
       No hay más entradas
     </div>
   </div>
@@ -38,6 +40,8 @@ const hasNextPage = ref(false);
 
 // Props
 const props = defineProps({
+  entradaTheme: { type: String, default: 'default' },
+  grid: { type: [Boolean, Number], default: false },
   query: { type: Object, default: {} },
   apiUrl: { type: String, default: '/api/entradas' },
   cacheKey: { type: String, default: null },
@@ -52,6 +56,17 @@ const loading = ref(false);
 const observerTarget = ref(null)
 
 const entradaRefs = ref({});
+
+const entradaContainerClass = computed(() => {
+  return {
+    'space-y-10 md:space-y-0 md:grid grid-cols-3 gap-4': props.grid === true || props.grid === 3,
+    'space-y-10 md:space-y-0 md:grid grid-cols-2 gap-4': props.grid === 2,
+    'space-y-10 md:space-y-0 md:grid grid-cols-4 gap-4': props.grid === 4,
+    'space-y-10 md:space-y-0 md:grid grid-cols-5 gap-4': props.grid === 5,
+    'space-y-10 md:space-y-0 md:grid grid-cols-6 gap-4': props.grid === 6,
+    'space-y-10': props.grid === false,
+  }
+})
 
 function setEntradaRef(el, id) {
   if (el) {
@@ -77,7 +92,7 @@ hasNextPage.value = entradas.value.hasNextPage;
 
 // Fetch inicial de fijadas
 
-if(!props.saltearFijadas){
+if (!props.saltearFijadas) {
   const cacheKey = `${props.cacheKey}:fijadas`;
   const queryParams = qs.stringify({
     populate: 'entradas,comentarios', // custom query param
@@ -88,10 +103,10 @@ if(!props.saltearFijadas){
       "contexto": { equals: SalonStore.contextoId }
     }
   }, { encode: false })
-  const { data: entradasFijadasRes } = await useAsyncData(cacheKey, () => useAPI(`/api/fijadas?${queryParams}` ))
+  const { data: entradasFijadasRes } = await useAsyncData(cacheKey, () => useAPI(`/api/fijadas?${queryParams}`))
   idsEntradasFijadas.value = [];
   entradasFijadasRes.value.docs.forEach(item => {
-    if (item.entrada.id != undefined){
+    if (item.entrada.id != undefined) {
       idsEntradasFijadas.value.push(item.entrada.id)
       item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
     }
@@ -169,26 +184,27 @@ const FetchNewerFromDate = async (date) => {
   console.log('Fetching newer items from:', date)
   loading.value = true
 
-  // Query original y le saco el createdAt
-  let queryWhere = props.query?.where?.and.filter(item => !item.createdAt) || {};
-  const createdAtCondition = { createdAt: { greater_than: date } };
+  // Query original y le saco el createdAty)
+  let queryWhere = props.query;
   
-  if (queryWhere?.where) {
-    // If there's an existing `where` clause, merge it with the new condition
-    if (queryWhere.where.and) {
-      queryWhere.where.and.push(createdAtCondition);
-    }
-  } else {
-    // If no `where` clause exists, create one
+  // New condition
+  const createdAtCondition = { createdAt: { greater_than: date } };
+
+  if(queryWhere.where?.and){
+    // delete old createdAt condition
+    queryWhere.where.and = queryWhere.where.and.filter(item => !item.createdAt) || {};
+    queryWhere.where.and.push(createdAtCondition)
+  }else if(queryWhere.where){
+    queryWhere.where = queryWhere.where.filter(item => !item.createdAt) || {};
     queryWhere.where = createdAtCondition;
   }
-    
-  let newerItemsQuery = {  
+  
+  let newerItemsQuery = {
     populate: 'entradas,comentarios', // custom query param
     depth: 2,
     sort: '-createdAt',
     createdGreaterThan: date, // Para feed de El Salon que no tiene query nativo de payloadcms 
-    where: queryWhere
+    where: queryWhere.where
   }
 
   const queryParams = qs.stringify(newerItemsQuery, { encode: false })
@@ -234,7 +250,7 @@ onMounted(() => {
   // console.log("lista de entradas", listaEntradas.value)
 
   OnCreateEntryHook = hooks.hook('publicacion:creada', handlePublicacionCreada)
-  OnEntradaFijadaHook = hooks.hook('entrada:fijada', ({entrada, fijada}) => {
+  OnEntradaFijadaHook = hooks.hook('entrada:fijada', ({ entrada, fijada }) => {
     entrada.fijada = fijada.id
     idsEntradasFijadas.value.push(entrada.id)
     entradasFijadas.value.unshift(entrada)
@@ -242,7 +258,7 @@ onMounted(() => {
       entradaRefs.value[entrada.id].ResaltarEntrada();
     })
   })
-  OnEntradaDesfijadaHook = hooks.hook('entrada:desfijada', ({entrada, fijada}) => {
+  OnEntradaDesfijadaHook = hooks.hook('entrada:desfijada', ({ entrada, fijada }) => {
     entrada.fijada = null
     idsEntradasFijadas.value = idsEntradasFijadas.value.filter(id => id !== entrada.id)
     entradasFijadas.value = entradasFijadas.value.filter(item => item.id !== entrada.id)
@@ -255,7 +271,7 @@ onUnmounted(() => {
     observer.disconnect()
   }
   if (OnCreateEntryHook) OnCreateEntryHook()
-  if(OnEntradaFijadaHook) OnEntradaFijadaHook()
+  if (OnEntradaFijadaHook) OnEntradaFijadaHook()
 })
 
 </script>

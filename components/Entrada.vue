@@ -1,14 +1,13 @@
 
 <script setup>
-const entradaVariant = ref('default');
 const entradaRenderComponent = computed(() => {
-  if (typeof entradaVariant.value === 'string') {
+  if (typeof props.theme === 'string') {
     return {
       default: resolveComponent('EntradaDefault'),
-      library: resolveComponent('EntradaLibrary')
-    }[entradaVariant.value];
+      biblioteca: resolveComponent('EntradaBiblioteca')
+    }[props.theme];
   }
-  return entradaVariant.value;
+  return props.theme;
 });
 
 import { useConfirm } from "primevue/useconfirm";
@@ -19,6 +18,10 @@ const { hooks } = useNuxtApp();
 const toast = useToast();
 const { data: authData } = useAuth()
 const props = defineProps({
+    theme: {
+        type: String,
+        default: "default"
+    },
     entrada: {
         type: Object,
         required: true,

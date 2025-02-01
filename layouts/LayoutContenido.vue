@@ -57,7 +57,7 @@
             </div>
         </nav>
     </header>
-    <main class="small-container">
+    <main :class="containerType">
         <slot />
     </main>
     <NotificacionesDialog v-model:visible="notificacionesVisible" ref="notificacionesDialog" />
@@ -77,6 +77,13 @@
 
     const toast = useToast();
     import { useToast } from "primevue/usetoast";
+
+    defineProps({
+        containerType:{
+            type: String,
+            default: 'container-small'
+        }
+    });
 
     watchEffect(() => {
         const notifications = totalNotifications.value > 0 ? `(${totalNotifications.value}) ` : '';

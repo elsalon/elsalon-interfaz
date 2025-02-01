@@ -60,7 +60,7 @@
   }
 }
 
-.small-container{
+.container-small{
   max-width: 640px;
   @apply px-4 md:px-0 mx-auto;
 }
@@ -230,4 +230,8 @@ ol{
 
 .fade-in.loaded {
   opacity: 1;
+}
+
+.entrada-biblioteca .prose img{
+  display: none;
 }

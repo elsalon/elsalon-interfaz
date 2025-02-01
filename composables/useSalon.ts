@@ -3,14 +3,11 @@ import { useRoute } from 'nuxt/app'
 import { ref } from "vue";
 
 export default function useSalon() {
-  const route = useRoute()
   const elsalon = useSalonStore()
-
-  const slug = route.params?.slug || 'el-salon'
-  const paginaActual = ref(elsalon.salones.find(s => s.slug === slug) || elsalon.salones.find(s => s.slug === 'el-salon'))
+  const pageId = elsalon.contextoId
+  const paginaActual = ref(elsalon.salones.find(s => s.id === pageId) || elsalon.salones.find(s => s.slug === 'el-salon'))
 
   return {
-    slug,
     paginaActual
   }
 }

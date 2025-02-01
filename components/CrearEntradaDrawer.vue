@@ -65,6 +65,8 @@ const Publicar = async () => {
     const sala = salonStore.currContext == "bitacora" ? null : paginaActual.value.id
 
     console.log({paginaActual})
+    console.log("Publicando en sala id", sala)
+    
     let method ='POST'
 	let body = {
 		contenido: html, 
