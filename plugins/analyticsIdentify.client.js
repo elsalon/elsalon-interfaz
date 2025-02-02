@@ -5,9 +5,8 @@ export default defineNuxtPlugin(() => {
   
     watchEffect(() => {
       if (status.value === 'authenticated') {
-        console.log("***", status.value, data.value)
+        // console.log("***", status.value, data.value)
         const user = data.value?.user
-        console.log('Mixpanel: identify', user)
         mixpanel.identify(user?.id)
         mixpanel.people.set({
           $name: user?.nombre,

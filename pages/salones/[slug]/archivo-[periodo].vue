@@ -43,7 +43,7 @@ const query = {
     }
 }
 
-console.log({startDate, endDate})
-console.log("***", query)
+// console.log({startDate, endDate})
+// console.log("***", query)
 
 </script>
