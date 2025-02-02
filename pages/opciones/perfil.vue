@@ -33,11 +33,11 @@
         <div :class="{'opacity-50':password==''}">
             <div class="text-sm mt-10">Si no querés cambiar tu contraseña, dejá estos campos vacíos</div>
             
-            <label for="contraseña" class="font-semibold w-1/4">nueva contraseña</label>
-            <InputText id="contraseña" class="w-full" type="password" v-model="password" :required="password!=''"/>
+            <label for="password" class="font-semibold w-1/4">nueva contraseña</label>
+            <InputText id="password" class="w-full" type="password" v-model="password" :required="password!=''"/>
         
-            <label for="contraseña" class="font-semibold w-1/4">repetí contraseña</label>
-            <InputText id="contraseña" class="w-full" type="password" v-model="password2" :required="password!=''"/>
+            <label for="password2" class="font-semibold w-1/4">repetí contraseña</label>
+            <InputText id="password2" class="w-full" type="password" v-model="password2" :required="password!=''"/>
         </div>
         
         <div class="text-right mb-10">

@@ -20,7 +20,7 @@
       <span class="spinner mr-2"></span> Cargando...
     </div>
     <!-- Pagination Status -->
-    <div v-show="!hasNextPage" class="mt-10 h-10 text-center text-gray-500 text-sm">
+    <div v-show="!hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-gray-500 text-sm">
       No hay más entradas
     </div>
   </div>
