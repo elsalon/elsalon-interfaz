@@ -52,7 +52,7 @@ if(salonStore.currContext == "bitacora"){
 }
 
 
-
+const mixpanel = useMixpanel()
 
 const Publicar = async () => {
     uploading.value = true
@@ -63,6 +63,7 @@ const Publicar = async () => {
     
     const { paginaActual } = useSalon() // TODO ordenar estos dos que quedaron redundantes
     const sala = salonStore.currContext == "bitacora" ? null : paginaActual.value.id
+    const salaNombre = salonStore.currContext == "bitacora" ? "Bitácora" : paginaActual.value.nombre
 
     console.log({paginaActual})
     console.log("Publicando en sala id", sala)
@@ -93,10 +94,14 @@ const Publicar = async () => {
 	try{
 		const response = await useAPI(endpoint, {body, method});
 		console.log("Publicacion creada:", response)
+        const cantVideos = response.doc.embedsYoutube.split(",").length + response.doc.embedsVimeo.split(",").length
         if(isEditing.value){
             useNuxtApp().callHook("publicacion:editada", {resultado:"ok", entrada: response.doc})
+            // cantidad videos
+            mixpanel.track("Entrada editada", {id: response.doc.id, sala: salaNombre, imagenes: response.doc.imagenes.length, archivos: response.doc.archivos.length, videos: cantVideos, menciones: response.doc.mencionados.length, autoriaGrupal: response.doc.autoriaGrupal})
         }else{
             useNuxtApp().callHook("publicacion:creada", {resultado:"ok", entrada: response.doc})
+            mixpanel.track("Entrada creada", {id: response.doc.id, sala: salaNombre, imagenes: response.doc.imagenes.length, archivos: response.doc.archivos.length, videos: cantVideos, menciones: response.doc.mencionados.length, autoriaGrupal: response.doc.autoriaGrupal})
         }
         
 	}catch{

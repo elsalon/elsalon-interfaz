@@ -49,6 +49,8 @@ const ClearEditor = () => {
     editor.value.clear()
 }
 
+const mixpanel = useMixpanel()
+
 const Publicar = async () => {
     uploading.value = true
     const {html, imagenes, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo} = await editor.value.parseEditorToUpload()
@@ -83,9 +85,15 @@ const Publicar = async () => {
 		const response = await useAPI(endpoint, {body, method});
 		console.log("Comentario creado:", response)
 		useNuxtApp().callHook("comentario:creado", {resultado:"ok"})
-        toast.add({ severity: 'contrast', detail: 'Comentario publicado', life: 3000});   
         console.log("emit userPosted", response.doc)
         emit('userPosted', response.doc)
+        if(isEditing.value){
+            toast.add({ severity: 'contrast', detail: 'Comentario editado', life: 3000});
+            mixpanel.track("Comentario editado", {id: response.doc.id, entrada: props.entradaId})
+        }else{
+            toast.add({ severity: 'contrast', detail: 'Comentario publicado', life: 3000});
+            mixpanel.track("Comentario creado", {id: response.doc.id, entrada: props.entradaId})
+        }
         
 	}catch{
 		useNuxtApp().callHook("comentario:creado", {resultado:"error"})

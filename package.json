@@ -31,6 +31,7 @@
     "@primevue/nuxt-module": "^4.0.5",
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.20",
+    "mixpanel-nuxt": "^0.0.13",
     "postcss": "^8.4.45",
     "sass-embedded": "^1.80.6",
     "tailwindcss": "^3.4.10"

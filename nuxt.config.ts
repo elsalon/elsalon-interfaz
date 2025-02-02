@@ -8,11 +8,21 @@ export default defineNuxtConfig({
   modules: [
     '@sidebase/nuxt-auth',
     '@pinia/nuxt',
-    '@primevue/nuxt-module'
+    '@primevue/nuxt-module',
+    'mixpanel-nuxt'
   ],
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
+    }
+  },
+  // *****
+  // Mixpanel Analytics
+  // *****
+  mixpanel: {
+    config:{
+      debug: true,
+      ignore_dnt: true,
     }
   },
   // *****
