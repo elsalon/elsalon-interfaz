@@ -47,6 +47,7 @@ const haApreciado = ref(false);
 const haApreciadoId = ref(null);
 
 const mostrarTodosAprecios = ref(false);
+const mixpanel = useMixpanel();
 
 
 const CheckUserHaApreciado = () => {
@@ -78,6 +79,8 @@ const handleAprecioClicked = async () => {
             // console.log(res)
             docs.value = docs.value.filter(doc => doc.id != haApreciadoId.value.id);
             totalDocs.value--;
+
+            mixpanel.track('Aprecio eliminado', {contenidoid: props.contenidoid, contenidotipo: props.contenidotipo})
         }else{
             // Creo un aprecio
             console.log('Creando aprecio', props.contenidoid)
@@ -85,6 +88,8 @@ const handleAprecioClicked = async () => {
             const res = await useAPI(`/api/aprecio/`, {body, method: 'POST'})
             docs.value.push(res.doc)
             totalDocs.value++;
+
+            mixpanel.track('Aprecio', {contenidoid: props.contenidoid, contenidotipo: props.contenidotipo})
         }
     }catch(e){
         console.log(e)
