@@ -92,12 +92,14 @@
 </template>
 
 <script setup>
+import { mix } from "@primevue/themes";
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
 const { data: authData } = useAuth()
 
 const confirm = useConfirm();
 const toast = useToast();
+const mixpanel = useMixpanel();
 
 const props = defineProps({
     grupo: {
@@ -105,8 +107,6 @@ const props = defineProps({
         required: true,
     },
 });
-
-
 
 const grupoEdit = ref({
     nombre: props.grupo.nombre,
@@ -175,6 +175,7 @@ const AbandonarDialog = () => {
                 await useAPI(`/api/grupos/${props.grupo.id}`, {body, method: "PATCH"});
                 toast.add({ severity: 'contrast', summary: 'Grupos', detail: `Abandonaste el grupo "${props.grupo.nombre}"`, life: 3000 });
                 emit('abandonadoGrupo', props.grupo.id);
+                mixpanel.track('Grupo Abandonado', {grupo: props.grupo.id, nombre: props.grupo.nombre});
             } catch (e) {
                 console.error(e);
                 toast.add({ severity: 'error', summary: 'Error', detail: 'Hubo un error al abandonar el grupo', life: 3000 });
@@ -227,6 +228,7 @@ const handleSubmitAgregarIntegrantes = async () => {
         const res = await useAPI(`/api/grupos/${props.grupo.id}`, {body: {integrantes}, method: 'PATCH'});
         toast.add({ severity: 'contrast', detail: 'Integrantes agregados', life: 3000});   
         emit('editadoGrupo', res.doc);
+        mixpanel.track('Grupo Agrego Integrantes', {grupo: props.grupo.id, integrantes: nuevosIntegrantes.value.map(i => i.id), nombres: nuevosIntegrantes.value.map(i => i.nombre)});
     }catch(e){
         console.error('Error al agregar integrantes', e)
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo agregar integrantes', life: 3000});

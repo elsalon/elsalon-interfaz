@@ -45,7 +45,7 @@
         nombre: '',
         usuarios: []
     });
-    
+    const mixpanel = useMixpanel();
     const salonStore = useSalonStore();
     salonStore.SetPageTitle(`Grupos`)
     
@@ -93,6 +93,7 @@
             const res = await useAPI('/api/grupos', {body, method});
             console.log(res);
             toast.add({severity: 'contrast', summary: 'Grupo creado', detail: 'Se creó un nuevo grupo', life: 3000});
+            mixpanel.track('Grupo Creado', {grupo: res.doc.id, nombre: res.doc.nombre, integrantes: res.doc.integrantes.map((usuario) => usuario.id), nombres: res.doc.integrantes.map((usuario) => usuario.nombre)});
         }catch(e){
             console.error(e);
             toast.add({severity: 'error', summary: 'Error', detail: 'No se pudo crear el grupo', life: 3000});
