@@ -30,7 +30,7 @@ const props = defineProps(
     },
 )
 const autorSeleccionado = ref(null)
-const publicarLabel = ref("Publicar *")
+const publicarLabel = ref("Publicar")
 const sala = salonStore.currContext == "bitacora" ? "Bitácora" : paginaActual.value.nombre
 publicarLabel.value = sala ? `Publicar en ${sala}` : "Publicar";
 
@@ -56,7 +56,7 @@ const mixpanel = useMixpanel()
 
 const Publicar = async () => {
     uploading.value = true
-    const {html, imagenes, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo} = await editor.value.parseEditorToUpload()
+    const {html, imagenes, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo} = await editor.value.parseEditorToUpload(publicarLabel)
     if(html == ""){
         return;
     }

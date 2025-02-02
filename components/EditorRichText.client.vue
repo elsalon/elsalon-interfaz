@@ -62,7 +62,7 @@ const handlePublishHotkey = (e) => {
     }
 }
 
-const parseEditorToUpload = async () => {
+const parseEditorToUpload = async (btnLabel = null) => {
     const delta = quill.getContents()
     let html = quill.root.innerHTML
 
@@ -96,10 +96,11 @@ const parseEditorToUpload = async () => {
                 console.log(op)
                 // This is a base64 image, need to upload
                 const file = await fetch(imageUrl).then(res => res.blob())
+                btnLabel.value = "Subiendo imágenes..."
                 const uploadedImage = await uploadImage(file)
                 if (uploadedImage) {
                     html = html.replace(imageUrl, `[image:${uploadedImage.id}]`)
-                    console.log("PUshing image", uploadedImage.id)
+                    console.log("Pushing image", uploadedImage.id)
                     attachedImages.value.push({ imagen: uploadedImage.id })
                 }
             }
@@ -127,10 +128,12 @@ const parseEditorToUpload = async () => {
             archivos.push({ archivo: file.id })
             continue
         }
+        btnLabel.value = "Subiendo Archivos..."
         const uploadedFile = await uploadFile(file)
         archivos.push({ archivo: uploadedFile.id })
     }
 
+    btnLabel.value = "Procesando..."
     // Parse menciones y etiquetas
     const tempDiv = document.createElement("div");
     tempDiv.innerHTML = html;
@@ -168,6 +171,7 @@ const parseEditorToUpload = async () => {
     embedsYoutube = embedsYoutube.join(",");
     embedsVimeo = embedsVimeo.join(",");
 
+    btnLabel.value = "Publicando..."
     return { html, imagenes: attachedImages.value, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo }
 }
 

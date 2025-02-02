@@ -12,7 +12,7 @@
                 <!-- Selector Identidad -->
                 <SelectorIdentidad v-model="autorSeleccionado" :esComentario="true" class="w-1/3 md:w-auto"/>
                 <!-- Btn Publica -->
-                <Button  @click="Publicar" :loading="uploading" size="small" :label="isEditing ? 'Guardar' : 'Comentar'" class="w-2/3 md:w-auto"></Button>
+                <Button  @click="Publicar" :loading="uploading" size="small" :label="isEditing ? 'Guardar' : comentarLabel" class="w-2/3 md:w-auto"></Button>
             </div>
         </div>
     </ClientOnly>
@@ -23,6 +23,7 @@ const {data: authData} = useAuth()
 const salonStore = useSalonStore()
 const toast = useToast();
 
+const comentarLabel = ref("Comentar")
 const editor = ref(null)
 const miComentario = ref('')
 const uploading = ref(false)
@@ -53,7 +54,7 @@ const mixpanel = useMixpanel()
 
 const Publicar = async () => {
     uploading.value = true
-    const {html, imagenes, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo} = await editor.value.parseEditorToUpload()
+    const {html, imagenes, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo} = await editor.value.parseEditorToUpload(comentarLabel)
     if(html == ""){
         return;
     }
