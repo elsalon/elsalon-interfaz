@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     config:{
       debug: true,
       ignore_dnt: true,
+      persistence: 'localStorage',
     }
   },
   // *****
