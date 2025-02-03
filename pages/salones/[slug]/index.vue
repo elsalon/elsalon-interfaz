@@ -63,17 +63,19 @@ if (salon.value.archivo.activar) {
 }
 
 
-const miembros = ref(null)
 
 const onEstadoColaboracion = (estado) => {
     estadoColaboracion.value = estado;
-    BuscarMiembros();
+    RefreshMiembros();
 }
 
-const BuscarMiembros = async () => {
+const RefreshMiembros = async () => {
     miembros.value = await useAPI(`/api/colaboraciones?where[idColaborador][equals]=${salon.value.id}&limit=0`);
-    // console.log(miembros.value)
 }
+
+const miembrosCacheKey = `miembros-${salon.value.id}`;
+const { data: miembros } = await useAsyncData(miembrosCacheKey, () => useAPI(`/api/colaboraciones?where[idColaborador][equals]=${salon.value.id}&limit=0`))
+
 
 
 
