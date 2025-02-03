@@ -21,8 +21,8 @@ const props = defineProps({
     salon: { type: Object, required: true }
 })
 const fileInput = ref()
-const { data: authData } = useAuth()
-const puedeEditar = authData.value?.user?.rol == 'docente' || authData.value?.user?.isAdmin;
+const auth = useAuth()
+const puedeEditar = auth.data.value?.user?.rol == 'docente' || auth.data.value?.user?.isAdmin;
 const salonStore = useSalonStore()
 
 const LoadImage = () => {

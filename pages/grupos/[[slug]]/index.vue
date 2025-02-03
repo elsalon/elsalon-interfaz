@@ -30,7 +30,7 @@
 <script setup>
 const route = useRoute()
 const slug = route.params?.slug
-const {data: authData} = useAuth()
+const auth = useAuth()
 
 const cacheKey = ref(`grupos-${slug}`)
 // Fetch the user data based on the slug
@@ -47,7 +47,7 @@ const salonStore = useSalonStore()
 salonStore.setContext('grupo', grupo.value.id)
 salonStore.SetPageTitle(grupo.value.nombre)
 
-const userIsInGroup = ref(grupo.value.integrantes.some(i => i.id == authData.value?.user.id))
+const userIsInGroup = ref(grupo.value.integrantes.some(i => i.id == auth.data.value?.user.id))
 const query = {
     where: {
         and: [

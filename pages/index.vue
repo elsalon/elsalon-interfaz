@@ -12,8 +12,8 @@
 definePageMeta({
     title: "Inicio",
 })
-const {data: authData} = useAuth();
-const cacheKey = ref(`elsalon-${authData.value.user.id}`)
+const auth = useAuth();
+const cacheKey = ref(`elsalon-${auth.data.value.user.id}`)
 const salonStore = useSalonStore();
 const elsalon = salonStore.salones.find(salon => salon.slug === "el-salon")
 if(!elsalon){

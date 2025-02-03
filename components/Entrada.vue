@@ -16,7 +16,7 @@ const confirm = useConfirm();
 
 const { hooks } = useNuxtApp();
 const toast = useToast();
-const { data: authData } = useAuth()
+const auth = useAuth()
 const props = defineProps({
     theme: {
         type: String,
@@ -45,10 +45,10 @@ const identidadUrl = computed(() => {
 })
 
 const UsuarioTieneAutoridad = entrada.autoriaGrupal
-    ? entrada.grupo?.integrantes.some(i => i.id == authData.value.user.id)
-    : entrada.autor.id == authData.value.user.id;
+    ? entrada.grupo?.integrantes.some(i => i.id == auth.data.value.user.id)
+    : entrada.autor.id == auth.data.value.user.id;
 
-const usuarioEsAdminODocente = authData.value.user.isAdmin || authData.value.user.rol == "docente";
+const usuarioEsAdminODocente = auth.data.value.user.isAdmin || auth.data.value.user.rol == "docente";
 
 const CopiarLink = () => {
     const url = `${window.location.origin}/entradas/${entrada.id}`;

@@ -18,8 +18,8 @@
 
 
 <script setup>
-const { data: authData } = useAuth()
-const canEdit = authData.value?.user?.rol === 'docente' || authData.value?.user?.isAdmin
+const auth = useAuth()
+const canEdit = auth.data.value?.user?.rol === 'docente' || auth.data.value?.user?.isAdmin
 const salonStore = useSalonStore()
 const toast = useToast();
 

@@ -40,7 +40,7 @@
     const toast = useToast();
     import { useToast } from "primevue/usetoast";
     const visible = ref(false);
-    const {data: authData} = useAuth()
+    const auth = useAuth()
     const nuevoGrupo = ref({
         nombre: '',
         usuarios: []
@@ -82,8 +82,8 @@
             integrantes: nuevoGrupo.value.usuarios.map((usuario) => usuario.id)
         }
         // Chequeo que el usuario actual esté en el grupo
-        if(!nuevoGrupo.value.usuarios.find((usuario) => usuario.id == authData.value.user.id)){
-            body.integrantes.push(authData.value.user.id);
+        if(!nuevoGrupo.value.usuarios.find((usuario) => usuario.id == auth.data.value.user.id)){
+            body.integrantes.push(auth.data.value.user.id);
         }
         console.log('Creando grupo', nuevoGrupo.value);
         // Crear grupo

@@ -42,7 +42,7 @@ import { useConfirm } from "primevue/useconfirm";
 const confirm = useConfirm();
 const toast = useToast();
 const { $formatDate } = useNuxtApp()
-const { data: authData } = useAuth()
+const auth = useAuth()
 const props = defineProps({
     comentario: {
         type: Object,
@@ -78,9 +78,9 @@ identidadUrl.value = comentario.autoriaGrupal ? `/grupos/${identidad.value.slug}
 const ToggleComment = () => { emit('toggleCommentBox'); }
 const UsuarioTieneAutoridad = () => {
     if (comentario.autoriaGrupal) {
-        return comentario.grupo?.integrantes.find(i => i.id == authData.value.user.id)
+        return comentario.grupo?.integrantes.find(i => i.id == auth.data.value.user.id)
     } else {
-        return comentario.autor.id == authData.value.user.id
+        return comentario.autor.id == auth.data.value.user.id
     }
 }
 

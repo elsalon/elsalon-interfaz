@@ -62,7 +62,7 @@
 
 <script setup>
 const salonStore = useSalonStore()
-const { data: authData } = useAuth()
+const auth = useAuth()
 const { $formatDate } = useNuxtApp()
 const { hooks } = useNuxtApp();
 
@@ -143,7 +143,7 @@ let puedeFijar = false;
 if (salonStore.currContext == "salon") {
     puedeFijar = props.usuarioEsAdminODocente; // si la entrada es un salon y el usuario es admin o docente
 }
-if (salonStore.currContext == "bitacora" && props.entrada.autor.id == authData.value.user.id) {
+if (salonStore.currContext == "bitacora" && props.entrada.autor.id == auth.data.value.user.id) {
     puedeFijar = true; // si estamos en la bitacora del usuario actual
 }
 if (salonStore.currContext == "grupo") {

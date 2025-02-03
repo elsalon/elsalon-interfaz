@@ -36,7 +36,7 @@ import 'photoswipe/style.css';
 
 const route = useRoute()
 const slug = route.params?.slug
-const {data: authData} = useAuth()
+const auth = useAuth()
 
 // Fetch the user data based on the slug
 const res = await useAPI(`/api/users?where[slug][equals]=${slug}`)
@@ -50,7 +50,7 @@ const usuario = ref(res.docs[0])
 const salonStore = useSalonStore()
 salonStore.SetPageTitle(usuario.value.nombre)
 salonStore.setContext('bitacora', usuario.value.id)
-const userIsMe = ref(usuario.value.id == authData.value?.user.id)
+const userIsMe = ref(usuario.value.id == auth.data.value?.user.id)
 const query = {
     where: {
         and : [

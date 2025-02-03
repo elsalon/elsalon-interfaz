@@ -6,7 +6,7 @@ export function useReactiveAuth() {
 
     watch([data, status], ([newData, newStatus]) => {
         myKey.value++
-        authData.value = newData.user
+        authData.value = newData?.user
     }, { immediate: true, deep: true })
 
     return { authData, status, myKey }

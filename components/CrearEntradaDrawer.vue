@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-const {data: authData} = useAuth()
+const auth = useAuth()
 const editor = ref(null)
 const isEditing = ref(false)
 const uploading = ref(false)
@@ -91,7 +91,7 @@ const Publicar = async () => {
 		endpoint = `/api/entradas/${props.entryEdit.entrada.id}`
 	}
 	// Autoria grupal
-	if(autorSeleccionado.value.id != authData.value.user.id){
+	if(autorSeleccionado.value.id != auth.data.value.user.id){
 		body.autoriaGrupal = true
 		body.grupo = autorSeleccionado.value.id
 	}

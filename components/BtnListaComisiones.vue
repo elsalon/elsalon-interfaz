@@ -60,7 +60,7 @@
 
 <script setup>
 import qs from 'qs';
-const { data: authData } = useAuth();
+const auth = useAuth();
 const props = defineProps({
     salon: {
         type: Object,
@@ -105,7 +105,7 @@ const comisionesItems = ref(comisiones.docs.map(comision => {
     }
 }));
 
-if (authData.value.user.rol == 'docente' || authData.value.user.isAdmin) {
+if (auth.data.value.user.rol == 'docente' || auth.data.value.user.isAdmin) {
     comisionesItems.value.push({
         label: 'Nueva comisión',
         command: () => {

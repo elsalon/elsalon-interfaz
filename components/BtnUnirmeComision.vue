@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-const {data: authData} = useAuth()
+const auth = useAuth()
 const props = defineProps({
     comision: Object,
     required: true
@@ -13,7 +13,7 @@ const emit = defineEmits(['UsuarioCambioInscripcion']);
 const toast = useToast();
 const loading = ref(false);
 
-const usuarioPertenece = props.comision.integrantes?.some(integrante => integrante.id == authData.value.user.id) || props.comision.docentes?.some(docente => docente.id == authData.value.user.id);
+const usuarioPertenece = props.comision.integrantes?.some(integrante => integrante.id == auth.data.value.user.id) || props.comision.docentes?.some(docente => docente.id == auth.data.value.user.id);
 
 // FUNCIONES API
 const UnirmeComisionIndividuo = async () =>{

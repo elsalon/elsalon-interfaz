@@ -92,10 +92,9 @@
 </template>
 
 <script setup>
-import { mix } from "@primevue/themes";
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
-const { data: authData } = useAuth()
+const auth = useAuth()
 
 const confirm = useConfirm();
 const toast = useToast();
@@ -170,7 +169,7 @@ const AbandonarDialog = () => {
         accept: async () => {
             try {
                 const body = {
-                    integrantes: props.grupo.integrantes.filter((i) => i.id != authData.value.user.id).map((i) => i.id) // envio los ids de los integrantes menos el mio
+                    integrantes: props.grupo.integrantes.filter((i) => i.id != auth.data.value.user.id).map((i) => i.id) // envio los ids de los integrantes menos el mio
                 }
                 await useAPI(`/api/grupos/${props.grupo.id}`, {body, method: "PATCH"});
                 toast.add({ severity: 'contrast', summary: 'Grupos', detail: `Abandonaste el grupo "${props.grupo.nombre}"`, life: 3000 });

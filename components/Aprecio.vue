@@ -37,7 +37,7 @@ const props = defineProps({
         required: true,
     },
 });
-const {data: authData} = useAuth();
+const auth = useAuth();
 
 const fetching = ref(false);
 const docs = ref(props.aprecioIniciales.docs || []);
@@ -50,7 +50,7 @@ const mixpanel = useMixpanel();
 
 
 const CheckUserHaApreciado = () => {
-    haApreciadoId.value = docs.value?.find(doc => doc.autor.id == authData.value.user.id);
+    haApreciadoId.value = docs.value?.find(doc => doc.autor.id == auth.data.value.user.id);
     haApreciado.value = haApreciadoId.value != null;
 }
 
@@ -69,7 +69,7 @@ const handleAprecioClicked = async () => {
                 where: {
                     and: [
                         { contenidoid: { equals:  props.contenidoid } },
-                        { autor: { equals: authData.value.user.id } },
+                        { autor: { equals: auth.data.value.user.id } },
                     ]
                 }
             }, { encode: false })

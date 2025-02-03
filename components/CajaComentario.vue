@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-const {data: authData} = useAuth()
+const auth = useAuth()
 const salonStore = useSalonStore()
 const toast = useToast();
 
@@ -81,7 +81,7 @@ const Publicar = async () => {
 		endpoint = `/api/comentarios/${props.commentEdit.entrada.id}`
 	}
     // Autoria grupal
-	if(autorSeleccionado.value.id != authData.value.user.id){
+	if(autorSeleccionado.value.id != auth.data.value.user.id){
 		body.autoriaGrupal = true
 		body.grupo = autorSeleccionado.value.id
 	}

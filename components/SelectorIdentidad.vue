@@ -42,7 +42,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 
-const { data: authData } = useAuth();
+const auth = useAuth();
 const salonStore = useSalonStore();
 const props = defineProps({
     modelValue: {
@@ -77,9 +77,9 @@ onMounted(async () => {
     await salonStore.FetchGruposDelUsuario();
 
     autoresOpciones.value.push({
-        avatar: authData.value.user.avatar ? authData.value.user.avatar.sizes.thumbnail.url : null,
-        nombre: authData.value?.user?.nombre,
-        id: authData.value?.user?.id
+        avatar: auth.data.value.user.avatar ? auth.data.value.user.avatar.sizes.thumbnail.url : null,
+        nombre: auth.data.value?.user?.nombre,
+        id: auth.data.value?.user?.id
     });
 
     salonStore.gruposDelUsuario.forEach(grupo => {
@@ -96,7 +96,7 @@ onMounted(async () => {
 
     if (!props.esComentario) {
         if (salonStore.currContext == "bitacora") {
-            selectedValue.value = autoresOpciones.value.find(autor => autor.id == authData.value.user.id);
+            selectedValue.value = autoresOpciones.value.find(autor => autor.id == auth.data.value.user.id);
             disableSelectorIdentidad.value = true;
         } else if (salonStore.currContext == "grupo") {
             selectedValue.value = autoresOpciones.value.find(autor => autor.id == contextoId);

@@ -29,17 +29,18 @@
             
             <!-- Avatar Usuario -->
             <div style="width:48px">
-            <client-only>
-                <template v-if="authData">
+                <!-- {{ auth?.data.value.user.nombre }} -->
+            
+                <template v-if="auth?.data">
                     <!-- Avatar Con notificationes -->
                     <template v-if="totalNotifications > 0">
                         <OverlayBadge :value="totalNotifications" size="small">
-                            <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" :usuario="authData" @click="toggleUserMenu"/>
+                            <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" :usuario="auth?.data.value.user" @click="toggleUserMenu"/>
                         </OverlayBadge>
                     </template>
                     <!-- Avatar Sin notificationes -->
                     <template v-else>
-                        <AvatarSalon :key="'avt'+myKey" class="cursor-pointer -right-px" :usuario="authData" @click="toggleUserMenu"/>
+                        <AvatarSalon :key="'avt'+myKey" class="cursor-pointer -right-px" :usuario="auth?.data.value.user" @click="toggleUserMenu"/>
                     </template>
                 </template>
                 
@@ -53,7 +54,6 @@
                         </a>
                     </template>
                 </Menu>
-            </client-only>
             </div>
         </nav>
     </header>
@@ -66,11 +66,9 @@
 <script setup>
     const { isHeaderVisible } = useScrollDirection(75)
     const { totalNotifications } = useNotifications()
-    const { authData, myKey } = useReactiveAuth()
-    const {signOut} = useAuth()
+    const { myKey } = useReactiveAuth()
+    const auth = useAuth()
     import { PrimeIcons } from '@primevue/core/api';
-    // const authData = computed(() => useAuth().data)
-    const { paginaActual } = useSalon()
     const salonStore = useSalonStore();
     const notificacionesVisible = ref(false);
     const notificacionesDialog = ref();
@@ -116,7 +114,7 @@
     const userMenu = ref();
     const itemsUserMenu = computed(()=>[
         {
-            label: authData?.value?.nombre,
+            label: auth?.data?.value.user.nombre,
             items: [
                 {
                     label: 'Notificaciones',
@@ -132,7 +130,7 @@
                     label: 'Bitácora',
                     icon: PrimeIcons.BOOK,
                     command: () => {
-                        navigateTo('/usuarios/'+ authData?.value.slug)
+                        navigateTo('/usuarios/'+ auth?.data.value.user.slug)
                     }
                 },
                 {
@@ -160,14 +158,14 @@
                     label: 'Cerrar Sesión',
                     icon: PrimeIcons.SIGN_OUT,
                     command: () => {
-                        signOut({ callbackUrl: '/login' })
+                        auth.signOut({ callbackUrl: '/login' })
                     }
                 },
             ]
         }
     ]);
 
-    if(authData?.value?.isAdmin){
+    if(auth?.data.value.user.isAdmin){
         itemsUserMenu.value[0].items.push({
             label: 'Admin El Salón',
             icon: PrimeIcons.WRENCH,
