@@ -2,6 +2,7 @@
     <div class="relative" title="Aulas">
         <Inplace v-if="canEdit" @open="OnOpen" @close="OnClose" class="block">
             <template #display>
+                <span v-if="mostrarCta" class="text-muted-color text-sm">Editar Aulas</span>
                 <span class="font-bold">{{ aulas }}</span>
             </template>
             <template #content="{ closeCallback }">
@@ -29,6 +30,11 @@ const props = defineProps({
 
 const aulas = ref(props.salon.aulas);
 const editing = ref(false);
+
+const mostrarCta = computed(() => {
+    if(!canEdit) return false
+    return aulas.value === undefined || aulas.value === null || aulas.value === "";
+})
 
 const OnOpen = () => {
     editing.value = true;
