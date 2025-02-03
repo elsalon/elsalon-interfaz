@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-// const estadoColaboracion = ref(false)
+// const estadoEnlace = ref(false)
 const route = useRoute()
 const slug = route.params?.slug
 const salonStore = useSalonStore();
@@ -42,8 +42,4 @@ const query = {
         ]
     }
 }
-
-// console.log({startDate, endDate})
-// console.log("***", query)
-
 </script>

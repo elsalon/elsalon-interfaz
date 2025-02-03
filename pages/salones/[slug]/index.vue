@@ -22,12 +22,12 @@
             </div>
 
             <div class="flex-1 mb-4 md:w-1/2">
-                <BtnColaborar @estadoColaboracion="onEstadoColaboracion" />
+                <BtnEnlazar @estadoEnlace="onEstadoEnlace" type="sala"/>
             </div>
         </div>
 
 
-        <CrearEntradaBtn v-if="estadoColaboracion == 2" />
+        <CrearEntradaBtn v-if="estadoEnlace == 2" />
         <!-- TODO Query -->
         <ListaEntradas :query="query" :cacheKey="cacheKey" />
     </NuxtLayout>
@@ -35,7 +35,7 @@
 
 <script setup>
 
-const estadoColaboracion = ref(false)
+const estadoEnlace = ref(false)
 const route = useRoute()
 const slug = route.params?.slug
 const salonStore = useSalonStore();
@@ -62,20 +62,20 @@ if (salon.value.archivo.activar) {
     query.where.and.push({ createdAt: { less_than_equal: endDate } })
 }
 
-const primerEstadoColaboracionUpdate = ref(true)
-const onEstadoColaboracion = (estado) => {
-    estadoColaboracion.value = estado;
-    if(!primerEstadoColaboracionUpdate.value){
+const primerestadoEnlaceUpdate = ref(true)
+const onEstadoEnlace = (estado) => {
+    estadoEnlace.value = estado;
+    if(!primerestadoEnlaceUpdate.value){
         RefreshMiembros();
     }
-    primerEstadoColaboracionUpdate.value = false;
+    primerestadoEnlaceUpdate.value = false;
 }
 
 const RefreshMiembros = async () => {
-    miembros.value = await useAPI(`/api/colaboraciones?where[idColaborador][equals]=${salon.value.id}&limit=0`);
+    miembros.value = await useAPI(`/api/enlaces?where[idEnlazado][equals]=${salon.value.id}&limit=0`);
 }
 
 const miembrosCacheKey = `miembros-${salon.value.id}`;
-const { data: miembros } = await useAsyncData(miembrosCacheKey, () => useAPI(`/api/colaboraciones?where[idColaborador][equals]=${salon.value.id}&limit=0`))
+const { data: miembros } = await useAsyncData(miembrosCacheKey, () => useAPI(`/api/enlaces?where[idEnlazado][equals]=${salon.value.id}&limit=0`))
 
 </script>

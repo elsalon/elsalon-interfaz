@@ -21,7 +21,7 @@
             </div>
         </div>
         
-        <BtnColaborar v-if="!userIsInGroup"/>
+        <BtnEnlazar v-if="!userIsInGroup" type="grupo"/>
         <CrearEntradaBtn v-if="userIsInGroup" />
         <ListaEntradas :query="query" :cacheKey="cacheKey" />
     </NuxtLayout>
