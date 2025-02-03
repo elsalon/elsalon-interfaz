@@ -1,8 +1,5 @@
 <template>
-    <div v-if="salonStore.gruposDelUsuarioFetching" class="text-gray-500 text-xs flex items-center justify-center">
-        <div>Cargando...</div>
-    </div>
-    <Select v-else v-model="selectedValue" :options="autoresOpciones" optionLabel="name" placeholder="Autoría" :disabled="disableSelectorIdentidad" 
+    <Select v-model="selectedValue" placeholder="Cargando..." :loading="salonStore.gruposDelUsuarioFetching" :options="autoresOpciones" optionLabel="name" :disabled="disableSelectorIdentidad" 
         :class="{ 'w-full md:w-56': !props.esComentario, 'text-xs': props.esComentario }">
         <template #value="slotProps">
             <!-- Seleccionado -->
