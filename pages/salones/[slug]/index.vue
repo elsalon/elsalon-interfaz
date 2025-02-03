@@ -62,11 +62,13 @@ if (salon.value.archivo.activar) {
     query.where.and.push({ createdAt: { less_than_equal: endDate } })
 }
 
-
-
+const primerEstadoColaboracionUpdate = ref(true)
 const onEstadoColaboracion = (estado) => {
     estadoColaboracion.value = estado;
-    RefreshMiembros();
+    if(!primerEstadoColaboracionUpdate.value){
+        RefreshMiembros();
+    }
+    primerEstadoColaboracionUpdate.value = false;
 }
 
 const RefreshMiembros = async () => {
@@ -75,8 +77,5 @@ const RefreshMiembros = async () => {
 
 const miembrosCacheKey = `miembros-${salon.value.id}`;
 const { data: miembros } = await useAsyncData(miembrosCacheKey, () => useAPI(`/api/colaboraciones?where[idColaborador][equals]=${salon.value.id}&limit=0`))
-
-
-
 
 </script>
