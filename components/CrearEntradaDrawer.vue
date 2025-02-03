@@ -4,11 +4,11 @@
             <EditorRichText ref="editor" :editingData="props.entryEdit" @publishHotKey="Publicar"/>
              
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
-            <div class="flex justify-end mt-4 flex-col space-y-1 md:flex-row md:space-y-0 md:space-x-1">
-                <SelectorIdentidad v-model="autorSeleccionado" />
-
+            <div class="flex justify-end mt-4 md:space-y-0 ">
+                <!-- Selector Identidad -->
+                <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading"/>
                 <!-- Boton Publicar -->
-                <Button @click="Publicar" :loading="uploading" :label="isEditing ? 'Guardar' : publicarLabel"></Button>
+                <Button @click="Publicar" class="flex-grow md:flex-grow-0" :loading="uploading" :label="isEditing ? 'Guardar' : publicarLabel"></Button>
             </div>
         </div>
     </ClientOnly>
@@ -30,9 +30,7 @@ const props = defineProps(
     },
 )
 const autorSeleccionado = ref(null)
-const publicarLabel = ref("Publicar")
 const sala = salonStore.currContext == "bitacora" ? "Bitácora" : paginaActual.value.nombre
-publicarLabel.value = sala ? `Publicar en ${sala}` : "Publicar";
 
 if (props.entryEdit) {
     console.log("Editando entrada", props.entryEdit)
@@ -45,12 +43,18 @@ if (props.entryEdit) {
 }
 
 
+const publicarLabelContexto = ref("")
+publicarLabelContexto.value = sala ? `Publicar en ${sala}` : "Publicar";
 if(salonStore.currContext == "bitacora"){
-    publicarLabel.value = "Publicar en bitácora"
+    publicarLabelContexto.value = "Publicar en bitácora"
 }else if(salonStore.currContext == "grupo"){
-    publicarLabel.value = "Publicar en bitácora grupal"
+    publicarLabelContexto.value = "Publicar en bitácora grupal"
 }
+const publicarLabel = ref(publicarLabelContexto.value)
 
+watch(() => autorSeleccionado.value, () => {
+    publicarLabel.value = `${publicarLabelContexto.value} como ${autorSeleccionado.value.nombre}`
+})
 
 const mixpanel = useMixpanel()
 
