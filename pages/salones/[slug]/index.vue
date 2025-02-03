@@ -10,20 +10,7 @@
 
         <div class="text-center flex flex-wrap justify-around items-center w-full mb-10">
             <!-- Lista de avatares de miembros -->
-            <div class="flex-1 mb-4 md:w-1/2">
-                <div v-if="miembros" class="text-md text-muted-color">
-                    <div class="flex justify-center space-x-2">
-                        <NuxtLink v-for="miembro in miembros.docs" :key="miembro.id"
-                            :to="`/usuarios/${miembro.autor.slug}`" :title="miembro.autor.nombre">
-                            <AvatarSalon :usuario="miembro.autor" size="small" imagesize="small" />
-                        </NuxtLink>
-                        <span v-if="miembros.totalDocs > miembros.docs.length" class="text-muted-color">+{{
-            miembros.totalDocs -
-            miembros.docs.length }}</span>
-                    </div>
-                </div>
-                <div v-else class="text-md text-muted-color">...</div>
-            </div>
+            <ListaMiembrosSala :miembros="miembros" />
 
             <div class="flex-1 mb-4 md:w-1/2">
                 <BtnListaComisiones :salon="salon" :periodo="periodo" />
@@ -84,7 +71,7 @@ const onEstadoColaboracion = (estado) => {
 }
 
 const BuscarMiembros = async () => {
-    miembros.value = await useAPI(`/api/colaboraciones?where[idColaborador][equals]=${salon.value.id}`);
+    miembros.value = await useAPI(`/api/colaboraciones?where[idColaborador][equals]=${salon.value.id}&limit=0`);
     // console.log(miembros.value)
 }
 

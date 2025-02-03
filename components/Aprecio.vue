@@ -7,7 +7,6 @@
         
         <Button v-show="totalDocs>0" :title="userNamesTooltip" link class="my-2 text-xs text-surface-500" :class="{'opacity-30':fetching}" style="padding: 0" :label="`(${totalDocs})`" @click="AbrirTodosLosAprecios()" />
         
-            <!-- {{ aprecioIniciales }} -->
         <Dialog v-model:visible="mostrarTodosAprecios" modal header="Aprecian" :style="{ width: '25rem' }">
             <template v-if="fetching" class="text-center">Cargando...</template>
             <template v-else>
