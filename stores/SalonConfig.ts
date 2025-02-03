@@ -129,13 +129,31 @@ export const useSalonStore = defineStore('salon', {
       }
     },
     async FetchGruposDelUsuario(force = false) {
-      if (!this.gruposDelUsuario || force || !this.gruposDelUsuarioFetching) {
-        console.log("Fetching grupos");
-        this.gruposDelUsuarioFetching = true;
-        const {docs: gruposDelUsuario} = await useAPI(`/api/grupos/me`);
-        this.gruposDelUsuario = gruposDelUsuario;
-        this.gruposDelUsuarioFetching = false;
-        console.log("Fetched grupos", gruposDelUsuario);
+      // If we need fresh data or don't have cached data, and we're not already fetching
+      if ((force || !this.gruposDelUsuario) && !this.gruposDelUsuarioFetching) {
+        try {
+          console.log("Fetching grupos");
+          this.gruposDelUsuarioFetching = true;
+          const { docs: gruposDelUsuario } = await useAPI(`/api/grupos/me`);
+          this.gruposDelUsuario = gruposDelUsuario;
+          console.log("Fetched grupos", gruposDelUsuario);
+        } catch (error) {
+          console.error("Error fetching grupos", error);
+          throw error;
+        } finally {
+          this.gruposDelUsuarioFetching = false;
+        }
+      }
+      // If another fetch is already in progress, wait for it to complete
+      else if (this.gruposDelUsuarioFetching) {
+        await new Promise((resolve) => {
+          const checkInterval = setInterval(() => {
+            if (!this.gruposDelUsuarioFetching) {
+              clearInterval(checkInterval);
+              resolve();
+            }
+          }, 50);
+        });
       }
     }
   },
