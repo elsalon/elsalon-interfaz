@@ -235,3 +235,8 @@ ol{
 .entrada-biblioteca .prose img{
   display: none;
 }
+
+.lista-salones .router-link-active{
+  @apply bg-gray-100;
+  pointer-events: none;
+}
