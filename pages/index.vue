@@ -3,6 +3,7 @@
         <template #header>El Salón</template>
         <CrearEntradaBtn />
         <!-- TODO QUery -->
+         <div class="mt-5"></div>
         <ListaEntradas apiUrl="/api/salones/feed" :cacheKey="cacheKey"/>
     </NuxtLayout>
 </template>
