@@ -27,7 +27,7 @@
         </div>
 
 
-        <LineaDeTiempo :salon="salon"/>
+        <LineaDeTiempo v-if="salon.agenda.activar" :salon="salon"/>
 
 
         <CrearEntradaBtn v-if="estadoEnlace == 2" />

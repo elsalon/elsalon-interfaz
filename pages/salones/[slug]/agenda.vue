@@ -37,6 +37,19 @@
 
 
 <script setup>
+const route = useRoute()
+const slug = route.params?.slug
+const salonStore = useSalonStore();
+const salon = ref(null)
+salon.value = salonStore.salones.find(salon => salon.slug === slug)
+const periodo = salon.value.archivo.periodos[0]
+
+if(!salon.value.agenda.activar){
+    // Redirect
+    navigateTo(`/salones/${slug}`)
+}
+
+
 import { useScreens } from 'vue-screen-utils';
 
 
@@ -50,14 +63,6 @@ const columns = mapCurrent({ lg: 2 }, 1);
 const expanded = mapCurrent({ lg: false }, true);
 
 
-const route = useRoute()
-const slug = route.params?.slug
-const salonStore = useSalonStore();
-const salon = ref(null)
-salon.value = salonStore.salones.find(salon => salon.slug === slug)
-console.log(salon.value.archivo.periodos)
-const periodo = salon.value.archivo.periodos[0]
-console.log(periodo.startDate)
 
 const attributes = ref([
   {
