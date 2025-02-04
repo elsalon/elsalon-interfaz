@@ -6,11 +6,11 @@
             <div class="absolute left-4 right-4 h-0.5 bg-gray-200" :style="`top: ${markerPosition}px`"></div>
 
             <div v-for="(item, index) in items" :key="index"
-                class="linea-item relative z-10 flex flex-col items-center">
+                class="linea-item relative z-10 flex flex-col items-center" :class="{ 'flex-grow': index > 0  ||items.length == 1}">
                 <!-- Title -->
                 <div class="mb-4 max-w-[200px] text-center h-14">
-                    <div class="text-sm font-semibold text-gray-700 line-clamp-2 break-words">
-                        {{ truncateTitle(item.title) }}
+                    <div class="text-sm font-semibold text-gray-700 line-clamp-2 break-words max-w-[7rem]">
+                        {{ item.title }}
                     </div>
                 </div>
 
@@ -47,7 +47,7 @@
                 <!-- Content -->
                 <div class="ml-4 flex-1">
                     <div class="text-sm font-semibold text-gray-700 line-clamp-2">
-                        {{ truncateTitle(item.title) }}
+                        {{ item.title }}
                     </div>
                     <div class="mt-1 text-xs text-gray-500">
                         {{ item.date }}
@@ -86,11 +86,11 @@ const items = ref([
     { title: 'Preentrega Viaje', date: '20 Mayo' },
     { title: 'Entrega Final y Visualización de trailers', date: '27 Mayo' },
     { title: 'Devolución ', date: '05 Junio' },
-    // { title: 'Cierre Actas, Firma Libretas', date: '12 Junio' }
+    { title: 'Cierre Actas, Firma Libretas', date: '12 Junio' }
 ])
 
-const markers = ref([])
-const markerPosition = ref(null)
+// const markers = ref([])
+// const markerPosition = ref(null)
 
 onMounted(() => {
     // if (markers.value.length > 0) {
@@ -100,13 +100,12 @@ onMounted(() => {
     // }
 })
 
-const router = useRouter();
 const IrAgenda = () => {
     navigateTo('./agenda', { replace: true })
 }
 
-const truncateTitle = (title) => {
-    const maxLength = 60;
-    return title.length > maxLength ? title.substring(0, maxLength) + '...' : title;
-};
+// const truncateTitle = (title) => {
+//     const maxLength = 60;
+//     return title.length > maxLength ? title.substring(0, maxLength) + '...' : title;
+// };
 </script>
