@@ -170,7 +170,7 @@
             label: 'Admin El Salón',
             icon: PrimeIcons.WRENCH,
             command: () => {
-                navigateTo('/admin')
+                navigateTo('/admin', {external:true, target: '_blank'})
             }
         })
     }
