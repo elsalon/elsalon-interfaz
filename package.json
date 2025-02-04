@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@primevue/nuxt-module": "^4.0.5",
+    "@samk-dev/nuxt-vcalendar": "^1.0.4",
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.20",
     "mixpanel-nuxt": "^0.0.13",

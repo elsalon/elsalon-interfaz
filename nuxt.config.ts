@@ -9,7 +9,8 @@ export default defineNuxtConfig({
     '@sidebase/nuxt-auth',
     '@pinia/nuxt',
     '@primevue/nuxt-module',
-    'mixpanel-nuxt'
+    'mixpanel-nuxt',
+    '@samk-dev/nuxt-vcalendar',
   ],
   runtimeConfig: {
     public: {

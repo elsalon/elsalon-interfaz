@@ -3,7 +3,7 @@
         <!-- Desktop Timeline -->
         <div class="hidden md:flex md:items-center md:justify-between">
             <!-- Horizontal line connecting first/last markers -->
-            <div class="absolute left-4 right-4 h-0.5 bg-gray-200" :style="`top: ${markerPosition}px`"></div>
+            <div class="absolute left-4 right-4 h-0.5 bg-gray-200" ></div>
 
             <div v-for="(item, index) in items" :key="index"
                 class="linea-item relative z-10 flex flex-col items-center" :class="{ 'flex-grow': index > 0  ||items.length == 1}">
@@ -23,13 +23,7 @@
                     {{ item.date }}
                 </div>
             </div>
-
-            
-            <!-- <Button icon="pi pi-bookmark" severity="secondary" rounded aria-label="Bookmark" size="small"/> -->
-             
-            <!-- <Button icon="pi pi-calendar" class="bg-white hover:bg-white" severity="secondary" variant="text" rounded aria-label="Bookmark" text/> -->
             <Button icon="pi pi-calendar" class="relative" size="small" severity="contrast" rounded aria-label="Bookmark" @click="IrAgenda"/>
-            <!-- <Button class="absolute" icon="pi pi-check" size="small" label="Ver más" /> -->
         </div>
 
         <!-- Mobile Timeline -->
@@ -61,51 +55,41 @@
                 </div> -->
                 <!-- Marker -->
                 <div class="flex-shrink-0">
-                    <!-- <Button icon="pi pi-calendar" severity="secondary" rounded aria-label="Bookmark" /> -->
                     <Button icon="pi pi-calendar" class="relative left-[-11px]" size="small" severity="contrast" rounded aria-label="Bookmark" @click="IrAgenda" />
-                    <!-- <div class="h-4 w-4 rounded-full border-4 border-black bg-white"></div> -->
                 </div>
-                
             </div>
-            <!-- <Button icon="pi pi-calendar " class="relative left-[-14px] mt-3" severity="secondary"  rounded aria-label="Bookmark"  label="Ver más"/> -->
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+const LIMITE_EVENTOS = 4
 
-//   const props = defineProps({
-//     items: {
-//       type: Array,
-//       required: true,
-//       validator: (items) => items.every(item => item.title && item.date)
-//     }
-//   })
-const items = ref([
-    { title: 'Preentrega Viaje', date: '20 Mayo' },
-    { title: 'Entrega Final y Visualización de trailers', date: '27 Mayo' },
-    { title: 'Devolución ', date: '05 Junio' },
-    { title: 'Cierre Actas, Firma Libretas', date: '12 Junio' }
-])
-
-// const markers = ref([])
-// const markerPosition = ref(null)
-
-onMounted(() => {
-    // if (markers.value.length > 0) {
-    //   const firstMarker = markers.value[0]
-    //   const rect = firstMarker.getBoundingClientRect()
-    //   markerPosition.value = rect.top + rect.height/2 - firstMarker.parentElement.parentElement.getBoundingClientRect().top
-    // }
+const props = defineProps({
+    salon: {
+        type: Object,
+        required: true
+    }
 })
 
-const IrAgenda = () => {
-    navigateTo('./agenda', { replace: true })
-}
+const cacheKey = `eventos-${props.salon.id}`
+// Fetch inicial de eventos
+const queryParams = qs.stringify({
+  depth: 0,
+  sort: '-createdAt',
+  limit: LIMITE_EVENTOS,
+  where:{
+    and: [
+      { sala: { equals: props.salon.id } },
+      { fecha: { greater_than_equal: new Date().toISOString() } }
+    ]
+  },
+}, { encode: false })
+const { data: eventos } = await useAsyncData(cacheKey, () => useAPI(`${props.apiUrl}?${queryParams}`))
+console.log(eventos)
 
-// const truncateTitle = (title) => {
-//     const maxLength = 60;
-//     return title.length > maxLength ? title.substring(0, maxLength) + '...' : title;
-// };
-</script>
+// const router = useRouter()
+const IrAgenda = () => {
+    navigateTo(`/salones/${props.salon.slug}/agenda`)
+}
+</script> 
