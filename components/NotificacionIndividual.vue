@@ -107,9 +107,9 @@ switch(props.notificacion.tipoNotificacion){
         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
         body.value += `te mencionó ${DescEntradaOComentarioDesconocida()}`
         break;
-    case 'colaboracion':
+    case 'enlace':
         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
-        body.value += `empezó a colaborar`;
+        body.value += `se enlazó`;
         linkNotificacion.value = `/usuarios/${props.notificacion.usuario.slug}` // En este caso no linkeo a un contenido sino al usuario que inicio la interacción
         if(props.notificacion.sourceDocument.relationTo == 'users'){
             body.value += ` con vos`
