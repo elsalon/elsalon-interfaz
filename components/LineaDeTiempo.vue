@@ -75,7 +75,7 @@ const props = defineProps({
     }
 })
 
-const cacheKey = `eventos-${props.salon.id}`
+const cacheKey = `lineatiempo-${props.salon.id}`
 let hoy = new Date();
 hoy.setHours(1, 0, 0, 0);
 
