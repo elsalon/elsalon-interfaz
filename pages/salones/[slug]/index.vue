@@ -8,23 +8,26 @@
             </h2>
         </div>
 
-        <div class="text-center flex flex-wrap justify-around items-center w-full mb-10">
+        <div class="text-center flex flex-wrap justify-around items-center w-full mb-10 bg-gray-100 p-1">
             <!-- Lista de avatares de miembros -->
             <ListaMiembrosSala :miembros="miembros" />
 
-            <div class="flex-1 mb-4 md:w-1/2">
+            <div class="flex-1 md:w-1/2">
                 <BtnListaComisiones :salon="salon" :periodo="periodo" />
             </div>
 
             <!-- Boton Archivo -->
-            <div class="flex-1 mb-4 md:w-1/2" v-if="salon.archivo.activar" >
+            <div class="flex-1 md:w-1/2" v-if="salon.archivo.activar" >
                 <BtnListaArchivo :salon="salon" />
             </div>
 
-            <div class="flex-1 mb-4 md:w-1/2">
+            <div class="flex-1 md:w-1/2">
                 <BtnEnlazar @estadoEnlace="onEstadoEnlace" type="sala"/>
             </div>
         </div>
+
+
+        <LineaDeTiempo/>
 
 
         <CrearEntradaBtn v-if="estadoEnlace == 2" />
@@ -34,7 +37,6 @@
 </template>
 
 <script setup>
-
 const estadoEnlace = ref(false)
 const route = useRoute()
 const slug = route.params?.slug

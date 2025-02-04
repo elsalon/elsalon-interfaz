@@ -15,7 +15,7 @@ const mostrarTodosLosMiembros = ref(false)
 </script>
 
 <template>
-    <div class="flex-1 mb-4 md:w-1/2  items-center">
+    <div class="flex-1 md:w-1/2  items-center">
         <div class="text-md text-muted-color" v-if="miembros?.docs">
             <div v-if="miembros.totalDocs == 0" class="text-muted text-sm">Sin miembros</div>
             <div v-else class="flex justify-center space-x-1 items-center">
