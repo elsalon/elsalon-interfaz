@@ -17,8 +17,8 @@
             </div>
 
             <!-- Boton Archivo -->
-            <div class="flex-1 mb-4 md:w-1/2">
-                <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon" />
+            <div class="flex-1 mb-4 md:w-1/2" v-if="salon.archivo.activar" >
+                <BtnListaArchivo :salon="salon" />
             </div>
 
             <div class="flex-1 mb-4 md:w-1/2">
