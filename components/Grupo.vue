@@ -47,7 +47,7 @@
 
                 <div class="flex gap-2 mb-10 flex-col md:flex-row">
                     <label for="desc" class="font-semibold w-1/4">desc</label>
-                    <Textarea id="desc" class="w-full leading-normal" v-model="grupoEdit.desc" autoResize rows="5" cols="30" />
+                    <Textarea id="desc" class="w-full leading-normal" v-model="grupoEdit.desc" rows="5" cols="30" />
                 </div>
                 
                 <div class="text-right mb-10">

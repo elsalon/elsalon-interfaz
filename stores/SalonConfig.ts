@@ -66,23 +66,23 @@ export const useSalonStore = defineStore('salon', {
             // Solo agrego el periodo 2 de este año si ya paso agosto
             if (i !== currentYear || currentMonth >= 7) {
               periodos.push({
-                startDate: new Date(i + '-' + this.comienzoCuatri2),
-                endDate: new Date(i + '-' + this.finCuatri2),
+                startDate: new Date(i + '-' + this.comienzoCuatri2 + "GMT-0300"),
+                endDate: new Date(i + '-' + this.finCuatri2 + "GMT-0300"),
                 nombre: i + ' c. 2',
                 slug: `${i}-2`,
               })
             }
             periodos.push({
-              startDate: new Date(i + '-' + this.comienzoCuatri1),
-              endDate: new Date(i + '-' + this.finCuatri1),
+              startDate: new Date(i + '-' + this.comienzoCuatri1 + "GMT-0300"),
+              endDate: new Date(i + '-' + this.finCuatri1 + "GMT-0300"),
               nombre: i + ' c. 1',
               slug: `${i}-1`,
             })
           }else{
             // Materias anuales tienen un solo periodo por año (default)
             periodos.push({
-              startDate: new Date(i + '-' + this.comienzoCuatri1),
-              endDate: new Date(i + '-' + this.finCuatri2),
+              startDate: new Date(i + '-' + this.comienzoCuatri1 + "GMT-0300"),
+              endDate: new Date(i + '-' + this.finCuatri2 + "GMT-0300"),
               nombre: i,
               slug: `${i}`,
             })

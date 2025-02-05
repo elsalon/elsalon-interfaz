@@ -23,7 +23,7 @@
                     {{ $formatDateCorto(item.fecha) }}
                 </div>
             </div>
-            <Button icon="pi pi-calendar" class="relative" size="small" severity="contrast" rounded aria-label="Bookmark" @click="IrAgenda"/>
+            <Button icon="pi pi-calendar" class="relative" size="small" severity="contrast" rounded aria-label="Bookmark" @click="IrEventos"/>
         </div>
 
         <!-- Mobile Timeline -->
@@ -55,7 +55,7 @@
                 </div> -->
                 <!-- Marker -->
                 <div class="flex-shrink-0">
-                    <Button icon="pi pi-calendar" class="relative left-[-11px]" size="small" severity="contrast" rounded aria-label="Bookmark" @click="IrAgenda" />
+                    <Button icon="pi pi-calendar" class="relative left-[-11px]" size="small" severity="contrast" rounded aria-label="Bookmark" @click="IrEventos" />
                 </div>
             </div>
         </div>
@@ -82,7 +82,7 @@ hoy.setHours(1, 0, 0, 0);
 // Fetch inicial de eventos
 const queryParams = qs.stringify({
   depth: 0,
-  sort: '-createdAt',
+  sort: 'fecha',
   limit: LIMITE_EVENTOS,
   where:{
     and: [
@@ -94,7 +94,7 @@ const queryParams = qs.stringify({
 const { data: eventos } = await useAsyncData(cacheKey, () => useAPI(`/api/eventos?${queryParams}`))
 console.log(queryParams)
 // const router = useRouter()
-const IrAgenda = () => {
-    navigateTo(`/salones/${props.salon.slug}/agenda`)
+const IrEventos = () => {
+    navigateTo(`/salones/${props.salon.slug}/eventos`)
 }
 </script> 

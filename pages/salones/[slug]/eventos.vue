@@ -1,0 +1,221 @@
+<template>
+    <NuxtLayout name="layout-contenido">
+        <template #header>
+            <NuxtLink :to="`/salones/${salon.slug}`" class="link">{{ salon.nombre }}</NuxtLink> / Eventos
+        </template>
+
+        <div class="text-center mb-2">
+            <LogoSala :salon="salon" />
+            <NuxtLink class="text-3xl font-bold" :to="`/salones/${salon.slug}`">
+                <h1>{{ salon.nombre }}</h1>
+            </NuxtLink>
+
+            <!-- <BtnListaComisiones :salon="salon" :periodo="periodo"/>
+            <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon"/> -->
+            <div class="flex flex-col md:flex-row space-x-2">
+
+                <client-only>
+                    <VCalendar ref="calendar" class="mt-5" borderless :rows="rows" :expanded="expanded" :masks="masks"
+                        :attributes="attributes" locale="es" :min-date="periodo.startDate"
+                        :max-date="periodo.endDate" :initial-page="initialPage" @dayclick="onDayClicked"
+                        @daymouseenter="onDayMouseEnter" @daymouseleave="onDayMouseLeft" @did-move="onDidMove"
+                        @update:pages="onUpdatePages">
+
+                    </VCalendar>
+
+                    <div class="md:mt-14 w-full">
+                        <div v-if="!fechasVisibles.length" class="text-center text-gray-500 text-sm">No hay eventos en
+                            este
+                            periodo</div>
+                        <div v-for="evento in fechasVisibles" :key="evento.id"
+                            class="p-2 mb-2 text-left hover:cursor-pointer"
+                            :class="{ 'bg-orange-50': eventoIdHovered == evento.id, 'text-gray-400': evento.pasado }"
+                            @click="focusEvento(evento)" @mouseleave="eventoIdHovered = null">
+                            <div class="text-lg font-semibold">{{ evento.titulo }}</div>
+                            <div class="text-sm text-gray-500">{{ $formatDateCorto(evento.fecha) }}</div>
+                            <div class="">{{ evento.descripcion }}</div>
+                        </div>
+                    </div>
+                </client-only>
+            </div>
+        </div>
+
+        <!-- Ventana Crear / Editar evento -->
+        <Dialog v-model:visible="mostrarVentanaEdit" modal :header="ventanaEditHeader" :style="{ width: '25rem' }">
+            
+            <div class="flex gap-2 mb-4 flex-col md:flex-row">
+                <label for="fecha" class="font-semibold w-1/4">fecha</label>
+                <DatePicker id="fecha" v-model="eventoEditando.fecha" class="w-full" :minDate="periodo.startDate" :maxDate="periodo.endDate" showTime hourFormat="24" fluid />
+            </div>
+
+            <div class="flex gap-2 mb-4 flex-col md:flex-row">
+                <label for="titulo" class="font-semibold w-1/4">título</label>
+                <InputText id="titulo" class="w-full" v-model="eventoEditando.titulo" required minlength="3" autofocus />
+            </div>
+            
+            <div class="flex gap-2 mb-10 flex-col md:flex-row">
+                <label for="desc" class="font-semibold w-1/4">desc</label>
+                <Textarea id="desc" class="w-full leading-normal" v-model="eventoEditando.descripcion" rows="5" cols="30" />
+            </div>
+
+            <div class="text-right flex justify-end gap-x-2">
+                <Button type="submit" class="" label="Cancelar" severity="secondary" :disabled="loadingEdit" @click="mostrarVentanaEdit=false"/>
+                <Button type="submit" class="" label="Crear evento" :loading="loadingEdit" />
+            </div>
+        </Dialog>
+
+
+    </NuxtLayout>
+</template>
+
+
+<script setup>
+const calendar = ref(null)
+const route = useRoute()
+const slug = route.params?.slug
+const salonStore = useSalonStore();
+const salon = ref(null)
+salon.value = salonStore.salones.find(salon => salon.slug === slug)
+let periodo = salon.value.archivo.periodos[0]
+
+if (!salon.value.eventos.activar) {
+    // Redirect
+    navigateTo(`/salones/${slug}`)
+}
+
+const auth = useAuth()
+import { useAsyncData } from "#app";
+import qs from 'qs';
+const { $formatDateCorto } = useNuxtApp()
+
+import { useScreens } from 'vue-screen-utils';
+const { mapCurrent } = useScreens({
+    xs: '0px',
+    sm: '640px',
+    md: '768px',
+});
+const rows = mapCurrent({ md: 2 }, 1);
+const expanded = mapCurrent({ md: false }, true);
+
+const masks = {
+    "dayPopover": "WWWW D MMMM",
+}
+const puedeEditar = auth.data.value?.user?.rol == 'docente' || auth.data.value?.user?.isAdmin;
+let hoy = new Date();
+hoy.setHours(1, 0, 0, 0);
+
+const cacheKey = `eventos-${salon.id}`
+
+const queryParams = qs.stringify({
+    depth: 0,
+    sort: 'fecha',
+    limit: 0,
+    where: {
+        and: [
+            { sala: { equals: salon.id } },
+            { fecha: { greater_than_equal: periodo.startDate.toISOString() } },
+            { fecha: { less_than_equal: periodo.endDate.toISOString() } }
+        ]
+    },
+}, { encode: false })
+const { data: eventos } = await useAsyncData(cacheKey, () => useAPI(`/api/eventos?${queryParams}`))
+eventos.value.docs.forEach(evento => {
+    evento.fecha = new Date(evento.fecha)
+    evento.pasado = evento.fecha < hoy
+})
+
+const primerEventoFuturo = eventos.value.docs.find(evento => evento.fecha >= hoy)
+const initialPage = { day: primerEventoFuturo.fecha.getDay(), month: primerEventoFuturo.fecha.getMonth(), year: primerEventoFuturo.fecha.getFullYear() }
+console.log({ initialPage })
+
+const attributes = ref(
+    eventos.value.docs.map(evento => {
+        return {
+            highlight: {
+                color: 'gray',
+            },
+            dates: evento.fecha,
+            customData: {
+                id: evento.id
+            },
+            // popover: {
+            //     label: evento.titulo,
+            //     hideIndicator: true,
+            // },
+        }
+    })
+);
+
+const displayMinDate = ref()
+const displayMaxDate = ref()
+const eventoIdHovered = ref()
+
+const onUpdatePages = (pages) => {
+    //   console.log('pages', pages)
+    displayMinDate.value = pages[0].days.filter(d => d.inMonth)[0].date
+    const lastPage = pages[pages.length - 1]
+    const lastPageDays = lastPage.days.filter(d => d.inMonth)
+    displayMaxDate.value = lastPageDays[lastPageDays.length - 1].date
+}
+const onDayClicked = (date) => {
+    if (!puedeEditar) return;
+    console.log('dayclicked', date)
+    ComenzarCrearEvento(date)
+}
+const onDayMouseEnter = (date) => {
+    //   console.log('daymousentered', date)
+    //   dateHovered.value = date
+    if (date.attributes[0]?.customData?.id) {
+        eventoIdHovered.value = date.attributes[0].customData.id
+    }
+
+}
+const onDayMouseLeft = (date) => {
+    //   console.log('daymouseleft', date)
+    eventoIdHovered.value = null
+}
+const onDidMove = (date) => {
+    //   console.log('didmove', date)
+}
+
+const focusEvento = async (evento) => {
+    if (eventoIdHovered.value == evento.id) return
+    // console.log('focusEvento', evento)
+    eventoIdHovered.value = evento.id
+    await calendar.value.focusDate(evento.fecha)
+}
+
+const fechasVisibles = computed(() => {
+    return eventos.value.docs.filter(evento => {
+        return !evento.pasado || evento.fecha >= displayMinDate.value
+    })
+})
+
+const isEditing = ref(false)
+const mostrarVentanaEdit = ref(false)
+const ventanaEditHeader = computed(() => isEditing.value ? 'Editar evento' : 'Crear evento')
+const eventoEditando = ref(null)
+const loadingEdit = ref(false)
+
+const ComenzarCrearEvento = (evt) => {
+    isEditing.value = false
+    let fecha = evt.date
+    // fecha.setHours(10, 0, 0, 0)
+    eventoEditando.value = {
+        titulo: '',
+        descripcion: '',
+        fecha,
+    }
+    mostrarVentanaEdit.value = true
+}
+
+</script>
+
+<style>
+.vc-container {
+    @media (min-width: 768px) {
+        position: sticky !important;
+        top: 100px;
+    }
+}
+</style>
