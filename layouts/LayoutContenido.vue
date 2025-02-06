@@ -10,6 +10,12 @@
             <Avatar v-else :label="paginaActual?.siglas" class="select-none cursor-pointer" :style="{backgroundColor: paginaActual.color, color: '#fff'}" size="large" shape="" @click="toggleSalonesMenu"/> -->
             <Avatar label="☰" class="select-none cursor-pointer bg-black text-white" size="large" shape="" @click="toggleSalonesMenu"/>
             <Drawer v-model:visible="menuSalonesVisible" class="!w-full md:!w-80 lg:!w-[30rem]">
+
+                <!-- Widget Busqueda -->
+                <div class="mb-3">
+                    <CajaBusqueda/>
+                </div>
+
                 <div v-for="item in salonStore.salones" class="ml-1 lista-salones">
                     <NuxtLink :to="GenerateUrl(item.slug)" class="flex items-center mb-1 hover:font-bold">
                         <span class="mr-2">
@@ -140,13 +146,13 @@
                         navigateTo('/opciones/grupos')
                     },
                 },
-                {
-                    label: 'Búsqueda',
-                    icon: PrimeIcons.SEARCH,
-                    command: () => {
-                        navigateTo('/busqueda')
-                    }
-                },
+                // {
+                //     label: 'Búsqueda',
+                //     icon: PrimeIcons.SEARCH,
+                //     command: () => {
+                //         navigateTo('/busqueda')
+                //     }
+                // },
                 {
                     label: 'Opciones',
                     icon: PrimeIcons.COG,
