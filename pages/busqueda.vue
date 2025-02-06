@@ -1,6 +1,9 @@
 <template>
     <NuxtLayout name="layout-contenido">
-        <template #header>Búsqueda</template>
+        <template #header>
+            <RouterLink :to="`/`" class="link">S</RouterLink> /
+            Búsqueda
+        </template>
         <form @submit.prevent="Buscar">
 
             <InputText v-model="searchQuery" type="text" size="large" placeholder="Búsqueda" class="block w-full" />
@@ -77,8 +80,6 @@ const searchQuery = ref('')
 let lastQuery = ""
 const isSearching = ref(false)
 
-
-
 const categories = ref([
     { name: "Entradas", key: "entradas" },
     { name: "Usuarios", key: "usuarios" },
@@ -117,7 +118,7 @@ const Buscar = async () => {
 
     try {
         const res = await useAPI(`/api/busqueda?query=${searchQuery.value}&categorias=${selectedCategories.value.join(',')}`, { method: 'GET' }, )
-        console.log('Resultados:', res)
+        // console.log('Resultados:', res)
         searchResults.entradas = res.entradas?.docs || [];
         searchResults.usuarios = res.usuarios?.docs || [];
         searchResults.grupos = res.grupos?.docs || [];
@@ -140,7 +141,11 @@ const SinResultado = computed(() => {
 const queryParams = router.currentRoute.value.query
 if(queryParams.query){
     searchQuery.value = queryParams.query
-    selectedCategories.value = queryParams.categorias.split(',')
+    if(queryParams.categorias){
+        selectedCategories.value = queryParams.categorias.split(',')
+    }else{
+        selectedCategories.value = categories.value.map(c => c.key)
+    }
     Buscar();
 }
 </script>
