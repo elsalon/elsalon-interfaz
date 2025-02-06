@@ -211,7 +211,6 @@ const handleScroll = () => {
     if(!calendarDom){
         calendarDom = document.getElementById('calendar')
     }
-    console.log(calendarDom.getBoundingClientRect().top)
     if(calendarDom.getBoundingClientRect().top < 64 ){
         calendarView.value = 'weekly'
     }else{
