@@ -88,4 +88,17 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  // Configuracion de Rutas Nuxt Nitro
+  // SWR: Stale-While-Revalidate
+  // swr: true >> page generated on demand, revalidates in background, cached until API response changes
+  // swr: 3600 >> pages generated on demand, revalidates in background, cached for 1 hour (3600 seconds)
+  // 300 segundos = 5 minutos
+  routeRules: {
+    '/login':  { prerender: true },
+    '/olvide': { prerender: true },
+    '/registrar': { prerender: true },
+    '/': { swr: true }, // El Salon Feed
+    '/salones/**': { swr: 300 },
+    '/entradas/**': { swr: 900 },
+  }
 })
