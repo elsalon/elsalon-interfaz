@@ -92,8 +92,6 @@ const queryParams = qs.stringify({
   },
 }, { encode: false })
 const { data: eventos } = await useAsyncData(cacheKey, () => useAPI(`/api/eventos?${queryParams}`))
-console.log(queryParams)
-// const router = useRouter()
 const IrEventos = () => {
     navigateTo(`/salones/${props.salon.slug}/eventos`)
 }
