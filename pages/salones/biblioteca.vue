@@ -1,5 +1,6 @@
 <template>
     <NuxtLayout name="layout-contenido" containerType="container">
+        <RouterLink :to="`/`" class="link">S</RouterLink> /
         <template #header>{{ salon.nombre }}</template>
         <div class="text-center mb-5">
             <LogoSala :salon="salon" />

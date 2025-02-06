@@ -1,6 +1,9 @@
 <template>
     <NuxtLayout name="layout-contenido">
-        <template #header>Búsqueda</template>
+        <template #header>
+            <RouterLink :to="`/`" class="link">S</RouterLink> /
+            Búsqueda
+        </template>
         <form @submit.prevent="Buscar">
 
             <InputText v-model="searchQuery" type="text" size="large" placeholder="Búsqueda" class="block w-full" />

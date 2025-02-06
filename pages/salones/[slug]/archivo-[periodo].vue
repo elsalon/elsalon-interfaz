@@ -1,7 +1,8 @@
 <template>
     <NuxtLayout name="layout-contenido">
         <template #header>
-            <NuxtLink :to="`/salones/${salon.slug}`" class="link">{{ salon.nombre }}</NuxtLink> /
+            <RouterLink :to="`/`" class="link">S</RouterLink> /
+            <NuxtLink :to="`/salones/${salon.slug}`" class="link">{{ salon.siglas }}</NuxtLink> /
             Archivo {{ periodo.nombre }}
         </template>
 
