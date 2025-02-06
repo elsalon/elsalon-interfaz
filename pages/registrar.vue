@@ -3,8 +3,8 @@
     <template v-if="!userSignedUp" #cta>Registrate en El Salón</template>
     <template v-if="!userSignedUp">
       <form @submit.prevent="handleSignup" class="space-y-3">
-            <div>
-          <label for="nombre" class="block text-900 font-medium mb-2">Nombre</label>
+        <div>
+          <label for="nombre" class="block text-900 font-medium mb-2">Nombre y Apellido</label>
           <InputText id="nombre" type="text" class="block w-full" v-model="nombre" autofocus required minlength="3"/>
         </div>
         
@@ -15,11 +15,28 @@
     
         <div>
           <label for="password" class="block text-900 font-medium mb-2">Contraseña</label>
-          <InputText id="password" type="password" class="block w-full" v-model="password" required />
+          <Password v-model="password" id="password" inputProps="" fluid toggleMask :feedback="false" />
         </div>  
+
+        <div>
+          <label for="confirmPassword" class="block text-900 font-medium mb-2">Confirmar Contraseña</label>
+          <Password 
+            id="confirmPassword" 
+            type="password" 
+            class="block w-full" 
+            v-model="confirmPassword"
+            :class="{'p-invalid': passwordError}"
+            required 
+            :feedback="false"
+            fluid
+          />
+          <div class="h-4">
+            <small class="p-error" v-if="passwordError">Las contraseñas no coinciden</small>
+          </div>
+        </div>
       
         <div>
-          <Button type="submit" label="Registrar" class="block w-full mt-3" :loading="loading"></Button>
+          <Button type="submit" label="Registrar" class="block w-full mt-3" :loading="loading" :disabled="!isFormValid"></Button>
         </div>
       </form>
       
@@ -38,7 +55,6 @@
 </template>
   
 <script setup>
-// Permito que se pueda acceder a la página sin autenticación
 definePageMeta({
   auth: {
     unauthenticatedOnly: true,
@@ -49,11 +65,12 @@ useHead({
   title: 'Registrar - Salón',
 })
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const nombre = ref('')
 const email = ref('')
 const password = ref('')
+const confirmPassword = ref('')
 const loading = ref(false)
 const { signUp } = useAuth()
 
@@ -62,7 +79,24 @@ const userSignedUp = ref(false)
 const toast = useToast();
 import { useToast } from "primevue/usetoast";
 
+const passwordError = computed(() => {
+  return confirmPassword.value !== '' && password.value !== confirmPassword.value
+})
+
+const isFormValid = computed(() => {
+  return nombre.value.length >= 3 && 
+         email.value && 
+         password.value && 
+         confirmPassword.value && 
+         !passwordError.value
+})
+
 const handleSignup = async () => {
+  if (passwordError.value) {
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Las contraseñas no coinciden', life: 3000});
+    return;
+  }
+
   loading.value = true
   try {
     const credentials = { 
@@ -70,12 +104,22 @@ const handleSignup = async () => {
         password: password.value,
         nombre: nombre.value,
     }
-    await signUp(credentials, undefined, { preventLoginFlow: true })
-    userSignedUp.value = true
-    
+    const { error} = await signUp(credentials, undefined, { preventLoginFlow: true })
+      .catch(e => ({ error: e.data }))
+    console.error("Error",error )
+
+    if(error?.errors.length){
+      let detail = "Hubo un error registrando el usuario";
+      if(error?.errors[0]?.data?.some(e => e.field == "email")){
+        detail = "El mail no es válido"
+      }
+      toast.add({ severity: 'contrast', summary: 'Error', detail, life: 3000});
+    }else{
+      userSignedUp.value = true
+    }
+
   } catch (error) {
-    console.error('Signup failed:', error)
-    toast.add({ severity: 'contrast', summary: 'Error', detail: 'No se pudo dar de alta', life: 3000});
+    toast.add({ severity: 'contrast', summary: 'Error', detail: "Hubo un error en el registro", life: 3000});
   } finally {
     loading.value = false
   }
