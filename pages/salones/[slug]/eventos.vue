@@ -107,6 +107,7 @@ const { isHeaderVisible } = useScrollDirection(75)
 const auth = useAuth()
 import { useAsyncData } from "#app";
 import qs from 'qs';
+import { createWebHistory } from "vue-router";
 const { $formatDateCorto } = useNuxtApp()
 const toast = useToast();
 const confirm = useConfirm();
@@ -318,12 +319,11 @@ const GuardarCambiosEvento = async() => {
         console.log('Evento editado', response)
         let evento = response.doc;
         evento.fecha = new Date(evento.fecha)
+        const idxAttr = attributes.value.findIndex(attr => attr.customData?.id == eventoEditando.value.id)
+        attributes.value[idxAttr].dates = evento.fecha
         // Actualizo en la lista de eventos
         const idx = eventos.value.docs.findIndex(evt => evt.id == eventoEditando.value.id)
         eventos.value.docs[idx] = evento
-        // Actualizo en el calendario
-        const idxAttr = attributes.value.findIndex(attr => attr.customData.id == eventoEditando.value.id)
-        attributes.value[idxAttr].dates = evento.fecha
         toast.add({ severity: 'contrast', detail: 'Evento editado', life: 3000 });
     }catch(e){
         console.warn(e)
@@ -344,7 +344,8 @@ const PromptEliminarEvento = (evento) => {
             outlined: true
         },
         acceptProps: {
-            label: 'Borrar'
+            label: 'Borrar',
+            severity: 'danger',
         },
         reject: () => {
             console.log('Borrar evento cancelada');
@@ -362,7 +363,7 @@ const EliminarEvento = async(evento) => {
         // Elimino del calendario
         const idx = eventos.value.docs.findIndex(evt => evt.id == evento.id)
         eventos.value.docs.splice(idx, 1)
-        const idxAttr = attributes.value.findIndex(attr => attr.customData.id == evento.id)
+        const idxAttr = attributes.value.findIndex(attr => attr.customData?.id == evento.id)
         attributes.value.splice(idxAttr, 1)
         toast.add({ severity: 'contrast', detail: 'Evento eliminado', life: 3000 });
         mostrarVentanaEdit.value = false
