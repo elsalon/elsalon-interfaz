@@ -1,7 +1,8 @@
 <template>
     <NuxtLayout name="layout-contenido">
         <template #header>
-            <NuxtLink :to="`/salones/${salon.slug}`" class="link">{{ salon.nombre }}</NuxtLink> / Eventos
+            <RouterLink :to="`/`" class="link">S</RouterLink> /
+            <NuxtLink :to="`/salones/${salon.slug}`" class="link">{{ salon.siglas }}</NuxtLink> / Eventos
         </template>
 
         <div class="text-center mb-2">
@@ -15,25 +16,28 @@
             <div class="flex flex-col md:flex-row space-x-2">
 
                 <client-only>
-                    <VCalendar ref="calendar" class="mt-5" borderless :rows="rows" :expanded="expanded" :masks="masks"
+                    <VCalendar id="calendar" ref="calendar" :view="calendarView" 
+                        class="transition-padding duration-300" :class="{'pt-16': isHeaderVisible && calendarView == 'weekly'}"
+                        borderless :rows="rows" :expanded="expanded" :masks="masks"
                         :attributes="attributes" locale="es" :min-date="periodo.startDate"
                         :max-date="periodo.endDate" :initial-page="initialPage" @dayclick="onDayClicked"
                         @daymouseenter="onDayMouseEnter" @daymouseleave="onDayMouseLeft" @did-move="onDidMove"
-                        @update:pages="onUpdatePages">
+                        @update:pages="onUpdatePages"
+                        >
 
                     </VCalendar>
 
-                    <div class="md:mt-14 w-full">
+                    <div class="md:mt-14 md:w-full">
                         <div v-if="!fechasVisibles.length" class="text-center text-gray-500 text-sm">No hay eventos en
                             este
                             periodo</div>
-                        <div v-for="evento in fechasVisibles" :key="evento.id"
+                        <div v-for="evento in fechasVisibles" :key="evento.id" :ref="el => evtRefs[evento.id] = el"
                             class="p-2 mb-2 text-left hover:cursor-pointer"
                             :class="{ 'bg-orange-50': eventoIdHovered == evento.id, 'text-gray-400': evento.pasado }"
                             @click="focusEvento(evento)" @mouseleave="eventoIdHovered = null">
                             <div class="text-lg font-semibold">{{ evento.titulo }}</div>
-                            <div class="text-sm text-gray-500">{{ $formatDateCorto(evento.fecha) }}</div>
-                            <div class="">{{ evento.descripcion }}</div>
+                            <div class="text-xs md:text-sm text-gray-500">{{ $formatDateCorto(evento.fecha) }}</div>
+                            <div class="text-sm md:text-base">{{ evento.descripcion }}</div>
                         </div>
                     </div>
                 </client-only>
@@ -78,11 +82,14 @@ const salon = ref(null)
 salon.value = salonStore.salones.find(salon => salon.slug === slug)
 let periodo = salon.value.archivo.periodos[0]
 
+const evtRefs = ref({})
+
 if (!salon.value.eventos.activar) {
     // Redirect
     navigateTo(`/salones/${slug}`)
 }
 
+const { isHeaderVisible } = useScrollDirection(75)
 const auth = useAuth()
 import { useAsyncData } from "#app";
 import qs from 'qs';
@@ -96,7 +103,7 @@ const { mapCurrent } = useScreens({
 });
 const rows = mapCurrent({ md: 2 }, 1);
 const expanded = mapCurrent({ md: false }, true);
-
+const calendarView = ref('monthly')
 const masks = {
     "dayPopover": "WWWW D MMMM",
 }
@@ -126,7 +133,6 @@ eventos.value.docs.forEach(evento => {
 
 const primerEventoFuturo = eventos.value.docs.find(evento => evento.fecha >= hoy)
 const initialPage = { day: primerEventoFuturo.fecha.getDay(), month: primerEventoFuturo.fecha.getMonth(), year: primerEventoFuturo.fecha.getFullYear() }
-console.log({ initialPage })
 
 const attributes = ref(
     eventos.value.docs.map(evento => {
@@ -158,9 +164,17 @@ const onUpdatePages = (pages) => {
     displayMaxDate.value = lastPageDays[lastPageDays.length - 1].date
 }
 const onDayClicked = (date) => {
-    if (!puedeEditar) return;
-    console.log('dayclicked', date)
-    ComenzarCrearEvento(date)
+    if(!puedeEditar){
+        // Usuario sin privilegios scrollea 
+        // scroll to evento
+        const eventoRef = evtRefs.value[eventoIdHovered.value]
+        if (eventoRef) {
+            eventoRef.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+    }else{
+        // Usuario con privilegios crea nuevo evento
+        ComenzarCrearEvento(date)
+    }
 }
 const onDayMouseEnter = (date) => {
     //   console.log('daymousentered', date)
@@ -183,6 +197,26 @@ const focusEvento = async (evento) => {
     // console.log('focusEvento', evento)
     eventoIdHovered.value = evento.id
     await calendar.value.focusDate(evento.fecha)
+}
+
+let calendarDom = null
+onMounted(() => {
+      window.addEventListener('scroll', handleScroll)
+    })
+  
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll)
+})
+const handleScroll = () => {
+    if(!calendarDom){
+        calendarDom = document.getElementById('calendar')
+    }
+    console.log(calendarDom.getBoundingClientRect().top)
+    if(calendarDom.getBoundingClientRect().top < 64 ){
+        calendarView.value = 'weekly'
+    }else{
+        calendarView.value = 'monthly'
+    }
 }
 
 const fechasVisibles = computed(() => {
@@ -213,8 +247,11 @@ const ComenzarCrearEvento = (evt) => {
 
 <style>
 .vc-container {
+    position: sticky !important;
+    top: 0px;
+    /* padding-top: 50px; */
     @media (min-width: 768px) {
-        position: sticky !important;
+        padding-top: 0px;
         top: 100px;
     }
 }
