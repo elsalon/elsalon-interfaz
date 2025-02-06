@@ -27,9 +27,13 @@
                     </VCalendar>
 
                     <div class="md:mt-9 md:w-full">
-                        <div v-if="!fechasVisibles.length" class="text-center text-gray-500 text-sm">No hay eventos en
-                            este
-                            periodo</div>
+                        <template v-if="eventos.docs.length == 0">
+                            <div class="text-center text-gray-500 text-sm">Clickeá en una fecha para crear el primer evento</div>
+                        </template>
+                        <template v-else>
+                            <div v-if="!fechasVisibles.length" class="text-center text-gray-500 text-sm">
+                                No hay eventos en este periodo</div>
+                        </template>
                         <div v-for="evento in fechasVisibles" :key="evento.id" :ref="el => evtRefs[evento.id] = el"
                             class="p-2 mb-2 text-left hover:cursor-pointer"
                             :class="{ 'bg-orange-50': eventoIdHovered == evento.id, 'text-gray-400': evento.pasado, 'opacity-30': evento.loading }"
@@ -93,10 +97,10 @@ salon.value = salonStore.salones.find(salon => salon.slug === slug)
 let periodo = salon.value.archivo.periodos[0]
 
 const evtRefs = ref({})
-
+const router = useRouter()
 if (!salon.value.eventos.activar) {
     // Redirect
-    navigateTo(`/salones/${slug}`)
+    router.push(`/salones/${slug}`)
 }
 
 const { isHeaderVisible } = useScrollDirection(75)
@@ -281,18 +285,20 @@ const CrearEventoNuevo = async() => {
     loadingEdit.value = true
     try{
         const response = await useAPI('/api/eventos', { method: 'POST', body: eventoEditando.value })
-        console.log('Evento creado', response)
+        let evento = response.doc;
+        console.log('Evento creado', evento)
+        evento.fecha = new Date(evento.fecha)
         // Agrego a la lista de eventos y la reordeno
-        eventos.value.docs.push(response)
+        eventos.value.docs.push(evento)
         eventos.value.docs.sort((a, b) => a.fecha - b.fecha)
         // Agregado al calendario
         attributes.value.push({
             highlight: {
                 color: 'gray',
             },
-            dates: new Date(response.fecha),
+            dates: evento.fecha,
             customData: {
-                id: response.id
+                id: evento.id
             },
         })
         toast.add({ severity: 'contrast', detail: 'Evento creado', life: 3000 });
