@@ -30,7 +30,6 @@ const props = defineProps(
     },
 )
 const autorSeleccionado = ref(null)
-const sala = salonStore.currContext == "bitacora" ? "Bitácora" : paginaActual.value.nombre
 
 if (props.entryEdit) {
     console.log("Editando entrada", props.entryEdit)
@@ -42,13 +41,13 @@ if (props.entryEdit) {
     isEditing.value = true
 }
 
-
 const publicarLabelContexto = ref("")
-publicarLabelContexto.value = sala ? `Publicar en ${sala}` : "Publicar";
 if(salonStore.currContext == "bitacora"){
     publicarLabelContexto.value = "Publicar en bitácora"
 }else if(salonStore.currContext == "grupo"){
     publicarLabelContexto.value = "Publicar en bitácora grupal"
+}else{
+    publicarLabelContexto.value = `Publicar en ${paginaActual.value.nombre}`
 }
 const publicarLabel = ref(publicarLabelContexto.value)
 
@@ -66,8 +65,14 @@ const Publicar = async () => {
     }
     
     const { paginaActual } = useSalon() // TODO ordenar estos dos que quedaron redundantes
-    const sala = salonStore.currContext == "bitacora" ? null : paginaActual.value.id
-    const salaNombre = salonStore.currContext == "bitacora" ? "Bitácora" : paginaActual.value.nombre
+    let sala, salaNombre;
+    if(salonStore.currContext == "bitacora" || salonStore.currContext == "grupo"){
+        sala = null
+        salaNombre = salonStore.currContext == "bitacora" ? "Bitácora" : "Bitácora grupal"
+    }else{
+        sala = paginaActual.value.id
+        salaNombre = paginaActual.value.nombre
+    }
 
     console.log({paginaActual})
     console.log("Publicando en sala id", sala)

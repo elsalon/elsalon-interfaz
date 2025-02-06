@@ -61,6 +61,7 @@ const props = defineProps({
 
 const autoresOpciones = ref([]);
 const disableSelectorIdentidad = ref(false);
+const contextoId = salonStore.contextoId;
 
 const emit = defineEmits(["update:modelValue"]);
 
