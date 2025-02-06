@@ -97,6 +97,8 @@ export default defineNuxtConfig({
     '/login':  { prerender: true },
     '/olvide': { prerender: true },
     '/registrar': { prerender: true },
+    '/verificar': { prerender: true },
+    '/busqueda': { prerender: true },
     '/': { swr: true }, // El Salon Feed
     '/salones/**': { swr: 300 },
     '/entradas/**': { swr: 900 },
