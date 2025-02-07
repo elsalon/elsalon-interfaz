@@ -47,28 +47,46 @@ const MarcarLeida = async () => {
     emit('leida', props.notificacion)
 }
 
-const DescEntradaOComentarioDelUsuario = async () => {
+// const DescComentario = async () => {
+//     switch(props.notificacion.sourceDocument.relationTo){
+//         case 'entradas':
+//             linkNotificacion.value = `/entradas/${props.notificacion.sourceDocument.value.id}`
+//             // La entrada puede ser propia o grupal
+//             if(props.notificacion.sourceDocument.value.autoriaGrupal){
+//                 // Entrada grupal
+//                 return `tu entrada grupal con <strong>${props.notificacion.sourceDocument.value.grupo.nombre}</strong>: "${props.notificacion.sourceDocument.value.extracto}"`
+//             }else{
+//                 // Entrada hecha por el usuario
+//                 return `tu entrada "${props.notificacion.sourceDocument.value.extracto}"`
+//             }
+//         case 'comentarios':
+//             const entrada = await useAPI(`/api/entradas/${props.notificacion.sourceDocument.value.entrada}`)
+//             linkNotificacion.value = `/entradas/${entrada.id}`
+//             if(entrada.autoriaGrupal){
+//                 // Entrada grupal
+//                 return `tu comentario grupal con <strong>${entrada.grupo.nombre}</strong>: "${entrada.extracto}"`
+//             }else{
+//                 // Entrada hecha por el usuario
+//                 return `tu comentario "${entrada.extracto}"` // referencia a la entrada de este comentario
+//             }
+//     }        
+// }
+
+const DescAprecio = async () => {
     switch(props.notificacion.sourceDocument.relationTo){
         case 'entradas':
             linkNotificacion.value = `/entradas/${props.notificacion.sourceDocument.value.id}`
-            // La entrada puede ser propia o grupal
-            if(props.notificacion.sourceDocument.value.autoriaGrupal){
-                // Entrada grupal
-                return `tu entrada grupal con <strong>${props.notificacion.sourceDocument.value.grupo.nombre}</strong>: "${props.notificacion.sourceDocument.value.extracto}"`
-            }else{
-                // Entrada hecha por el usuario
-                return `tu entrada "${props.notificacion.sourceDocument.value.extracto}"`
-            }
+            return `en una entrada "${props.notificacion.sourceDocument.value.extracto}"`
         case 'comentarios':
-            const entrada = await useAPI(`/api/entradas/${props.notificacion.sourceDocument.value.entrada}`)
-            linkNotificacion.value = `/entradas/${entrada.id}`
-            if(entrada.autoriaGrupal){
-                // Entrada grupal
-                return `tu entrada grupal con <strong>${entrada.grupo.nombre}</strong>: "${entrada.extracto}"`
-            }else{
-                // Entrada hecha por el usuario
-                return `tu entrada "${entrada.extracto}"` // referencia a la entrada de este comentario
-            }
+            linkNotificacion.value = `/entradas/${props.notificacion.sourceDocument.value.entrada}`
+            console.log("**",props.notificacion.sourceDocument.value.entrada)
+            // if (entrada.autoriaGrupal) {
+            //     // Entrada grupal
+            //     return `tu comentario grupal con <strong>${entrada.grupo.nombre}</strong>: "${entrada.extracto}"`
+            // } else {
+            //     // Entrada hecha por el usuario
+            //     return `tu comentario "${entrada.extracto}"` // referencia a la entrada de este comentario
+            // }
     }        
 }
 
@@ -82,6 +100,7 @@ const DescEntradaOComentarioDesconocida = () => {
     }        
 }
 
+identidad.value = props.notificacion.usuario; // default
 
 switch(props.notificacion.tipoNotificacion){
     case 'aprecio':
@@ -89,11 +108,11 @@ switch(props.notificacion.tipoNotificacion){
         if(props.notificacion.cantidad > 0){
             body.value += `y ${props.notificacion.cantidad} más `
         }
-        body.value += `apreció ${await DescEntradaOComentarioDelUsuario()}`
+        body.value += `apreció ${await DescAprecio()}`
         break;
     case 'comentario':
         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
-        body.value += `comentó ${await DescEntradaOComentarioDelUsuario()}`
+        // body.value += `comentó ${await DescComentario()}`
         break;
     case 'comentario-grupal':
         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
@@ -124,7 +143,7 @@ switch(props.notificacion.tipoNotificacion){
         linkNotificacion.value = `/grupos/${props.notificacion.sourceDocument.value.id}`
         break;
     case 'grupo-integrante-nuevo':
-    identidad.value = props.notificacion.sourceDocument.value; // El grupo
+        identidad.value = props.notificacion.sourceDocument.value; // El grupo
         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
         body.value += `fue agregado al grupo <strong>${props.notificacion.sourceDocument.value.nombre}</strong>`
         linkNotificacion.value = `/grupos/${props.notificacion.sourceDocument.value.id}`
@@ -137,7 +156,7 @@ switch(props.notificacion.tipoNotificacion){
         break;
 
     default:
-    props.notificacion.usuario
+        props.notificacion.usuario
         identidad.value = props.notificacion.usuario
         body.value = `Tipo de notificación desconocido`
         break;

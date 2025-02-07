@@ -39,8 +39,8 @@
             
                 <template v-if="auth?.data">
                     <!-- Avatar Con notificationes -->
-                    <template v-if="totalNotifications > 0">
-                        <OverlayBadge :value="totalNotifications" size="small">
+                    <template v-if="notificacionSinLeer > 0">
+                        <OverlayBadge :value="notificacionSinLeer" size="small">
                             <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" :usuario="auth?.data.value.user" @click="toggleUserMenu"/>
                         </OverlayBadge>
                     </template>
@@ -71,7 +71,7 @@
 
 <script setup>
     const { isHeaderVisible } = useScrollDirection(75)
-    const { totalNotifications } = useNotifications()
+    const { notificacionSinLeer } = useNotifications()
     const { myKey } = useReactiveAuth()
     const auth = useAuth()
     import { PrimeIcons } from '@primevue/core/api';
@@ -90,16 +90,16 @@
     });
 
     watchEffect(() => {
-        const notifications = totalNotifications.value > 0 ? `(${totalNotifications.value}) ` : '';
+        const notifications = notificacionSinLeer.value > 0 ? `(${notificacionSinLeer.value}) ` : '';
         const title = salonStore.pageTitle ?  `${salonStore.pageTitle} - Salón` : 'Salón';
         useHead({
             title: notifications + title
         });
     });
 
-    // listen for totalNotifications change
+    // listen for notificacionSinLeer change
     let firstRun = true;
-    watch(totalNotifications, (val) => {
+    watch(notificacionSinLeer, (val) => {
         if(val > 0){
             if(firstRun){
                 firstRun = false;
@@ -130,7 +130,7 @@
                         notificacionesVisible.value = true;
                         // console.log(notificacionesDialog.value)
                     },
-                    badge: totalNotifications.value
+                    badge: notificacionSinLeer.value
                 },
                 {
                     label: 'Bitácora',

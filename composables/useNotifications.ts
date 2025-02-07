@@ -9,7 +9,7 @@ const sharedState = {
   lastFetchTime: ref(null),
   isLoading: ref(false),
   error: ref(null),
-  totalNotifications: ref(0),
+  notificacionSinLeer: ref(0),
   loadedOnce: ref(false)
 }
 
@@ -28,9 +28,9 @@ export function useNotifications() {
     sharedState.error.value = null
 
     try {
-      const { docs: newNotifications, totalDocs: totalNotifications } = await useAPI('/api/notificaciones?where[leida][not_equals]=true&limit=1')
-      console.log('Fetched notifications:', newNotifications, totalNotifications)
-      sharedState.totalNotifications.value = totalNotifications
+      const { docs: newNotifications, totalDocs: notificacionSinLeer } = await useAPI('/api/notificaciones?where[leida][not_equals]=true&limit=1')
+      console.log('Fetched notifications:', newNotifications, notificacionSinLeer)
+      sharedState.notificacionSinLeer.value = notificacionSinLeer
       
       // Compare with existing notifications and show toast for new ones
       const newOnes = newNotifications.filter(notification => 
@@ -72,7 +72,7 @@ export function useNotifications() {
 
   return {
     notifications: sharedState.notifications,
-    totalNotifications: sharedState.totalNotifications,
+    notificacionSinLeer: sharedState.notificacionSinLeer,
     isLoading: sharedState.isLoading,
     error: sharedState.error,
     fetchNotifications,
