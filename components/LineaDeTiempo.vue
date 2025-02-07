@@ -5,7 +5,7 @@
             <Button label="Crear primer evento" @click="IrEventos" size="small"/>
         </div>
     </template>
-    <template v-else>
+    <template v-if="eventos.docs.length>0">
         <div class="relative mt-2 mb-6 ml-4 md:ml-0 md:mb-8">
             <!-- Desktop Timeline -->
             <div class="hidden md:flex md:items-center md:justify-between">
