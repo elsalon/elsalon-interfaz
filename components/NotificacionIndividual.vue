@@ -1,24 +1,25 @@
 <template>
-        <NuxtLink @click.prevent="handleClick()" :to="linkNotificacion" class="p-3 m-1 block" :class="{'bg-gray-100': !notificacion.leida}">
-            <div class="flex notification-item">
-                <div>
-                    <AvatarSalon :usuario="identidad" size="small" class="mr-4" />
-                </div>
-                <div>
-                    <div class="text-sm mr-2" v-html="body"></div>
+    <NuxtLink @click.prevent="HandleNotificacionLink()" :to="linkNotificacion" class="p-3 m-1 block"
+        :class="{ 'bg-gray-100': !notificacion.leida }">
+        <div class="flex notification-item">
+            <div>
+                <AvatarSalon :usuario="props.notificacion.identidad.value" size="small" class="mr-4" />
+            </div>
+            <div>
+                <div class="text-sm mr-2" v-html="props.notificacion.mensaje"></div>
 
-                    <div class="flex items-center justify-between">
-                        <div class="text-gray-400 text-xs">{{ $formatDate(props.notificacion.createdAt) }}</div>
-                    </div>
+                <div class="flex items-center justify-between">
+                    <div class="text-gray-400 text-xs">{{ $formatDate(props.notificacion.createdAt) }}</div>
                 </div>
             </div>
-            
-        </NuxtLink>
-        <!-- <Button label="Marcar como leída" severity="warning" text aria-label="Marcar como leída"
+        </div>
+
+    </NuxtLink>
+    <!-- <Button label="Marcar como leída" severity="warning" text aria-label="Marcar como leída"
             class="text-xs" @click.stop="MarcarLeida()" /> -->
 </template>
+
 <script setup>
-const body = ref('')
 const router = useRouter();
 const linkNotificacion = ref('')
 
@@ -30,20 +31,35 @@ const props = defineProps({
     }
 })
 
-const identidad = ref()
+// const identidad = ref()
 const emit = defineEmits(['leida'])
 
-const handleClick = async () => {
-    console.log('handleClick')
-    await MarcarLeida()
-    router.push(linkNotificacion.value);
+switch (props.notificacion.link.relationTo) {
+    case 'entradas':
+        linkNotificacion.value = `/entradas/${props.notificacion.link.value.id}`
+        break;
+    case 'users':
+        linkNotificacion.value = `/usuarios/${props.notificacion.link.value.slug}`
+        break;
+    case 'grupos':
+        linkNotificacion.value = `/grupos/${props.notificacion.link.value.slug}`
+        break;
+    case 'salones':
+        linkNotificacion.value = `/salones/${props.notificacion.link.value.slug}`
+        break;
+}
+
+const HandleNotificacionLink = async () => {
+    console.log('HandleNotificacionLink')
+    await MarcarLeida();
+    router.push(linkNotificacion.value)
 }
 
 const MarcarLeida = async () => {
     console.log('Marcar leida', props.notificacion.id)
     props.notificacion.leida = true
-    const body = {leida:true}
-    await useAPI(`/api/notificaciones/${props.notificacion.id}`, {body, method:'PATCH'})
+    const body = { leida: true }
+    await useAPI(`/api/notificaciones/${props.notificacion.id}`, { body, method: 'PATCH' })
     emit('leida', props.notificacion)
 }
 
@@ -72,97 +88,97 @@ const MarcarLeida = async () => {
 //     }        
 // }
 
-const DescAprecio = async () => {
-    switch(props.notificacion.sourceDocument.relationTo){
-        case 'entradas':
-            linkNotificacion.value = `/entradas/${props.notificacion.sourceDocument.value.id}`
-            return `en una entrada "${props.notificacion.sourceDocument.value.extracto}"`
-        case 'comentarios':
-            linkNotificacion.value = `/entradas/${props.notificacion.sourceDocument.value.entrada}`
-            console.log("**",props.notificacion.sourceDocument.value.entrada)
-            // if (entrada.autoriaGrupal) {
-            //     // Entrada grupal
-            //     return `tu comentario grupal con <strong>${entrada.grupo.nombre}</strong>: "${entrada.extracto}"`
-            // } else {
-            //     // Entrada hecha por el usuario
-            //     return `tu comentario "${entrada.extracto}"` // referencia a la entrada de este comentario
-            // }
-    }        
-}
+// const DescAprecio = async () => {
+//     switch(props.notificacion.sourceDocument.relationTo){
+//         case 'entradas':
+//             linkNotificacion.value = `/entradas/${props.notificacion.sourceDocument.value.id}`
+//             return `en una entrada "${props.notificacion.sourceDocument.value.extracto}"`
+//         case 'comentarios':
+//             linkNotificacion.value = `/entradas/${props.notificacion.sourceDocument.value.entrada}`
+//             console.log("**",props.notificacion.sourceDocument.value.entrada)
+//             // if (entrada.autoriaGrupal) {
+//             //     // Entrada grupal
+//             //     return `tu comentario grupal con <strong>${entrada.grupo.nombre}</strong>: "${entrada.extracto}"`
+//             // } else {
+//             //     // Entrada hecha por el usuario
+//             //     return `tu comentario "${entrada.extracto}"` // referencia a la entrada de este comentario
+//             // }
+//     }        
+// }
 
-const DescEntradaOComentarioDesconocida = () => {
-    linkNotificacion.value = `/entradas/${props.notificacion.sourceDocument.value.id}`
-    switch(props.notificacion.sourceDocument.relationTo){
-        case 'entradas':
-            return `en una entrada "${props.notificacion.sourceDocument.value.extracto}"`
-        case 'comentarios':
-            return `en un comentario "${props.notificacion.sourceDocument.value.extracto}"`
-    }        
-}
+// const DescEntradaOComentarioDesconocida = () => {
+//     linkNotificacion.value = `/entradas/${props.notificacion.sourceDocument.value.id}`
+//     switch(props.notificacion.sourceDocument.relationTo){
+//         case 'entradas':
+//             return `en una entrada "${props.notificacion.sourceDocument.value.extracto}"`
+//         case 'comentarios':
+//             return `en un comentario "${props.notificacion.sourceDocument.value.extracto}"`
+//     }        
+// }
 
-identidad.value = props.notificacion.usuario; // default
+// identidad.value = props.notificacion.usuario; // default
 
-switch(props.notificacion.tipoNotificacion){
-    case 'aprecio':
-        body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
-        if(props.notificacion.cantidad > 0){
-            body.value += `y ${props.notificacion.cantidad} más `
-        }
-        body.value += `apreció ${await DescAprecio()}`
-        break;
-    case 'comentario':
-        body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
-        // body.value += `comentó ${await DescComentario()}`
-        break;
-    case 'comentario-grupal':
-        body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
-        body.value += `comentó como grupo <strong>${props.notificacion.sourceDocument.value.grupo.nombre}</strong>: "${props.notificacion.sourceDocument.value.extracto}"`
-        break;
-    case 'entrada-grupal':
-        body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
-        body.value += `publicó una entrada grupal con <strong>${props.notificacion.sourceDocument.value.grupo.nombre}</strong>: "${props.notificacion.sourceDocument.value.extracto}"`
-        break;
-    case 'mencion':
-        body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
-        body.value += `te mencionó ${DescEntradaOComentarioDesconocida()}`
-        break;
-    case 'enlace':
-        body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
-        body.value += `se enlazó`;
-        linkNotificacion.value = `/usuarios/${props.notificacion.usuario.slug}` // En este caso no linkeo a un contenido sino al usuario que inicio la interacción
-        if(props.notificacion.sourceDocument.relationTo == 'users'){
-            body.value += ` con vos`
-        }else if(props.notificacion.sourceDocument.relationTo == 'grupos'){
-            body.value += ` con tu grupo <strong>${props.notificacion.sourceDocument.value.nombre}</strong>`
-        }
-        break;
+// switch(props.notificacion.tipoNotificacion){
+//     case 'aprecio':
+//         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
+//         if(props.notificacion.cantidad > 0){
+//             body.value += `y ${props.notificacion.cantidad} más `
+//         }
+//         body.value += `apreció ${await DescAprecio()}`
+//         break;
+//     case 'comentario':
+//         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
+//         // body.value += `comentó ${await DescComentario()}`
+//         break;
+//     case 'comentario-grupal':
+//         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
+//         body.value += `comentó como grupo <strong>${props.notificacion.sourceDocument.value.grupo.nombre}</strong>: "${props.notificacion.sourceDocument.value.extracto}"`
+//         break;
+//     case 'entrada-grupal':
+//         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
+//         body.value += `publicó una entrada grupal con <strong>${props.notificacion.sourceDocument.value.grupo.nombre}</strong>: "${props.notificacion.sourceDocument.value.extracto}"`
+//         break;
+//     case 'mencion':
+//         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
+//         body.value += `te mencionó ${DescEntradaOComentarioDesconocida()}`
+//         break;
+//     case 'enlace':
+//         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
+//         body.value += `se enlazó`;
+//         linkNotificacion.value = `/usuarios/${props.notificacion.usuario.slug}` // En este caso no linkeo a un contenido sino al usuario que inicio la interacción
+//         if(props.notificacion.sourceDocument.relationTo == 'users'){
+//             body.value += ` con vos`
+//         }else if(props.notificacion.sourceDocument.relationTo == 'grupos'){
+//             body.value += ` con tu grupo <strong>${props.notificacion.sourceDocument.value.nombre}</strong>`
+//         }
+//         break;
 
-    case 'grupo-fuiste-agregado':
-        identidad.value = props.notificacion.sourceDocument.value; // El grupo
-        body.value = `fuiste agregado al grupo <strong>${props.notificacion.sourceDocument.value.nombre}</strong>`
-        linkNotificacion.value = `/grupos/${props.notificacion.sourceDocument.value.id}`
-        break;
-    case 'grupo-integrante-nuevo':
-        identidad.value = props.notificacion.sourceDocument.value; // El grupo
-        body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
-        body.value += `fue agregado al grupo <strong>${props.notificacion.sourceDocument.value.nombre}</strong>`
-        linkNotificacion.value = `/grupos/${props.notificacion.sourceDocument.value.id}`
-        break;
-    case 'grupo-integrante-abandono':
-        identidad.value = props.notificacion.sourceDocument.value; // El grupo
-        body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
-        body.value += `abandonó el grupo <strong>${props.notificacion.sourceDocument.value.nombre}</strong>`
-        linkNotificacion.value = `/grupos/${props.notificacion.sourceDocument.value.id}`
-        break;
+//     case 'grupo-fuiste-agregado':
+//         identidad.value = props.notificacion.sourceDocument.value; // El grupo
+//         body.value = `fuiste agregado al grupo <strong>${props.notificacion.sourceDocument.value.nombre}</strong>`
+//         linkNotificacion.value = `/grupos/${props.notificacion.sourceDocument.value.id}`
+//         break;
+//     case 'grupo-integrante-nuevo':
+//         identidad.value = props.notificacion.sourceDocument.value; // El grupo
+//         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
+//         body.value += `fue agregado al grupo <strong>${props.notificacion.sourceDocument.value.nombre}</strong>`
+//         linkNotificacion.value = `/grupos/${props.notificacion.sourceDocument.value.id}`
+//         break;
+//     case 'grupo-integrante-abandono':
+//         identidad.value = props.notificacion.sourceDocument.value; // El grupo
+//         body.value = `<strong>${props.notificacion.usuario?.nombre}</strong> `;
+//         body.value += `abandonó el grupo <strong>${props.notificacion.sourceDocument.value.nombre}</strong>`
+//         linkNotificacion.value = `/grupos/${props.notificacion.sourceDocument.value.id}`
+//         break;
 
-    default:
-        props.notificacion.usuario
-        identidad.value = props.notificacion.usuario
-        body.value = `Tipo de notificación desconocido`
-        break;
-}
+//     default:
+//         props.notificacion.usuario
+//         identidad.value = props.notificacion.usuario
+//         body.value = `Tipo de notificación desconocido`
+//         break;
+// }
 
 
 
-    
+
 </script>
