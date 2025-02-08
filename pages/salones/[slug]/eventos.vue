@@ -128,7 +128,7 @@ const puedeEditar = auth.data.value?.user?.rol == 'docente' || auth.data.value?.
 let hoy = new Date();
 hoy.setHours(1, 0, 0, 0);
 
-const cacheKey = `eventos-${salon.id}`
+const cacheKey = `eventos-${salon.value.id}`
 
 const queryParams = qs.stringify({
     depth: 0,
@@ -136,7 +136,7 @@ const queryParams = qs.stringify({
     limit: 0,
     where: {
         and: [
-            { sala: { equals: salon.id } },
+            { sala: { equals: salon.value.id } },
             { fecha: { greater_than_equal: periodo.startDate.toISOString() } },
             { fecha: { less_than_equal: periodo.endDate.toISOString() } }
         ]
@@ -285,7 +285,11 @@ const GuardarEvento = () => {
 const CrearEventoNuevo = async() => {
     loadingEdit.value = true
     try{
-        const response = await useAPI('/api/eventos', { method: 'POST', body: eventoEditando.value })
+        const body = {
+            ...eventoEditando.value,
+            sala: salon.value.id
+        }
+        const response = await useAPI('/api/eventos', { method: 'POST', body })
         let evento = response.doc;
         console.log('Evento creado', evento)
         evento.fecha = new Date(evento.fecha)
