@@ -145,7 +145,8 @@ const EliminarComentario = async () => {
                 outlined: true
             },
             acceptProps: {
-                label: 'Borrar'
+                label: 'Borrar',
+                severity: 'danger'
             },
             reject: () => {
                 console.log('Borrar comentario cancelada');
