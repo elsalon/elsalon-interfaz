@@ -5,7 +5,7 @@
         <template #header>
             <NuxtLink :to="identidadUrl">
                 <div class="flex items-center gap-2">
-                    <AvatarSalon :usuario="identidad" size="small" :title="tituloIdentidad" />
+                    <AvatarSalon :usuario="identidad" size="small" :title="tituloIdentidad" style="font-size: .6rem;" />
                     <span class="font-bold" :title="tituloIdentidad">{{ identidad.nombre }}</span>
                     <span class="text-gray-300 text-xs">{{ $formatDate(comentario.createdAt) }}</span>
                 </div>

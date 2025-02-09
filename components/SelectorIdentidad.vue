@@ -7,10 +7,10 @@
             <div v-if="slotProps.value" class="flex items-center">
                 <template v-if="slotProps.value.avatar">
                     <img v-if="slotProps.value.avatar" :alt="slotProps.value.label" :src="slotProps.value.avatar"
-                        :class="`mr-2`" style="width: 18px" />
+                        class="mr-2 w-5 h-5"  />
                 </template>
                 <template v-else>
-                    <AvatarSalon :usuario="slotProps.value" class="w-5 h-5 mr-2 text-xs" />
+                    <AvatarSalon :usuario="slotProps.value" class="w-5 h-5 mr-2" size="small" style="font-size:.5rem"/>
                 </template>
                 <!-- <div class="flex-grow" v-show="!props.esComentario">{{ slotProps.value.nombre }}</div> -->
             </div>
@@ -23,10 +23,10 @@
             <div class="flex items-center" :class="{ 'text-xs': props.esComentario }">
                 <template v-if="slotProps.option.avatar">
                     <img v-if="slotProps.option.avatar != null" :alt="slotProps.option.label"
-                        :src="slotProps.option.avatar" class="mr-2" style="width: 18px" />
+                        :src="slotProps.option.avatar" class="mr-2 w-5 h-5"  />
                 </template>
                 <template v-else>
-                    <AvatarSalon :usuario="slotProps.option" class="w-5 h-5 mr-2 text-xs" />
+                    <AvatarSalon :usuario="slotProps.option" class="w-5 h-5 mr-2" size="small" style="font-size:.5rem" />
                 </template>
                 <div class="flex-grow">{{ slotProps.option.nombre }}</div>
             </div>
