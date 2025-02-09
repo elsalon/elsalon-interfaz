@@ -23,10 +23,14 @@ export default function useRenderSalonHtml(entrada){
     }
 
     // 2 y 3. Convierto menciones y etiquetas en HTML
+    // Expresiones regulares para menciones y etiquetas
+    const mentionUsuarioRegex = /\[([^\]]+)\]\(usuario:([a-zA-Z0-9]+)\)/g;
+    const mentionGrupoRegex = /\[([^\]]+)\]\(grupo:([a-zA-Z0-9]+)\)/g;
+    const tagRegex = /\[([^\]]+)\]\(etiqueta:([a-zA-Z0-9]+)\)/g;
 
     // Función auxiliar para convertir menciones o etiquetas
-    const convertToHtml = (content, regex, entrada, array, type, urlPath, className) => {
-        const matches = [...content.matchAll(regex)];
+    const parseEtiquetasToHtml = (content, entrada,  className) => {
+        const matches = [...content.matchAll(tagRegex)];
 
         for (const match of matches) {
             const fullText = match[0];       // El texto completo, e.g., [Coso gon](mencion:66dce3b5d0a303ddc377b366)
@@ -34,13 +38,13 @@ export default function useRenderSalonHtml(entrada){
             const dataId = match[2];         // El 'id' después de 'mencion:' o 'etiqueta:'
             
             // Encuentra el objeto basado en el id
-            const item = entrada[array]?.find(obj => obj.id == dataId);
+            const item = entrada.etiquetas?.find(obj => obj.id == dataId);
             if (!item) {
                 continue; // Si no se encuentra el objeto, saltar esta iteración
             }
 
             // Crear la etiqueta <a> con el slug e id
-            const link = `<a href="/${urlPath}/${item.slug}" class="${className}" data-value="${name}" data-id="${item.id}" contenteditable="false">${type === 'mencion' ? '@' : '#'}${name}</a>`;
+            const link = `<a href="/etiquetas/${item.slug}" class="'etiqueta-link'" data-value="${name}" data-id="${item.id}" contenteditable="false">#${name}</a>`;
 
             // Reemplazar la mención/etiqueta en el contenido
             content = content.replace(fullText, link);
@@ -49,15 +53,38 @@ export default function useRenderSalonHtml(entrada){
         return content;
     };
 
-    // Expresiones regulares para menciones y etiquetas
-    const mentionRegex = /\[([^\]]+)\]\(mencion:([a-zA-Z0-9]+)\)/g;
-    const tagRegex = /\[([^\]]+)\]\(etiqueta:([a-zA-Z0-9]+)\)/g;
+    
+    const parseMencionesToHtml = (content, regex, entrada) => {
+        const matches = [...content.matchAll(regex)];
 
-    // Convertir menciones
-    content = convertToHtml(content, mentionRegex, entrada, 'mencionados', 'mencion', 'usuarios', 'mencion-link');
+        for (const match of matches) {
+            const fullText = match[0];       // El texto completo, e.g., [Coso gon](mencion:66dce3b5d0a303ddc377b366)
+            const name = match[1];           // El 'name' dentro de los corchetes
+            const dataId = match[2];         // El 'id' después de 'mencion:' o 'etiqueta:'
+            
+            // Encuentra el objeto basado en el id
+            const item = entrada.mencionados?.find(obj => obj.value.id == dataId);
+            if (!item) {
+                continue; // Si no se encuentra el objeto, saltar esta iteración
+            }
+            const urlPath = item.relationTo === 'users' ? 'usuarios' : 'grupos';
+            // Crear la etiqueta <a> con el slug e id
+            const link = `<a href="/${urlPath}/${item.value.slug}" class="mencion-link" data-value="${name}" data-id="${item.value.id}" contenteditable="false">@${name}</a>`;
+
+            // Reemplazar la mención/etiqueta en el contenido
+            content = content.replace(fullText, link);
+        }
+
+        return content;
+    };
+    // Convertir menciones usuarios
+    content = parseMencionesToHtml(content, mentionUsuarioRegex, entrada);
+
+    // Convertir menciones grupos
+    content = parseMencionesToHtml(content, mentionGrupoRegex, entrada);
 
     // Convertir etiquetas
-    content = convertToHtml(content, tagRegex, entrada, 'etiquetas', 'etiqueta', 'etiquetas', 'etiqueta-link');
+    content = parseEtiquetasToHtml(content, entrada);
 
     return content;
 }

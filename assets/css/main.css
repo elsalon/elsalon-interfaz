@@ -162,11 +162,23 @@ form label{
   }
 }
 .ql-mention-list-container{
+  z-index: 1000;
   @apply bg-white p-1 border border-solid border-zinc-100;
   .ql-mention-list-item {
     @apply p-1 cursor-pointer hover:bg-gray-100;
     &.selected{
       @apply bg-gray-100;
+    }
+    .mention-item{
+      @apply flex items-center;
+      .mention-iniciales, .mention-avatar{
+        @apply w-6 h-6 mr-1;
+      }
+      .mention-iniciales{
+        @apply bg-black text-white text-center;
+        font-size: .5rem;
+        align-content: center;
+      }
     }
   }
 }
