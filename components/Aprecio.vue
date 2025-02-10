@@ -7,6 +7,7 @@
         
         <Button v-show="totalDocs>0" :title="userNamesTooltip" link class="my-2 text-xs text-surface-500" :class="{'opacity-30':fetching}" style="padding: 0" :label="`(${totalDocs})`" @click="AbrirTodosLosAprecios()" />
         
+            <!-- {{ aprecioIniciales }} -->
         <Dialog v-model:visible="mostrarTodosAprecios" modal header="Aprecian" :style="{ width: '25rem' }">
             <template v-if="fetching" class="text-center">Cargando...</template>
             <template v-else>
@@ -37,7 +38,7 @@ const props = defineProps({
         required: true,
     },
 });
-const auth = useAuth();
+const {data: authData} = useAuth();
 
 const fetching = ref(false);
 const docs = ref(props.aprecioIniciales.docs || []);
@@ -50,7 +51,7 @@ const mixpanel = useMixpanel();
 
 
 const CheckUserHaApreciado = () => {
-    haApreciadoId.value = docs.value?.find(doc => doc.autor.id == auth.data.value.user.id);
+    haApreciadoId.value = docs.value?.find(doc => doc.autor.id == authData.value.user.id);
     haApreciado.value = haApreciadoId.value != null;
 }
 
@@ -69,7 +70,7 @@ const handleAprecioClicked = async () => {
                 where: {
                     and: [
                         { contenidoid: { equals:  props.contenidoid } },
-                        { autor: { equals: auth.data.value.user.id } },
+                        { autor: { equals: authData.value.user.id } },
                     ]
                 }
             }, { encode: false })

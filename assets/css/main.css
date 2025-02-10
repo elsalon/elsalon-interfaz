@@ -195,7 +195,7 @@ form label{
 }
 
 .actions{
-  @apply flex flex-row items-center justify-start;  
+  @apply flex flex-row items-end justify-start;  
 }
 
 .actions > button:first-child{
