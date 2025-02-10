@@ -26,6 +26,7 @@
 const { notificacionSinLeer } = useNotifications()
 const totalNotificaciones = ref()
 const notificaciones = ref([])
+const user = useAuth().data.value.user
 import qs from 'qs'
 
 const props = defineProps({
@@ -38,9 +39,9 @@ const props = defineProps({
 watch(() => props.visible, (val) => {
     if(val) {
         console.log("Opened notification")
-        if(notificaciones.value.length == 0) {
-            FetchNotifications()
-        }
+        FetchNotifications()
+        // if(notificaciones.value.length == 0) {
+        // }
     }
 })
 
@@ -65,29 +66,25 @@ const MarcarTodasLeidas = async () => {
 const FetchNotifications = async() => {
     fetching.value = true
     const query = {
-        sort: '-createdAt',
+        sort: 'leida',
         limit: 5,
-        depth: 6,
+        depth: 2,
     }
-    if(notificaciones.value.length > 0) {
-        const lastCreatedAt = notificaciones.value[notificaciones.value.length - 1].createdAt
-        query.where = { createdAt: { less_than: lastCreatedAt } }
-    }
+    // if(notificaciones.value.length > 0) {
+    //     const lastCreatedAt = notificaciones.value[notificaciones.value.length - 1].createdAt
+    //     query.where = { createdAt: { less_than: lastCreatedAt } }
+    // }
     const queryParams = qs.stringify(query, { encode: false })
     const res = await useAPI(`/api/notificaciones?${queryParams}`)
     fetching.value = false
     notificaciones.value = [...notificaciones.value, ...res.docs]
+    notificaciones.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     hasNextPage.value = res.hasNextPage;
     totalNotificaciones.value = res.totalDocs
     console.log('FetchNotifications', res)
 
 }
 
-const CrearTextoNotificacion = (notificacion) => {
-    // Acá un cuadro de las posibles combinaciones de notificaciones
-    // https://docs.google.com/spreadsheets/d/108Jejdou-WqEw8dVV39WaclI3UjnE-h7x6LyYGMvup0/edit?usp=sharing
-    
-}
 
 const handleNotificacionLeida = (notificacion) => {
     console.log('Notificacion leida', notificacion)

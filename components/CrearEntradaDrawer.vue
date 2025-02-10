@@ -119,8 +119,11 @@ const Publicar = async () => {
         }else{
 		    useNuxtApp().callHook("publicacion:creada", {resultado:"error"})
         }
-	}
-    uploading.value = false;
+	}finally{
+        setTimeout(() => {
+            uploading.value = false;
+        }, 2500);
+    }
 }
 
 

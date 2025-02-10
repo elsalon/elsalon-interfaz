@@ -102,8 +102,11 @@ const Publicar = async () => {
 	}catch{
 		useNuxtApp().callHook("comentario:creado", {resultado:"error"})
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo publicar el comentario', life: 3000});
-	}
-	uploading.value = false;
+	}finally{
+        setTimeout(() => {
+            uploading.value = false;
+        }, 2500);
+    }
 }
 
 const handleHotkey = (e) => {
