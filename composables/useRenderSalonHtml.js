@@ -69,7 +69,7 @@ export default function useRenderSalonHtml(entrada){
             }
             const urlPath = item.relationTo === 'users' ? 'usuarios' : 'grupos';
             // Crear la etiqueta <a> con el slug e id
-            const link = `<a href="/${urlPath}/${item.value.slug}" class="mencion-link" data-value="${name}" data-id="${item.value.id}" contenteditable="false">@${name}</a>`;
+            const link = `<a href="/${urlPath}/${item.value.slug}" class="mencion-link" data-value="${name}" data-id="${item.value.id}" data-relation-to="${item.relationTo}" contenteditable="false">@${name}</a>`;
 
             // Reemplazar la mención/etiqueta en el contenido
             content = content.replace(fullText, link);
