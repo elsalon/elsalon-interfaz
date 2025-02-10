@@ -1,8 +1,8 @@
 <template>
     <form @submit.prevent="handleSubmit" class="space-y-3">
         <div class="flex gap-2 mb-4 flex-col md:flex-row">
-            <label for="username" class="font-semibold w-1/3">nombre y apellido</label>
-            <InputText id="username" class="w-full" v-model="perfil.nombre" required minlength="3" autofocus />
+            <label for="nombre" class="font-semibold w-1/3">nombre y apellido</label>
+            <InputText id="nombre" class="w-full" v-model="perfil.nombre" required minlength="3" autofocus />
         </div>
 
         <div class="flex gap-2 mb-4 flex-col md:flex-row">

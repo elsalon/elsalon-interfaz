@@ -1,23 +1,27 @@
 <template>
     <ClientOnly>
-        <Dialog :visible="visible" header="Notificaciones" :style="{ width: '25rem' }" position="top" :draggable="true" @update:visible="$emit('update:visible', $event)">
+        <Dialog :visible="visible" header="Notificaciones" :style="{ width: '25rem' }" position="top" :draggable="true"
+            @update:visible="$emit('update:visible', $event)">
             <div v-if="notificaciones.length == 0 && !fetching" class="p-3 text-sm text-gray-500 text-center">
                 <span>No tenés notificaciones</span>
             </div>
 
             <div v-for="notificacion in notificaciones">
-                <NotificacionIndividual :notificacion="notificacion" @leida="handleNotificacionLeida"/>
+                <NotificacionIndividual :notificacion="notificacion" @leida="handleNotificacionLeida" :key="notificacion.id"/>
             </div>
-        
+
             <div v-if="fetching" class="p-3 text-sm text-gray-500 text-center">
                 <span>Cargando...</span>
             </div>
 
             <template #footer>
-                <Button v-if="mostrarBtnMarcarLeidas" label="Marcas todas leídas" outlined severity="secondary" @click="MarcarTodasLeidas" size="small" class="flex-grow"/>
-                <Button v-if="notificacionRestantes>0" :label="`Cargar más (${notificacionRestantes})`" @click="FetchNotifications" size="small" class="flex-grow"/>
+                <Button v-if="mostrarBtnMarcarLeidas" :disabled="fetching" label="Marcas todas leídas" outlined
+                    severity="secondary" @click="MarcarTodasLeidas" size="small" class="flex-grow" />
+                <Button v-if="notificacionRestantes > 0" :loading="fetching"
+                    :label="`Cargar más (${notificacionRestantes})`" @click="FetchNotifications" size="small"
+                    class="flex-grow" />
             </template>
-            
+
         </Dialog>
     </ClientOnly>
 </template>
@@ -37,9 +41,9 @@ const props = defineProps({
 })
 
 watch(() => props.visible, (val) => {
-    if(val) {
+    if (val) {
         console.log("Opened notification")
-        FetchNotifications()
+        FetchNotifications(true)
         // if(notificaciones.value.length == 0) {
         // }
     }
@@ -58,30 +62,41 @@ const closeDialog = () => {
 
 const MarcarTodasLeidas = async () => {
     console.log('Marcar todas leidas')
-    await useAPI(`/api/notificaciones/todasleidas`, {method:'PATCH'})
+    await useAPI(`/api/notificaciones/todasleidas`, { method: 'PATCH' })
     notificaciones.value.forEach(n => n.leida = true)
     notificacionSinLeer.value = 0
 }
 
-const FetchNotifications = async() => {
+const FetchNotifications = async (refresh = false) => {
     fetching.value = true
     const query = {
-        sort: 'leida',
+        sort: '-updatedAt',
         limit: 5,
-        depth: 2,
+        depth: 3,
+        where: {
+            and: [
+                { autor: { equals: user.id } },
+            ]
+        }
     }
-    // if(notificaciones.value.length > 0) {
-    //     const lastCreatedAt = notificaciones.value[notificaciones.value.length - 1].createdAt
-    //     query.where = { createdAt: { less_than: lastCreatedAt } }
-    // }
+    if (!refresh) {
+        query.where.and.push({
+            updatedAt: {
+                less_than_equal: notificaciones.value[notificaciones.value.length - 1]?.updatedAt || new Date() // La ultima o la fecha actual
+            }
+        })
+    }
+
     const queryParams = qs.stringify(query, { encode: false })
     const res = await useAPI(`/api/notificaciones?${queryParams}`)
     fetching.value = false
     notificaciones.value = [...notificaciones.value, ...res.docs]
-    notificaciones.value.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    // Remove duplicate
+    notificaciones.value = [...new Map(notificaciones.value.map(item => [item['id'], item])).values()]
+    notificaciones.value.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
     hasNextPage.value = res.hasNextPage;
     totalNotificaciones.value = res.totalDocs
-    console.log('FetchNotifications', res)
+    console.log('Fetch More Notifications', res)
 
 }
 

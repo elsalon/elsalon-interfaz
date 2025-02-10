@@ -20,7 +20,7 @@
         
             <div class="flex gap-2 mb-4 flex-col">
                 <label for="username" class="font-semibold">Nombre del grupo</label>
-                <InputText id="username" class="w-full" v-model="nuevoGrupo.nombre" required minlength="5" />
+                <InputText id="username" pattern="[^-\u{1F300}-\u{1F9FF}\u{2700}-\u{27BF}]+" class="w-full" v-model="nuevoGrupo.nombre" required minlength="5" />
             </div>
             <div class="flex gap-2 mb-4 flex-col">
                 <label for="username" class="font-semibold">Integrantes</label>
@@ -57,17 +57,17 @@
         visible.value = true;
     }
 
-    const handleAbandonadoGrupo = (grupo) => {
+    const handleAbandonadoGrupo = async (grupo) => {
         console.log('Abandonado grupo', grupo);
-        salonStore.FetchGruposDelUsuario(true)
+        await salonStore.FetchGruposDelUsuario(true)
     }
 
-    const handleEditadoGrupo = (grupo) => {
+    const handleEditadoGrupo = async (grupo) => {
         console.log('Grupo editado', grupo);
-        salonStore.FetchGruposDelUsuario(true)
+        await salonStore.FetchGruposDelUsuario(true)
     }
 
-    salonStore.FetchGruposDelUsuario(true);
+    await salonStore.FetchGruposDelUsuario(true);
 
     // LOGICA CREAR NUEVO GRUPO
     const creandoNuevoGrupo = ref(false);

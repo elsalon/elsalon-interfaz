@@ -31,8 +31,8 @@
         <Dialog v-model:visible="editarGrupoVisible" modal header="Editar grupo" style="min-width: 35vw;">
             <form @submit.prevent="handleSubmitEdit" class="space-y-3">
                 <div class="flex gap-2 mb-4 flex-col md:flex-row">
-                    <label for="username" class="font-semibold w-1/4">nombre</label>
-                    <InputText id="username" class="w-full" v-model="grupoEdit.nombre" required minlength="3" autofocus />
+                    <label for="nombre" class="font-semibold w-1/4">nombre</label>
+                    <InputText id="nombre" pattern="[^-\u{1F300}-\u{1F9FF}\u{2700}-\u{27BF}]+" class="w-full" v-model="grupoEdit.nombre" required minlength="3" autofocus />
                 </div>
 
                 <div class="flex gap-2 mb-4 flex-col md:flex-row">

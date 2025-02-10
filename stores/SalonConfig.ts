@@ -132,11 +132,9 @@ export const useSalonStore = defineStore('salon', {
       // If we need fresh data or don't have cached data, and we're not already fetching
       if ((force || !this.gruposDelUsuario) && !this.gruposDelUsuarioFetching) {
         try {
-          console.log("Fetching grupos");
           this.gruposDelUsuarioFetching = true;
           const { docs: gruposDelUsuario } = await useAPI(`/api/grupos/me`);
           this.gruposDelUsuario = gruposDelUsuario;
-          console.log("Fetched grupos", gruposDelUsuario);
         } catch (error) {
           console.error("Error fetching grupos", error);
           throw error;
