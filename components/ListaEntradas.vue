@@ -190,15 +190,19 @@ const FetchNewerFromDate = async (date) => {
   // New condition
   const createdAtCondition = { createdAt: { greater_than: date } };
 
-  if(queryWhere.where?.and){
-    // delete old createdAt condition
-    queryWhere.where.and = queryWhere.where.and.filter(item => !item.createdAt) || {};
-    queryWhere.where.and.push(createdAtCondition)
-  }else if(queryWhere.where){
-    queryWhere.where = queryWhere.where.filter(item => !item.createdAt) || {};
-    queryWhere.where = createdAtCondition;
+  if(listaEntradas.value.length > 0){
+    // Solo agregamos la fecha si ya hay entradas
+    // Sino buscamos las query original 
+    if(queryWhere.where?.and){
+      // delete old createdAt condition
+      queryWhere.where.and = queryWhere.where.and.filter(item => !item.createdAt) || {};
+      queryWhere.where.and.push(createdAtCondition)
+    }else if(queryWhere.where){
+      queryWhere.where = queryWhere.where.filter(item => !item.createdAt) || {};
+      queryWhere.where = createdAtCondition;
+    }
   }
-  
+    
   let newerItemsQuery = {
     populate: 'entradas,comentarios', // custom query param
     depth: 2,

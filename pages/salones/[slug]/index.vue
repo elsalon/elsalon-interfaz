@@ -30,7 +30,7 @@
         </div>
 
 
-        <LineaDeTiempo v-if="salon.eventos.activar" :salon="salon"/>
+        <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon"/>
 
 
         <CrearEntradaBtn v-if="estadoEnlace == 2" />
