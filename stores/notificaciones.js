@@ -5,7 +5,7 @@ export const useNotificacionesStore = defineStore('notificaciones', {
     dialogVisible: false,
 
     notificaciones: [],
-    totalNotificaciones: 0,
+    restantes: 0,
 
     nuevas: null,
     fetching: false,
@@ -35,25 +35,26 @@ export const useNotificacionesStore = defineStore('notificaciones', {
       this.nuevas = 0
     },
 
-    async fetchNotificacionesTodas(from = new Date()) {
+    async fetchNotificacionesTodas(fromDate = new Date()) {
       const user = useAuth().data.value.user; // Access the user data
+      const limit = 5
 
       this.fetching = true
       const query = {
         sort: '-updatedAt',
-        limit: 5,
+        limit,
         depth: 3,
         where: {
           and: [
             { autor: { equals: user.id } },
-            { updatedAt: { less_than: from } },
+            { updatedAt: { less_than_equal: fromDate } },
           ]
         }
       }
       const queryParams = qs.stringify(query, { encode: false })
       const { docs, totalDocs } = await useAPI(`/api/notificaciones?${queryParams}`)
       this.MergeNotificaciones(docs)
-      this.totalNotificaciones = totalDocs
+      this.restantes = totalDocs - docs.length;
       this.fetching = false
     },
 
@@ -72,7 +73,7 @@ export const useNotificacionesStore = defineStore('notificaciones', {
     async fetchNotificacionesMas() {
       const ultimaNotificacion = this.notificaciones[this.notificaciones.length - 1]
       if (!ultimaNotificacion) return
-      this.fetchNotificacionesTodas(ultimaNotificacion.updatedAt)
+      this.fetchNotificacionesTodas(new Date(ultimaNotificacion.updatedAt))
     },
 
 
