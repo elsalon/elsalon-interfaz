@@ -37,19 +37,19 @@ salonStore.SetPageTitle(`Configuración`)
 
 const toast = useToast();
 import { useToast } from "primevue/usetoast";
-const {data } = useAuth();;
+const {data, getSession } = useAuth()
 
 const loading = ref(false)
 
 const configuracion = ref({
     notificacionesMail: {
-        activas: data.value.user.notificacionesMail.activas,
-        mencionNueva: data.value.user.notificacionesMail.mencionNueva,
-        comentarioNuevo: data.value.user.notificacionesMail.comentarioNuevo,
+        activas: data.value.user?.notificacionesMail.activas,
+        mencionNueva: data.value.user?.notificacionesMail.mencionNueva,
+        comentarioNuevo: data.value.user?.notificacionesMail.comentarioNuevo,
     },
 })
 
-const permisoNotificacionesNavegador = ref(Notification.permission === 'granted')
+const permisoNotificacionesNavegador = ref()
 watch(permisoNotificacionesNavegador, (val) => {
     if(val){
         Notification.requestPermission().then((permission) => {
@@ -84,4 +84,8 @@ const handleSubmit = async () => {
     
     loading.value = false
 }
+
+onMounted(async () => {
+    permisoNotificacionesNavegador.value = Notification.permission === 'granted'
+})
 </script>

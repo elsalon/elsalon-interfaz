@@ -26,7 +26,7 @@
         </div>
 
         <div class="flex gap-2 mb-10 flex-col md:flex-row">
-            <label for="bio" class="font-semibold w-1/4">bio</label>
+            <label for="bio" class="font-semibold w-1/3">bio</label>
             <Textarea id="bio" class="w-full leading-normal" v-model="perfil.bio" rows="5" cols="30" />
         </div>
 
