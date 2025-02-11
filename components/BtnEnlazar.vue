@@ -72,10 +72,11 @@
     }
 
     const emit = defineEmits(['estadoEnlace'])
-
-    const resEnlace = await useAPI(`/api/enlaces?where[autor][equals]=${auth.data.value.user.id}&where[idEnlazado][equals]=${SalonStore.contextoId}`)
-    if(resEnlace.docs.length > 0){
-        idEnlace.value = resEnlace.docs[0].id
+    
+    const enlaceCacheKey = `enlace-${SalonStore.contextoId}+${auth.data.value.user.id}`
+    const { data: resEnlace } = await useAsyncData(enlaceCacheKey, () => useAPI(`/api/enlaces?where[autor][equals]=${auth.data.value.user.id}&where[idEnlazado][equals]=${SalonStore.contextoId}`))
+    if(resEnlace.value.docs.length > 0){
+        idEnlace.value = resEnlace.value.docs[0].id
         estadoMostrarBtnEnlace.value = 2
     }else{
         estadoMostrarBtnEnlace.value = 1
