@@ -39,8 +39,8 @@
             
                 <template v-if="auth?.data">
                     <!-- Avatar Con notificationes -->
-                    <template v-if="notificacionSinLeer > 0">
-                        <OverlayBadge :value="notificacionSinLeer" size="small">
+                    <template v-if="notificacionesStore.nuevas > 0">
+                        <OverlayBadge :value="notificacionesStore.nuevas" size="small">
                             <AvatarSalon :key="'avt'+myKey" class="cursor-pointer" :usuario="auth?.data.value.user" @click="toggleUserMenu"/>
                         </OverlayBadge>
                     </template>
@@ -66,12 +66,12 @@
     <main :class="containerType">
         <slot />
     </main>
-    <NotificacionesDialog v-model:visible="notificacionesVisible" ref="notificacionesDialog" />
+    <NotificacionesDialog ref="notificacionesDialog" />
 </template>
 
 <script setup>
     const { isHeaderVisible } = useScrollDirection(75)
-    const { notificacionSinLeer } = useNotifications()
+    const notificacionesStore = useNotificacionesStore()
     const { myKey } = useReactiveAuth()
     const auth = useAuth()
     import { PrimeIcons } from '@primevue/core/api';
@@ -90,22 +90,18 @@
     });
 
     watchEffect(() => {
-        const notifications = notificacionSinLeer.value > 0 ? `(${notificacionSinLeer.value}) ` : '';
+        const notifications = notificacionesStore.nuevas > 0 ? `(${notificacionesStore.nuevas}) ` : '';
         const title = salonStore.pageTitle ?  `${salonStore.pageTitle} - Salón` : 'Salón';
         useHead({
             title: notifications + title
         });
     });
 
-    // listen for notificacionSinLeer change
-    let firstRun = true;
-    watch(notificacionSinLeer, (val) => {
-        if(val > 0){
-            if(firstRun){
-                firstRun = false;
-                return;
-            }
-            console.log('Nuevas notificaciones', val)
+    // listen for notificacionesNuevas change
+    watch(() => notificacionesStore.nuevas, (val, oldVal) => {
+        console.log('Nuevas notificaciones', val, oldVal)
+        if(oldVal != null && val > 0){
+            // No es el primer fetch y hay nuevas notificaciones
             toast.add({ severity: 'contrast', detail: 'Tenés nuevas notificaciones', life: 3000});
         }
     });
@@ -127,10 +123,10 @@
                     icon: PrimeIcons.BELL,
                     command: () => {
                         // Abrir drawer de notificaciones?
-                        notificacionesVisible.value = true;
+                        notificacionesStore.dialogVisible = true;
                         // console.log(notificacionesDialog.value)
                     },
-                    badge: notificacionSinLeer.value
+                    badge: notificacionesStore.nuevas
                 },
                 {
                     label: 'Bitácora',

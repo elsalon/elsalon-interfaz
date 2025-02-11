@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   plugins: [
     '~/plugins/api.ts',
+    '~/plugins/notificationStartPolling.js',
   ],
   modules: [
     '@sidebase/nuxt-auth',
