@@ -319,7 +319,8 @@ const CrearEventoNuevo = async() => {
 const GuardarCambiosEvento = async() => {
     loadingEdit.value = true
     try{
-        const response = await useAPI(`/api/eventos/${eventoEditando.value.id}`, { method: 'PUT', body: eventoEditando.value })
+        eventoEditando.value.sala = typeof eventoEditando.value.sala == 'object' ? eventoEditando.value.sala.id : eventoEditando.value.sala
+        const response = await useAPI(`/api/eventos/${eventoEditando.value.id}`, { method: 'PATCH', body: eventoEditando.value })
         console.log('Evento editado', response)
         let evento = response.doc;
         evento.fecha = new Date(evento.fecha)
