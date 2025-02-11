@@ -119,8 +119,8 @@ watch(() => notificacionesStore.nuevas, (val, oldVal) => {
 
 const AbrirNotificacionNavegador = () => {
     if (Notification.permission === 'granted') {
-        new Notification('Tenés nuevas notificaciones', {
-            body: 'Hacé click para verlas',
+        new Notification('El Salón', {
+            body: 'Tenés nuevas notificaciones',
             icon: '/favicon.ico',
         }).onclick = () => {
             // Focus the tab
