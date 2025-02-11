@@ -18,7 +18,9 @@ const salonStore = useSalonStore();
 const elsalon = salonStore.salones.find(salon => salon.slug === "el-salon")
 if(!elsalon){
     console.error("No se encontró salón con slug 'el-salon'", salonStore.salones)
-    
+    setTimeout(() => {
+        location.reload()
+    }, 500);
 }
 const salonId = elsalon.id
 salonStore.setContext('salon', salonId)
