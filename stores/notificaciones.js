@@ -15,15 +15,14 @@ export const useNotificacionesStore = defineStore('notificaciones', {
   }),
 
   actions: {
-
-
     async fetchNotificacionesNuevas() {
-      if(this.dialogVisible){
+      if (this.dialogVisible) {
         // Fetch todas
-        console.log("TODO")
-      }else{
+        const { result } = await useAPI('/api/notificaciones/nuevas?includeDocs=true')
+        this.MergeNotificaciones(result.docs)
+        this.nuevas = 0
+      } else {
         // Solo la cantidad
-        console.log("Fetch nuevas")
         const { result } = await useAPI('/api/notificaciones/nuevas')
         this.nuevas = result.totalDocs
       }
@@ -52,19 +51,22 @@ export const useNotificacionesStore = defineStore('notificaciones', {
         }
       }
       const queryParams = qs.stringify(query, { encode: false })
-      const {docs, totalDocs} = await useAPI(`/api/notificaciones?${queryParams}`)
-      
-      if(this.notificaciones == null){
+      const { docs, totalDocs } = await useAPI(`/api/notificaciones?${queryParams}`)
+      this.MergeNotificaciones(docs)
+      this.totalNotificaciones = totalDocs
+      this.fetching = false
+    },
+
+    MergeNotificaciones(docs) {
+      if (this.notificaciones == null) {
         this.notificaciones = docs
-      }else{
+      } else {
         this.notificaciones.push(...docs)
       }
       // Remove duplicate
       this.notificaciones = this.notificaciones.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i)
-      console.log({totalDocs})
-      this.totalNotificaciones = totalDocs
-      this.fetching = false
-      this.resetNotificacionesNuevas()
+      // sort updatedAt
+      this.notificaciones.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
     },
 
     async fetchNotificacionesMas() {
@@ -76,8 +78,8 @@ export const useNotificacionesStore = defineStore('notificaciones', {
 
     async MarcarTodasLeidas() {
       console.log('Marcar todas leidas')
-      // await useAPI(`/api/notificaciones/todasleidas`, { method: 'PATCH' })
-      // notificaciones.value.forEach(n => n.leida = true)
+      await useAPI(`/api/notificaciones/todasleidas`, { method: 'PATCH' })
+      this.notificaciones.value.forEach(n => n.leida = true)
     },
 
     startPolling() {
@@ -85,7 +87,7 @@ export const useNotificacionesStore = defineStore('notificaciones', {
       const frecuenciaSegundos = 10
       this.isPolling = true
       this.fetchNotificacionesNuevas() // Initial fetch
- 
+
       this.pollingInterval = setInterval(() => {
         this.fetchNotificacionesNuevas()
       }, frecuenciaSegundos * 1000)
@@ -111,17 +113,3 @@ export default defineNuxtPlugin((nuxtApp) => {
     store.stopPolling()
   })
 })
-
-// TODO
-// listen for notificacionesNuevas change
-// let firstRun = true;
-// watch(notificacionesNuevas, (val) => {
-//     if(val > 0){
-//         if(firstRun){
-//             firstRun = false;
-//             return;
-//         }
-//         console.log('Nuevas notificaciones', val)
-//         toast.add({ severity: 'contrast', detail: 'Tenés nuevas notificaciones', life: 3000});
-//     }
-// });
