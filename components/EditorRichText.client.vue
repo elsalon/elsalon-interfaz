@@ -85,7 +85,7 @@ const parseEditorToUpload = async (btnLabel = null) => {
                 const videoId = youtubeMatch[1];
                 embedsYoutube.push(videoId);
             }
-            if(vimeoMatch){
+            if (vimeoMatch) {
                 const videoId = vimeoMatch[1];
                 embedsVimeo.push(videoId);
             }
@@ -147,16 +147,16 @@ const parseEditorToUpload = async (btnLabel = null) => {
             const dataId = el.getAttribute('data-id');
             const dataValue = el.getAttribute('data-value');
             // Crear el texto de reemplazo basado en el tipo
-            if(type == 'mencion'){
-                if(el.getAttribute('data-relation-to') == 'users'){
+            if (type == 'mencion') {
+                if (el.getAttribute('data-relation-to') == 'users') {
                     type = 'usuario';
-                } else if(el.getAttribute('data-relation-to') == 'grupos'){
+                } else if (el.getAttribute('data-relation-to') == 'grupos') {
                     type = 'grupo';
                 }
             }
             const replacementText = `[${dataValue}](${type}:${dataId})`;
             el.outerHTML = replacementText; // Reemplazar con el formato personalizado
-            return {value: dataId, relationTo: el.getAttribute('data-relation-to')}; // Devolver el ID para agregarlo al array correspondiente
+            return { value: dataId, relationTo: el.getAttribute('data-relation-to') }; // Devolver el ID para agregarlo al array correspondiente
         });
     };
 
@@ -186,7 +186,7 @@ const uploadFile = async (file) => {
     const formData = new FormData()
     formData.append('file', file, file.name)
     try {
-        const {doc} = await useUploadFile('/api/archivos', formData);
+        const { doc } = await useUploadFile('/api/archivos', formData);
         console.log("Response:", doc)
         return { id: doc.id, url: doc.url }
     } catch (error) {
@@ -202,7 +202,7 @@ const uploadImage = async (file) => {
     const imageFile = await CompressImage(file)
     formData.append('file', imageFile, randFilename)
     try {
-        const {doc} = await useUploadFile('/api/imagenes', formData);
+        const { doc } = await useUploadFile('/api/imagenes', formData);
         return { id: doc.id, url: doc.url }
     } catch (error) {
         console.error('Error uploading image:', error)
@@ -282,26 +282,26 @@ onMounted(async () => {
                     renderLoading: function () {
                         return 'Buscando usuarios o grupos...'
                     },
-                    renderItem: function(item, searchTerm){
-                        console.log(item,searchTerm)
+                    renderItem: function (item, searchTerm) {
+                        console.log(item, searchTerm)
                         const div = document.createElement('div');
                         div.className = 'mention-item';
-                        
-                        if(item.avatar){
+
+                        if (item.avatar) {
                             const img = document.createElement('img');
                             img.src = item.avatar;
                             img.className = 'mention-avatar';
                             div.appendChild(img);
-                        }else{
+                        } else {
                             const iniciales = document.createElement('div');
                             iniciales.className = 'mention-iniciales';
                             const inicialesTxt = item.value.split(' ').map(n => n[0]).join('').substring(0, 3).toUpperCase();
                             iniciales.innerText = inicialesTxt
                             div.appendChild(iniciales);
                         }
-                        
+
                         div.appendChild(document.createTextNode(item.value));
-                        
+
                         return div;
                         // return Node.createElement('div', {class: 'mention-item'}, item.value)
                         // return `<div class="mention-item">${item.value}</div>`
@@ -311,18 +311,27 @@ onMounted(async () => {
 
                         if (mentionChar === "@") {
                             if (searchTerm.length < 2) return
-                            const users = await useAPI(`/api/users?where[nombre][contains]=${searchTerm}&limit=5`);
-                            const grupos = await useAPI(`/api/grupos?where[nombre][contains]=${searchTerm}&limit=5`);
-                            // console.log(users.docs)
-                            // merge users and grupos
-                            values = [...users.docs.map(user => {
-                                return { id: user.id, relationTo: 'users', value: user.nombre, avatar: user.avatar?.sizes.thumbnail.url }
-                            }), ...grupos.docs.map(group => {
-                                return { id: group.id, relationTo: 'grupos', value: group.nombre, avatar: group.avatar?.sizes.thumbnail.url }
-                            })]
-                            // values = users.docs.map(user => {
-                            //     return { id: user.id, value: user.nombre }
-                            // })
+                            const search = searchTerm.trim()
+                            console.log('search', search)
+                            const [users, grupos] = await Promise.all([
+                                useAPI(`/api/users?where[nombre][like]=${search}&limit=5`),
+                                useAPI(`/api/grupos?where[nombre][like]=${search}&limit=5`)
+                            ]);
+
+                            values = [
+                                ...users.docs.map(user => ({
+                                    id: user.id,
+                                    relationTo: 'users',
+                                    value: user.nombre,
+                                    avatar: user.avatar?.sizes.thumbnail.url
+                                })),
+                                ...grupos.docs.map(group => ({
+                                    id: group.id,
+                                    relationTo: 'grupos',
+                                    value: group.nombre,
+                                    avatar: group.avatar?.sizes.thumbnail.url
+                                }))
+                            ];
                         } else if (mentionChar === "#") {
                             const etiquetas = salonStore.etiquetas.filter(etiqueta =>
                                 etiqueta.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -340,7 +349,7 @@ onMounted(async () => {
                             renderList(matches, searchTerm);
                         }
                     },
-                    dataAttributes: ['id', 'value', 'denotationChar', 'link', 'target','disabled', 'relationTo'],
+                    dataAttributes: ['id', 'value', 'denotationChar', 'link', 'target', 'disabled', 'relationTo'],
                 },
             }
         })
