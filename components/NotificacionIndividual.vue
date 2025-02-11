@@ -3,7 +3,8 @@
         :class="{ 'bg-gray-100': !notificacion.leida }">
         <div class="flex notification-item">
             <div>
-                <AvatarSalon :usuario="props.notificacion.identidad.value" size="small" class="mr-4" style="font-size: .6rem;"/>
+                <AvatarSalon :usuario="props.notificacion.identidad.value" size="small" class="mr-4" style="font-size: .6rem;" 
+                :avatarType="props.notificacion.identidad.relationTo"/>
             </div>
             <div>
                 <div class="text-sm mr-2" v-html="props.notificacion.mensaje"></div>
@@ -30,6 +31,7 @@ const props = defineProps({
         required: true
     }
 })
+
 
 // const identidad = ref()
 const emit = defineEmits(['leida'])

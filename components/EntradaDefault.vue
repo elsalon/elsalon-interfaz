@@ -33,7 +33,7 @@
                 <!-- Menú ajustes entrada -->
                 <div class="flex-grow md:invisible group-hover/entrada:visible text-right">
                     <Button text @click="ToggleArticleOptions">...</Button>
-                    <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo"
+                    <Menu v-if="opcionesArticulo.length>0" :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo"
                         :popup="true" class="text-xs" />
                 </div>
             </div>
@@ -114,10 +114,11 @@ const ToggleArticleOptions = (event) => {
 };
 
 const opcionesArticulo = ref([
-    {
-        label: 'Copiar Link',
-        command: () => props.CopiarLink(),
-    },
+    // Dejo comentada la opcion de copiar link
+    // {
+    //     label: 'Copiar Link',
+    //     command: () => props.CopiarLink(),
+    // },
 ]);
 // Opciones si el usuario es el autor o parte del grupo
 if (props.UsuarioTieneAutoridad) {
