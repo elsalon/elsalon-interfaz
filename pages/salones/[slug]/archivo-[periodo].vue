@@ -31,8 +31,8 @@ salonStore.SetPageTitle(`Archivo ${salon.value.nombre} ${periodo.nombre}`)
 
 const cacheKey = `archivo-${salon.value.id}-${periodo.slug}`
 
-const startDate = encodeURIComponent(periodo.startDate.toISOString());
-const endDate   = encodeURIComponent(periodo.endDate.toISOString());
+const startDate = encodeURIComponent(periodo.startDate);
+const endDate   = encodeURIComponent(periodo.endDate);
 
 const query = {
     where: {

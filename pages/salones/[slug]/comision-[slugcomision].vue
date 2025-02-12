@@ -63,8 +63,8 @@ let query = {}
 const periodo = salon.value.archivo.periodos[0]
 const cacheKey = `archivo-${salon.value.id}-${periodo.slug}`
 if(salon.value.archivo.activar){
-    const startDate = encodeURIComponent(periodo.startDate.toISOString());
-    const endDate = encodeURIComponent(periodo.endDate.toISOString());
+    const startDate = encodeURIComponent(periodo.startDate);
+    const endDate = encodeURIComponent(periodo.endDate);
     query = {
         startDate,
         endDate,

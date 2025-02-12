@@ -96,7 +96,7 @@ const queryParams = qs.stringify({
     where: {
         and: [
             { sala: { equals: props.salon.id } },
-            { fecha: { greater_than_equal: hoy.toISOString() } } // Solo eventos futuros
+            { fecha: { greater_than_equal: hoy } } // Solo eventos futuros
         ]
     },
 }, { encode: false })

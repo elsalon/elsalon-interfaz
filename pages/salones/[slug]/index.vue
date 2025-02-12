@@ -61,8 +61,8 @@ var query = {
 // Si este espacio tiene archivo, filtro por el periodo actual
 const periodo = salon.value.archivo.periodos[0]
 if (salon.value.archivo.activar) {
-    const startDate = encodeURIComponent(periodo.startDate.toISOString());
-    const endDate = encodeURIComponent(periodo.endDate.toISOString());
+    const startDate = encodeURIComponent(periodo.startDate);
+    const endDate = encodeURIComponent(periodo.endDate);
     query.where.and.push({ createdAt: { greater_than_equal: startDate } })
     query.where.and.push({ createdAt: { less_than_equal: endDate } })
 }

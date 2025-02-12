@@ -137,8 +137,8 @@ const queryParams = qs.stringify({
     where: {
         and: [
             { sala: { equals: salon.value.id } },
-            { fecha: { greater_than_equal: periodo.startDate.toISOString() } },
-            { fecha: { less_than_equal: periodo.endDate.toISOString() } }
+            { fecha: { greater_than_equal: periodo.startDate } },
+            { fecha: { less_than_equal: periodo.endDate } }
         ]
     },
 }, { encode: false })

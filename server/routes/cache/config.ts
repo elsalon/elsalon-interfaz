@@ -24,7 +24,6 @@ interface Etiqueta {
   slug: string;
 }
 
-
 let cache: any = null;
 let cacheTimestamp = 0;
 const CACHE_DURATION = 1000 * 60 * 60 * 3; // 3 hours
