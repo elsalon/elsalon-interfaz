@@ -85,7 +85,7 @@ export const useNotificacionesStore = defineStore('notificaciones', {
 
     startPolling() {
       if (this.isPolling) return
-      const frecuenciaSegundos = 10
+      const frecuenciaSegundos = 60
       this.isPolling = true
       this.fetchNotificacionesNuevas() // Initial fetch
 
