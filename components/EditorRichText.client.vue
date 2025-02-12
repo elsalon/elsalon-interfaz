@@ -257,9 +257,10 @@ onMounted(async () => {
                     container: [
                         ['bold', 'italic', 'underline', 'strike'],
                         [{ 'align': [] }],
-                        ['blockquote', 'code-block'],
-                        // [{ 'header': 1 }, { 'header': 2 }],
+                        // 'blockquote',
+                        [ 'code-block'],
                         [{ 'list': 'bullet' }],
+                        // [{ 'header': 1 }, { 'header': 2 }],
                         ['link', 'image', 'video', 'attach'],
                         // [{ 'script': 'sub' }, { 'script': 'super' }],
                         // [{ 'indent': '-1' }, { 'indent': '+1' }],

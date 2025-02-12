@@ -61,7 +61,7 @@ const RecargarComision = async () => {
 // Filtro por el periodo actual
 let query = {}
 const periodo = salon.value.archivo.periodos[0]
-const cacheKey = `archivo-${salon.value.id}-${periodo.slug}`
+const cacheKey = `comision-${salon.value.id}-${periodo.slug}`
 if(salon.value.archivo.activar){
     const startDate = encodeURIComponent(periodo.startDate);
     const endDate = encodeURIComponent(periodo.endDate);
