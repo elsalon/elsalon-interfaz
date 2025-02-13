@@ -83,7 +83,7 @@ let OnEntradaDesfijadaHook = null;
 const queryParams = qs.stringify({
   populate: 'entradas,comentarios', // custom query param
   depth: 2,
-  sort: '-createdAt',
+  sort: '-lastActivity',
   ...props.query,
 }, { encode: false })
 const { data: entradas } = await useAsyncData(props.cacheKey, () => useAPI(`${props.apiUrl}?${queryParams}`))
@@ -97,7 +97,7 @@ if (!props.saltearFijadas) {
   const queryParams = qs.stringify({
     populate: 'entradas,comentarios', // custom query param
     depth: 4,
-    sort: '-createdAt',
+    sort: '-lastActivity',
     limit: 12,
     where: {
       "contexto": { equals: SalonStore.contextoId }
@@ -126,31 +126,31 @@ const listaEntradas = computed(() => {
 const fetchNextItems = async () => {
   loading.value = true
 
-  // Get the last item's createdAt timestamp
+  // Get the last item's lastActivity timestamp
   const lastItem = entradasPaginadas.value[entradasPaginadas.value.length - 1];
-  const lastCreatedAt = lastItem ? lastItem.createdAt : null;
+  const lastLastActivity = lastItem ? lastItem.lastActivity : null;
   // Build the base query
   const baseQuery = {
     depth: 2,
-    sort: '-createdAt',
-    createdLessThan: lastCreatedAt,
+    sort: '-lastActivity',
+    createdLessThan: lastLastActivity,
     ...props.query,
   };
 
-  // Add the createdAt condition if there's a last item
-  if (lastCreatedAt) {
-    const createdAtCondition = { createdAt: { less_than: lastCreatedAt } };
+  // Add the lastActivity condition if there's a last item
+  if (lastLastActivity) {
+    const lastActivityCondition = { lastActivity: { less_than: lastLastActivity } };
 
     if (baseQuery.where) {
       // If there's an existing `where` clause, merge it with the new condition
       if (baseQuery.where.and) {
-        baseQuery.where.and.push(createdAtCondition);
+        baseQuery.where.and.push(lastActivityCondition);
       } else {
-        baseQuery.where = { and: [baseQuery.where, createdAtCondition] };
+        baseQuery.where = { and: [baseQuery.where, lastActivityCondition] };
       }
     } else {
       // If no `where` clause exists, create one
-      baseQuery.where = createdAtCondition;
+      baseQuery.where = lastActivityCondition;
     }
   }
   baseQuery.populate = 'entradas,comentarios'; // custom query param
@@ -184,29 +184,29 @@ const FetchNewerFromDate = async (date) => {
   console.log('Fetching newer items from:', date)
   loading.value = true
 
-  // Query original y le saco el createdAty)
+  // Query original y le saco el lastActivityy)
   let queryWhere = props.query;
   
   // New condition
-  const createdAtCondition = { createdAt: { greater_than: date } };
+  const lastActivityCondition = { lastActivity: { greater_than: date } };
 
   if(listaEntradas.value.length > 0){
     // Solo agregamos la fecha si ya hay entradas
     // Sino buscamos las query original 
     if(queryWhere.where?.and){
-      // delete old createdAt condition
-      queryWhere.where.and = queryWhere.where.and.filter(item => !item.createdAt) || {};
-      queryWhere.where.and.push(createdAtCondition)
+      // delete old lastActivity condition
+      queryWhere.where.and = queryWhere.where.and.filter(item => !item.lastActivity) || {};
+      queryWhere.where.and.push(lastActivityCondition)
     }else if(queryWhere.where){
-      queryWhere.where = queryWhere.where.filter(item => !item.createdAt) || {};
-      queryWhere.where = createdAtCondition;
+      queryWhere.where = queryWhere.where.filter(item => !item.lastActivity) || {};
+      queryWhere.where = lastActivityCondition;
     }
   }
     
   let newerItemsQuery = {
     populate: 'entradas,comentarios', // custom query param
     depth: 2,
-    sort: '-createdAt',
+    sort: '-lastActivity',
     createdGreaterThan: date, // Para feed de El Salon que no tiene query nativo de payloadcms 
     where: queryWhere.where
   }
@@ -221,7 +221,7 @@ const FetchNewerFromDate = async (date) => {
 const handlePublicacionCreada = async (data) => {
   if (data.resultado == "ok") {
     // Publicacion exitosa. Cargo entradas nuevas
-    await FetchNewerFromDate(entradasPaginadas.value[0]?.createdAt || Date.now())
+    await FetchNewerFromDate(entradasPaginadas.value[0]?.lastActivity || Date.now())
     // Resalto la entrada nueva
     entradaRefs.value[data.entrada.id].ResaltarEntrada();
   } else {
