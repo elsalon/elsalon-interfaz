@@ -1,5 +1,5 @@
 <template>
-    <header class="bg-white sticky top-0 flex h-16 items-center z-50 px-4 md:px-6 transition-transform duration-300"
+    <header class="bg-white dark:bg-zinc-900 sticky top-0 flex h-16 items-center z-50 px-4 md:px-6 transition-transform duration-300"
         :class="{ '-translate-y-full': !isHeaderVisible }">
         <FijarEntrada />
 

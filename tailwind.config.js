@@ -2,7 +2,7 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-  darkMode:  'dark',
+  darkMode:  "class",
   content: [
     "./primevue-presets/**/*.{js,vue,ts}",
     "./components/**/*.{js,vue,ts}",
@@ -14,22 +14,22 @@ module.exports = {
   ],
   theme: {
     
-    extend: {
-      colors: {
-        primary: 'black',
-        secondary: 'black',
-        neutral: 'black',
-        accent: 'black',
-        surface: {
-          400: 'black',
-        },
-      },
-    },
+    // extend: {
+    //   colors: {
+    //     primary: 'black',
+    //     secondary: 'black',
+    //     neutral: 'black',
+    //     accent: 'black',
+    //     surface: {
+    //       400: 'black',
+    //     },
+    //   },
+    // },
     
     
     container:{
       center: true,
-      padding: '1rem',
+      // padding: '1rem',
       // screens: {
       //   sm: "640px",
       //   md: "640px",
