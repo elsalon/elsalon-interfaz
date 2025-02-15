@@ -103,15 +103,24 @@
 .prose iframe, .ql-editor iframe{
   @apply w-full aspect-video;
 }
-.prose img{
+.prose img:not(.avatar-mencion){
   @apply w-full;
   @media (min-width: 640px) {
     max-height: 50vh;
     object-fit: contain;
   }
 }
-.prose img:hover{
+.prose img:not(.avatar-mencion):hover{
   @apply cursor-zoom-in;
+}
+.prose .avatar-mencion{
+  @apply m-0 h-4 mr-1;
+  align-self: center;
+}
+.mencion-link{
+  @apply  hover:bg-slate-100 p-0;
+  display: inline-flex;
+  align-items: baseline;
 }
 
 /* Imagenes en editor de entrada */
