@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model:visible="showOnboarding" modal :closable="false" class="max-w-[50vw] min-w-[20rem] ">
+    <Dialog v-model:visible="showOnboarding" modal :closable="false" >
         
         <div class="overflow-hidden ">
             <div class="relative min-h-40 overflow-hidden">
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <div class="relative min-w-40">
+        <div class="relative min-w-64">
             <!-- BOTONES -->
             <div class="flex pt-6 justify-end space">
                 <Button v-if="activeStep > 0" severity="secondary" icon="pi pi-arrow-left" size="small"
@@ -40,10 +40,8 @@
 <script setup>
 const { getPendingOnboardingSteps } = useOnboarding();
 const user = useAuth().data.value.user;
-console.log(user.fechaOnboarding)
 const pendingSteps = getPendingOnboardingSteps(user.fechaOnboarding);
-console.log(pendingSteps)
-
+console.log("fechaOnboarding:", user.fechaOnboarding, "Pending steps:", pendingSteps.length)
 const activeStep = ref(0);
 const showOnboarding = ref(pendingSteps.length > 0)
 
