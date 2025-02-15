@@ -252,3 +252,16 @@ ol{
   @apply bg-gray-100;
   pointer-events: none;
 }
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-enter-from {
+  transform: translateX(100%);
+}
+
+.slide-leave-to {
+  transform: translateX(-100%);
+}
