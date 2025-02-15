@@ -39,14 +39,15 @@ const slug = route.params?.slug
 const auth = useAuth()
 
 // Fetch the user data based on the slug
-const res = await useAPI(`/api/users?where[slug][equals]=${slug}`)
-if (res.docs.length === 0) {
+const usrQueryCacheKey = "usr"+slug;
+const { data: usrQuery } = await useAsyncData(usrQueryCacheKey, () => useAPI(`/api/users?where[slug][equals]=${slug}`))
+if (usrQuery.value.docs.length === 0) {
     throw createError({
         statusCode: 404,
         statusMessage: 'Not Found',
     })
 }
-const usuario = ref(res.docs[0])
+const usuario = ref(usrQuery.value.docs[0])
 const salonStore = useSalonStore()
 salonStore.SetPageTitle(usuario.value.nombre)
 salonStore.setContext('bitacora', usuario.value.id)
