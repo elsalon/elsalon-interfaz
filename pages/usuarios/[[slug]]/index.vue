@@ -23,7 +23,11 @@
             </NuxtLink>
         </div>
 
-        <BtnEnlazar class="mb-5" v-if="!userIsMe" type="usuario"/>
+        <div class="text-center flex flex-wrap justify-around items-center w-full mb-10 p-1 relative">
+            <!-- bg-gray-100 -->
+            <BtnEnlazar v-if="!userIsMe" type="usuario"/>
+            <BtnOpcionesBtnOpcUsuario :otro="usuario" @userEdited="UserEdited"/>
+        </div>
         
         <CrearEntradaBtn v-if="userIsMe" />
         <ListaEntradas :query="query" :cacheKey="cacheKey"/>
@@ -105,4 +109,8 @@ const OpenAvatar = () => {
 const grupos = ref([])
 const resGrupos = await useAPI(`/api/grupos?where[integrantes][contains]=${usuario.value.id}`)
 grupos.value = resGrupos.docs
+
+const UserEdited = (userData) => {
+    usuario.value = userData
+}
 </script>
