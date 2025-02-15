@@ -13,8 +13,10 @@
             <template v-else>
                 <div class="space-y-1">
                     <div v-for="doc in docs" :key="doc.id" class="flex items-center">
-                        <AvatarSalon :usuario="doc.autor" />
-                        <NuxtLink :to="`/usuarios/${doc.autor.slug}`" class="ml-2">{{ doc.autor.nombre }}</NuxtLink>
+                        <NuxtLink :to="`/usuarios/${doc.autor.slug}`" class="ml-2">
+                            <AvatarSalon :usuario="doc.autor" />
+                            {{ doc.autor.nombre }}
+                        </NuxtLink>
                     </div>
                 </div>
             </template>
