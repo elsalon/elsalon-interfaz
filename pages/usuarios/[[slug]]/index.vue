@@ -1,6 +1,9 @@
 <template>
     <NuxtLayout name="layout-contenido">    
-        <template #header>{{ usuario.nombre }}</template>
+        <template #header>
+            <RouterLink :to="`/`" class="link">S</RouterLink> /
+            {{ usuario.nombre }}
+        </template>
 
         <div class="user-info mb-5">
             <div class="text-center mb-2">
