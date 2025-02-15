@@ -55,7 +55,7 @@
         </div>
 
         <!-- Ventana Crear / Editar evento -->
-        <Dialog v-model:visible="mostrarVentanaEdit" modal :header="ventanaEditHeader" :style="{ width: '25rem' }">
+        <Dialog v-model:visible="mostrarVentanaEdit" modal :header="ventanaEditHeader" :style="{ width: '25rem' }" :dismissableMask="true">
             
             <div class="flex gap-2 mb-4 flex-col md:flex-row">
                 <label for="fecha" class="font-semibold w-1/4">fecha</label>

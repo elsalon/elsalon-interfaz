@@ -1,7 +1,7 @@
 <template>
     <ClientOnly>
         <Dialog :visible="notificacionesStore.dialogVisible" header="Notificaciones" :style="{ width: '25rem' }"
-            position="top" :draggable="true">
+            position="top" :dismissableMask="true">
             <template #closeicon>
                 <Button icon="pi pi-times" severity="secondary" size="small" text
                     @click="notificacionesStore.dialogVisible = false" />
