@@ -25,7 +25,7 @@
                     severity="secondary" @click="notificacionesStore.MarcarTodasLeidas" size="small"
                     class="flex-grow" />
                 <Button v-if="notificacionesStore.restantes > 0" :loading="fetching"
-                    :label="`Cargar más (${notificacionesStore.restantes})`"
+                    :label="`Ver más (${notificacionesStore.restantes})`"
                     @click="notificacionesStore.fetchNotificacionesMas()" size="small" class="flex-grow" />
             </template>
 

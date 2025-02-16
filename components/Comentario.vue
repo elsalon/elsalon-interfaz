@@ -18,7 +18,7 @@
                 :popup="true" class="text-xs" />
         </template>
 
-        <div v-show="!editandoComentario" class="prose prose-sm prose-headings:my-1 leading-none break-words">
+        <div v-show="!editandoComentario" class="prose prose-sm prose-headings:my-1 leading-[1rem] break-words">
             <ContenidoRendereado ref="contenidoRender" :contenido="comentario" />
         </div>
 

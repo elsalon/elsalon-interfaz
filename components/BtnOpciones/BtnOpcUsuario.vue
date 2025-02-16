@@ -23,12 +23,12 @@ const ToggleMenu = (event) => {
 const toast = useToast();
 const opciones =  ref([]);
 
-const GenerarOpcionesPrivilegios = () => {
+const GenerarOpcionesRoles = () => {
     opciones.value = []
     if(user.rol === 'docente'){
         if(props.otro.rol !== 'docente'){
             opciones.value.push({ 
-                label: 'Otorgar Privilegios Docente', 
+                label: 'Otorgar rol docente', 
                 icon: 'pi pi-plus',
                 command: () => {
                     CambiarRol('docente')
@@ -36,7 +36,7 @@ const GenerarOpcionesPrivilegios = () => {
              })
         }else{
             opciones.value.push({ 
-                label: 'Quitar Privilegios Docente', 
+                label: 'Quitar rol docente', 
                 icon: 'pi pi-minus',
                 command: () => {
                     CambiarRol('alumno')
@@ -48,7 +48,7 @@ const GenerarOpcionesPrivilegios = () => {
     if(user.isAdmin){
         if(!props.otro.isAdmin){
             opciones.value.push({ 
-                label: 'Otorgar Privilegios Admin',
+                label: 'Otorgar rol admin',
                 icon: 'pi pi-plus',
                 command: () => {
                     ToggleAdmin()
@@ -56,7 +56,7 @@ const GenerarOpcionesPrivilegios = () => {
             })
         }else{
             opciones.value.push({ 
-                label: 'Quitar Privilegios Admin',
+                label: 'Quitar rol admin',
                 icon: 'pi pi-minus',
                 command: () => {
                     ToggleAdmin()
@@ -67,7 +67,7 @@ const GenerarOpcionesPrivilegios = () => {
 }
 
 if(user.id !== props.otro.id){
-    GenerarOpcionesPrivilegios();
+    GenerarOpcionesRoles();
 }
 
 const CambiarRol = async(nuevoRol) => {
@@ -77,7 +77,7 @@ const CambiarRol = async(nuevoRol) => {
         const res = await useAPI(`/api/users/${props.otro.id}/cambiar-rol`, {body:{rol:nuevoRol}, method: 'PATCH'})
         emit('userEdited', res)
         nextTick(() => {
-            GenerarOpcionesPrivilegios();
+            GenerarOpcionesRoles();
         })
         toast.add({severity: 'contrast', summary: "Rol cambiado", detail: `${props.otro.nombre} ahora es ${nuevoRol}`, life:3000});
     }catch(e){
@@ -94,7 +94,7 @@ const ToggleAdmin = async() => {
     try{
         const res = await useAPI(`/api/users/${props.otro.id}/toggle-admin`, {method: 'PATCH'})
         nextTick(() => {
-            GenerarOpcionesPrivilegios();
+            GenerarOpcionesRoles();
         })
         const detail = res.isAdmin ? `${props.otro.nombre} ahora es Admin` : `${props.otro.nombre} ya no es Admin`
         toast.add({severity: 'contrast', summary: "Admin cambiado", detail, life:3000});

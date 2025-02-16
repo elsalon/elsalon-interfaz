@@ -44,7 +44,7 @@
                 <template v-if="auth?.data">
                     <!-- Avatar Con notificationes -->
                     <template v-if="notificacionesStore.nuevas > 0">
-                        <OverlayBadge :value="notificacionesStore.nuevas" size="small">
+                        <OverlayBadge>
                             <AvatarSalon :key="'avt' + myKey" class="cursor-pointer" :usuario="auth?.data.value.user"
                                 @click="toggleUserMenu" />
                         </OverlayBadge>
