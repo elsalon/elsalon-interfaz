@@ -17,7 +17,7 @@ export default {
             // Size
             'p-0 px-1',
             {
-                'w-2 h-2': props.value === null,
+                'w-3 h-3': props.value === null,
                 'min-w-[1.5rem] h-[1.5rem]': props.value !== null && props.size === null,
                 'min-w-[1.25rem] h-[1.25rem]': props.size === 'small',
                 'min-w-[2.25rem] h-[2.25rem]': props.size === 'large',

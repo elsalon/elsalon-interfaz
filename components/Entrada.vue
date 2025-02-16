@@ -59,9 +59,8 @@ const CopiarLink = () => {
 const DestacarEntrada = async () => {
     loading.value = true;
     try{
-        const body = { destacada: !entrada.destacada };
-        const res = await useAPI(`/api/entradas/${props.entrada.id}`, { body, method: "PATCH" });
-        const destacada = res.doc.destacada;
+        const res = await useAPI(`/api/entradas/${props.entrada.id}/destacar`, { method: "PATCH" });
+        const destacada = res.destacada;
         const message = destacada ? 'Entrada destacada' : 'Destacado eliminado';
         entrada.destacada = destacada;
         toast.add({ severity: 'contrast', detail: message, life: 3000 });

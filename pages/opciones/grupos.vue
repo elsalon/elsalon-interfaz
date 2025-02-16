@@ -15,7 +15,7 @@
     <Grupo v-for="grupo in salonStore.gruposDelUsuario" :key="grupo.id" :grupo="grupo" @abandonadoGrupo="handleAbandonadoGrupo" @editadoGrupo="handleEditadoGrupo"/>
 
     <!-- DIALOG CREAR NUEVO GRUPO -->
-    <Dialog v-model:visible="visible" modal header="Nuevo grupo" style="min-width: 35vw;">
+    <Dialog v-model:visible="visible" modal header="Nuevo grupo" style="min-width: 35vw;" :dismissableMask="true">
          <form @submit.prevent="handleSubmitNuevoGrupo">
         
             <div class="flex gap-2 mb-4 flex-col">

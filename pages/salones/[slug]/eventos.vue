@@ -55,11 +55,11 @@
         </div>
 
         <!-- Ventana Crear / Editar evento -->
-        <Dialog v-model:visible="mostrarVentanaEdit" modal :header="ventanaEditHeader" :style="{ width: '25rem' }">
+        <Dialog v-model:visible="mostrarVentanaEdit" modal :header="ventanaEditHeader" :style="{ width: '25rem' }" :dismissableMask="true">
             
             <div class="flex gap-2 mb-4 flex-col md:flex-row">
                 <label for="fecha" class="font-semibold w-1/4">fecha</label>
-                <DatePicker dateFormat="dd/mm/yy" id="fecha" v-model="eventoEditando.fecha" class="w-full" :minDate="periodo.startDate" :maxDate="periodo.endDate" showTime hourFormat="24" fluid />
+                <DatePicker dateFormat="dd/mm/yy" id="fecha" v-model="eventoEditando.fecha" class="w-full" :minDate="new Date(periodo.startDate)" :maxDate="new Date(periodo.endDate)" showTime hourFormat="24" fluid />
             </div>
 
             <div class="flex gap-2 mb-4 flex-col md:flex-row">
@@ -92,6 +92,7 @@ const calendar = ref(null)
 const route = useRoute()
 const slug = route.params?.slug
 const salonStore = useSalonStore();
+salonStore.SetPageTitle(`Eventos`)
 const salon = ref(null)
 salon.value = salonStore.salones.find(salon => salon.slug === slug)
 let periodo = salon.value.archivo.periodos[0]

@@ -30,7 +30,7 @@ const mostrarTodosLosMiembros = ref(false)
         <div v-else class="text-muted">...</div>
     </div>
 
-    <Dialog v-model:visible="mostrarTodosLosMiembros" modal header="Miembros" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="mostrarTodosLosMiembros" modal header="Miembros" :style="{ width: '25rem' }" :dismissableMask="true">
         <div class="space-y-1">
             <div v-for="doc in miembros.docs" :key="doc.id" class="flex items-center">
                 <AvatarSalon :usuario="doc.autor" />

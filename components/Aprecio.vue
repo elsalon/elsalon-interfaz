@@ -8,13 +8,15 @@
         <Button v-show="totalDocs>0" :title="userNamesTooltip" link class="my-2 text-xs text-surface-500" :class="{'opacity-30':fetching}" style="padding: 0" :label="`(${totalDocs})`" @click="AbrirTodosLosAprecios()" />
         
             <!-- {{ aprecioIniciales }} -->
-        <Dialog v-model:visible="mostrarTodosAprecios" modal header="Aprecian" :style="{ width: '25rem' }">
+        <Dialog v-model:visible="mostrarTodosAprecios" modal header="Aprecian" :style="{ width: '25rem' }" :dismissableMask="true">
             <template v-if="fetching" class="text-center">Cargando...</template>
             <template v-else>
                 <div class="space-y-1">
                     <div v-for="doc in docs" :key="doc.id" class="flex items-center">
-                        <AvatarSalon :usuario="doc.autor" />
-                        <NuxtLink :to="`/usuarios/${doc.autor.slug}`" class="ml-2">{{ doc.autor.nombre }}</NuxtLink>
+                        <NuxtLink :to="`/usuarios/${doc.autor.slug}`" class="ml-2">
+                            <AvatarSalon :usuario="doc.autor" />
+                            {{ doc.autor.nombre }}
+                        </NuxtLink>
                     </div>
                 </div>
             </template>

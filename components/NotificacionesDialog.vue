@@ -1,7 +1,7 @@
 <template>
     <ClientOnly>
         <Dialog :visible="notificacionesStore.dialogVisible" header="Notificaciones" :style="{ width: '25rem' }"
-            position="top" :draggable="true">
+            position="top" :dismissableMask="true">
             <template #closeicon>
                 <Button icon="pi pi-times" severity="secondary" size="small" text
                     @click="notificacionesStore.dialogVisible = false" />
@@ -25,7 +25,7 @@
                     severity="secondary" @click="notificacionesStore.MarcarTodasLeidas" size="small"
                     class="flex-grow" />
                 <Button v-if="notificacionesStore.restantes > 0" :loading="fetching"
-                    :label="`Cargar más (${notificacionesStore.restantes})`"
+                    :label="`Ver más (${notificacionesStore.restantes})`"
                     @click="notificacionesStore.fetchNotificacionesMas()" size="small" class="flex-grow" />
             </template>
 

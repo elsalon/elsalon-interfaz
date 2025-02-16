@@ -23,6 +23,7 @@
 <script setup>
 const router = useRouter();
 const linkNotificacion = ref('')
+const notificacionesStore = useNotificacionesStore()
 
 const { $formatDate } = useNuxtApp()
 const props = defineProps({
@@ -36,24 +37,31 @@ const props = defineProps({
 // const identidad = ref()
 const emit = defineEmits(['leida'])
 
-switch (props.notificacion.link.relationTo) {
-    case 'entradas':
-        linkNotificacion.value = `/entradas/${props.notificacion.link.value.id}`
-        break;
-    case 'users':
-        linkNotificacion.value = `/usuarios/${props.notificacion.link.value.slug}`
-        break;
-    case 'grupos':
-        linkNotificacion.value = `/grupos/${props.notificacion.link.value.slug}`
-        break;
-    case 'salones':
-        linkNotificacion.value = `/salones/${props.notificacion.link.value.slug}`
-        break;
+// Hardcodeo link de notificacion rol docente
+if(props.notificacion.categoria === 'rol-docente'){
+    linkNotificacion.value = "/nodo/docente"
+}else{
+    // Sino lo asigno normalmente segun linkNotificacion
+    switch (props.notificacion.link.relationTo) {
+        case 'entradas':
+            linkNotificacion.value = `/entradas/${props.notificacion.link.value.id}`
+            break;
+        case 'users':
+            linkNotificacion.value = `/usuarios/${props.notificacion.link.value.slug}`
+            break;
+        case 'grupos':
+            linkNotificacion.value = `/grupos/${props.notificacion.link.value.slug}`
+            break;
+        case 'salones':
+            linkNotificacion.value = `/salones/${props.notificacion.link.value.slug}`
+            break;
+    }
 }
 
 const HandleNotificacionLink = async () => {
     console.log('HandleNotificacionLink')
     await MarcarLeida();
+    notificacionesStore.dialogVisible = false
     router.push(linkNotificacion.value)
 }
 

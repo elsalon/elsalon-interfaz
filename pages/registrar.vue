@@ -1,6 +1,6 @@
 <template>
 	<NuxtLayout name="layout-credenciales">
-    <template v-if="!userSignedUp" #cta>Registrate en El Salón</template>
+    <template v-if="!userSignedUp" #cta>Registrate</template>
     <template v-if="!userSignedUp">
       <form @submit.prevent="handleSignup" class="space-y-3">
         <div>
