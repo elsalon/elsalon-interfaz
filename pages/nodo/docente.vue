@@ -10,7 +10,7 @@
             Cada usuario del salón posee un rol, que por ahora sólo está determinado entre <strong>alumnx</strong> y <strong>docente</strong>.
             Por defecto los usuarios nuevos se les asigna el rol alumnx.
             <br><br>
-            El rol docente posee algunas capacidad que los alumnxs no tienen, con el objetivo de curar, proteger y promover el contenido dentro de el salón.
+            El rol docente posee algunas capacidades extra, con el objetivo de curar, proteger y promover el contenido dentro de <strong>el salón</strong>.
             También existe un rol admin reservado para las operaciones críticas de mantenimiento ya que tienen acceso irrestricto.
             
             <h3>Cómo obtener el rol docente</h3>
@@ -37,8 +37,8 @@
                     
                 </li>
                     <br>
-                <li><strong>Fijar</strong> funciona parecido al anterior salón, deja una entrada arriba de todo, pero para ayudar al orden
-                    de cada salón ahora tiene la opción de determinar cuánto tiempo debería quedar fijada</li>
+                <li><strong>Fijar</strong> deja una entrada arriba de todo para dar más visibilidad. Para ayudar al orden
+                    de cada salón, se incoroporó la opción de determinar cuánto tiempo debería quedar fijada. Luego de ese tiempo vuelve a su cronología normal.</li>
                     <video :src="vidFijarEntrada" no-controls muted autoplay loop class="m-auto my-10"/>
             </ul>
 
@@ -47,14 +47,14 @@
                 arriba de todo los próximos 4 eventos futuros. Se puede ingresar a la agenda para tener un panorama de todo el calendario anual.<br>
                 <img :src="imgEventosSalon" class="m-auto my-10 max-w-lg">
             Para agregar un nuevo evento clickear en la fecha del calendario y completar los datos, con el título, una descripción (este puede ser un buen lugar 
-            para poner la consigna o aspectos a ser evaluados) y la fecha + hora. Los eventos listado tienen un ícono de lápiz para editar, y un tacho para eliminar. 
+            para poner la consigna o aspectos a ser evaluados) y la fecha + hora. Los eventos listados tienen un ícono de lápiz para editar, y un tacho para eliminar. 
             Sólo los usuarios con rol docente pueden agregar/editar/eliminar eventos.
             
             <video :src="vidEventoCrear" no-controls muted autoplay loop class="m-auto my-10"/>
             
             <h3>Comisión</h3>
             Los docentes también pueden crear o eliminar comisiones dentro de cada sala, mientras que los usuarios no docentes sólo pueden consultar la lista de comisiones 
-            y unirse a una. <strong>Los espacios dentro de las comisiones sólo sirven como un filtro,</strong>no son sub espacios para escribir. El 
+            y unirse a una. <strong>Los espacios dentro de las comisiones sólo sirven como un filtro,</strong> no son sub espacios para escribir. El 
             <a href="https://github.com/elsalon/elsalon-servidor/blob/main/src/collections/ComisionesEndpoints.js#L113" target="_blank">filtro</a> revela todas las 
             entradas de sus integrantes en ese espacio o su bitácora como también la de grupos cuyos integrantes estén en la comisión.
             <div class="bg-gray-100 text-gray-400 my-2 p-2 text-center text-xs">
@@ -62,8 +62,8 @@
             </div>
 
             <h3>Aulas</h3>
-            Cada salón tiene un espacio bajo su nombre como un lugar para comunicar información rápidamente, como por ejemplo las aulas que vamos a usar cada jornada,
-            o cualquier uso de directiva que se quiera dar. Para editarlo solo hay que clickearlo y se convierte en un caja de texto para editar. Al terminar la edición
+            Cada salón tiene un espacio bajo su nombre como un lugar para comunicar información rápidamente, como por ejemplo las aulas que vamos a usar cada jornada. 
+            Para editar solo hay que clickearlo y se convierte en un caja de texto. Al terminar la edición
             clickear en la tilde para guardar.
 
             <video :src="vidAulas" no-controls muted autoplay loop class="m-auto my-10"/>
