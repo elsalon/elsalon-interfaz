@@ -28,14 +28,14 @@
                 <BtnEnlazar @estadoEnlace="onEstadoEnlace" type="sala"/>
             </div>
         </div>
-
-
-        <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon"/>
-
-
+        <div>
+            <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon"/>
+        </div>
+        <div>
+            <ListaEntradas :query="query" :cacheKey="cacheKey" />
+        </div>
+        
         <CrearEntradaBtn v-if="estadoEnlace == 2" />
-        <!-- TODO Query -->
-        <ListaEntradas :query="query" :cacheKey="cacheKey" />
     </NuxtLayout>
 </template>
 
