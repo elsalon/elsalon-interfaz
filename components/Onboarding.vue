@@ -45,6 +45,7 @@ const activeStep = ref(0);
 const showOnboarding = ref(pendingSteps.length > 0)
 
 const completeOnboarding = async() => {
+    const {getSession} = useAuth()
     showOnboarding.value = false;
     try{
         const data = {
@@ -52,6 +53,7 @@ const completeOnboarding = async() => {
         }
         const userRes = await useAPI(`/api/users/${user.id}`, {body: data, method: 'PATCH'});
         console.log(userRes.message)
+        await getSession()
     }catch(e){
         console.warn("No se pudo actualizar la fecha de onboarding")
     }
