@@ -1,8 +1,7 @@
 <template>
-    <Dialog v-model:visible="showOnboarding" modal :closable="false" >
-        
+    <Dialog v-model:visible="showOnboarding" modal :closable="false" :draggable="false" class="min-h-[90vh] md:min-h-[50vh]">
         <div class="overflow-hidden ">
-            <div class="relative min-h-40 overflow-hidden">
+            <div class="relative overflow-hidden min-h-[70vh] md:min-h-[50vh]">
                 <!-- Ensure this container is relative and has a fixed height -->
                 <TransitionGroup name="slide" mode="out-in">
                     <div v-for="(step, index) in pendingSteps" :key="index"
@@ -17,7 +16,7 @@
             </div>
         </div>
 
-        <div class="relative min-w-64">
+        <div class="relative min-w-80">
             <!-- BOTONES -->
             <div class="flex pt-6 justify-end space">
                 <Button v-if="activeStep > 0" severity="secondary" icon="pi pi-arrow-left" size="small"
@@ -28,7 +27,7 @@
                     @click="completeOnboarding()" />
             </div>
             <!-- PUNTITOS -->
-            <div class="flex justify-center space-x-1 absolute top-9 left-[50%] -translate-x-[50%]">
+            <div v-if="pendingSteps.length > 1" class="flex justify-center space-x-1 absolute top-9 left-[50%] -translate-x-[50%]">
                 <div v-for="(item, index) in pendingSteps" class="w-2 h-2 rounded-full bg-gray-200"
                     :class="{ 'bg-gray-400': activeStep == index }"></div>
             </div>

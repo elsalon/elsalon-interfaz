@@ -1,1 +1,0 @@
-<template>Bienvenido al salon !</template>

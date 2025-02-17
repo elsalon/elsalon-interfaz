@@ -1,0 +1,13 @@
+<template>
+    <div class="prose prose-sm md:prose-base">
+        <h3>Salones</h3>
+        
+        <div style="width:100%; aspect-ratio: 1;">
+            <Skeleton style="width:100%; height: 100%;"></Skeleton>
+        </div>
+
+        <p>
+            En el menú desplegable están listados los demás salones. Al entrar a cada uno, podés ver las publicaciones y <strong>enlazarte</strong> para compartir contenido específico
+        </p>
+    </div>
+</template>
