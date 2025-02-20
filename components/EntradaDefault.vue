@@ -98,7 +98,7 @@ watch(() => props.entrada, () => {
 });
 
 const AbrirPlaylist = () => {
-    useNuxtApp().callHook("videoplaylist:open", {data:'test'})
+    useNuxtApp().callHook("videoplaylist:open", {entrada: props.entrada})
 }
 
 const listaComentarios = ref()
