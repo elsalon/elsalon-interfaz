@@ -54,6 +54,8 @@
                 <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 mr-2 text-xs text-surface-500" style="padding: 0;"
                     label="Comentar" @click="ToggleCommentBox" />
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
+
+                <Button @click="AbrirPlaylist" link label="Abrir Playlist"/>
             </div>
             <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
                 :showCommentBox="showCommentBox" @userPosted="UserCommented" ref="listaComentarios" />
@@ -94,6 +96,10 @@ watch(() => props.entrada, () => {
     console.log("Entrada cambiada")
     contenidoRender.value.ReloadContents(props.entrada)
 });
+
+const AbrirPlaylist = () => {
+    useNuxtApp().callHook("videoplaylist:open", {data:'test'})
+}
 
 const listaComentarios = ref()
 const contenidoRender = ref()

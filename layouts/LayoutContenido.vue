@@ -72,6 +72,7 @@
         </nav>
     </header>
     <main :class="containerType">
+        <VideoPlaylist/>
         <slot />
     </main>
     <NotificacionesDialog ref="notificacionesDialog" />
