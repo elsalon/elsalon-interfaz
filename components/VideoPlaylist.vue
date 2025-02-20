@@ -1,11 +1,18 @@
 <template>
 
     <Drawer v-model:visible="visible" header=" " position="full">
-
-        <div>
-            <video ref="playerRef" playsinline controls></video>
+        <div class="flex w-full h-full">
+            <!-- PLAYER -->
+            <div class="flex-grow items-center justify-center">
+                <video ref="playerRef" playsinline controls></video>
+            </div>
+            <!-- PLAYLSIT -->
+            <div class="w-1/4 px-2 overflow-y-auto">
+                <div v-for="video in playlist" class="cursor-pointer p-1 hover:bg-gray-100" :key="video.id" @click="loadVideo(video.id)">
+                    {{ video.title }}
+                </div>
+            </div>
         </div>
-        <Button @click="test">test</Button>
     </Drawer>
 
 </template>
@@ -21,6 +28,7 @@ let startVideoPlaylistHook = null;
 const visible = ref(true)
 const playerRef = ref(null)
 let player = null
+const playlist = ref([{title:'tst', id:"MGRDy2PqCGk"}, {title:'tst2', id:"MiE4RwNhfDI"}])
 
 const test = () => {
     loadVideo("MGRDy2PqCGk")
@@ -33,10 +41,6 @@ const InitPlayer = () => {
         autoplay: false, // Autoplay is often blocked unless muted
     })
 
-    player.on('ready', () => {
-        console.log("Player is ready")
-    })
-
     player.on('playing', () => {
         console.log("Video started playing")
     })
@@ -47,7 +51,9 @@ const InitPlayer = () => {
 }
 
 const loadVideo = (id) => {
+    console.log(player)
     if (!player) {
+        console.log("Player not initialized")
         InitPlayer() // Initialize player first
     }
 
@@ -79,7 +85,8 @@ const handleOpenVideoPlaylist = async (data) => {
 
 watch(() => visible.value, (newValue) => {
     if (!newValue && player) {
-        player.stop();
+        player.destroy()
+        player = null
     }
 })
 
