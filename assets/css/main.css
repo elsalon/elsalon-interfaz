@@ -252,3 +252,9 @@ ol{
   @apply bg-gray-100;
   pointer-events: none;
 }
+
+.texto-cargando{
+  @apply bg-gradient-to-r bg-clip-text  text-transparent 
+  from-gray-400 via-gray-300 to-gray-400
+  animate-text;
+}
