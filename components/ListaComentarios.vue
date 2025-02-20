@@ -3,7 +3,11 @@
         <button v-if="hasNextPage && !fetchingComentarios" class="w-full my-1 text-gray-400 hover:text-gray-800 p-1 text-sm" @click="fetchComentarios">
             Ver más comentarios ({{ comentariosRestantes }})
         </button>
-        <div v-if="fetchingComentarios" class="my-1 w-full text-center text-gray-500 p-1 text-sm">Cargando comentarios...</div>
+        <div v-if="fetchingComentarios" class="my-1 w-full text-center text-gray-500 p-1 text-sm">
+            <span class="texto-cargando">
+                Cargando comentarios...
+            </span>
+        </div>
 
         <Comentario v-for="(comentario, index) in comentarios" 
             :comentario="comentario" 
