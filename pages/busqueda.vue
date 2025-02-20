@@ -36,8 +36,9 @@
                                 
                                 <div>
                                     <div>{{ result.extracto }}</div>
-                                    <div class="text-sm text-gray-400">{{ result.autor.nombre }} - {{
-                $formatDate(result.createdAt) }}</div>
+                                    <div class="text-sm text-gray-400">{{ result.autor.nombre }}
+                                        <time :datetime="result.createdAt">{{$formatDate(result.createdAt) }}</time>
+                                    </div>
                                 </div>
                             </NuxtLink>
                         <!-- </li> -->

@@ -7,7 +7,9 @@
                 <div class="flex items-center gap-2">
                     <AvatarSalon :usuario="identidad" size="small" :title="tituloIdentidad" style="font-size: .6rem;" />
                     <span class="font-bold" :title="tituloIdentidad">{{ identidad.nombre }}</span>
-                    <span class="text-gray-300 text-xs">{{ $formatDate(comentario.createdAt) }}</span>
+                    <span class="text-gray-300 text-xs">
+                        <time :datetime="comentario.createdAt">{{ $formatDate(comentario.createdAt) }}</time>
+                    </span>
                 </div>
             </NuxtLink>
         </template>

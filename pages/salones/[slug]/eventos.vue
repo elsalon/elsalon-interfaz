@@ -46,7 +46,9 @@
                                         <Button v-if="puedeEditar" icon="pi pi-pencil"  text rounded aria-label="Filter"  @click="ComenzarEditarEvento(evento)"/>
                                  </div>
                             </div>
-                            <div class="text-xs md:text-sm text-gray-500">{{ $formatDateCorto(evento.fecha) }}</div>
+                            <div class="text-xs md:text-sm text-gray-500">
+                                <time :datetime="evento.fecha">{{ $formatDateCorto(evento.fecha) }}</time>
+                            </div>
                             <div class="text-sm md:text-base">{{ evento.descripcion }}</div>
                         </div>
                     </div>
@@ -108,7 +110,6 @@ const { isHeaderVisible } = useScrollDirection(75)
 const auth = useAuth()
 import { useAsyncData } from "#app";
 import qs from 'qs';
-import { createWebHistory } from "vue-router";
 const { $formatDateCorto } = useNuxtApp()
 const toast = useToast();
 const confirm = useConfirm();

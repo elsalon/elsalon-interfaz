@@ -19,8 +19,9 @@
                             :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
                         <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline" :to="identidadUrl">Bitácora
                         </NuxtLink>
-                        <NuxtLink class="text-gray-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">{{
-            $formatDate(entrada.createdAt) }}</NuxtLink>
+                        <NuxtLink class="text-gray-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
+                            <time :datetime="entrada.createdAt" class="text-gray-400 text-xs">{{ $formatDate(entrada.createdAt) }}</time>
+                        </NuxtLink>
                         <!-- Entrada Fijada -->
                         <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"
                             title="Entrada Fijada"></i>
