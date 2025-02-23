@@ -176,9 +176,6 @@ const parseEditorToUpload = async (btnLabel = null) => {
     html = tempDiv.innerHTML;
     console.log("mencionados", mencionados, "etiquetas", etiquetas)
 
-    embedsYoutube = embedsYoutube.join(",");
-    embedsVimeo = embedsVimeo.join(",");
-
     btnLabel.value = "Publicando..."
     return { html, imagenes: attachedImages.value, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo }
 }

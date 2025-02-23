@@ -4,25 +4,25 @@
     <Dialog v-model:visible="visible" header=" " position="full" ref="maxDialog" :blockScroll="true"
         @show="biggifyDialog" :class="['!bg-white']" :pt="{ header: ['bg-white flex justify-between w-full p-2 '] }">
 
-        <div class="w-full h-full flex items-center justify-center">
+        <div class="w-full h-full md:flex items-center justify-center">
             <div v-if="loading">
                 <span class="texto-cargando">Cargando...</span>
             </div>
 
-            <div class="flex w-full gap-4 md:flex-row flex-col" v-show="!loading">
+            <div class=" md:flex w-full gap-4 md:flex-row flex-col" v-show="!loading">
                 <!-- PLAYER (Defines the height) -->
-                <div class="flex-grow flex items-center justify-center">
+                <div class="flex-grow md:flex items-center justify-center sticky top-0 z-10">
                     <div v-if="playlistFinished" class="w-full h-30 flex items-center justify-center">
                         <span class="text-2xl text-gray-500">Playlist terminó</span>
                     </div>
-                    <div :class="{ 'opacity-0': playlistFinished }" class="w-full aspect-video">
+                    <div :class="{ 'opacity-0': playlistFinished }" class="w-full">
                         <video ref="playerRef" playsinline controls class="w-full h-auto"></video>
                     </div>
                 </div>
 
                 <!-- PLAYLIST (Inherits video height) -->
-                <div class="w-full md:w-1/5 p-1 bg-white flex flex-col overflow-y-auto overflow-hidden relative scrollbar ">
-                    <div class="md:absolute md:w-full md:h-full top-0 left-0">
+                <div class=" w-full md:w-1/5 p-1 bg-white flex flex-col overflow-y-auto overflow-hidden relative scrollbar z-0">
+                    <div class="md:absolute md:w-full h-full top-0 left-0">
                         <div v-for="(video, i) in playlist" ref="videoItems"
                             class="cursor-pointer p-3 hover:bg-gray-200 flex items-center gap-2 rounded-sm"
                             :key="video.id" @click="LoadVideo(video, i)">
