@@ -1,6 +1,6 @@
 <template>
-    <div class="group/entrada transition-all duration-500 ease-in-out"
-    :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }">
+    <div class="group/entrada transition-all duration-500 ease-in-out p-1 entrada-default"
+    :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" >
     <article>
         <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
         <div class="flex pb-2">
@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div
-                class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-words">
+                class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-words max-w-none">
                 <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
             </div>
             <div class="" v-if="entrada.archivos.length">
