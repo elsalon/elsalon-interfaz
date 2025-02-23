@@ -14,6 +14,8 @@ import { useConfirm } from "primevue/useconfirm";
 import { useToast } from 'primevue/usetoast';
 const confirm = useConfirm();
 
+import qs from 'qs';
+
 const { hooks } = useNuxtApp();
 const toast = useToast();
 const auth = useAuth()
@@ -32,6 +34,66 @@ const resaltar = ref(false)
 const loading = ref(false);
 const { entrada } = props;
 const emit = defineEmits(['eliminar']);
+
+entrada.comentarios.fetching = false;
+entrada.masComentarios = false;
+
+const fetchComentarios = async () => {
+    console.log("Fetch comentarios")
+    entrada.comentarios.fetching = true
+    let query = {
+        where: {
+            and: [
+                { entrada: { equals: entrada.id } },
+            ]
+        },
+        sort: '-createdAt',
+        limit: 3,
+    }
+    // Si ya hay comentarios, fetch los anterior al mas viejo de la lista
+    const oldestCommentDate = entrada.comentarios.docs.length > 0 ? entrada.comentarios.docs[0].createdAt : null;
+    if (oldestCommentDate) {
+        query.where.and.push({ createdAt: { less_than: oldestCommentDate } })
+    }
+    console.log("Fetch comentarios", query)
+    const queryParams = qs.stringify(query, { encode: false });
+    const res = await useAPI(`/api/comentarios?${queryParams}`)
+
+    var comentariosNuevos = res.docs.filter(newComment =>
+        !entrada.comentarios.docs.some(existingComment => existingComment.id === newComment.id)
+    )
+    comentariosNuevos = comentariosNuevos.reverse()
+    entrada.comentarios.docs = [...comentariosNuevos, ...entrada.comentarios.docs]
+    entrada.masComentarios = res.hasNextPage;
+    entrada.comentarios.fetching = false
+}
+
+const fetchComentariosRecientes = async () => {
+    console.log("Fetch comentarios recientes")
+    // Si no hay comentarios, fetch el primer set de comentarios
+    if (entrada.comentarios.docs.length === 0) {
+        console.log("No hay comentarios, fetchComentarios")
+        await fetchComentarios()
+        return
+    }
+    const newestCommentDate = entrada.comentarios.docs.length > 0 ? entrada.comentarios.docs[entrada.comentarios.docs.length - 1].createdAt : null;
+    entrada.comentarios.fetching = true
+    console.log("Fetwching nwer than", newestCommentDate)
+    const query = {
+        where: {
+            and: [
+                { entrada: { equals: entrada.id } },
+                { createdAt: { greater_than: newestCommentDate } }
+            ]
+        },
+        sort: 'createdAt',
+    }
+    const queryParams = qs.stringify(query, { encode: false });
+    const res = await useAPI(`/api/comentarios?${queryParams}`)
+    const comentariosNuevos = res.docs.filter(newComment => !entrada.comentarios.docs.some(existingComment => existingComment.id === newComment.id))
+    entrada.comentarios.docs = [...entrada.comentarios.docs, ...comentariosNuevos]
+    entrada.comentarios.fetching = false
+}
 
 
 const identidad = computed(() => {
@@ -167,6 +229,10 @@ defineExpose({ ResaltarEntrada });
         :CopiarLink="CopiarLink"
         :DestacarEntrada="DestacarEntrada"
         :resaltar="resaltar"
+
+        @fetchComentarios="fetchComentarios"
+        @fetchComentariosRecientes="fetchComentariosRecientes"
         />
+        
 </template>
 

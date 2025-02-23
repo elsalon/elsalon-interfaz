@@ -61,8 +61,8 @@
                     <i class="pi pi-play-circle" />
                 </Button>
             </div>
-            <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
-                :showCommentBox="showCommentBox" @userPosted="UserCommented" ref="listaComentarios" />
+            <ListaComentarios :entradaId="entrada.id" :comentarios="entrada.comentarios"
+                :showCommentBox="showCommentBox" @userPosted="UserCommented" @fetchComentarios="emit('fetchComentarios')" ref="listaComentarios" />
         </div>
     </div>
 </template>
@@ -101,6 +101,9 @@ watch(() => props.entrada, () => {
     contenidoRender.value.ReloadContents(props.entrada)
 });
 
+
+const emit = defineEmits(['fetchComentariosRecientes', 'fetchComentarios'])
+
 const HabilitarPlaylist = computed(() => {
     // contar video en entrada
     const vidsEntrada = ContarVideos(props.entrada)
@@ -124,6 +127,7 @@ const contenidoRender = ref()
 
 const UserCommented = () => {
     listaComentarios.value.HideCommentbox();
+    emit('fetchComentariosRecientes')
 }
 
 const ToggleCommentBox = () => {

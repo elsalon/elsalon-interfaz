@@ -15,7 +15,7 @@
                     <div v-if="playlistFinished" class="w-full h-30 flex items-center justify-center absolute">
                         <span class="text-2xl text-gray-500">Playlist terminó</span>
                     </div>
-                    <div :class="{ 'opacity-0': playlistFinished }" class="w-full">
+                    <div :class="{ 'opacity-0': playlistFinished }" class="w-full transition-opacity">
                         <video ref="playerRef" playsinline controls class="w-full h-auto"></video>
                     </div>
                 </div>
@@ -29,9 +29,13 @@
                             <div class="w-2">
                                 <div v-if="i == currentVideo" class="w-2 h-2 bg-black rounded-full"></div>
                             </div>
+                            
                             <AvatarSalon :usuario="video.identidad" size="small" style="font-size: .6rem;" />
                             <div>
                                 {{ video.identidad.nombre }}
+                                <div class="text-gray-400 text-xs">
+                                    <time :datetime="video.createdAt" class="text-gray-400 text-xs">{{ $formatDate(video.createdAt) }}</time>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -47,6 +51,7 @@ import { ref, onMounted } from 'vue'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 const { hooks } = useNuxtApp();
+const { $formatDate } = useNuxtApp()
 import qs from 'qs';
 
 let startVideoPlaylistHook = null;
@@ -170,25 +175,6 @@ const ProcesarEntradaAPlaylist = async (entrada) => {
     entrada.comentarios.docs.forEach((comentario) => {
         newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
     })
-    // test
-    entrada.comentarios.docs.forEach((comentario) => {
-        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
-    })
-    entrada.comentarios.docs.forEach((comentario) => {
-        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
-    })
-    entrada.comentarios.docs.forEach((comentario) => {
-        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
-    })
-    entrada.comentarios.docs.forEach((comentario) => {
-        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
-    })
-    entrada.comentarios.docs.forEach((comentario) => {
-        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
-    })
-    entrada.comentarios.docs.forEach((comentario) => {
-        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
-    })
     return newPlaylist;
 }
 
@@ -201,6 +187,7 @@ const CrearItemPlaylist = (contenido) => {
                 identidad: identidad,
                 id: videoId,
                 provider: 'youtube',
+                createdAt: contenido.createdAt,
             })
         })
     }
@@ -210,6 +197,7 @@ const CrearItemPlaylist = (contenido) => {
                 identidad: identidad,
                 id: videoId,
                 provider: 'vimeo',
+                createdAt: contenido.createdAt,
             })
         })
     }

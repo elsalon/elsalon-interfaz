@@ -1,19 +1,19 @@
 <template>
     <div>
-        <button v-if="hasNextPage && !fetchingComentarios" class="w-full my-2 text-gray-400 hover:text-gray-800 text-sm"
-            @click="fetchComentarios">
+        <button v-if="comentariosRestantes > 0 && !props.comentarios.fetching" class="w-full my-2 text-gray-400 hover:text-gray-800 text-sm"
+            @click="emit('fetchComentarios')">
             Ver más comentarios ({{ comentariosRestantes }})
         </button>
-        <div v-if="fetchingComentarios" class="my-2 w-full text-center text-gray-500 text-sm">
+        <div v-if="props.comentarios.fetching" class="my-2 w-full text-center text-gray-500 text-sm">
             <span class="texto-cargando">
                 Cargando comentarios...
             </span>
         </div>
 
         <div class="pl-0 pt-2 border-l-1 border-gray-100 relative">
-            <Comentario v-for="(comentario, index) in comentarios" :comentario="comentario" :key="comentario.id"
+            <Comentario v-for="(comentario, index) in props.comentarios.docs" :comentario="comentario" :key="comentario.id"
                 @eliminar="EliminarComentario(comentario.id)" @toggleCommentBox="ToggleNewComment"
-                :ref="(el) => setComentarioRef(el, comentario.id)" :isLast="index === comentarios.length - 1" />
+                :ref="(el) => setComentarioRef(el, comentario.id)" :isLast="index === props.comentarios.docs.length - 1" />
 
             <Accordion :value="showCommentBox">
                 <AccordionPanel value="1">
@@ -29,7 +29,6 @@
 </template>
 
 <script setup>
-import qs from 'qs';
 import CajaComentario from './CajaComentario.vue';
 
 const props = defineProps({
@@ -37,29 +36,20 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    // showCommentBox: {
-    //     type: String,
-    //     default: '0',
-    // },
-    comentariosIniciales: {
+    comentarios: {
         type: Object,
         required: true,
     }
 })
-const hasNextPage = ref(false)
-const comentariosRestantes = ref(0)
-const comentarios = ref([])
-// computed property newestCommentDate
-const newestCommentDate = computed(() => comentarios.value.length > 0 ? comentarios.value[comentarios.value.length - 1].createdAt : null)
-const oldestCommentDate = computed(() => comentarios.value.length > 0 ? comentarios.value[0].createdAt : null)
 
+
+const comentariosRestantes = computed(() => props.comentarios.totalDocs - props.comentarios.docs.length)
 const showCommentBox = ref("0")
 
 const cajaComentarioKey = ref(0)
-const fetchingComentarios = ref(false)
 const cajaComentario = ref(null)
 
-const emit = defineEmits(['userPosted'])
+const emit = defineEmits(['userPosted', 'fetchComentarios'])
 
 const ToggleNewComment = () => {
     showCommentBox.value = showCommentBox.value == '0' ? '1' : '0';
@@ -67,10 +57,6 @@ const ToggleNewComment = () => {
 const HideCommentbox = () => {
     showCommentBox.value = '0';
 }
-
-comentarios.value = props.comentariosIniciales.docs;
-hasNextPage.value = props.comentariosIniciales.hasNextPage;
-comentariosRestantes.value = props.comentariosIniciales.totalDocs - comentarios.value.length
 
 const comentarioRefs = ref({});
 
@@ -80,71 +66,15 @@ function setComentarioRef(el, id) {
     }
 }
 
-const fetchComentarios = async () => {
-    fetchingComentarios.value = true
-    let query = {
-        where: {
-            and: [
-                { entrada: { equals: props.entradaId } },
-            ]
-        },
-        sort: '-createdAt',
-        limit: 3,
-    }
-    // Si ya hay comentarios, fetch los anterior al mas viejo de la lista
-    if (oldestCommentDate.value) {
-        query.where.and.push({ createdAt: { less_than: oldestCommentDate.value } })
-    }
-    console.log("Fetch comentarios", query)
-    const queryParams = qs.stringify(query, { encode: false });
-    const res = await useAPI(`/api/comentarios?${queryParams}`)
-
-    var newComments = res.docs.filter(newComment =>
-        !comentarios.value.some(existingComment => existingComment.id === newComment.id)
-    )
-    newComments = newComments.reverse()
-    comentarios.value = [...newComments, ...comentarios.value]
-    hasNextPage.value = res.hasNextPage;
-    comentariosRestantes.value = res.totalDocs - res.docs.length
-
-    fetchingComentarios.value = false
-}
-
-const fetchNewerComments = async () => {
-    // Si no hay comentarios, fetch el primer set de comentarios
-    if (!newestCommentDate.value) {
-        console.log("No hay comentarios, fetchComentarios")
-        await fetchComentarios()
-        return
-    }
-    fetchingComentarios.value = true
-    console.log("Fetwching nwer than", newestCommentDate.value)
-    const query = {
-        where: {
-            and: [
-                { entrada: { equals: props.entradaId } },
-                { createdAt: { greater_than: newestCommentDate.value } }
-            ]
-        },
-        sort: 'createdAt',
-    }
-    const queryParams = qs.stringify(query, { encode: false });
-    const res = await useAPI(`/api/comentarios?${queryParams}`)
-    const newComments = res.docs.filter(newComment => !comentarios.value.some(existingComment => existingComment.id === newComment.id))
-    comentarios.value = [...comentarios.value, ...newComments]
-
-    if (newComments.length > 0) {
-        newestCommentDate.value = newComments[0].createdAt
-    }
-    fetchingComentarios.value = false
-}
-
 const handleUserPostedComment = async (comentario) => {
     console.log('User posted comment', comentario)
-    await fetchNewerComments()
+    // await fetchNewerComments()
     emit('userPosted'); // lo vuelvo a emitir a "Entrada" para que cierre el accordion
     cajaComentario.value.ClearEditor();
-
+    // Wait until the new comment is rendered
+    while(!comentarioRefs.value[comentario.id]) {
+        await new Promise(r => setTimeout(r, 100));
+    }
     comentarioRefs.value[comentario.id].ResaltarComentario();
 }
 
@@ -154,8 +84,9 @@ const handleUserCancelComment = () => {
 }
 
 const EliminarComentario = (id) => {
-    comentarios.value = comentarios.value.filter(comentario => comentario.id != id)
+    props.comentarios.docs = props.comentarios.docs.filter(comentario => comentario.id != id)
+    // props.comentarios.value = props.comentarios.value.filter(comentario => comentario.id != id)
 }
 
-defineExpose({ ToggleNewComment, HideCommentbox, comentarios })
+defineExpose({ ToggleNewComment, HideCommentbox })
 </script>
