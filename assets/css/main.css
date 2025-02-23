@@ -64,7 +64,7 @@
 
 .entrada-default::after{
   content: "";
-  @apply block h-[1px] mt-10 mb-10 
+  @apply block h-[1px] mt-7 mb-7 
   /* bg-gray-200  */ /* Fondo color */ 
   /* bg-gradient-to-r from-white via-gray-200 to-white; */ /* Fondo gradient */ 
 }
