@@ -17,18 +17,20 @@
   --p-primary-900: var(--p-surface-900);
   --p-primary-950: var(--p-surface-950);
   --p-surface-0: #ffffff;
-  --p-surface-50: #f8fafc;
-  --p-surface-100: #f1f5f9;
-  --p-surface-200: #e2e8f0;
-  --p-surface-300: #cbd5e1;
-  --p-surface-400: #94a3b8;
-  --p-surface-500: #64748b;
-  --p-surface-600: #475569;
-  --p-surface-700: #334155;
-  --p-surface-800: #1e293b;
-  --p-surface-900: #0f172a;
-  --p-surface-950: #020617;
+  --p-surface-50: #fafafa;
+  --p-surface-100: #f5f5f5;
+  --p-surface-200: #e5e5e5;
+  --p-surface-300: #d4d4d4;
+  --p-surface-400: #a3a3a3;
+  --p-surface-500: #737373;
+  --p-surface-600: #525252;
+  --p-surface-700: #404040;
+  --p-surface-800: #262626;
+  --p-surface-900: #171717;
+  --p-surface-950: #0a0a0a; 
   --p-content-border-radius: 6px;
+
+  --plyr-color-main: var(--p-primary-700);
 }
 
 /* Light Mode */

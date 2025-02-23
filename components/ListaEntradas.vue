@@ -75,7 +75,7 @@ const entradaContainerClass = computed(() => {
     'space-y-10 md:space-y-0 md:grid grid-cols-4 gap-4': props.grid === 4,
     'space-y-10 md:space-y-0 md:grid grid-cols-5 gap-4': props.grid === 5,
     'space-y-10 md:space-y-0 md:grid grid-cols-6 gap-4': props.grid === 6,
-    'space-y-10': props.grid === false,
+    'space-y-20': props.grid === false,
   }
 })
 

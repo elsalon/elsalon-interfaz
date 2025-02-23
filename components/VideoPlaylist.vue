@@ -1,6 +1,7 @@
 <template>
 
-    <Drawer v-model:visible="visible" header=" " position="full">
+
+    <Dialog v-model:visible="visible" header=" " position="full"  ref="maxDialog" :blockScroll="true" @show="biggifyDialog">
         <div v-if="loading" class="w-full h-full flex items-center justify-center">
             <span class="texto-cargando">Cargando...</span> 
         </div>
@@ -27,7 +28,9 @@
                 </div>
             </div>
         </div>
-    </Drawer>
+
+    </Dialog>
+
 
 </template>
 
@@ -48,6 +51,12 @@ let player = null
 const playlist = ref([])
 const currentVideo = ref(0)
 const playlistFinished = ref(false)
+
+const maxDialog = ref();
+
+function biggifyDialog() {
+    maxDialog.value.maximized = true;
+}
 
 const InitPlayer = () => {
     console.log("Initializing player")
