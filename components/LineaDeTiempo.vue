@@ -25,7 +25,7 @@
 
                 <!-- Date -->
                 <div class="text-xs text-gray-500">
-                    {{ $formatDateCorto(item.fecha) }}
+                    <time :datatype="item.fecha">{{ $formatDateCorto(item.fecha) }}</time>
                 </div>
             </div>
             <Button icon="pi pi-calendar" class="relative" size="small" severity="contrast" rounded

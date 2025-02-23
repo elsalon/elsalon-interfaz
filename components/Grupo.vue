@@ -28,7 +28,7 @@
         </div>
 
 
-        <Dialog v-model:visible="editarGrupoVisible" modal header="Editar grupo" style="min-width: 35vw;">
+        <Dialog v-model:visible="editarGrupoVisible" modal header="Editar grupo" style="min-width: 35vw;" :dismissableMask="true">
             <form @submit.prevent="handleSubmitEdit" class="space-y-3">
                 <div class="flex gap-2 mb-4 flex-col md:flex-row">
                     <label for="nombre" class="font-semibold w-1/4">nombre</label>

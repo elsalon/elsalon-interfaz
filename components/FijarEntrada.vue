@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model:visible="visible" modal header="Fijar entrada" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="visible" modal header="Fijar entrada" :style="{ width: '25rem' }" :dismissableMask="true">
 
         <span class="text-surface-500 dark:text-surface-400 block mb-8">Elegí por cuanto tiempo fijar esta
             entrada</span>

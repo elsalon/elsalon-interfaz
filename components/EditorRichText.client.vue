@@ -43,7 +43,8 @@ const props = defineProps({
 
 const urlRegex = /\bhttps?:\/\/[^\s<]+(?![^<]*<\/a>)/;
 const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-const vimeoRegex = /(?:https?:\/\/)?(?:www\.)?(?:vimeo\.com\/)(\d+)/;
+const vimeoRegex = /(?:https?:\/\/)?(?:www\.|player\.)?vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|video\/|)(\d+)(?:[a-zA-Z0-9_-]+)?/i;
+
 
 const handleUploadFileClick = () => {
     fileInput.value.click();
@@ -258,7 +259,7 @@ onMounted(async () => {
                         ['bold', 'italic', 'underline', 'strike'],
                         [{ 'align': [] }],
                         // 'blockquote',
-                        [ 'code-block'],
+                        ['code-block'],
                         [{ 'list': 'bullet' }],
                         // [{ 'header': 1 }, { 'header': 2 }],
                         ['link', 'image', 'video', 'attach'],
@@ -355,6 +356,16 @@ onMounted(async () => {
             }
         })
 
+        // Limpiar formato de texto al pegar
+        quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
+            console.log("Clean clipboard")
+            delta.ops = delta.ops.map(op => {
+                return {
+                    insert: op.insert
+                }
+            })
+            return delta
+        })
 
         quill.on('text-change', (delta) => {
             const ops = delta.ops;

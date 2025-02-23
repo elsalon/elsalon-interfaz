@@ -1,21 +1,31 @@
 <template>
     <div class="relative group/aprecio w-max">
         <!-- Btn Aprecio -->
-        <Button link class="my-2 mr-1 text-xs text-surface-500" :class="{'opacity-30':fetching}" style="padding: 0" :label="tooltipText" @click="handleAprecioClicked" /> 
+        <Button link class="my-2 mr-1 text-xs text-surface-500" :class="{ 'opacity-30': fetching }" style="padding: 0"
+            :label="tooltipText" @click="handleAprecioClicked" />
         <!-- Btn Cantidad -->
-        <span v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs text-surface-500" :class="{'opacity-30':fetching}" >(0)</span>
-        
-        <Button v-show="totalDocs>0" :title="userNamesTooltip" link class="my-2 text-xs text-surface-500" :class="{'opacity-30':fetching}" style="padding: 0" :label="`(${totalDocs})`" @click="AbrirTodosLosAprecios()" />
-        
-            <!-- {{ aprecioIniciales }} -->
-        <Dialog v-model:visible="mostrarTodosAprecios" modal header="Aprecian" :style="{ width: '25rem' }">
-            <template v-if="fetching" class="text-center">Cargando...</template>
+        <span v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs text-surface-500"
+            :class="{ 'opacity-30': fetching }">(0)</span>
+
+        <Button v-show="totalDocs > 0" :title="userNamesTooltip" link class="my-2 text-xs text-surface-500"
+            :class="{ 'opacity-30': fetching }" style="padding: 0" :label="`(${totalDocs})`"
+            @click="AbrirTodosLosAprecios()" />
+
+        <!-- {{ aprecioIniciales }} -->
+        <Dialog v-model:visible="mostrarTodosAprecios" modal header=" " :style="{ width: '25rem' }"
+            :dismissableMask="true">
+            <template v-if="fetching" class="text-center">
+                <span class="texto-cargando">
+                    Cargando...
+                </span>
+            </template>
             <template v-else>
-                <div class="space-y-1">
-                    <div v-for="doc in docs" :key="doc.id" class="flex items-center">
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <NuxtLink v-for="doc in docs" :key="doc.id" :to="`/usuarios/${doc.autor.slug}`"
+                        class="flex gap-2 items-center p-1 hover:bg-gray-100">
                         <AvatarSalon :usuario="doc.autor" />
-                        <NuxtLink :to="`/usuarios/${doc.autor.slug}`" class="ml-2">{{ doc.autor.nombre }}</NuxtLink>
-                    </div>
+                        {{ doc.autor.nombre }}
+                    </NuxtLink>
                 </div>
             </template>
         </Dialog>
@@ -27,7 +37,7 @@ import qs from 'qs';
 const props = defineProps({
     aprecioIniciales: {
         type: Object,
-        default: {totalDocs: 0, haApreciado: false},
+        default: { totalDocs: 0, haApreciado: false },
     },
     contenidoid: {
         type: String,
@@ -38,7 +48,7 @@ const props = defineProps({
         required: true,
     },
 });
-const {data: authData} = useAuth();
+const { data: authData } = useAuth();
 
 const fetching = ref(false);
 const docs = ref(props.aprecioIniciales.docs || []);
@@ -58,42 +68,42 @@ const CheckUserHaApreciado = () => {
 CheckUserHaApreciado();
 
 const handleAprecioClicked = async () => {
-    if(fetching.value){
+    if (fetching.value) {
         return;
     }
     fetching.value = true;
-    try{
-        if(haApreciado.value){
+    try {
+        if (haApreciado.value) {
             // Eliminio mi aprecio
             console.log('Eliminando aprecio', props.contenidoid)
             const queryParams = qs.stringify({
                 where: {
                     and: [
-                        { contenidoid: { equals:  props.contenidoid } },
+                        { contenidoid: { equals: props.contenidoid } },
                         { autor: { equals: authData.value.user.id } },
                     ]
                 }
             }, { encode: false })
 
-            const res = await useAPI(`/api/aprecio?${queryParams}`, {method: 'DELETE'})
+            const res = await useAPI(`/api/aprecio?${queryParams}`, { method: 'DELETE' })
             // console.log(res)
             docs.value = docs.value.filter(doc => doc.id != haApreciadoId.value.id);
             totalDocs.value--;
 
-            mixpanel.track('Aprecio eliminado', {contenidoid: props.contenidoid, contenidotipo: props.contenidotipo})
-        }else{
+            mixpanel.track('Aprecio eliminado', { contenidoid: props.contenidoid, contenidotipo: props.contenidotipo })
+        } else {
             // Creo un aprecio
             console.log('Creando aprecio', props.contenidoid)
-            const body = {contenidoid: props.contenidoid, contenidotipo: props.contenidotipo}
-            const res = await useAPI(`/api/aprecio/`, {body, method: 'POST'})
+            const body = { contenidoid: props.contenidoid, contenidotipo: props.contenidotipo }
+            const res = await useAPI(`/api/aprecio/`, { body, method: 'POST' })
             docs.value.push(res.doc)
             totalDocs.value++;
 
-            mixpanel.track('Aprecio', {contenidoid: props.contenidoid, contenidotipo: props.contenidotipo})
+            mixpanel.track('Aprecio', { contenidoid: props.contenidoid, contenidotipo: props.contenidotipo })
         }
-    }catch(e){
+    } catch (e) {
         console.log(e)
-    }finally{
+    } finally {
         CheckUserHaApreciado();
         fetching.value = false;
     }
@@ -101,7 +111,7 @@ const handleAprecioClicked = async () => {
 
 // Computed
 const tooltipText = computed(() => {
-    if(haApreciado.value){
+    if (haApreciado.value) {
         return `Ya no aprecio`;
     }
     return `Aprecio`;
@@ -109,11 +119,11 @@ const tooltipText = computed(() => {
 
 const cantUserNames = 3;
 const userNamesTooltip = computed(() => {
-    if(docs.value.length == 1){
+    if (docs.value.length == 1) {
         return docs.value[0].autor.nombre + " aprecia esto";
     }
     let txt = docs.value.slice(0, cantUserNames).map(doc => doc.autor.nombre).join(', ');
-    if(docs.value.length > cantUserNames){
+    if (docs.value.length > cantUserNames) {
         txt += ` y ${docs.value.length - cantUserNames} más`;
     }
     txt += " aprecian esto";
@@ -122,7 +132,7 @@ const userNamesTooltip = computed(() => {
 
 const AbrirTodosLosAprecios = async () => {
     mostrarTodosAprecios.value = true;
-    if(totalDocs.value != docs.value.length){
+    if (totalDocs.value != docs.value.length) {
         await FetchAllAprecios();
     }
 }
@@ -130,15 +140,15 @@ const AbrirTodosLosAprecios = async () => {
 const FetchAllAprecios = async () => {
     console.log("FetchAllAprecios")
     fetching.value = true;
-    try{
+    try {
         console.log('Fetching aprecio', props.contenidoid)
         const res = await useAPI(`/api/aprecio/${props.contenidoid}?limit=0`);
         console.log(res)
         docs.value = res.docs;
         totalDocs.value = res.totalDocs;
-    }catch(e){
+    } catch (e) {
         console.warn(e)
-    }finally{
+    } finally {
         CheckUserHaApreciado();
         fetching.value = false;
     }
