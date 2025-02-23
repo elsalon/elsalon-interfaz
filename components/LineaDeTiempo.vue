@@ -7,7 +7,7 @@
         <!-- Desktop Timeline -->
         <div class="hidden md:flex md:items-center md:justify-between">
             <!-- Horizontal line connecting first/last markers -->
-            <div class="absolute left-4 right-4 h-0.5 bg-gray-200"></div>
+            <div class="absolute left-4 right-4 h-0.5 bg-neutral-200"></div>
 
             <div v-for="(item, index) in eventos?.docs" :key="index"
                 class="linea-item relative z-10 flex flex-col items-center"
@@ -37,7 +37,7 @@
             <div v-for="(item, index) in eventos?.docs" :key="index" class="relative flex pb-2"
                 :class="{ 'pb-5': index < eventos.docs.length - 1 }">
                 <!-- Vertical line -->
-                <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-gray-200">
+                <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-neutral-200">
                 </div>
 
                 <!-- Marker -->
@@ -58,7 +58,7 @@
 
             <div class="relative flex">
                 <!-- Vertical line -->
-                <!-- <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-gray-200">
+                <!-- <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-neutral-200">
                     </div> -->
                 <!-- Marker -->
                 <div class="flex-shrink-0">

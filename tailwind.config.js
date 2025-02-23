@@ -13,30 +13,27 @@ module.exports = {
     "./error.vue",
   ],
   theme: {
-    
-    // extend: {
-    //   colors: {
-    //     primary: 'black',
-    //     secondary: 'black',
-    //     neutral: 'black',
-    //     accent: 'black',
-    //     surface: {
-    //       400: 'black',
-    //     },
-    //   },
-    // },
-    
-    
+    extend: {
+      colors:{
+      },
+      animation: {
+        'text': 'text 5s ease infinite',
+      },
+      keyframes: {
+        'text': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center'
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center'
+          }
+        },
+      },
+    },
     container:{
       center: true,
-      // padding: '1rem',
-      // screens: {
-      //   sm: "640px",
-      //   md: "640px",
-      //   lg: "640px",
-      //   xl: "640px",
-      //   "2xl": "640px",
-      // }
     }
   },
   plugins: [

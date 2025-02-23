@@ -2,8 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+
 /* Primary and Surface Palettes */
 :root {
+  --background-dark: var(--p-surface-950);
+  --background-light: var(--p-surface-0);
   outline: none !important;
   --p-primary-50: var(--p-surface-50);
   --p-primary-100: var(--p-surface-100);
@@ -52,6 +55,13 @@
   --p-text-hover-muted-color: var(--p-surface-600);
 }
 
+.salon-bg{
+  background-color: var(--background-light);
+}
+.dark .salon-bg{
+  background-color: var(--background-dark);
+}
+
 :root {
   color-scheme: light;
 }
@@ -65,7 +75,7 @@
 .entrada-default::after{
   content: "";
   @apply block h-[1px] mt-7 mb-7 
-  /* bg-gray-200  */ /* Fondo color */ 
+  /* bg-neutral-200  */ /* Fondo color */ 
   /* bg-gradient-to-r from-white via-gray-200 to-white; */ /* Fondo gradient */ 
 }
 .container-small{
@@ -173,9 +183,9 @@ form label{
   z-index: 1000;
   @apply bg-white p-1 border border-solid border-zinc-100;
   .ql-mention-list-item {
-    @apply p-1 cursor-pointer hover:bg-gray-100;
+    @apply p-1 cursor-pointer hover:bg-neutral-100;
     &.selected{
-      @apply bg-gray-100;
+      @apply bg-neutral-100;
     }
     .mention-item{
       @apply flex items-center;
@@ -257,7 +267,7 @@ ol{
 }
 
 .lista-salones .router-link-active{
-  @apply bg-gray-100;
+  @apply bg-neutral-100;
   pointer-events: none;
 }
 

@@ -27,7 +27,7 @@
         </div>
 
         <div class="text-center flex flex-wrap justify-around items-center w-full mb-10 p-1 relative">
-            <!-- bg-gray-100 -->
+            <!-- bg-neutral-100 -->
             <BtnEnlazar v-if="!userIsMe" type="usuario"/>
             <BtnOpcionesBtnOpcUsuario :otro="usuario" @userEdited="UserEdited"/>
         </div>

@@ -3,7 +3,7 @@
         <div ref="editorContainer" tabindex="0"></div>
         <div class="attachedFiled">
 
-            <div v-for="archivo in attachedFiles" class="text-sm bg-gray-100 text-gray-400 p-2 mb-1 font-mono">
+            <div v-for="archivo in attachedFiles" class="text-sm bg-neutral-100 text-gray-400 p-2 mb-1 font-mono">
                 <div class="flex items">
                     <div class="grow">
                         <span>{{ archivo.name }}</span>

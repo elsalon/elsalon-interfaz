@@ -32,7 +32,7 @@ export default {
             { 'text-primary-600 bg-transparent border-transparent': props.link },
 
             // Plain Button
-            { 'text-white bg-gray-500 border border-gray-500': props.plain && !props.outlined && !props.text },
+            { 'text-white bg-neutral-500 border border-gray-500': props.plain && !props.outlined && !props.text },
             // Plain Text Button
             { 'text-surface-500': props.plain && props.text },
             // Plain Outlined Button
@@ -141,7 +141,7 @@ export default {
             // { 'focus:ring-primary': props.link },
 
             // Plain
-            { 'hover:bg-gray-600 hover:border-gray-600': props.plain && !props.outlined && !props.text },
+            { 'hover:bg-neutral-600 hover:border-gray-600': props.plain && !props.outlined && !props.text },
             // Text & Outlined Button
             { 'hover:bg-surface-300/10': props.plain && (props.text || props.outlined) },
 
