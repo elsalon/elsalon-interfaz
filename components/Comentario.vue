@@ -20,8 +20,8 @@
                 :popup="true" class="text-xs" />
         </template>
 
-        <div v-show="!editandoComentario" class="prose prose-sm prose-headings:my-1 leading-[1rem] break-words">
-            <ContenidoRendereado ref="contenidoRender" :contenido="comentario" />
+        <div v-show="!editandoComentario" class="prose prose-headings:my-1 leading-[1rem] break-words">
+            <ContenidoRendereado ref="contenidoRender" class="text-sm" :contenido="comentario" />
         </div>
 
         <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos" />
