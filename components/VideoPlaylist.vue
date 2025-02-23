@@ -1,33 +1,48 @@
 <template>
 
 
-    <Dialog v-model:visible="visible" header=" " position="full"  ref="maxDialog" :blockScroll="true" @show="biggifyDialog">
-        <div v-if="loading" class="w-full h-full flex items-center justify-center">
-            <span class="texto-cargando">Cargando...</span> 
-        </div>
-        <div class="flex w-full h-full" v-show="!loading">
-            <!-- PLAYER -->
-            <div class="flex-grow items-center justify-center">
-                <div v-if="playlistFinished" class="w-full h-30 flex items-center justify-center">
-                    <span class="text-2xl text-gray-500">Playlist terminó</span>
-                </div>
-                <div :class="{'opacity-0': playlistFinished}">
-                    <video ref="playerRef" playsinline controls></video>
-                </div>
+    <Dialog v-model:visible="visible" header=" " position="full" ref="maxDialog" :blockScroll="true" 
+        @show="biggifyDialog" :class="['!bg-white']" :pt="{header: ['bg-white flex justify-between w-full p-2 ']}">
+
+        <div class="w-full h-full flex items-center justify-center">
+    <div v-if="loading">
+        <span class="texto-cargando">Cargando...</span>
+    </div>
+
+    <div class="flex w-full gap-4" v-show="!loading">
+        <!-- PLAYER (Defines the height) -->
+        <div class="flex-grow flex items-center justify-center">
+            <div v-if="playlistFinished" class="w-full h-30 flex items-center justify-center">
+                <span class="text-2xl text-gray-500">Playlist terminó</span>
             </div>
-            <!-- PLAYLSIT -->
-            <div class="w-1/4 px-2 overflow-y-auto">
-                <div v-for="(video,i) in playlist" class="cursor-pointer p-1 hover:bg-gray-200 flex items-center gap-2"  :key="video.id" @click="LoadVideo(video, i)">
+            <div :class="{ 'opacity-0': playlistFinished }" class="w-full">
+                <video ref="playerRef" playsinline controls class="w-full h-auto"></video>
+            </div>
+        </div>
+
+        <!-- PLAYLIST (Inherits video height) -->
+        <div class="w-1/5 p-1  bg-white flex flex-col overflow-y-auto overflow-hidden relative" >
+            <div class="absolute w-full h-full top-0 left-0">
+                <div v-for="(video, i) in playlist"
+                    class="cursor-pointer p-3 hover:bg-gray-200 flex items-center gap-2 rounded-sm " 
+                    :key="video.id"
+                    @click="LoadVideo(video, i)">
                     <div class="w-2">
                         <div v-if="i == currentVideo" class="w-2 h-2 bg-black rounded-full"></div>
                     </div>
-                    <AvatarSalon :usuario="video.identidad" size="small" style="font-size: .6rem;"/>
+                    <AvatarSalon :usuario="video.identidad" size="small" style="font-size: .6rem;" />
                     <div>
                         {{ video.identidad.nombre }}
-                    </div> 
+                    </div>
                 </div>
+
             </div>
         </div>
+    </div>
+</div>
+
+
+
 
     </Dialog>
 
@@ -62,7 +77,7 @@ const InitPlayer = () => {
     console.log("Initializing player")
 
     player = new Plyr(playerRef.value, {
-        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+        controls: ['play', 'progress', 'current-time', 'duration', 'mute', 'volume',  'airplay', 'fullscreen'],
         autoplay: false, // Autoplay is often blocked unless muted
     })
 
@@ -95,7 +110,7 @@ const LoadVideo = (item, index = 0) => {
     }
     currentVideo.value = index
     playlistFinished.value = false;
-    
+
     player.once('ready', () => {
         console.log("New video loaded")
         player.play().catch(err => console.warn("Autoplay failed:", err))
@@ -129,15 +144,15 @@ const ProcesarEntradaAPlaylist = async (entrada) => {
     console.log("Procesando entrada", entrada)
     let extraComentarios = [];
     let newPlaylist = []
-    if(entrada.comentarios.totalDocs > entrada.comentarios.docs.length){
+    if (entrada.comentarios.totalDocs > entrada.comentarios.docs.length) {
         // No estan cargados todos los comentarios, tengo que cargar más.
         console.log("Cargando más comentarios")
         const oldestCommentDate = entrada.comentarios.docs[0].createdAt;
         let query = {
             where: {
                 and: [
-                    {entrada: {equals: entrada.id}},
-                    {createdAt: {less_than: oldestCommentDate}},
+                    { entrada: { equals: entrada.id } },
+                    { createdAt: { less_than: oldestCommentDate } },
                 ]
             },
             sort: '-createdAt',
@@ -151,10 +166,29 @@ const ProcesarEntradaAPlaylist = async (entrada) => {
     }
     newPlaylist = CrearItemPlaylist(entrada)
     extraComentarios.forEach((comentario) => {
-        newPlaylist = [...newPlaylist ,...CrearItemPlaylist(comentario)]
+        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
     })
     entrada.comentarios.docs.forEach((comentario) => {
-        newPlaylist = [...newPlaylist ,...CrearItemPlaylist(comentario)]
+        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
+    })
+    // test
+    entrada.comentarios.docs.forEach((comentario) => {
+        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
+    })
+    entrada.comentarios.docs.forEach((comentario) => {
+        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
+    })
+    entrada.comentarios.docs.forEach((comentario) => {
+        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
+    })
+    entrada.comentarios.docs.forEach((comentario) => {
+        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
+    })
+    entrada.comentarios.docs.forEach((comentario) => {
+        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
+    })
+    entrada.comentarios.docs.forEach((comentario) => {
+        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
     })
     return newPlaylist;
 }
@@ -162,8 +196,8 @@ const ProcesarEntradaAPlaylist = async (entrada) => {
 const CrearItemPlaylist = (contenido) => {
     let items = []
     let identidad = contenido.autoriaGrupal ? contenido.grupo : contenido.autor;
-    if(contenido.embedsYoutube !== ""){
-        contenido.embedsYoutube.split(",").forEach((videoId) => {
+    if (contenido.embedsYoutube !== "") {
+        contenido.embedsYoutube.forEach((videoId) => {
             items.push({
                 identidad: identidad,
                 id: videoId,
@@ -171,8 +205,8 @@ const CrearItemPlaylist = (contenido) => {
             })
         })
     }
-    if(contenido.embedsVimeo !== ""){
-        contenido.embedsVimeo.split(",").forEach((videoId) => {
+    if (contenido.embedsVimeo !== "") {
+        contenido.embedsVimeo.forEach((videoId) => {
             items.push({
                 identidad: identidad,
                 id: videoId,
@@ -181,7 +215,7 @@ const CrearItemPlaylist = (contenido) => {
         })
     }
     return items;
-    
+
 }
 
 watch(() => visible.value, (newValue) => {

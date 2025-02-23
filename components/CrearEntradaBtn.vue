@@ -8,7 +8,7 @@
         class="w-full md:w-5/6 bg-white"
         @show="biggifyDialog"
         :blockScroll="true"
-        :pt="{header: ['container-small flex justify-between w-full items-center']}">
+        :pt="{header: ['container-small flex justify-between w-full items-center p-2']}">
         <CrearEntradaDrawer :entryEdit="editContent"/>
     </Dialog>
 </template>
