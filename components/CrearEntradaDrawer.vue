@@ -1,6 +1,6 @@
 <template>
     <ClientOnly>
-        <div class="grow h-full flex flex-col">
+        <div class="h-full flex flex-col container-small">
             <EditorRichText ref="editor" :editingData="props.entryEdit" @publishHotKey="Publicar"/>
              
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
@@ -103,7 +103,7 @@ const Publicar = async () => {
 	try{
 		const response = await useAPI(endpoint, {body, method});
 		console.log("Publicacion creada:", response)
-        const cantVideos = response.doc.embedsYoutube.split(",").length + response.doc.embedsVimeo.split(",").length
+        const cantVideos = response.doc.embedsYoutube.length + response.doc.embedsVimeo.length
         if(isEditing.value){
             useNuxtApp().callHook("publicacion:editada", {resultado:"ok", entrada: response.doc})
             // cantidad videos
@@ -113,7 +113,8 @@ const Publicar = async () => {
             mixpanel.track("Entrada creada", {id: response.doc.id, sala: salaNombre, imagenes: response.doc.imagenes.length, archivos: response.doc.archivos.length, videos: cantVideos, menciones: response.doc.mencionados.length, autoriaGrupal: response.doc.autoriaGrupal})
         }
         
-	}catch{
+	}catch(e){
+        console.warn("Error posteando entrada", e)
         if(isEditing.value){
             useNuxtApp().callHook("publicacion:editada", {resultado:"error"})
         }else{

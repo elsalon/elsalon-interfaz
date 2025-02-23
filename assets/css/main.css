@@ -62,6 +62,12 @@
   }
 }
 
+.entrada-default::after{
+  content: "";
+  @apply block h-[1px] mt-7 mb-7 
+  /* bg-gray-200  */ /* Fondo color */ 
+  /* bg-gradient-to-r from-white via-gray-200 to-white; */ /* Fondo gradient */ 
+}
 .container-small{
   max-width: 640px;
   @apply px-4 md:px-0 mx-auto;
