@@ -56,7 +56,7 @@
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
 
                 
-                <Button v-if="HabilitarPlaylist" class="ml-auto group/playlist font-mono text-xs hover:text-black" @click="AbrirPlaylist" link >
+                <Button v-if="HabilitarPlaylist" class="ml-auto group/playlist font-mono text-xs hover:text-black animate-pulse hover:animate-none" @click="AbrirPlaylist" link >
                     <span class="mr-1 opacity-0 group-hover/playlist:opacity-100 transition-opacity">Playlist</span>
                     <i class="pi pi-play-circle" />
                 </Button>

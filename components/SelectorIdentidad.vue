@@ -12,7 +12,6 @@
                 <template v-else>
                     <AvatarSalon :usuario="slotProps.value" class="w-5 h-5 mr-2" size="small" style="font-size:.5rem"/>
                 </template>
-                <!-- <div class="flex-grow" v-show="!props.esComentario">{{ slotProps.value.nombre }}</div> -->
             </div>
             <span v-else>
                 {{ slotProps.placeholder }}
