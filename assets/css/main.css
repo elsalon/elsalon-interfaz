@@ -266,3 +266,8 @@ ol{
   from-gray-400 via-gray-300 to-gray-400
   animate-text;
 }
+.scrollbar{
+  @apply [&::-webkit-scrollbar]:w-1
+  [&::-webkit-scrollbar-track]:bg-none
+  [&::-webkit-scrollbar-thumb]:bg-gray-800
+}

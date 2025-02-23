@@ -37,6 +37,7 @@ module.exports = {
         secondary: 'black',
         neutral: 'black',
         accent: 'black',
+        gray: colors.trueGray,
         surface: {
           400: 'black',
         },
