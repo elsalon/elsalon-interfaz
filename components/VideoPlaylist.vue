@@ -4,7 +4,7 @@
     <Dialog v-model:visible="visible" header=" " position="full" ref="maxDialog" :blockScroll="true"
         @show="biggifyDialog" :class="['!bg-white']" :pt="{ header: ['bg-white flex justify-between w-full p-2 '] }">
 
-        <div class="w-full h-full md:flex items-center justify-center">
+        <div class="w-full h-full md:flex items-center justify-center" :class="{'flex':loading}">
             <div v-if="loading">
                 <span class="texto-cargando">Cargando...</span>
             </div>
@@ -12,7 +12,7 @@
             <div class=" md:flex w-full gap-4 md:flex-row flex-col" v-show="!loading">
                 <!-- PLAYER (Defines the height) -->
                 <div class="flex-grow md:flex items-center justify-center sticky top-0 z-10">
-                    <div v-if="playlistFinished" class="w-full h-30 flex items-center justify-center">
+                    <div v-if="playlistFinished" class="w-full h-30 flex items-center justify-center absolute">
                         <span class="text-2xl text-gray-500">Playlist terminó</span>
                     </div>
                     <div :class="{ 'opacity-0': playlistFinished }" class="w-full">
@@ -72,7 +72,7 @@ const InitPlayer = () => {
     console.log("Initializing player")
 
     player = new Plyr(playerRef.value, {
-        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'airplay', 'fullscreen'],
+        // controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'airplay', 'fullscreen'],
         autoplay: false, // Autoplay is often blocked unless muted
     })
 
@@ -122,6 +122,8 @@ const NextVideo = () => {
         console.log("Playlist finished")
         currentVideo.value = null;
         playlistFinished.value = true;
+        // Exit fullscreen
+        player.fullscreen.exit()
     }
 }
 

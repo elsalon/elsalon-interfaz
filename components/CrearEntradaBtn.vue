@@ -4,11 +4,11 @@
     <Dialog
         ref="maxDialog"
         v-model:visible="visible"
-        :header="editContent !== null ? 'Editar entrada' : 'Nueva entrada'"
+        header=" "
         class="w-full md:w-5/6 bg-white"
         @show="biggifyDialog"
         :blockScroll="true"
-        :pt="{header: ['container-small flex justify-between w-full items-center p-2']}">
+        :pt="{header: ['flex justify-between w-full items-center  p-2 container-small ']}">
         <CrearEntradaDrawer :entryEdit="editContent"/>
     </Dialog>
 </template>

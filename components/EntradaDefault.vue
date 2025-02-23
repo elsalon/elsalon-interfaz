@@ -1,5 +1,5 @@
 <template>
-    <div class="group/entrada transition-all duration-500 ease-in-out"
+    <div class="group/entrada transition-all duration-500 ease-in-out entrada-default md:p-1"
     :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }">
     <article>
         <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
