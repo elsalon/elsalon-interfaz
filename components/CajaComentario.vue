@@ -12,7 +12,7 @@
                 <!-- Selector Identidad -->
                 <SelectorIdentidad v-model="autorSeleccionado" :esComentario="true" :disabled="uploading"/>
                 <!-- Btn Publica -->
-                <Button  @click="Publicar" :loading="uploading" size="small" :label="isEditing ? 'Guardar' : comentarLabel" class="w-2/3 md:w-auto"></Button>
+                <Button  @click="Publicar" iconPos="right" :loading="uploading" size="small" :label="isEditing ? 'Guardar' : comentarLabel" class="w-2/3 md:w-auto"></Button>
             </div>
         </div>
     </ClientOnly>

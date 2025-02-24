@@ -3,14 +3,14 @@
         <div ref="editorContainer" tabindex="0"></div>
         <div class="attachedFiled">
 
-            <div v-for="archivo in attachedFiles" class="text-sm bg-gray-100 text-gray-400 p-2 mb-1 font-mono">
+            <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-100 text-zinc-400 p-2 mb-1 font-mono">
                 <div class="flex items">
                     <div class="grow">
                         <span>{{ archivo.name }}</span>
                         <span> ({{ formatBytes(archivo.size) }})</span>
                     </div>
                     <button @click="attachedFiles.splice(attachedFiles.indexOf(f), 1)"
-                        class="hover:text-gray-800">X</button>
+                        class="hover:text-zinc-800">X</button>
                 </div>
             </div>
         </div>

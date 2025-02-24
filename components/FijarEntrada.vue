@@ -12,7 +12,7 @@
 
         <div class="flex justify-end gap-2">
             <Button type="button" label="Cancelar" severity="secondary" @click="visible = false" :disabled="loading"></Button>
-            <Button type="button" label="Fijar" @click="Fijar" :loading="loading"></Button>
+            <Button type="button" iconPos="right" label="Fijar" @click="Fijar" :loading="loading"></Button>
         </div>
     </Dialog>
 </template>

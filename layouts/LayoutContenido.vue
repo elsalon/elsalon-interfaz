@@ -9,7 +9,7 @@
             <MenuPrincipal/>
 
             <div class="flex items-center">
-                <h1 class="text-lg font-semibold text-gray-800">
+                <h1 class="text-lg font-semibold text-zinc-800">
                     <slot name="header" />
                 </h1>
             </div>

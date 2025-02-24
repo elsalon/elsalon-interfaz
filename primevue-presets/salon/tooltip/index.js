@@ -35,10 +35,11 @@ export default {
             {
                 '-mt-[10px] top-1/2': context?.right || context?.left || (!context?.right && !context?.left && !context?.top && !context?.bottom),
                 '-ml-[10px] left-1/2': context?.top || context?.bottom
-            }
+            },
+            'hidden'
         ]
     }),
     text: {
-        class: ['p-3', 'bg-black', 'text-white', 'leading-none', 'rounded-md', 'whitespace-pre-line', 'break-words']
+        class: ['p-2', 'bg-black', 'text-white', 'leading-none', 'text-xs', 'whitespace-pre-line', 'break-words']
     }
 };

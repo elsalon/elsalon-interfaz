@@ -1,20 +1,20 @@
 <template>
     <div v-if="eventos?.docs.length == 0 && puedeEditar" class="text-center my-14">
-        <p class="text-gray-500 mb-3">Agregá eventos para visualizar la cursada en un calendario</p>
+        <p class="text-zinc-500 mb-3">Agregá eventos para visualizar la cursada en un calendario</p>
         <Button label="Crear primer evento" @click="IrEventos" size="small" />
     </div>
     <div v-if="eventos?.docs.length > 0" class="relative mt-2 mb-6 ml-4 md:ml-0 md:mb-8">
         <!-- Desktop Timeline -->
         <div class="hidden md:flex md:items-center md:justify-between">
             <!-- Horizontal line connecting first/last markers -->
-            <div class="absolute left-4 right-4 h-0.5 bg-gray-200"></div>
+            <div class="absolute left-4 right-4 h-0.5 bg-zinc-200"></div>
 
             <div v-for="(item, index) in eventos?.docs" :key="index"
                 class="linea-item relative z-10 flex flex-col items-center"
                 :class="{ 'flex-grow': index > 0 || eventos.docs.length == 1 }">
                 <!-- Title -->
                 <div class="mb-4 max-w-[200px] text-center h-14">
-                    <div class="text-sm font-semibold text-gray-700 line-clamp-2 break-words max-w-[7rem]">
+                    <div class="text-sm font-semibold text-zinc-700 line-clamp-2 break-words max-w-[7rem]">
                         {{ item.titulo }}
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                 </div>
 
                 <!-- Date -->
-                <div class="text-xs text-gray-500">
+                <div class="text-xs text-zinc-500">
                     <time :datatype="item.fecha">{{ $formatDateCorto(item.fecha) }}</time>
                 </div>
             </div>
@@ -37,7 +37,7 @@
             <div v-for="(item, index) in eventos?.docs" :key="index" class="relative flex pb-2"
                 :class="{ 'pb-5': index < eventos.docs.length - 1 }">
                 <!-- Vertical line -->
-                <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-gray-200">
+                <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-zinc-200">
                 </div>
 
                 <!-- Marker -->
@@ -47,10 +47,10 @@
 
                 <!-- Content -->
                 <div class="ml-4 flex-1">
-                    <div class="text-sm font-semibold text-gray-700 line-clamp-2">
+                    <div class="text-sm font-semibold text-zinc-700 line-clamp-2">
                         {{ item.titulo }}
                     </div>
-                    <div class="mt-1 text-xs text-gray-500">
+                    <div class="mt-1 text-xs text-zinc-500">
                         {{ $formatDateCorto(item.fecha) }}
                     </div>
                 </div>
@@ -58,7 +58,7 @@
 
             <div class="relative flex">
                 <!-- Vertical line -->
-                <!-- <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-gray-200">
+                <!-- <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-zinc-200">
                     </div> -->
                 <!-- Marker -->
                 <div class="flex-shrink-0">
