@@ -194,13 +194,18 @@ form label{
     }
   }
 }
+.ql-toolbar{
+  @apply bg-white;
+}
 .ql-container {
+  @apply bg-white;
   max-width: unset;
   font-family: unset !important;
   border-top: none !important;
   overflow-y: auto;
 }
 .comment-input{
+  @apply bg-white;
   .ql-container{
     overflow: visible;
   }

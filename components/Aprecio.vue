@@ -1,13 +1,16 @@
 <template>
-    <div class="relative group/aprecio w-max">
+    <div class="relative group/aprecio w-max flex">
         <!-- Btn Aprecio -->
-        <Button link class="my-2 mr-1 text-xs text-zinc-500" :class="{ 'opacity-30': fetching }" style="padding: 0"
-            :label="tooltipText" @click="handleAprecioClicked" />
+         <div class="relative">
+             <Button link class="my-2 mr-1 text-xs text-zinc-500 leading-normal" :class="{ 'font-bold text-zinc-800': haApreciadoShowState }" style="padding: 0"
+                 :label="tooltipText" @click="handleAprecioClicked" />
+            <div v-show="showAnim" class="absolute top-[8px] left-0 text-xs text-zinc-800/80 font-mono animate-[ping_1.5s_ease-out_infinite]">Aprecio</div>
+         </div>
         <!-- Btn Cantidad -->
-        <div v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs  text-zinc-500"
+        <div v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs  text-zinc-500  leading-normal"
             :class="{ 'opacity-30': fetching }">(0)</div>
 
-        <Button v-show="totalDocs > 0" v-tooltip.top="userNamesTooltip"  link class="my-2 text-xs  text-zinc-500"
+        <Button v-show="totalDocs > 0" v-tooltip.top="userNamesTooltip"  link class="my-2 text-xs  text-zinc-500  leading-normal"
             :class="{ 'opacity-30': fetching }" style="padding: 0" :label="`(${totalDocs})`"
             @click="AbrirTodosLosAprecios()" />
 
@@ -54,6 +57,8 @@ const fetching = ref(false);
 const docs = ref(props.aprecioIniciales.docs || []);
 const totalDocs = ref(props.aprecioIniciales.totalDocs || 0);
 const haApreciado = ref(false);
+const haApreciadoShowState = ref(false)
+const showAnim = ref(false)
 const haApreciadoId = ref(null);
 
 const mostrarTodosAprecios = ref(false);
@@ -63,15 +68,27 @@ const mixpanel = useMixpanel();
 const CheckUserHaApreciado = () => {
     haApreciadoId.value = docs.value?.find(doc => doc.autor.id == authData.value.user.id);
     haApreciado.value = haApreciadoId.value != null;
+    haApreciadoShowState.value = haApreciado.value
 }
 
 CheckUserHaApreciado();
+
+const ActivateAnim = () => {
+    showAnim.value = true;
+    setTimeout(()=>{
+        showAnim.value = false;
+    }, 1500)
+}
 
 const handleAprecioClicked = async () => {
     if (fetching.value) {
         return;
     }
     fetching.value = true;
+    haApreciadoShowState.value = !haApreciadoShowState.value; // toggle
+    if(haApreciadoShowState.value){
+        ActivateAnim()
+    }
     try {
         if (haApreciado.value) {
             // Eliminio mi aprecio
@@ -111,10 +128,10 @@ const handleAprecioClicked = async () => {
 
 // Computed
 const tooltipText = computed(() => {
-    if (haApreciado.value) {
-        return `Ya no aprecio`;
+    if (haApreciadoShowState.value) {
+        return `Aprecio`;
     }
-    return `Aprecio`;
+    return `Apreciar`;
 })
 
 const cantUserNames = 3;
@@ -155,3 +172,24 @@ const FetchAllAprecios = async () => {
 }
 
 </script>
+
+<style>
+@keyframes slow-ping {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
+.custom-ping {
+  animation: slow-ping 2s ease-out;
+}
+</style>

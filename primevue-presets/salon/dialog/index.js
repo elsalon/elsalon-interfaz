@@ -28,7 +28,9 @@ export default {
                 '!max-h-full': state.maximized,
                 '!top-0': state.maximized,
                 '!left-0': state.maximized
-            }
+            },
+
+            'bg-zinc-100'
         ]
     }),
     header: {
