@@ -1,13 +1,13 @@
 <template>
     <div class="relative group/aprecio w-max">
         <!-- Btn Aprecio -->
-        <Button link class="my-2 mr-1 text-xs text-neutral-500" :class="{ 'opacity-30': fetching }" style="padding: 0"
+        <Button link class="my-2 mr-1 text-xs text-neutral-600 dark:text-neutral-400" :class="{ 'opacity-30': fetching }" style="padding: 0"
             :label="tooltipText" @click="handleAprecioClicked" />
         <!-- Btn Cantidad -->
-        <span v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs text-neutral-500"
+        <span v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs text-neutral-600 dark:text-neutral-400"
             :class="{ 'opacity-30': fetching }">(0)</span>
 
-        <Button v-show="totalDocs > 0" :title="userNamesTooltip" link class="my-2 text-xs text-neutral-500"
+        <Button v-show="totalDocs > 0" :title="userNamesTooltip" link class="my-2 text-xs text-neutral-600 dark:text-neutral-400"
             :class="{ 'opacity-30': fetching }" style="padding: 0" :label="`(${totalDocs})`"
             @click="AbrirTodosLosAprecios()" />
 

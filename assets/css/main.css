@@ -8,9 +8,9 @@
   --background-dark: var(--p-surface-950);
   --background-light: var(--p-surface-0);
   --link-color: #0000EE;
-  --link-color-dark: #6EA8FE;
+  --link-color-dark: #8AB4F8;
   --linkvisited-color: #551A8B;
-  --linkvisited-color-dark: #B38BF5;
+  --linkvisited-color-dark: #C58AF9;
   outline: none !important;
   --p-primary-50: var(--p-surface-50);
   --p-primary-100: var(--p-surface-100);
@@ -302,7 +302,7 @@ ol{
 .texto-cargando{
   @apply bg-gradient-to-r bg-clip-text  text-transparent 
   from-neutral-400 via-neutral-300 to-neutral-400
-  animate-text;
+  animate-text bg-neutral-300;
 }
 
 .vc-dark{

@@ -51,7 +51,7 @@
             <!-- Comentarios -->
             <div class="actions">
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
-                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 mr-2 text-xs text-surface-500" style="padding: 0;"
+                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 mr-2 text-xs text-neutral-600 dark:text-neutral-400" style="padding: 0;"
                     label="Comentar" @click="ToggleCommentBox" />
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
             </div>

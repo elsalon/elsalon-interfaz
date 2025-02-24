@@ -31,7 +31,7 @@
         </DeferredContent>
 
         <div class="actions">
-            <Button v-show="isLast" link class="my-2 mr-2 text-xs text-neutral-500" label="Comentar"  style="padding: 0"
+            <Button v-show="isLast" link class="my-2 mr-2 text-xs text-neutral-600 dark:text-neutral-400" label="Comentar"  style="padding: 0"
                 @click="ToggleComment" />
             <Aprecio :contenidoid="comentario.id" contenidotipo="comentario"
                 :aprecioIniciales="comentario.aprecios" />
