@@ -5,7 +5,7 @@ export default {
             'inline',
 
             // Spacing
-            'px-3 py-2',
+            'py-1',
 
             // Shape
             'rounded-md',

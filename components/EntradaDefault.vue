@@ -5,14 +5,14 @@
         <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
         <div class="flex pb-2">
             <NuxtLink :to="identidadUrl">
-                <AvatarSalon :usuario="identidad" :title="tituloIdentidad" />
+                <AvatarSalon :usuario="identidad" v-tooltip.top="tooltipIdentidad"/>
             </NuxtLink>
             <!-- <EntradaDefault /> -->
             
                 <!-- Metadata entrada -->
                 <div class="ml-4">
                     <NuxtLink :to="identidadUrl" class="hover:underline">
-                        <h2 class="font-bold text-gray-700" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
+                        <h2 class="font-bold text-gray-700" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
                         <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline"
@@ -24,10 +24,10 @@
                         </NuxtLink>
                         <!-- Entrada Fijada -->
                         <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"
-                            title="Entrada Fijada"></i>
+                            v-tooltip.top="'Entrada Fijada'"></i>
                         <!-- Entrada Destacada -->
                         <i v-if="entrada.destacada" class="pi pi-star text-gray-400 ml-2" style="font-size: .7rem"
-                            title="Entrada Destacada"></i>
+                            v-tooltip.top="'Entrada Destacada'"></i>
                     </div>
                 </div>
 
@@ -70,7 +70,7 @@ const { hooks } = useNuxtApp();
 const props = defineProps({
     entrada: Object,
     identidadUrl: String,
-    tituloIdentidad: String,
+    tooltipIdentidad: String,
     identidad: Object,
     archivos: Array,
     opcionesArticulo: Array,

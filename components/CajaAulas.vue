@@ -1,5 +1,5 @@
 <template>
-    <div class="relative" title="Aulas">
+    <div class="relative" v-tooltip.bottom="'Aulas'">
         <Inplace v-if="canEdit" @open="OnOpen" @close="OnClose" class="block">
             <template #display>
                 <span v-if="mostrarCta" class="text-muted-color text-sm">Editar Aulas</span>

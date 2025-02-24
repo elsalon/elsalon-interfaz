@@ -18,8 +18,8 @@
             <div class="despues-entrada flex">
                 <div>
                     <NuxtLink :to="identidadUrl" class="link flex items-center gap-x-2">
-                        <AvatarSalon :usuario="identidad" :title="tituloIdentidad" size="small" />
-                        <h2 class=" text-gray-400  text-sm" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
+                        <AvatarSalon :usuario="identidad" size="small" />
+                        <h2 class=" text-gray-400  text-sm">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <NuxtLink class="text-gray-400 text-xs hover:underline" :to="`/entradas/${entrada.id}`">
                         <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>

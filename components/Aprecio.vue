@@ -7,7 +7,7 @@
         <span v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs text-surface-500"
             :class="{ 'opacity-30': fetching }">(0)</span>
 
-        <Button v-show="totalDocs > 0" :title="userNamesTooltip" link class="my-2 text-xs text-surface-500"
+        <Button v-show="totalDocs > 0" v-tooltip.top="userNamesTooltip"  link class="my-2 text-xs text-surface-500"
             :class="{ 'opacity-30': fetching }" style="padding: 0" :label="`(${totalDocs})`"
             @click="AbrirTodosLosAprecios()" />
 

@@ -1,6 +1,6 @@
 <template>
     <div class="text-center" v-if="estadoMostrarBtnEnlace > 0">
-        <Button v-if="estadoMostrarBtnEnlace==1" @click="IniciarEnlace" :loading="loading" :label="loading? 'Enlazando' : 'Enlazar'" :title="title" size="small"/>
+        <Button v-if="estadoMostrarBtnEnlace==1" @click="IniciarEnlace" :loading="loading" :label="loading? 'Enlazando' : 'Enlazar'" v-tooltip.bottom="tooltip" size="small"/>
         <Button v-if="estadoMostrarBtnEnlace==2" @click="DetenerEnlace" :loading="loading" severity="secondary" :label="loading? 'Desenlazando' : 'Desenlazar'" size="small"></Button>
     </div>
 </template>
@@ -20,19 +20,19 @@
         }
     })
 
-    let title;
+    let tooltip;
     let detail;
     switch(props.type){
         case 'sala':
-            title = "Enlazar para seguir las entradas de esta sala"
+            tooltip = "Enlazá para seguir las entradas de esta sala"
             detail = "Ahora seguís las entradas de esta sala"
             break;
         case 'usuario':
-            title = "Enlazar para seguir las entradas de este usuario"
+            tooltip = "Enlazá para seguir las entradas de este usuario"
             detail = "Ahora seguís las entradas de este usuario"
             break;
         case 'grupo':
-            title = "Enlazar para seguir las entradas de este grupo"
+            tooltip = "Enlazá para seguir las entradas de este grupo"
             detail = "Ahora seguís las entradas de este grupo"
             break;
     }
