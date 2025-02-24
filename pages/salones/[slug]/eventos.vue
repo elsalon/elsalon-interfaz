@@ -28,15 +28,15 @@
 
                     <div class="md:mt-9 md:w-full">
                         <template v-if="eventos.docs.length == 0">
-                            <div class="text-center text-zinc-500 text-sm">Clickeá en una fecha para crear el primer evento</div>
+                            <div class="text-center text-zinc-600 text-sm">Clickeá en una fecha para crear el primer evento</div>
                         </template>
                         <template v-else>
-                            <div v-if="!fechasVisibles.length" class="text-center text-zinc-500 text-sm">
+                            <div v-if="!fechasVisibles.length" class="text-center text-zinc-600 text-sm">
                                 No hay eventos en este periodo</div>
                         </template>
                         <div v-for="evento in fechasVisibles" :key="evento.id" :ref="el => evtRefs[evento.id] = el"
                             class="p-2 mb-2 text-left hover:cursor-pointer"
-                            :class="{ 'bg-orange-50': eventoIdHovered == evento.id, 'text-zinc-500': evento.pasado, 'opacity-30': evento.loading }"
+                            :class="{ 'bg-orange-50': eventoIdHovered == evento.id, 'text-zinc-600': evento.pasado, 'opacity-30': evento.loading }"
                             @click="focusEvento(evento)" @mouseleave="eventoIdHovered = null">
                             <div class="flex">
                                 <div class="text-lg font-semibold flex-grow">{{ evento.titulo }}</div>
@@ -46,7 +46,7 @@
                                         <Button v-if="puedeEditar" icon="pi pi-pencil"  text rounded aria-label="Filter"  @click="ComenzarEditarEvento(evento)"/>
                                  </div>
                             </div>
-                            <div class="text-xs md:text-sm text-zinc-500">
+                            <div class="text-xs md:text-sm text-zinc-600">
                                 <time :datetime="evento.fecha">{{ $formatDateCorto(evento.fecha) }}</time>
                             </div>
                             <div class="text-sm md:text-base">{{ evento.descripcion }}</div>

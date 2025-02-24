@@ -10,15 +10,15 @@
       </div>
 
       <div>
-        <p class="text-xs text-center text-zinc-500 mt-5">Al recuperar te llegará un mail con un link para activar tu cuenta</p>
+        <p class="text-xs text-center text-zinc-600 mt-5">Al recuperar te llegará un mail con un link para activar tu cuenta</p>
         <Button type="submit" label="Recuperar contraseña" class="block w-full mt-3" :loading="loading"></Button>
       </div>
     </form>
 
-    <p class="mt-10 text-center text-sm text-zinc-500">También podés
-      <a href="/login" class="font-semibold leading-6 text-zinc-500 hover:text-zinc-900">iniciar sesión</a>
+    <p class="mt-10 text-center text-sm text-zinc-600">También podés
+      <a href="/login" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900">iniciar sesión</a>
       o
-      <a href="/registrar" class="font-semibold leading-6 text-zinc-500 hover:text-zinc-900">registrarte</a>
+      <a href="/registrar" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900">registrarte</a>
     </p>
 
   </NuxtLayout>

@@ -17,7 +17,7 @@
 
         <!-- Group Members -->
         <div class="py-4">
-            <h3 class="text-sm font-medium text-zinc-500 mb-3">Integrantes</h3>
+            <h3 class="text-sm font-medium text-zinc-600 mb-3">Integrantes</h3>
             <div class="flex flex-wrap gap-4">
                 <NuxtLink v-for="usuario in grupo.integrantes" :to="`/usuarios/${usuario.slug}`" :key="usuario.id" class="flex items-center gap-x-2">
                     <AvatarSalon :usuario="usuario" class="w-8 h-8" />

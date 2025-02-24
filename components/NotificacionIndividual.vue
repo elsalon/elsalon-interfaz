@@ -10,7 +10,7 @@
                 <div class="text-sm mr-2" v-html="props.notificacion.mensaje"></div>
 
                 <div class="flex items-center justify-between">
-                    <div class="text-zinc-500 text-xs">
+                    <div class="text-zinc-600 text-xs">
                         <time :datetime="props.notificacion.createdAt">{{ $formatDate(props.notificacion.createdAt) }}</time>
                     </div>
                 </div>
