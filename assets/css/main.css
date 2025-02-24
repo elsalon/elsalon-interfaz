@@ -272,6 +272,6 @@ ol{
 
 .texto-cargando{
   @apply bg-gradient-to-r bg-clip-text  text-transparent 
-  from-zinc-400 via-zinc-300 to-zinc-400
+  from-zinc-200 via-zinc-700 to-zinc-200
   animate-text;
 }
