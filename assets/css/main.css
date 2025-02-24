@@ -32,6 +32,10 @@
 
   --plyr-color-main: var(--p-primary-700);
 }
+html{
+  @apply bg-zinc-100;
+  /* modo oscuro: zinc-800 */
+}
 
 /* Light Mode */
 :root {

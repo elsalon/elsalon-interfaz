@@ -1,7 +1,5 @@
 <template>
     <NotificacionesDialog ref="notificacionesDialog" />
-
-    <div style="width:48px">
         <template v-if="auth?.data">
             <!-- Avatar Con notificationes -->
             <template v-if="notificacionesStore.nuevas > 0">
@@ -29,7 +27,6 @@
                 </a>
             </template>
         </Menu>
-    </div>
 </template>
 
 <script setup>
