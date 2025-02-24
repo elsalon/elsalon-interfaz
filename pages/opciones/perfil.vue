@@ -44,10 +44,11 @@
             </div>
         </div>
         
-        <div class="text-right mb-10">
+        <div class="text-right">
             <Button type="submit" class="" label="Guardar" :loading="loading" />
         </div>
-
+        <!-- Espacio necesario -->
+        <div></div>
     </form>
 
 </template>
