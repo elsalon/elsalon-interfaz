@@ -33,7 +33,7 @@
                             <li>entradas de autores y grupos a las que el usuario está enalazado</li>
                             <li>entradas destacadas</li>
                         </ul> -->
-                    <small><a href="https://github.com/elsalon/elsalon-servidor/blob/main/src/collections/Salones.ts#L142" target="_blank">Ver cómo se genera la cronología inicial</a></small>
+                    <small><a href="https://github.com/elsalon/elsalon-servidor/blob/main/src/collections/Salones.ts#L142" target="_blank"><i class="pi pi-github"/> Ver cómo se genera la cronología inicial</a></small>
                     
                 </li>
                     <br>
@@ -55,7 +55,7 @@
             <h3>Comisión</h3>
             Los docentes también pueden crear o eliminar comisiones dentro de cada sala, mientras que los usuarios no docentes sólo pueden consultar la lista de comisiones 
             y unirse a una. <strong>Los espacios dentro de las comisiones sólo sirven como un filtro,</strong> no son sub espacios para escribir. El 
-            <a href="https://github.com/elsalon/elsalon-servidor/blob/main/src/collections/ComisionesEndpoints.js#L113" target="_blank">filtro</a> revela todas las 
+            <a href="https://github.com/elsalon/elsalon-servidor/blob/main/src/collections/ComisionesEndpoints.js#L113" target="_blank" class="text-xs"><i class="pi pi-github"/> filtro</a> revela todas las 
             entradas de sus integrantes en ese espacio o su bitácora como también la de grupos cuyos integrantes estén en la comisión.
             <div class="bg-gray-100 text-gray-400 my-2 p-2 text-center text-xs">
                 Esta vista todavía está en proceso así que puede fallar o decidamos quitarla
