@@ -108,6 +108,13 @@ const itemsUserMenu = computed(() => [
                 },
             },
             {
+                label: 'Ayuda',
+                icon: PrimeIcons.QUESTION_CIRCLE,
+                command: () => {
+                    navigateTo('/nodo/ayuda')
+                }
+            },
+            {
                 label: 'Opciones',
                 icon: PrimeIcons.COG,
                 command: () => {
