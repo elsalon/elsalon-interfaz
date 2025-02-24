@@ -2,7 +2,7 @@ export default {
     root: ({ state }) => ({
         class: [
             // Shape
-            'rounded-lg',
+            // 'rounded-lg',
             'shadow-lg',
             'border-0',
 
@@ -41,8 +41,8 @@ export default {
             'p-6',
 
             // Shape
-            'rounded-tl-lg',
-            'rounded-tr-lg',
+            // 'rounded-tl-lg',
+            // 'rounded-tr-lg',
 
             // Colors
             'bg-surface-0 dark:bg-surface-900',
