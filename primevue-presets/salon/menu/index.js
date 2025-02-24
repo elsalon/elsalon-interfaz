@@ -24,7 +24,7 @@ export default {
         ]
     },
     item: {
-        class: 'relative my-[2px] [&:first-child]:mt-0'
+        class: 'relative [&:first-child]:mt-0'
     },
     itemContent: ({ context }) => ({
         class: [

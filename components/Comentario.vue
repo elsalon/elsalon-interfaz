@@ -6,8 +6,8 @@
             <NuxtLink :to="identidadUrl">
                 <div class="flex items-center gap-2">
                     <AvatarSalon :usuario="identidad" size="small" :title="tituloIdentidad" style="font-size: .6rem;" />
-                    <span class="font-bold" :title="tituloIdentidad">{{ identidad.nombre }}</span>
-                    <span class="text-gray-300 text-xs">
+                    <span class="font-bold text-black dark:text-white" :title="tituloIdentidad">{{ identidad.nombre }}</span>
+                    <span class="text-neutral-400 text-xs">
                         <time :datetime="comentario.createdAt">{{ $formatDate(comentario.createdAt) }}</time>
                     </span>
                 </div>
@@ -31,7 +31,7 @@
         </DeferredContent>
 
         <div class="actions">
-            <Button v-show="isLast" link class="my-2 mr-2 text-xs text-surface-500" label="Comentar"  style="padding: 0"
+            <Button v-show="isLast" link class="my-2 mr-2 text-xs text-neutral-500" label="Comentar"  style="padding: 0"
                 @click="ToggleComment" />
             <Aprecio :contenidoid="comentario.id" contenidotipo="comentario"
                 :aprecioIniciales="comentario.aprecios" />

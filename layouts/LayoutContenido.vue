@@ -32,7 +32,7 @@
             </Drawer>
 
             <div class="flex items-center">
-                <h1 class="text-lg font-semibold text-gray-800">
+                <h1 class="text-lg font-semibold text-neutral-800">
                     <slot name="header" />
                 </h1>
             </div>

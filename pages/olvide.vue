@@ -10,12 +10,12 @@
       </div>
 
       <div>
-        <p class="text-xs text-center text-gray-400 mt-5">Cuando recuperas te llegará un mail con un link para activar tu cuenta</p>
+        <p class="text-xs text-center text-neutral-400 mt-5">Cuando recuperas te llegará un mail con un link para activar tu cuenta</p>
         <Button type="submit" label="Recuperar contraseña" class="block w-full mt-3" :loading="loading"></Button>
       </div>
     </form>
 
-    <p class="mt-10 text-center text-sm text-gray-500">También podés
+    <p class="mt-10 text-center text-sm text-neutral-500">También podés
       <a href="/login" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">iniciar sesión</a>
       o
       <a href="/registrar" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">registrarte</a>

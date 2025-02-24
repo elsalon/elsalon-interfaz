@@ -5,7 +5,7 @@
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
             <img src="/salon_logo_lg_600x80.png" class="m-auto">
             
-            <h2 class="mt-10 text-center text-2xl leading-9 tracking-tight text-gray-900">
+            <h2 class="mt-10 text-center text-2xl leading-9 tracking-tight text-neutral-900">
                 <slot name="cta">
                     Iniciá sesión
                 </slot>

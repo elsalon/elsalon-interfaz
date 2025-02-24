@@ -12,21 +12,21 @@
                 <!-- Metadata entrada -->
                 <div class="ml-4">
                     <NuxtLink :to="identidadUrl" class="hover:underline">
-                        <h2 class="font-bold text-gray-700" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
+                        <h2 class="font-bold text-black dark:text-white" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
-                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline"
+                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline "
                             :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
                         <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline" :to="identidadUrl">Bitácora
                         </NuxtLink>
-                        <NuxtLink class="text-gray-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
-                            <time :datetime="entrada.createdAt" class="text-gray-400 text-xs">{{ $formatDate(entrada.createdAt) }}</time>
+                        <NuxtLink class="text-neutral-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
+                            <time :datetime="entrada.createdAt" class="text-neutral-400 text-xs">{{ $formatDate(entrada.createdAt) }}</time>
                         </NuxtLink>
                         <!-- Entrada Fijada -->
-                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"
+                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-neutral-400 ml-2" style="font-size: .65rem"
                             title="Entrada Fijada"></i>
                         <!-- Entrada Destacada -->
-                        <i v-if="entrada.destacada" class="pi pi-star text-gray-400 ml-2" style="font-size: .7rem"
+                        <i v-if="entrada.destacada" class="pi pi-star text-neutral-400 ml-2" style="font-size: .7rem"
                             title="Entrada Destacada"></i>
                     </div>
                 </div>

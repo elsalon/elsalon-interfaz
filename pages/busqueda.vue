@@ -36,7 +36,7 @@
                                 
                                 <div>
                                     <div>{{ result.extracto }}</div>
-                                    <div class="text-sm text-gray-400">{{ result.autor.nombre }}
+                                    <div class="text-sm text-neutral-400">{{ result.autor.nombre }}
                                         <time :datetime="result.createdAt">{{$formatDate(result.createdAt) }}</time>
                                     </div>
                                 </div>

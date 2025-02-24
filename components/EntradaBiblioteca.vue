@@ -19,9 +19,9 @@
                 <div>
                     <NuxtLink :to="identidadUrl" class="link flex items-center gap-x-2">
                         <AvatarSalon :usuario="identidad" :title="tituloIdentidad" size="small" />
-                        <h2 class=" text-gray-400  text-sm" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
+                        <h2 class=" text-neutral-400  text-sm" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
-                    <NuxtLink class="text-gray-400 text-xs hover:underline" :to="`/entradas/${entrada.id}`">
+                    <NuxtLink class="text-neutral-400 text-xs hover:underline" :to="`/entradas/${entrada.id}`">
                         <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>
                     </NuxtLink>
                 </div>

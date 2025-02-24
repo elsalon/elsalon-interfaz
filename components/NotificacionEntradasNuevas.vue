@@ -1,8 +1,8 @@
 <template>
     <Transition name="slide-fade">
         <div class="entradasNuevasNotification" v-if="visible">
-            <div @click="IrAEntradasRecientes" class="text-white hover:text-gray-300">Ver entradas nuevas</div>
-            <div @click="Ocultar"><i class="pi pi-times text-white hover:text-gray-300" style="font-size: .6rem;"></i>
+            <div @click="IrAEntradasRecientes" class="text-white hover:text-neutral-300">Ver entradas nuevas</div>
+            <div @click="Ocultar"><i class="pi pi-times text-white hover:text-neutral-300" style="font-size: .6rem;"></i>
             </div>
         </div>
     </Transition>

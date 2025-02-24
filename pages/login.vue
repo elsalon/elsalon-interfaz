@@ -21,7 +21,7 @@
         </div>
       </form>
   
-      <p class="mt-10 text-center text-sm text-gray-500">
+      <p class="mt-10 text-center text-sm text-neutral-500">
         ¿No tenés usuario?
         <a href="/registrar" class="font-semibold leading-6 text-surface-600 hover:text-surface-500" tabindex="4">Registrate</a>
       </p>

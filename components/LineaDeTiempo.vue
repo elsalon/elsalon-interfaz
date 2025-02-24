@@ -1,6 +1,6 @@
 <template>
     <div v-if="eventos?.docs.length == 0 && puedeEditar" class="text-center my-14">
-        <p class="text-gray-500 mb-3">Agregá eventos para visualizar la cursada en un calendario</p>
+        <p class="text-neutral-500 mb-3">Agregá eventos para visualizar la cursada en un calendario</p>
         <Button label="Crear primer evento" @click="IrEventos" size="small" />
     </div>
     <div v-if="eventos?.docs.length > 0" class="relative mt-2 mb-6 ml-4 md:ml-0 md:mb-8">
@@ -14,7 +14,7 @@
                 :class="{ 'flex-grow': index > 0 || eventos.docs.length == 1 }">
                 <!-- Title -->
                 <div class="mb-4 max-w-[200px] text-center h-14">
-                    <div class="text-sm font-semibold text-gray-700 line-clamp-2 break-words max-w-[7rem]">
+                    <div class="text-sm font-semibold text-neutral-700 line-clamp-2 break-words max-w-[7rem]">
                         {{ item.titulo }}
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                 </div>
 
                 <!-- Date -->
-                <div class="text-xs text-gray-500">
+                <div class="text-xs text-neutral-500">
                     <time :datatype="item.fecha">{{ $formatDateCorto(item.fecha) }}</time>
                 </div>
             </div>
@@ -47,10 +47,10 @@
 
                 <!-- Content -->
                 <div class="ml-4 flex-1">
-                    <div class="text-sm font-semibold text-gray-700 line-clamp-2">
+                    <div class="text-sm font-semibold text-neutral-700 line-clamp-2">
                         {{ item.titulo }}
                     </div>
-                    <div class="mt-1 text-xs text-gray-500">
+                    <div class="mt-1 text-xs text-neutral-500">
                         {{ $formatDateCorto(item.fecha) }}
                     </div>
                 </div>

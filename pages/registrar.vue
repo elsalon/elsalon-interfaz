@@ -40,7 +40,7 @@
         </div>
       </form>
       
-      <p class="mt-10 text-center text-sm text-gray-500">¿Ya tenés usuario?
+      <p class="mt-10 text-center text-sm text-neutral-500">¿Ya tenés usuario?
         <a href="/login" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">Iniciá sesión</a>
       </p>
     </template>

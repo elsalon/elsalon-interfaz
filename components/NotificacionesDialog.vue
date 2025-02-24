@@ -12,11 +12,11 @@
                 <NotificacionIndividual :notificacion="notificacion" :key="notificacion.id" />
             </div>
 
-            <div v-if="notificacionesStore.fetching" class="p-3 text-sm text-gray-500 text-center">
+            <div v-if="notificacionesStore.fetching" class="p-3 text-sm text-neutral-500 text-center">
                 <span class="texto-cargando">Cargando notificaciones...</span>
             </div>
             <div v-else-if="notificacionesStore.notificaciones.length == 0 && !fetching"
-                class="p-3 text-sm text-gray-500 text-center">
+                class="p-3 text-sm text-neutral-500 text-center">
                 <span>No tenés notificaciones</span>
             </div>
 

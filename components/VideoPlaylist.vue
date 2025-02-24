@@ -8,7 +8,7 @@
             <!-- PLAYER -->
             <div class="flex-grow items-center justify-center">
                 <div v-if="playlistFinished" class="w-full h-30 flex items-center justify-center">
-                    <span class="text-2xl text-gray-500">Playlist terminó</span>
+                    <span class="text-2xl text-neutral-500">Playlist terminó</span>
                 </div>
                 <div :class="{'opacity-0': playlistFinished}">
                     <video ref="playerRef" playsinline controls></video>
