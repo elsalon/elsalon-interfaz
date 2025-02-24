@@ -7,20 +7,20 @@
         <!-- Desktop Timeline -->
         <div class="hidden md:flex md:items-center md:justify-between">
             <!-- Horizontal line connecting first/last markers -->
-            <div class="absolute left-4 right-4 h-0.5 bg-neutral-200"></div>
+            <div class="absolute left-4 right-4 h-0.5 bg-neutral-200 dark:bg-neutral-700"></div>
 
             <div v-for="(item, index) in eventos?.docs" :key="index"
                 class="linea-item relative z-10 flex flex-col items-center"
                 :class="{ 'flex-grow': index > 0 || eventos.docs.length == 1 }">
                 <!-- Title -->
-                <div class="mb-4 max-w-[200px] text-center h-14">
-                    <div class="text-sm font-semibold text-neutral-700 line-clamp-2 break-words max-w-[7rem]">
+                <div class="mb-4 max-w-[200px] text-center h-14 ">
+                    <div class="text-sm font-semibold text-neutral-700 line-clamp-2 break-words max-w-[7rem] dark:text-neutral-200">
                         {{ item.titulo }}
                     </div>
                 </div>
 
                 <!-- Marker -->
-                <div class="h-4 w-4 rounded-full border-4 border-black bg-white relative top-[-27px]" ref="markers">
+                <div class="h-4 w-4 rounded-full border-4 border-black bg-white dark:bg-neutral-700 relative top-[-27px]" ref="markers">
                 </div>
 
                 <!-- Date -->
@@ -37,17 +37,17 @@
             <div v-for="(item, index) in eventos?.docs" :key="index" class="relative flex pb-2"
                 :class="{ 'pb-5': index < eventos.docs.length - 1 }">
                 <!-- Vertical line -->
-                <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-neutral-200">
+                <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-neutral-200 dark:bg-neutral-700">
                 </div>
 
                 <!-- Marker -->
                 <div class="flex-shrink-0">
-                    <div class="h-4 w-4 rounded-full border-4 border-black bg-white"></div>
+                    <div class="h-4 w-4 rounded-full border-4 border-black bg-white dark:bg-neutral-700"></div>
                 </div>
 
                 <!-- Content -->
                 <div class="ml-4 flex-1">
-                    <div class="text-sm font-semibold text-neutral-700 line-clamp-2">
+                    <div class="text-sm font-semibold text-neutral-700 dark:text-neutral-200 line-clamp-2">
                         {{ item.titulo }}
                     </div>
                     <div class="mt-1 text-xs text-neutral-500">

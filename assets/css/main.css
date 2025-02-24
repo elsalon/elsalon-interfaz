@@ -7,6 +7,10 @@
 :root {
   --background-dark: var(--p-surface-950);
   --background-light: var(--p-surface-0);
+  --link-color: #0000EE;
+  --link-color-dark: #6EA8FE;
+  --linkvisited-color: #551A8B;
+  --linkvisited-color-dark: #B38BF5;
   outline: none !important;
   --p-primary-50: var(--p-surface-50);
   --p-primary-100: var(--p-surface-100);
@@ -92,14 +96,20 @@
 }
 
 .link{
-  color: blue;
+  color: var(--link-color);
   text-decoration: none;
+}
+.dark .link{
+  color: var(--link-color-dark);
 }
 .link:hover{
   text-decoration: underline;
 }
 .link:visited{
-  color: purple;
+  color: var(--linkvisited-color);
+}
+.dark .link:visited{
+  color: var(--linkvisited-color-dark);
 }
 
 .prose{
@@ -110,9 +120,12 @@
 }
 /* estilos links vieja escuela */
 .prose a, .listaArchivos a{
-  color: blue;
+  color: var(--link-color);
   text-decoration: none;
   font-weight: unset;
+}
+.dark .prose a, .dark .listaArchivos a{
+  color: var(--link-color-dark);
 }
 .prose a:hover, .listaArchivos a:hover{
   text-decoration: underline;
@@ -121,7 +134,10 @@
   text-decoration: none;
 }
 .prose a:visited, .listaArchivos a:visited{
-  color: purple;
+  color: var(--linkvisited-color);
+}
+.dark .prose a:visited, .dark .listaArchivos a:visited{
+  color: var(--linkvisited-color-dark);
 }
 
 .prose iframe, .ql-editor iframe{
@@ -287,4 +303,8 @@ ol{
   @apply bg-gradient-to-r bg-clip-text  text-transparent 
   from-neutral-400 via-neutral-300 to-neutral-400
   animate-text;
+}
+
+.vc-dark{
+  --vc-bg: var(--background-dark) !important;
 }

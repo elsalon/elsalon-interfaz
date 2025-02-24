@@ -16,7 +16,7 @@
             <div class="flex flex-col md:flex-row space-x-2">
 
                 <client-only>
-                    <VCalendar id="calendar" ref="calendar" :view="calendarView" 
+                    <VCalendar id="calendar" ref="calendar" :view="calendarView" :is-dark="isDark"
                         class="transition-padding duration-300 z-10" :class="{'pt-16': isHeaderVisible && calendarView == 'weekly'}"
                         borderless :rows="rows" :expanded="expanded" :masks="masks"
                         :attributes="attributes" locale="es" :min-date="periodo.startDate"
@@ -105,6 +105,9 @@ if (!salon.value.eventos.activar) {
     // Redirect
     router.push(`/salones/${slug}`)
 }
+
+const colorMode = useColorMode()
+const isDark = computed(() => colorMode.value === 'dark')
 
 const { isHeaderVisible } = useScrollDirection(75)
 const auth = useAuth()
