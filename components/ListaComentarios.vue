@@ -1,17 +1,17 @@
 <template>
     <div>
         <div class="w-full text-center">
-            <Button v-if="hasNextPage && !fetchingComentarios" link class="my-2 !text-primary-400 text-xs"
+            <Button v-if="hasNextPage && !fetchingComentarios" link class="my-2 !text-zinc-500 text-xs"
                 @click="fetchComentarios" :label="`Ver más comentarios (${comentariosRestantes})`"/>
         </div>
 
-        <div v-if="fetchingComentarios" class="my-2 w-full text-center text-primary-500 text-sm">
+        <div v-if="fetchingComentarios" class="my-2 w-full text-center text-zinc-500 text-sm">
             <span class="texto-cargando">
                 Cargando comentarios...
             </span>
         </div>
 
-        <div class="pl-0 pt-2 border-l-1 border-primary-100 relative">
+        <div class="pl-0 pt-2 border-l-1 border-zinc-100 relative">
             <Comentario v-for="(comentario, index) in comentarios" :comentario="comentario" :key="comentario.id"
                 @eliminar="EliminarComentario(comentario.id)" @toggleCommentBox="ToggleNewComment"
                 :ref="(el) => setComentarioRef(el, comentario.id)" :isLast="index === comentarios.length - 1" />

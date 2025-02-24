@@ -2,9 +2,9 @@
   <NotificacionEntradasNuevas ref="notifEntradasNuevas" />
 
   <!-- Empty State -->
-  <div v-if="listaEntradas.length === 0" class="text-center text-gray-500 text-sm">
+  <div v-if="listaEntradas.length === 0" class="text-center text-zinc-500 text-sm">
     <!-- CTA Primera publicacion -->
-    <p class="my-10 text-gray-500">Todavía no hay entradas en esta sala</p>
+    <p class="my-10 text-zinc-500">Todavía no hay entradas en esta sala</p>
     <!-- <Button label="+ Escribir primera entrada" @click="visible=true" class="mb-10"/> -->
   </div>
 
@@ -31,7 +31,7 @@
     </div>
     </Transition>
     <!-- Pagination Status -->
-    <div v-show="!hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-gray-500 text-sm">
+    <div v-show="!hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-zinc-500 text-sm">
       No hay más entradas
     </div>
   </div>

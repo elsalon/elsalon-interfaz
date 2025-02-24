@@ -22,12 +22,11 @@
         <div v-if="grupos.length" class="flex gap-3 mb-5 flex-wrap">
             <NuxtLink v-for="grupo in grupos" :to="`/grupos/${grupo.slug}`" :key="grupo.id" class="flex items-center">
                 <AvatarSalon :usuario="grupo" class="w-8 h-8 mr-1" />
-                <span class="text-sm text-gray-700">{{ grupo.nombre }}</span>
+                <span class="text-sm text-zinc-800">{{ grupo.nombre }}</span>
             </NuxtLink>
         </div>
 
         <div class="text-center flex flex-wrap justify-around items-center w-full mb-10 p-1 relative">
-            <!-- bg-gray-100 -->
             <BtnEnlazar v-if="!userIsMe" type="usuario"/>
             <BtnOpcionesBtnOpcUsuario :otro="usuario" @userEdited="UserEdited"/>
         </div>

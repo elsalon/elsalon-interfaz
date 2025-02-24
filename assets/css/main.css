@@ -151,7 +151,7 @@
 }
 
 .caja-input{
-  @apply leading-none m-0 py-2 px-3 rounded-md text-surface-800 placeholder:text-surface-400  bg-surface-0 border border-surface-300 invalid:focus:ring-red-200 invalid:hover:border-red-500 hover:border-surface-400 focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 focus:z-10 appearance-none transition-colors duration-200;
+  @apply leading-none m-0 py-2 px-3 rounded-md text-surface-800 placeholder:text-surface-400  bg-surface-0 border border-surface-300 invalid:focus:ring-red-200 invalid:hover:border-red-500 hover:border-surface-400 focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-zinc-500 focus:z-10 appearance-none transition-colors duration-200;
 }
 
 form label{
@@ -173,9 +173,9 @@ form label{
   z-index: 1000;
   @apply bg-white p-1 border border-solid border-zinc-100;
   .ql-mention-list-item {
-    @apply p-1 cursor-pointer hover:bg-gray-100;
+    @apply p-1 cursor-pointer hover:bg-zinc-100;
     &.selected{
-      @apply bg-gray-100;
+      @apply bg-zinc-100;
     }
     .mention-item{
       @apply flex items-center;
@@ -257,12 +257,12 @@ ol{
 }
 
 .lista-salones .router-link-active{
-  @apply bg-gray-100;
+  @apply bg-zinc-100;
   pointer-events: none;
 }
 
 .texto-cargando{
   @apply bg-gradient-to-r bg-clip-text  text-transparent 
-  from-gray-400 via-gray-300 to-gray-400
+  from-zinc-400 via-zinc-300 to-zinc-400
   animate-text;
 }

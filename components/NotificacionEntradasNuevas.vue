@@ -1,8 +1,8 @@
 <template>
     <Transition name="slide-fade">
         <div class="entradasNuevasNotification" v-if="visible">
-            <div @click="IrAEntradasRecientes" class="text-white hover:text-gray-300">Ver entradas nuevas</div>
-            <div @click="Ocultar"><i class="pi pi-times text-white hover:text-gray-300" style="font-size: .6rem;"></i>
+            <div @click="IrAEntradasRecientes" class="text-white hover:text-zinc-500">Ver entradas nuevas</div>
+            <div @click="Ocultar"><i class="pi pi-times text-white hover:text-zinc-500" style="font-size: .6rem;"></i>
             </div>
         </div>
     </Transition>
@@ -55,7 +55,7 @@ defineExpose({
 </script>
 <style scoped>
 .entradasNuevasNotification {
-  @apply flex bg-primary-500 space-x-2 text-white text-xs px-2 py-1 rounded-full;
+  @apply flex bg-zinc-500 space-x-2 text-white text-xs px-2 py-1 rounded-full;
   z-index: 9999;
   position: fixed;
   top: 20px;

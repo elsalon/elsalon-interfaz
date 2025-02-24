@@ -33,7 +33,7 @@
         </template>
         <template #footer>
             <NuxtLink to="/opciones/grupos" target="_blank" v-if="salonStore.gruposDelUsuario.length == 0">
-                <div class="px-3 py-1 text-gray-400 hover:underline text-sm">Aprendé cómo publicar como grupo</div>
+                <div class="px-3 py-1 text-zinc-500 hover:underline text-sm">Aprendé cómo publicar como grupo</div>
             </NuxtLink>
         </template>
     </Select>

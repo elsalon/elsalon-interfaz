@@ -1,13 +1,13 @@
 <template>
     <div class="relative group/aprecio w-max">
         <!-- Btn Aprecio -->
-        <Button link class="my-2 mr-1 text-xs !text-primary-500" :class="{ 'opacity-30': fetching }" style="padding: 0"
+        <Button link class="my-2 mr-1 text-xs text-zinc-500" :class="{ 'opacity-30': fetching }" style="padding: 0"
             :label="tooltipText" @click="handleAprecioClicked" />
         <!-- Btn Cantidad -->
-        <div v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs !text-primary-500"
+        <div v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs  text-zinc-500"
             :class="{ 'opacity-30': fetching }">(0)</div>
 
-        <Button v-show="totalDocs > 0" v-tooltip.top="userNamesTooltip"  link class="my-2 text-xs !text-primary-500"
+        <Button v-show="totalDocs > 0" v-tooltip.top="userNamesTooltip"  link class="my-2 text-xs  text-zinc-500"
             :class="{ 'opacity-30': fetching }" style="padding: 0" :label="`(${totalDocs})`"
             @click="AbrirTodosLosAprecios()" />
 
@@ -22,7 +22,7 @@
             <template v-else>
                 <div class="grid grid-cols-1 md:grid-cols-2">
                     <NuxtLink v-for="doc in docs" :key="doc.id" :to="`/usuarios/${doc.autor.slug}`"
-                        class="flex gap-2 items-center p-1 hover:bg-primary-100">
+                        class="flex gap-2 items-center p-1 hover:bg-zinc-100">
                         <AvatarSalon :usuario="doc.autor" />
                         {{ doc.autor.nombre }}
                     </NuxtLink>
