@@ -1,6 +1,6 @@
 <template>
-    <div class="group/entrada transition-all duration-500 ease-in-out"
-    :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }">
+    <div class="group/entrada transition-all duration-500 ease-in-out p-1 entrada-default"
+    :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" >
     <article>
         <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
         <div class="flex pb-2">
@@ -19,8 +19,9 @@
                             :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
                         <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline" :to="identidadUrl">Bitácora
                         </NuxtLink>
-                        <NuxtLink class="text-gray-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">{{
-            $formatDate(entrada.createdAt) }}</NuxtLink>
+                        <NuxtLink class="text-gray-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
+                            <time :datetime="entrada.createdAt" class="text-gray-400 text-xs">{{ $formatDate(entrada.createdAt) }}</time>
+                        </NuxtLink>
                         <!-- Entrada Fijada -->
                         <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"
                             title="Entrada Fijada"></i>
@@ -38,14 +39,14 @@
                 </div>
             </div>
             <div
-                class="prose prose-headings:text-xl prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2 break-words">
+                class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-words max-w-none">
                 <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
             </div>
-            <div class="sm:pl-[65px]" v-if="entrada.archivos.length">
+            <div class="" v-if="entrada.archivos.length">
                 <ListaArchivos :archivos="entrada.archivos" />
             </div>
         </article>
-        <div class="despues-entrada sm:pl-[65px]">
+        <div class="despues-entrada ml-0">
             <!-- <Divider /> -->
             <!-- Comentarios -->
             <div class="actions">

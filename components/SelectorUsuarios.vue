@@ -40,7 +40,9 @@
                     />
                 </template>
                 <template v-else>
-                    <div class="w-6 h-6"></div>
+                    <div class="w-6 h-6">
+                        <AvatarSalon :usuario=" slotProps.option" class="w-6 h-6" size="" style="font-size:.5rem" />
+                    </div>
                 </template>
                 <div class="flex-grow ml-2">{{ slotProps.option.nombre }}</div>
             </div>

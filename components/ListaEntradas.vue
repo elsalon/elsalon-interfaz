@@ -15,10 +15,21 @@
   </div>
   <div>
     <!-- Loading Indicator -->
+    <Transition
+  enter-from-class="translate-y-full opacity-0"
+  enter-to-class="translate-y-0 opacity-100"
+  leave-from-class="translate-y-0 opacity-100"
+  leave-to-class="translate-y-full opacity-0"
+  enter-active-class="transition-all duration-300 ease-out"
+  leave-active-class="transition-all duration-300 ease-in">
     <div v-if="loading"
-      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 text-gray-500 text-sm flex items-center">
-      <span class="spinner mr-2"></span> Cargando...
+     class="fixed left-1/2 transform -translate-x-1/2 text-sm flex items-center bg-white/80 p-1 transition-all duration-300 ease-in-out animate-slide-in-bottom"
+     :class="{ 'bottom-4': loading, '-bottom-full': !loading }">
+      <span class="texto-cargando">
+        Cargando...
+      </span>
     </div>
+    </Transition>
     <!-- Pagination Status -->
     <div v-show="!hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-gray-500 text-sm">
       No hay más entradas
@@ -64,7 +75,7 @@ const entradaContainerClass = computed(() => {
     'space-y-10 md:space-y-0 md:grid grid-cols-4 gap-4': props.grid === 4,
     'space-y-10 md:space-y-0 md:grid grid-cols-5 gap-4': props.grid === 5,
     'space-y-10 md:space-y-0 md:grid grid-cols-6 gap-4': props.grid === 6,
-    'space-y-10': props.grid === false,
+    'entrada-default-container': props.grid === false,
   }
 })
 

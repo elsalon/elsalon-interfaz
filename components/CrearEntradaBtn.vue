@@ -1,16 +1,14 @@
 <template>
     <Button id="btnEscribir" label="+ Escribir" @click="AbrirEditor" />
 
-    <!-- <Drawer v-model:visible="visible" header="Escribir" position="full">
-        <CrearEntradaDrawer :entryEdit="editContent"/>
-    </Drawer> -->
     <Dialog
         ref="maxDialog"
         v-model:visible="visible"
-        maximizable
-        :header="editContent ? 'Editar' : 'Escribir'"
+        :header="editContent !== null ? 'Editar entrada' : 'Nueva entrada'"
         class="w-full md:w-5/6 bg-white"
-        @show="biggifyDialog">
+        @show="biggifyDialog"
+        :blockScroll="true"
+        :pt="{header: ['container-small flex justify-between w-full items-center']}">
         <CrearEntradaDrawer :entryEdit="editContent"/>
     </Dialog>
 </template>

@@ -1,6 +1,10 @@
 <template>
     <template v-if="salonStore.gruposDelUsuarioFetching">
-        <div class="my-4 text-center text-gray-500 text-sm">Cargando...</div>
+        <div class="my-4 text-center text-gray-500 text-sm">
+            <span class="texto-cargando">
+                Cargando...
+            </span>
+        </div>
     </template>
     <template v-else-if="salonStore.gruposDelUsuario.length">
         <Button label="Nuevo grupo" @click="AbrirModalNuevoGrupo()" class="mb-10"/>

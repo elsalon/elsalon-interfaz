@@ -7,7 +7,9 @@
                 <div class="flex items-center gap-2">
                     <AvatarSalon :usuario="identidad" size="small" :title="tituloIdentidad" style="font-size: .6rem;" />
                     <span class="font-bold" :title="tituloIdentidad">{{ identidad.nombre }}</span>
-                    <span class="text-gray-300 text-xs">{{ $formatDate(comentario.createdAt) }}</span>
+                    <span class="text-gray-300 text-xs">
+                        <time :datetime="comentario.createdAt">{{ $formatDate(comentario.createdAt) }}</time>
+                    </span>
                 </div>
             </NuxtLink>
         </template>
@@ -18,8 +20,8 @@
                 :popup="true" class="text-xs" />
         </template>
 
-        <div v-show="!editandoComentario" class="prose prose-sm prose-headings:my-1 leading-[1rem] break-words">
-            <ContenidoRendereado ref="contenidoRender" :contenido="comentario" />
+        <div v-show="!editandoComentario" class="prose prose-headings:my-1 leading-[1rem] break-words max-w-none">
+            <ContenidoRendereado ref="contenidoRender" class="text-sm" :contenido="comentario" />
         </div>
 
         <ListaArchivos v-if="archivos.length > 0 && !editandoComentario" :archivos="archivos" />

@@ -13,7 +13,7 @@
             </div>
 
             <div v-if="notificacionesStore.fetching" class="p-3 text-sm text-gray-500 text-center">
-                <span>Cargando notificaciones...</span>
+                <span class="texto-cargando">Cargando notificaciones...</span>
             </div>
             <div v-else-if="notificacionesStore.notificaciones.length == 0 && !fetching"
                 class="p-3 text-sm text-gray-500 text-center">
