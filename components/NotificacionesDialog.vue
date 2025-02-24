@@ -24,7 +24,7 @@
                 <Button v-if="mostrarBtnMarcarLeidas" :disabled="fetching" label="Marcas todas leídas" outlined
                     severity="secondary" @click="notificacionesStore.MarcarTodasLeidas" size="small"
                     class="flex-grow" />
-                <Button v-if="notificacionesStore.restantes > 0" :loading="fetching"
+                <Button v-if="notificacionesStore.restantes > 0"  iconPos="right" :loading="fetching"
                     :label="`Ver más (${notificacionesStore.restantes})`"
                     @click="notificacionesStore.fetchNotificacionesMas()" size="small" class="flex-grow" />
             </template>

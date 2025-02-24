@@ -17,7 +17,7 @@
     </div>
       
         <div>
-          <Button type="submit" label="Ingresar" class="block w-full mt-3" :loading="loading" tabindex="3"></Button>
+          <Button type="submit" label="Ingresar" class="block mt-3" :loading="loading" fluid iconPos="right"  tabindex="3"></Button>
         </div>
       </form>
   

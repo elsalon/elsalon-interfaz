@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <Button type="submit" label="Buscar" class="mt-4" @click="Buscar" :loading="isSearching" />
+            <Button type="submit" label="Buscar" class="mt-4" @click="Buscar" iconPos="right" :loading="isSearching" />
         </form>
             <div class="mt-4" v-if="SinResultado">
                 <p>No se encontraron resultados para <strong>{{ lastQuery }}</strong></p>

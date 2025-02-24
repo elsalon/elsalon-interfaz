@@ -1,5 +1,8 @@
 <template>
-    <Select v-model="selectedValue" :loading="salonStore.gruposDelUsuarioFetching" :options="autoresOpciones"
+    <div v-show="salonStore.gruposDelUsuarioFetching" class="w-10 h-10 flex items-center justify-center">
+        <i class="pi pi-spin pi-spinner" />
+    </div>
+    <Select v-model="selectedValue" v-show="!salonStore.gruposDelUsuarioFetching" :options="autoresOpciones"
         optionLabel="name" :disabled="disableSelectorIdentidad || loading" :class="{ 'text-xs': props.esComentario }"
         :pt="SelectStyleProperties">
         <template #value="slotProps">

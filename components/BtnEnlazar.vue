@@ -1,7 +1,7 @@
 <template>
     <div class="text-center" v-if="estadoMostrarBtnEnlace > 0">
-        <Button v-if="estadoMostrarBtnEnlace==1" @click="IniciarEnlace" :loading="loading" :label="loading? 'Enlazando' : 'Enlazar'" v-tooltip.bottom="tooltip" size="small"/>
-        <Button v-if="estadoMostrarBtnEnlace==2" @click="DetenerEnlace" :loading="loading" severity="secondary" :label="loading? 'Desenlazando' : 'Desenlazar'" size="small"></Button>
+        <Button v-if="estadoMostrarBtnEnlace==1" @click="IniciarEnlace" iconPos="right" :loading="loading" :label="loading? 'Enlazando' : 'Enlazar'" v-tooltip.bottom="tooltip" size="small"/>
+        <Button v-if="estadoMostrarBtnEnlace==2" @click="DetenerEnlace" iconPos="right" :loading="loading" severity="secondary" :label="loading? 'Desenlazando' : 'Desenlazar'" size="small"></Button>
     </div>
 </template>
 

@@ -32,11 +32,11 @@ export default {
             { 'text-primary-600 bg-transparent border-transparent': props.link },
 
             // Plain Button
-            { 'text-white bg-zinc-500 border border-zinc-500': props.plain && !props.outlined && !props.text },
+            { 'text-white bg-gray-500 border border-gray-500': props.plain && !props.outlined && !props.text },
             // Plain Text Button
             { 'text-surface-500': props.plain && props.text },
             // Plain Outlined Button
-            { 'text-surface-500 border border-zinc-500': props.plain && props.outlined },
+            { 'text-surface-500 border border-gray-500': props.plain && props.outlined },
 
             // Text Button
             { 'bg-transparent border-transparent': props.text && !props.plain },
@@ -141,7 +141,7 @@ export default {
             // { 'focus:ring-primary': props.link },
 
             // Plain
-            { 'hover:bg-zinc-600 hover:border-zinc-600': props.plain && !props.outlined && !props.text },
+            { 'hover:bg-gray-600 hover:border-gray-600': props.plain && !props.outlined && !props.text },
             // Text & Outlined Button
             { 'hover:bg-surface-300/10': props.plain && (props.text || props.outlined) },
 
@@ -203,7 +203,8 @@ export default {
             'cursor-pointer overflow-hidden select-none',
 
             // Badge
-            '[&>[data-pc-name=badge]]:min-w-4 [&>[data-pc-name=badge]]:h-4 [&>[data-pc-name=badge]]:leading-4'
+            '[&>[data-pc-name=badge]]:min-w-4 [&>[data-pc-name=badge]]:h-4 [&>[data-pc-name=badge]]:leading-4',
+            {'w-full': props.fluid}
         ]
     }),
     label: ({ props }) => ({
@@ -214,7 +215,10 @@ export default {
             {
                 'hover:underline': props.link
             },
-            { 'flex-1': props.label !== null, 'invisible w-0': props.label == null }
+            { 'flex-1': props.label !== null, 'invisible w-0': props.label == null },
+            'transition-none',
+            {'pl-8': props.fluid && props.loading && props.iconPos == 'right'},
+            {'pr-8': props.fluid && props.loading && props.iconPos == 'left'},
         ]
     }),
     icon: ({ props }) => ({

@@ -50,7 +50,7 @@
                 </div>
                 
                 <div class="text-right mb-10">
-                    <Button type="submit" class="" label="Guardar" :loading="loading" />
+                    <Button type="submit" class="" label="Guardar" iconPos="right" :loading="loading" />
                 </div>
 
             </form>
@@ -80,7 +80,7 @@
                 </div> -->
                 
                 <div class="text-right mb-10">
-                    <Button type="submit" class="" label="Agregar" :loading="loading" />
+                    <Button type="submit" class="" label="Agregar" iconPos="right" :loading="loading" />
                 </div>
 
             </form>

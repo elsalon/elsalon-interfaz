@@ -8,7 +8,7 @@
                 <!-- Selector Identidad -->
                 <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading"/>
                 <!-- Boton Publicar -->
-                <Button @click="Publicar" class="flex-grow md:flex-grow-0" :loading="uploading" :label="isEditing ? 'Guardar' : publicarLabel"></Button>
+                <Button @click="Publicar" class="flex-grow md:flex-grow-0" :loading="uploading" md:fluid :label="isEditing ? 'Guardar' : publicarLabel" iconPos="right"></Button>
             </div>
         </div>
     </ClientOnly>
