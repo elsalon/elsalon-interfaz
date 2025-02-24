@@ -10,7 +10,7 @@
       </div>
 
       <div>
-        <p class="text-xs text-center text-zinc-500 mt-5">Cuando recuperas te llegará un mail con un link para activar tu cuenta</p>
+        <p class="text-xs text-center text-zinc-500 mt-5">Al recuperar te llegará un mail con un link para activar tu cuenta</p>
         <Button type="submit" label="Recuperar contraseña" class="block w-full mt-3" :loading="loading"></Button>
       </div>
     </form>
