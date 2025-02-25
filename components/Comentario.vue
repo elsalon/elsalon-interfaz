@@ -3,15 +3,17 @@
         class="mb-3 border-surface-0 text-sm group/comentario panelComentario transition-all duration-500 ease-in-out"
         :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" ref="comentarioDom">
         <template #header>
-            <NuxtLink :to="identidadUrl">
-                <div class="flex items-center gap-2">
-                    <AvatarSalon :usuario="identidad" size="small" v-tooltip.top="tooltipIdentidad" style="font-size: .6rem;" />
-                    <span class="font-bold text-black" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</span>
-                    <span class="text-zinc-600 text-xs">
-                        <time :datetime="comentario.createdAt">{{ $formatDate(comentario.createdAt) }}</time>
-                    </span>
-                </div>
-            </NuxtLink>
+            <div class="flex items-center gap-2">
+                <NuxtLink :to="identidadUrl">
+                    <div class="flex items-center gap-2">
+                        <AvatarSalon :usuario="identidad" size="small" v-tooltip.top="tooltipIdentidad" style="font-size: .6rem;" />
+                        <span class="font-bold text-black" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</span>
+                    </div>
+                </NuxtLink>
+                <span class="text-zinc-600 text-xs">
+                    <time :datetime="comentario.createdAt">{{ $formatDate(comentario.createdAt) }}</time>
+                </span>
+            </div>
         </template>
 
         <template #icons v-if="opcionesComment.length">
