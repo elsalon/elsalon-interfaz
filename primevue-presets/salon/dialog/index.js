@@ -30,7 +30,7 @@ export default {
                 '!left-0': state.maximized
             },
 
-            'bg-zinc-100'
+            'salon-bg'
         ]
     }),
     header: {
@@ -51,7 +51,7 @@ export default {
             'text-surface-700 dark:text-surface-0/80',
             'border border-b-0',
             'border-surface-200 dark:border-surface-700',
-            'bg-zinc-100',
+            'salon-bg',
         ]
     },
     title: {
@@ -104,7 +104,7 @@ export default {
             'text-surface-700 dark:text-surface-0/80',
             'border border-t-0 border-b-0',
             'border-surface-200 dark:border-surface-700',
-            'bg-zinc-100'
+            'salon-bg'
         ]
     },
     mask: ({ props }) => ({

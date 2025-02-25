@@ -32,10 +32,6 @@
 
   --plyr-color-main: var(--p-primary-700);
 }
-html{
-  @apply bg-zinc-100;
-  /* modo oscuro: zinc-800 */
-}
 
 /* Light Mode */
 :root {
@@ -64,6 +60,20 @@ html{
   :root {
       color-scheme: light;
   }
+}
+
+.salon-bg{
+  @apply bg-zinc-100;
+}
+.dark .salon-bg{
+  @apply bg-zinc-800;
+}
+
+html{
+  @apply transition-colors bg-zinc-100;
+}
+html.dark{
+  @apply bg-zinc-800;
 }
 
 .entrada-default::after{
@@ -97,6 +107,9 @@ html{
 }
 
 /* estilos links vieja escuela */
+.dark .prose{
+  @apply prose-invert;
+}
 .prose a, .listaArchivos a{
   color: blue;
   text-decoration: none;

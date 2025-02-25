@@ -204,7 +204,8 @@ export default {
 
             // Badge
             '[&>[data-pc-name=badge]]:min-w-4 [&>[data-pc-name=badge]]:h-4 [&>[data-pc-name=badge]]:leading-4',
-            {'w-full': props.fluid}
+            {'w-full': props.fluid},
+            'bg-black'
         ]
     }),
     label: ({ props }) => ({

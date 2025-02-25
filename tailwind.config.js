@@ -14,8 +14,16 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors:{
+      colors: {
+        primary: 'black',
+        secondary: 'black',
+        neutral: 'black',
+        accent: 'black',
+        surface: {
+          400: 'black',
+        },
       },
+    
       animation: {
         'text': 'text 5s ease infinite',
       },
