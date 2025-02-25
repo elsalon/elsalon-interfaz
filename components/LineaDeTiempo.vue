@@ -19,9 +19,9 @@
                     </div>
                 </div>
 
-                    <!-- Marker -->
-                    <div class="h-4 w-4 rounded-full border-4 border-black bg-white relative top-[-27px]" ref="markers">
-                    </div>
+                <!-- Marker -->
+                <div class="h-4 w-4 rounded-full border-4 border-black bg-white relative top-[-27px]" ref="markers">
+                </div>
 
                 <!-- Date -->
                 <div class="text-xs text-zinc-600">
@@ -40,10 +40,10 @@
                 <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-zinc-200">
                 </div>
 
-                    <!-- Marker -->
-                    <div class="flex-shrink-0">
-                        <div class="h-4 w-4 rounded-full border-4 border-black bg-white"></div>
-                    </div>
+                <!-- Marker -->
+                <div class="flex-shrink-0">
+                    <div class="h-4 w-4 rounded-full border-4 border-black bg-white"></div>
+                </div>
 
                 <!-- Content -->
                 <div class="ml-4 flex-1">
@@ -60,11 +60,10 @@
                 <!-- Vertical line -->
                 <!-- <div class="absolute left-[7px] top-4 bottom-0 w-0.5 bg-zinc-200">
                     </div> -->
-                    <!-- Marker -->
-                    <div class="flex-shrink-0">
-                        <Button icon="pi pi-calendar" class="relative left-[-11px]" size="small" severity="contrast"
-                            rounded aria-label="Bookmark" @click="IrEventos" />
-                    </div>
+                <!-- Marker -->
+                <div class="flex-shrink-0">
+                    <Button icon="pi pi-calendar" class="relative left-[-11px]" size="small" severity="contrast" rounded
+                        aria-label="Bookmark" @click="IrEventos" />
                 </div>
             </div>
         </div>
