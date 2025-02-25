@@ -1,13 +1,17 @@
 <template>
     <template v-if="salonStore.gruposDelUsuarioFetching">
-        <div class="my-4 text-center text-gray-500 text-sm">Cargando...</div>
+        <div class="my-4 text-center text-zinc-600 text-sm">
+            <span class="texto-cargando">
+                Cargando...
+            </span>
+        </div>
     </template>
     <template v-else-if="salonStore.gruposDelUsuario.length">
         <Button label="Nuevo grupo" @click="AbrirModalNuevoGrupo()" class="mb-10"/>
     </template>
     <template v-else>
         <div class="text-center mt-10">
-            <p class="my-10 text-gray-500">Podés crear grupos de trabajo con tus compañerxs para postear colectivamente y compartir una bitácora de progeso</p>
+            <p class="my-10 text-zinc-600">Podés crear grupos de trabajo con tus compañerxs para postear colectivamente y compartir una bitácora de progeso</p>
             <Button label="Crear primer grupo" @click="AbrirModalNuevoGrupo()" class="mb-10"/>
         </div>
     </template>
@@ -15,7 +19,7 @@
     <Grupo v-for="grupo in salonStore.gruposDelUsuario" :key="grupo.id" :grupo="grupo" @abandonadoGrupo="handleAbandonadoGrupo" @editadoGrupo="handleEditadoGrupo"/>
 
     <!-- DIALOG CREAR NUEVO GRUPO -->
-    <Dialog v-model:visible="visible" modal header="Nuevo grupo" style="min-width: 35vw;">
+    <Dialog v-model:visible="visible" modal header="Nuevo grupo" style="min-width: 35vw;" :dismissableMask="true">
          <form @submit.prevent="handleSubmitNuevoGrupo">
         
             <div class="flex gap-2 mb-4 flex-col">

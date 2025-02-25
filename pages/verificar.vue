@@ -1,5 +1,9 @@
 <template>
-	Verificando usuario
+    <div class="w-full text-center flex items-end justify-center h-40">
+        <span class="texto-cargando text-2xl">
+            Verificando usuario
+        </span>
+    </div>
 </template>
   
 <script setup>
@@ -31,7 +35,6 @@ const handleVerificar = async () => {
     loading.value = true
     console.log('Verificar usuario')
     try{
-
         const res = await $fetch(`${runtimeConfig.apiBase}/api/users/verify/${token}`, {
             method: 'POST',
             body: JSON.stringify({token})

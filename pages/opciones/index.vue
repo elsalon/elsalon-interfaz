@@ -1,4 +1,4 @@
-<template>Cargando perfil</template>
+<template></template>
 <script setup>
     const elsalon = useSalonStore();
     elsalon.setContext('opciones')

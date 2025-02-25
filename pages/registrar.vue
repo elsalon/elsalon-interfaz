@@ -1,6 +1,6 @@
 <template>
 	<NuxtLayout name="layout-credenciales">
-    <template v-if="!userSignedUp" #cta>Registrate en El Salón</template>
+    <template v-if="!userSignedUp" #cta>Registrate</template>
     <template v-if="!userSignedUp">
       <form @submit.prevent="handleSignup" class="space-y-3">
         <div>
@@ -10,7 +10,7 @@
         
         <div>
           <label for="email" class="block text-900 font-medium mb-2">Email</label>
-          <InputText id="email" type="text" class="block w-full" v-model="email" required />
+          <InputText id="email" type="email" class="block w-full" v-model="email" required />
         </div>
     
         <div>
@@ -40,8 +40,8 @@
         </div>
       </form>
       
-      <p class="mt-10 text-center text-sm text-gray-500">¿Ya tenés usuario?
-        <a href="/login" class="font-semibold leading-6 text-surface-600 hover:text-surface-500">Iniciá sesión</a>
+      <p class="mt-10 text-center text-sm text-zinc-600">¿Ya tenés usuario?
+        <a href="/login" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900">Iniciá sesión</a>
       </p>
     </template>
     

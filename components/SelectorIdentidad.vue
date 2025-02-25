@@ -1,5 +1,8 @@
 <template>
-    <Select v-model="selectedValue" :loading="salonStore.gruposDelUsuarioFetching" :options="autoresOpciones"
+    <div v-show="salonStore.gruposDelUsuarioFetching" class="w-10 h-10 flex items-center justify-center">
+        <i class="pi pi-spin pi-spinner" />
+    </div>
+    <Select v-model="selectedValue" v-show="!salonStore.gruposDelUsuarioFetching" :options="autoresOpciones"
         optionLabel="name" :disabled="disableSelectorIdentidad || loading" :class="{ 'text-xs': props.esComentario }"
         :pt="SelectStyleProperties">
         <template #value="slotProps">
@@ -7,10 +10,10 @@
             <div v-if="slotProps.value" class="flex items-center">
                 <template v-if="slotProps.value.avatar">
                     <img v-if="slotProps.value.avatar" :alt="slotProps.value.label" :src="slotProps.value.avatar"
-                        class="mr-2 w-6 h-6"  />
+                        class="w-10 h-10"  />
                 </template>
                 <template v-else>
-                    <AvatarSalon :usuario="slotProps.value" class="w-5 h-5 mr-2" size="small" style="font-size:.5rem"/>
+                    <AvatarSalon :usuario="slotProps.value" class="w-10 h-10" size="" style="font-size:.7rem" :key="slotProps.value.id"/>
                 </template>
                 <!-- <div class="flex-grow" v-show="!props.esComentario">{{ slotProps.value.nombre }}</div> -->
             </div>
@@ -33,7 +36,7 @@
         </template>
         <template #footer>
             <NuxtLink to="/opciones/grupos" target="_blank" v-if="salonStore.gruposDelUsuario.length == 0">
-                <div class="px-3 py-1 text-gray-400 hover:underline text-sm">Aprendé cómo publicar como grupo</div>
+                <div class="px-3 py-1 text-zinc-600 hover:underline text-sm">Aprendé cómo publicar como grupo</div>
             </NuxtLink>
         </template>
     </Select>
@@ -106,14 +109,20 @@ onMounted(async () => {
     }
 });
 
+
+
 let SelectStyleProperties = {
-    dropdown: ['flex items-center justify-center',
+    dropdown: [
+        'flex items-center justify-center',
         'shrink-0',
         // Color and Background
-        'bg-transparent',
         'text-surface-500',
         // Size
-        'w-6',
+        'w-2 h-2',
+        'font-sm',
+        'absolute right-[2px] bottom-[2px]',
+        
+        'text-white',
     ], label: ['leading-[normal]',
 
         // Display
@@ -127,7 +136,7 @@ let SelectStyleProperties = {
 
         // Sizing and Spacing
         'w-[1%]',
-        'py-2 pr-0 pl-2',
+        'py-0 pr-0 pl-0',
 
         //Shape
         'rounded-none',

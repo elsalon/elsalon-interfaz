@@ -1,28 +1,28 @@
 <template>
 
 <!-- {{ configuracion }} -->
-    <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row font-mono">
-        <label for="notificacionesNavegador" class="font-semibold w-96">Notificaciones Navegador</label>
-        <Checkbox inputId="notificacionesNavegador" class="w-full" v-model="permisoNotificacionesNavegador" binary :disabled="permisoNotificacionesNavegador" />
+    <div class="flex gap-2 mb-4 mt-0 flex-row font-mono">
+        <Checkbox inputId="notificacionesNavegador" v-model="permisoNotificacionesNavegador" binary :disabled="permisoNotificacionesNavegador" />
+        <label for="notificacionesNavegador" class="font-semibold w-96" v-tooltip.bottom="'Al hacer clic, el navegador te pedirá permiso para enviar notificaciones. Se desactivan manualmente en los ajustes del navegador'">Notificaciones Navegador</label>
     </div>
 
     <div class="h-5"></div>
 
 <form @submit.prevent="handleSubmit" class="space-y-3">
     
-    <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
+    <div class="flex gap-2 mb-4 mt-0 flex-row">
+        <Checkbox inputId="notificacionesMailActivas" v-model="configuracion.notificacionesMail.activas" binary />
         <label for="notificacionesMailActivas" class="font-semibold w-96">Notificaciones por Mail</label>
-        <Checkbox inputId="notificacionesMailActivas" class="w-full" v-model="configuracion.notificacionesMail.activas" binary />
     </div>
 
-    <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
+    <div class="flex gap-2 mb-4 mt-0 flex-row">
+        <Checkbox inputId="mencionNueva" v-model="configuracion.notificacionesMail.mencionNueva" binary :disabled="!configuracion.notificacionesMail.activas"/>
         <label for="mencionNueva" class="w-96">Mencion Nueva</label>
-        <Checkbox inputId="mencionNueva" class="w-full" v-model="configuracion.notificacionesMail.mencionNueva" binary :disabled="!configuracion.notificacionesMail.activas"/>
     </div>
 
-    <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
+    <div class="flex gap-2 mb-4 mt-0 flex-row">
+        <Checkbox inputId="comentarioNuevo" v-model="configuracion.notificacionesMail.comentarioNuevo" binary :disabled="!configuracion.notificacionesMail.activas"/>
         <label for="comentarioNuevo" class="w-96">Comentario Nuevo</label>
-        <Checkbox inputId="comentarioNuevo" class="w-full" v-model="configuracion.notificacionesMail.comentarioNuevo" binary :disabled="!configuracion.notificacionesMail.activas"/>
     </div>
 
     <div class="text-right mb-10">

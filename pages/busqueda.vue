@@ -6,7 +6,7 @@
         </template>
         <form @submit.prevent="Buscar">
 
-            <InputText v-model="searchQuery" type="text" size="large" placeholder="Búsqueda" class="block w-full" />
+            <InputText v-model="searchQuery" type="search" size="large" placeholder="Búsqueda" class="block w-full" />
 
             <div class="card flex flex-wrap gap-4 mt-4">
                 <div v-for="category of categories" :key="category.key" class="flex items-center">
@@ -16,55 +16,59 @@
                 </div>
             </div>
 
-            <Button type="submit" label="Buscar" class="mt-4" @click="Buscar" :loading="isSearching" />
+            <Button type="submit" label="Buscar" class="mt-4" @click="Buscar" iconPos="right" :loading="isSearching" />
         </form>
-        <template v-if="SinResultado">
-            <div class="mt-4">
+            <div class="mt-4" v-if="SinResultado">
                 <p>No se encontraron resultados para <strong>{{ lastQuery }}</strong></p>
             </div>
-        </template>
-        <template v-else-if="searchResults">
-            <div class="mt-4">
+        
+            <div class="my-8" v-else-if="searchResults">
                 <!-- Resultados Entradas -->
-                <div v-if="searchResults.entradas.length">
-                    <h3 class="text-xl font-bold mt-4">Entradas</h3>
-                    <ul>
-                        <li v-for="result in searchResults.entradas" :key="result.id">
-                            <NuxtLink :to="`/entradas/${result.id}`" class="block mb-3">
-                                <div>{{ result.extracto }}</div>
-                                <div class="text-sm text-gray-400">{{ result.autor.nombre }} - {{
-            $formatDate(result.createdAt) }}</div>
+                <!-- <template v-if="searchResults.entradas.length"> -->
+                    <!-- <h3 class="text-xl font-bold mt-4">Entradas</h3> -->
+                    <!-- <ul> -->
+                        <!-- <li > -->
+                            <NuxtLink v-for="result in searchResults.entradas" :key="result.id" :to="`/entradas/${result.id}`" class=" hover:bg-zinc-200 p-2 flex items-center gap-x-2">
+                                
+                                <img v-if="result.imagenes.length > 0" :src="result.imagenes[0].imagen.sizes.medium.url" class="h-16 aspect-square object-cover" />
+                                <img v-else :src="result.autor.avatar.sizes.medium.url" class="h-16 aspect-square object-cover" />
+                                    
+                                
+                                <div>
+                                    <div>{{ result.extracto }}</div>
+                                    <div class="text-sm text-zinc-600">{{ result.autor.nombre }}
+                                        <time :datetime="result.createdAt">{{$formatDate(result.createdAt) }}</time>
+                                    </div>
+                                </div>
                             </NuxtLink>
-                        </li>
-                    </ul>
-                </div>
+                        <!-- </li> -->
+                    <!-- </ul> -->
+                <!-- </template> -->
 
                 <!-- Resultados Usuarios -->
-                <div v-if="searchResults.usuarios.length">
-                    <h3 class="text-xl font-bold mt-4">Usuarios</h3>
-                    <div class="flex flex-wrap gap-4">
+                <!-- <template v-if="searchResults.usuarios.length"> -->
+                    <!-- <h3 class="text-xl font-bold mt-4">Usuarios</h3> -->
+                    <!-- <div class="flex flex-wrap gap-4"> -->
                         <NuxtLink v-for="usuario in searchResults.usuarios" :to="`/usuarios/${usuario.slug}`"
-                            :key="usuario.id" class="flex items-center gap-x-2">
-                            <AvatarSalon :usuario="usuario" class="w-8 h-8" />
-                            <span class="text-sm text-gray-700">{{ usuario.nombre }}</span>
+                            :key="usuario.id" class="flex items-center hover:bg-zinc-200 p-2  gap-x-2">
+                            <AvatarSalon :usuario="usuario" class="w-16 h-16 object-cover" />
+                            <span class="">{{ usuario.nombre }}</span>
                         </NuxtLink>
-                    </div>
-                </div>
+                    <!-- </div> -->
+                <!-- </template> -->
 
                 <!-- Resultados Grupos -->
-                <div v-if="searchResults.grupos.length">
-                    <h3 class="text-xl font-bold mt-4">Grupos</h3>
-                    <div class="flex flex-wrap gap-4">
+                <!-- <template v-if="searchResults.grupos.length"> --> 
+                    <!-- <h3 class="text-xl font-bold mt-4">Grupos</h3>
+                    <div class="flex flex-wrap gap-4"> -->
                         <NuxtLink v-for="grupo in searchResults.grupos" :to="`/grupos/${grupo.slug}`" :key="grupo.id"
-                            class="flex items-center gap-x-2">
-                            <AvatarSalon :usuario="grupo" class="w-8 h-8" />
-                            <span class="text-sm text-gray-700">{{ grupo.nombre }}</span>
+                            class="flex items-center hover:bg-zinc-200 p-2  gap-x-2" >
+                            <AvatarSalon :usuario="grupo" class="w-16 h-16 object-cover" />
+                            <span class="">{{ grupo.nombre }}</span>
                         </NuxtLink>
-                    </div>
-                </div>
-
-            </div>
-        </template>
+                    <!-- </div> -->
+                <!-- </div> -->
+        </div>
 
         <!-- {{ searchResults }} -->
     </NuxtLayout>

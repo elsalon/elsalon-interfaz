@@ -28,15 +28,15 @@
 
                     <div class="md:mt-9 md:w-full">
                         <template v-if="eventos.docs.length == 0">
-                            <div class="text-center text-gray-500 text-sm">Clickeá en una fecha para crear el primer evento</div>
+                            <div class="text-center text-zinc-600 text-sm">Clickeá en una fecha para crear el primer evento</div>
                         </template>
                         <template v-else>
-                            <div v-if="!fechasVisibles.length" class="text-center text-gray-500 text-sm">
+                            <div v-if="!fechasVisibles.length" class="text-center text-zinc-600 text-sm">
                                 No hay eventos en este periodo</div>
                         </template>
                         <div v-for="evento in fechasVisibles" :key="evento.id" :ref="el => evtRefs[evento.id] = el"
                             class="p-2 mb-2 text-left hover:cursor-pointer"
-                            :class="{ 'bg-orange-50': eventoIdHovered == evento.id, 'text-gray-400': evento.pasado, 'opacity-30': evento.loading }"
+                            :class="{ 'bg-orange-50': eventoIdHovered == evento.id, 'text-zinc-600': evento.pasado, 'opacity-30': evento.loading }"
                             @click="focusEvento(evento)" @mouseleave="eventoIdHovered = null">
                             <div class="flex">
                                 <div class="text-lg font-semibold flex-grow">{{ evento.titulo }}</div>
@@ -46,7 +46,9 @@
                                         <Button v-if="puedeEditar" icon="pi pi-pencil"  text rounded aria-label="Filter"  @click="ComenzarEditarEvento(evento)"/>
                                  </div>
                             </div>
-                            <div class="text-xs md:text-sm text-gray-500">{{ $formatDateCorto(evento.fecha) }}</div>
+                            <div class="text-xs md:text-sm text-zinc-600">
+                                <time :datetime="evento.fecha">{{ $formatDateCorto(evento.fecha) }}</time>
+                            </div>
                             <div class="text-sm md:text-base">{{ evento.descripcion }}</div>
                         </div>
                     </div>
@@ -55,11 +57,11 @@
         </div>
 
         <!-- Ventana Crear / Editar evento -->
-        <Dialog v-model:visible="mostrarVentanaEdit" modal :header="ventanaEditHeader" :style="{ width: '25rem' }">
+        <Dialog v-model:visible="mostrarVentanaEdit" modal :header="ventanaEditHeader" :style="{ width: '25rem' }" :dismissableMask="true">
             
             <div class="flex gap-2 mb-4 flex-col md:flex-row">
                 <label for="fecha" class="font-semibold w-1/4">fecha</label>
-                <DatePicker dateFormat="dd/mm/yy" id="fecha" v-model="eventoEditando.fecha" class="w-full" :minDate="periodo.startDate" :maxDate="periodo.endDate" showTime hourFormat="24" fluid />
+                <DatePicker dateFormat="dd/mm/yy" id="fecha" v-model="eventoEditando.fecha" class="w-full" :minDate="new Date(periodo.startDate)" :maxDate="new Date(periodo.endDate)" showTime hourFormat="24" fluid />
             </div>
 
             <div class="flex gap-2 mb-4 flex-col md:flex-row">
@@ -92,6 +94,7 @@ const calendar = ref(null)
 const route = useRoute()
 const slug = route.params?.slug
 const salonStore = useSalonStore();
+salonStore.SetPageTitle(`Eventos`)
 const salon = ref(null)
 salon.value = salonStore.salones.find(salon => salon.slug === slug)
 let periodo = salon.value.archivo.periodos[0]
@@ -107,7 +110,6 @@ const { isHeaderVisible } = useScrollDirection(75)
 const auth = useAuth()
 import { useAsyncData } from "#app";
 import qs from 'qs';
-import { createWebHistory } from "vue-router";
 const { $formatDateCorto } = useNuxtApp()
 const toast = useToast();
 const confirm = useConfirm();

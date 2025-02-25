@@ -1,6 +1,6 @@
 <template>
-    <NuxtLink @click.prevent="HandleNotificacionLink()" :to="linkNotificacion" class="p-3 m-1 block"
-        :class="{ 'bg-gray-100': !notificacion.leida }">
+    <NuxtLink @click.prevent="HandleNotificacionLink()" :to="linkNotificacion" class="p-3 mb-1 block"
+        :class="{ 'bg-zinc-200': !notificacion.leida }">
         <div class="flex notification-item">
             <div>
                 <AvatarSalon :usuario="props.notificacion.identidad.value" size="small" class="mr-4" style="font-size: .6rem;" 
@@ -10,7 +10,9 @@
                 <div class="text-sm mr-2" v-html="props.notificacion.mensaje"></div>
 
                 <div class="flex items-center justify-between">
-                    <div class="text-gray-400 text-xs">{{ $formatDate(props.notificacion.createdAt) }}</div>
+                    <div class="text-zinc-600 text-xs">
+                        <time :datetime="props.notificacion.createdAt">{{ $formatDate(props.notificacion.createdAt) }}</time>
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,6 +25,7 @@
 <script setup>
 const router = useRouter();
 const linkNotificacion = ref('')
+const notificacionesStore = useNotificacionesStore()
 
 const { $formatDate } = useNuxtApp()
 const props = defineProps({
@@ -36,24 +39,31 @@ const props = defineProps({
 // const identidad = ref()
 const emit = defineEmits(['leida'])
 
-switch (props.notificacion.link.relationTo) {
-    case 'entradas':
-        linkNotificacion.value = `/entradas/${props.notificacion.link.value.id}`
-        break;
-    case 'users':
-        linkNotificacion.value = `/usuarios/${props.notificacion.link.value.slug}`
-        break;
-    case 'grupos':
-        linkNotificacion.value = `/grupos/${props.notificacion.link.value.slug}`
-        break;
-    case 'salones':
-        linkNotificacion.value = `/salones/${props.notificacion.link.value.slug}`
-        break;
+// Hardcodeo link de notificacion rol docente
+if(props.notificacion.categoria === 'rol-docente'){
+    linkNotificacion.value = "/nodo/docente"
+}else{
+    // Sino lo asigno normalmente segun linkNotificacion
+    switch (props.notificacion.link.relationTo) {
+        case 'entradas':
+            linkNotificacion.value = `/entradas/${props.notificacion.link.value.id}`
+            break;
+        case 'users':
+            linkNotificacion.value = `/usuarios/${props.notificacion.link.value.slug}`
+            break;
+        case 'grupos':
+            linkNotificacion.value = `/grupos/${props.notificacion.link.value.slug}`
+            break;
+        case 'salones':
+            linkNotificacion.value = `/salones/${props.notificacion.link.value.slug}`
+            break;
+    }
 }
 
 const HandleNotificacionLink = async () => {
     console.log('HandleNotificacionLink')
     await MarcarLeida();
+    notificacionesStore.dialogVisible = false
     router.push(linkNotificacion.value)
 }
 

@@ -11,7 +11,7 @@
             </h2>
         </div>
 
-        <div class="text-center flex flex-wrap justify-around items-center w-full mb-10 bg-gray-100 p-1">
+        <div class="text-center flex flex-wrap justify-around items-center w-full mb-10 bg-white p-1">
             <!-- Lista de avatares de miembros -->
             <ListaMiembrosSala :miembros="miembros" />
 
@@ -28,14 +28,14 @@
                 <BtnEnlazar @estadoEnlace="onEstadoEnlace" type="sala"/>
             </div>
         </div>
-
-
-        <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon"/>
-
-
+        <div>
+            <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon"/>
+        </div>
+        <div>
+            <ListaEntradas :query="query" :cacheKey="cacheKey" />
+        </div>
+        
         <CrearEntradaBtn v-if="estadoEnlace == 2" />
-        <!-- TODO Query -->
-        <ListaEntradas :query="query" :cacheKey="cacheKey" />
     </NuxtLayout>
 </template>
 

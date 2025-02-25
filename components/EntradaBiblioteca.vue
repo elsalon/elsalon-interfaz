@@ -8,7 +8,7 @@
 
         <article class="flex flex-col flex-grow">
             <div class="flex-grow">
-                <div class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-all">
+                <div class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-words">
                     <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
                 </div>
                 <div v-if="entrada.archivos.length">
@@ -18,11 +18,12 @@
             <div class="despues-entrada flex">
                 <div>
                     <NuxtLink :to="identidadUrl" class="link flex items-center gap-x-2">
-                        <AvatarSalon :usuario="identidad" :title="tituloIdentidad" size="small" />
-                        <h2 class=" text-gray-400  text-sm" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
+                        <AvatarSalon :usuario="identidad" size="small" />
+                        <h2 class=" text-zinc-600  text-sm">{{ identidad.nombre }}</h2>
                     </NuxtLink>
-                    <NuxtLink class="text-gray-400 text-xs hover:underline" :to="`/entradas/${entrada.id}`">
-                        {{ $formatDate(entrada.createdAt) }}</NuxtLink>
+                    <NuxtLink class="text-zinc-600 text-xs hover:underline" :to="`/entradas/${entrada.id}`">
+                        <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>
+                    </NuxtLink>
                 </div>
                 <div v-if="UsuarioTieneAutoridad" class="flex-grow md:invisible group-hover/entrada:visible text-right">
                     <Button text @click="ToggleArticleOptions">...</Button>

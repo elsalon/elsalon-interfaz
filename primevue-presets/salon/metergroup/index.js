@@ -19,7 +19,7 @@ export default {
             { 'h-2': props.orientation === 'horizontal' },
 
             // Colors
-            'bg-gray-200 dark:bg-gray-700',
+            'bg-zinc-200 dark:bg-zinc-700',
 
             // Border Radius
             'rounded-lg'

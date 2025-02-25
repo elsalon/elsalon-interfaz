@@ -1,7 +1,7 @@
 <template>
     <ClientOnly>
-        <Dialog :visible="notificacionesStore.dialogVisible" header="Notificaciones" :style="{ width: '25rem' }"
-            position="top" :draggable="true">
+        <Dialog v-model:visible="notificacionesStore.dialogVisible" modal header="Notificaciones" :style="{ width: '25rem' }"
+        :dismissableMask="true"  position="top">
             <template #closeicon>
                 <Button icon="pi pi-times" severity="secondary" size="small" text
                     @click="notificacionesStore.dialogVisible = false" />
@@ -12,11 +12,11 @@
                 <NotificacionIndividual :notificacion="notificacion" :key="notificacion.id" />
             </div>
 
-            <div v-if="notificacionesStore.fetching" class="p-3 text-sm text-gray-500 text-center">
-                <span>Cargando notificaciones...</span>
+            <div v-if="notificacionesStore.fetching" class="p-3 text-sm text-zinc-600 text-center">
+                <span class="texto-cargando">Cargando notificaciones...</span>
             </div>
             <div v-else-if="notificacionesStore.notificaciones.length == 0 && !fetching"
-                class="p-3 text-sm text-gray-500 text-center">
+                class="p-3 text-sm text-zinc-600 text-center">
                 <span>No tenés notificaciones</span>
             </div>
 
@@ -24,8 +24,8 @@
                 <Button v-if="mostrarBtnMarcarLeidas" :disabled="fetching" label="Marcas todas leídas" outlined
                     severity="secondary" @click="notificacionesStore.MarcarTodasLeidas" size="small"
                     class="flex-grow" />
-                <Button v-if="notificacionesStore.restantes > 0" :loading="fetching"
-                    :label="`Cargar más (${notificacionesStore.restantes})`"
+                <Button v-if="notificacionesStore.restantes > 0"  iconPos="right" :loading="fetching"
+                    :label="`Ver más (${notificacionesStore.restantes})`"
                     @click="notificacionesStore.fetchNotificacionesMas()" size="small" class="flex-grow" />
             </template>
 

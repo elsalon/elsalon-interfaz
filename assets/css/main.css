@@ -17,18 +17,24 @@
   --p-primary-900: var(--p-surface-900);
   --p-primary-950: var(--p-surface-950);
   --p-surface-0: #ffffff;
-  --p-surface-50: #f8fafc;
-  --p-surface-100: #f1f5f9;
-  --p-surface-200: #e2e8f0;
-  --p-surface-300: #cbd5e1;
-  --p-surface-400: #94a3b8;
-  --p-surface-500: #64748b;
-  --p-surface-600: #475569;
-  --p-surface-700: #334155;
-  --p-surface-800: #1e293b;
-  --p-surface-900: #0f172a;
-  --p-surface-950: #020617;
+  --p-surface-50: #fafafa;
+  --p-surface-100: #f5f5f5;
+  --p-surface-200: #e5e5e5;
+  --p-surface-300: #d4d4d4;
+  --p-surface-400: #a3a3a3;
+  --p-surface-500: #737373;
+  --p-surface-600: #525252;
+  --p-surface-700: #404040;
+  --p-surface-800: #262626;
+  --p-surface-900: #171717;
+  --p-surface-950: #0a0a0a; 
   --p-content-border-radius: 6px;
+
+  --plyr-color-main: var(--p-primary-700);
+}
+html{
+  @apply bg-zinc-100;
+  /* modo oscuro: zinc-800 */
 }
 
 /* Light Mode */
@@ -60,6 +66,12 @@
   }
 }
 
+.entrada-default::after{
+  content: "";
+  @apply block h-[1px] mt-7 mb-7 
+  /* bg-gray-200  */ /* Fondo color */ 
+  /* bg-gradient-to-r from-white via-gray-200 to-white; */ /* Fondo gradient */ 
+}
 .container-small{
   max-width: 640px;
   @apply px-4 md:px-0 mx-auto;
@@ -143,7 +155,7 @@
 }
 
 .caja-input{
-  @apply leading-none m-0 py-2 px-3 rounded-md text-surface-800 placeholder:text-surface-400  bg-surface-0 border border-surface-300 invalid:focus:ring-red-200 invalid:hover:border-red-500 hover:border-surface-400 focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-primary-500 focus:z-10 appearance-none transition-colors duration-200;
+  @apply leading-none m-0 py-2 px-3 rounded-md text-surface-800 placeholder:text-surface-400  bg-surface-0 border border-surface-300 invalid:focus:ring-red-200 invalid:hover:border-red-500 hover:border-surface-400 focus:outline-none focus:outline-offset-0 focus:ring-1 focus:ring-zinc-500 focus:z-10 appearance-none transition-colors duration-200;
 }
 
 form label{
@@ -165,9 +177,9 @@ form label{
   z-index: 1000;
   @apply bg-white p-1 border border-solid border-zinc-100;
   .ql-mention-list-item {
-    @apply p-1 cursor-pointer hover:bg-gray-100;
+    @apply p-1 cursor-pointer hover:bg-zinc-100;
     &.selected{
-      @apply bg-gray-100;
+      @apply bg-zinc-100;
     }
     .mention-item{
       @apply flex items-center;
@@ -182,13 +194,18 @@ form label{
     }
   }
 }
+.ql-toolbar{
+  @apply bg-white;
+}
 .ql-container {
+  @apply bg-white;
   max-width: unset;
   font-family: unset !important;
   border-top: none !important;
   overflow-y: auto;
 }
 .comment-input{
+  @apply bg-white;
   .ql-container{
     overflow: visible;
   }
@@ -249,6 +266,12 @@ ol{
 }
 
 .lista-salones .router-link-active{
-  @apply bg-gray-100;
+  @apply bg-zinc-100;
   pointer-events: none;
+}
+
+.texto-cargando{
+  @apply bg-gradient-to-r bg-clip-text  text-transparent 
+  from-zinc-200 via-zinc-700 to-zinc-200
+  animate-text;
 }

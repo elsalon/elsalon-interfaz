@@ -1,32 +1,32 @@
 <template>
-    <div class="group/entrada transition-all duration-500 ease-in-out"
-    :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }">
+    <div class="group/entrada transition-all duration-500 ease-in-out p-1 entrada-default"
+    :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" >
     <article>
         <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
         <div class="flex pb-2">
             <NuxtLink :to="identidadUrl">
-                <AvatarSalon :usuario="identidad" :title="tituloIdentidad" />
+                <AvatarSalon :usuario="identidad" v-tooltip.top="tooltipIdentidad"/>
             </NuxtLink>
             <!-- <EntradaDefault /> -->
             
                 <!-- Metadata entrada -->
                 <div class="ml-4">
                     <NuxtLink :to="identidadUrl" class="hover:underline">
-                        <h2 class="font-bold text-gray-700" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
+                        <h2 class="font-bold text-black" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
-                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline"
+                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline text-zinc-600" 
                             :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
-                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline" :to="identidadUrl">Bitácora
+                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline text-zinc-600 " :to="identidadUrl">Bitácora</NuxtLink>
+                        <NuxtLink class="text-zinc-600 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
+                            <time :datetime="entrada.createdAt" class="text-zinc-600 text-xs">{{ $formatDate(entrada.createdAt) }}</time>
                         </NuxtLink>
-                        <NuxtLink class="text-gray-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">{{
-            $formatDate(entrada.createdAt) }}</NuxtLink>
                         <!-- Entrada Fijada -->
-                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-gray-400 ml-2" style="font-size: .65rem"
-                            title="Entrada Fijada"></i>
+                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-zinc-600 ml-2" style="font-size: .65rem"
+                            v-tooltip.top="'Entrada Fijada'"></i>
                         <!-- Entrada Destacada -->
-                        <i v-if="entrada.destacada" class="pi pi-star text-gray-400 ml-2" style="font-size: .7rem"
-                            title="Entrada Destacada"></i>
+                        <i v-if="entrada.destacada" class="pi pi-star text-zinc-600 ml-2" style="font-size: .7rem"
+                            v-tooltip.top="'Entrada Destacada'"></i>
                     </div>
                 </div>
 
@@ -38,19 +38,19 @@
                 </div>
             </div>
             <div
-                class="prose prose-headings:text-xl prose-headings:my-1 sm:pl-[65px] leading-normal prose-img:my-2 break-all">
+                class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-words max-w-none">
                 <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
             </div>
-            <div class="sm:pl-[65px]" v-if="entrada.archivos.length">
+            <div class="" v-if="entrada.archivos.length">
                 <ListaArchivos :archivos="entrada.archivos" />
             </div>
         </article>
-        <div class="despues-entrada sm:pl-[65px]">
+        <div class="despues-entrada ml-0">
             <!-- <Divider /> -->
             <!-- Comentarios -->
             <div class="actions">
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
-                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 mr-2 text-xs text-surface-500" style="padding: 0;"
+                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 mr-2 text-xs text-zinc-600 leading-normal" style="padding: 0;"
                     label="Comentar" @click="ToggleCommentBox" />
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
             </div>
@@ -69,7 +69,7 @@ const { hooks } = useNuxtApp();
 const props = defineProps({
     entrada: Object,
     identidadUrl: String,
-    tituloIdentidad: String,
+    tooltipIdentidad: String,
     identidad: Object,
     archivos: Array,
     opcionesArticulo: Array,

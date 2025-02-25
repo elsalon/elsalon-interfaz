@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model:visible="visible" modal header="Fijar entrada" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="visible" modal header="Fijar entrada" :style="{ width: '25rem' }" :dismissableMask="true">
 
         <span class="text-surface-500 dark:text-surface-400 block mb-8">Elegí por cuanto tiempo fijar esta
             entrada</span>
@@ -12,7 +12,7 @@
 
         <div class="flex justify-end gap-2">
             <Button type="button" label="Cancelar" severity="secondary" @click="visible = false" :disabled="loading"></Button>
-            <Button type="button" label="Fijar" @click="Fijar" :loading="loading"></Button>
+            <Button type="button" iconPos="right" label="Fijar" @click="Fijar" :loading="loading"></Button>
         </div>
     </Dialog>
 </template>

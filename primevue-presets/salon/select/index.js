@@ -4,6 +4,7 @@ export default {
             // Display and Position
             'inline-flex',
             'relative',
+            // 'border-surface-300',
             // Shape
             // { 'rounded-md': parent.instance.$name !== 'InputGroup' },
             // { 'first:rounded-l-md rounded-none last:rounded-r-md': parent.instance.$name == 'InputGroup' },
@@ -13,10 +14,10 @@ export default {
             // Color and Background
             { 'bg-surface-0 dark:bg-surface-950': !props.disabled },
 
-            'border',
-            { 'dark:border-surface-700': parent.instance.$name != 'InputGroup' },
-            { 'dark:border-surface-600': parent.instance.$name == 'InputGroup' },
-            { 'border-surface-300 dark:border-surface-600': !props.invalid },
+            // 'border',
+            // { 'dark:border-surface-700': parent.instance.$name != 'InputGroup' },
+            // { 'dark:border-surface-600': parent.instance.$name == 'InputGroup' },
+            // { 'border-surface-300 dark:border-surface-600': !props.invalid },
 
             // Invalid State
             'invalid:focus:ring-red-200',
@@ -28,8 +29,8 @@ export default {
             'duration-200',
 
             // States
-            { 'hover:border-surface-400 dark:hover:border-surface-600': !props.invalid },
-            { 'outline-none outline-offset-0 ring-1 ring-primary-500 dark:ring-primary-400 z-10': state.focused },
+            // { 'hover:border-surface-400 dark:hover:border-surface-600': !props.invalid },
+            // { 'outline-none outline-offset-0 ring-1 ring-primary-500 dark:ring-primary-400 z-10': state.focused },
 
             // Misc
             'cursor-pointer',
@@ -129,7 +130,7 @@ export default {
 
             // Spacing
             'm-0 px-3 py-2',
-            'first:mt-0 mt-[2px]',
+            'first:mt-0',
 
             // Shape
             'border-0',
