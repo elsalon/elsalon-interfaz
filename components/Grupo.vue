@@ -4,7 +4,7 @@
         <!-- Group Header -->
         <div class="flex items-center gap-x-4 py-4 ">
             <AvatarSalon :usuario="grupo" class="w-12 h-12" />
-            <NuxtLink :to="`/grupos/${grupo.slug}`" class="text-lg font-semibold text-zinc-800 grow hover:underline">{{ grupo.nombre }}</NuxtLink>
+            <NuxtLink :to="`/grupos/${grupo.slug}`" class="text-lg text-zinc-800 dark:text-zinc-100 grow hover:underline">{{ grupo.nombre }}</NuxtLink>
             <div>
                 <Button text @click="ToggleGrupoOptions">...</Button>
                 <!-- <Menu :ref="el => menuRefs[grupo.id] = el" id="overlay_menu_grupo" :model="opcionesGrupo" :popup="true" class="text-xs" />  -->
@@ -17,7 +17,7 @@
 
         <!-- Group Members -->
         <div class="py-4">
-            <h3 class="text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-3">Integrantes</h3>
+            <h3 class="text-sm text-zinc-600 dark:text-zinc-400 mb-3">Integrantes</h3>
             <div class="flex flex-wrap gap-4">
                 <NuxtLink v-for="usuario in grupo.integrantes" :to="`/usuarios/${usuario.slug}`" :key="usuario.id" class="flex items-center gap-x-2">
                     <AvatarSalon :usuario="usuario" class="w-8 h-8" />

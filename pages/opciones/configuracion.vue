@@ -1,14 +1,12 @@
 <template>
-
-<!-- {{ configuracion }} -->
-    <div class="flex gap-2 mb-4 mt-0 flex-row font-mono">
+    <div class="flex gap-2 mb-4 mt-0 flex-row font-mono dark:text-zinc-100">
         <Checkbox inputId="notificacionesNavegador" v-model="permisoNotificacionesNavegador" binary :disabled="permisoNotificacionesNavegador" />
         <label for="notificacionesNavegador" class="font-semibold w-96" v-tooltip.bottom="'Al hacer clic, el navegador te pedirá permiso para enviar notificaciones. Se desactivan manualmente en los ajustes del navegador'">Notificaciones Navegador</label>
     </div>
 
     <div class="h-5"></div>
 
-<form @submit.prevent="handleSubmit" class="space-y-3">
+<form @submit.prevent="handleSubmit" class="space-y-3 dark:text-zinc-100">
     
     <div class="flex gap-2 mb-4 mt-0 flex-row">
         <Checkbox inputId="notificacionesMailActivas" v-model="configuracion.notificacionesMail.activas" binary />
