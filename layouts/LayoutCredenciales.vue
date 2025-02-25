@@ -5,7 +5,7 @@
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
             <img src="/elsalon_logo_trans_500x250.png" class="m-auto w-[250px] invert dark:invert-0">
 
-            <div class="prose mt-10">
+            <div class="prose dark:prose-invert mt-10">
                 <h3>
                     <slot name="cta">
                         Iniciá sesión

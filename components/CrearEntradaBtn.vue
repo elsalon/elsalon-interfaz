@@ -5,10 +5,10 @@
         ref="maxDialog"
         v-model:visible="visible"
         :header="editContent !== null ? 'Editar entrada' : 'Nueva entrada'"
-        class="w-full md:w-5/6 bg-white"
+        class="w-full md:w-5/6"
         @show="biggifyDialog"
         :blockScroll="true"
-        :pt="{header: ['container-small flex justify-between w-full items-center']}">
+        :pt="{header: ['container-small flex justify-between w-full items-center dark:text-surface-0/80']}">
         <CrearEntradaDrawer :entryEdit="editContent"/>
     </Dialog>
 </template>

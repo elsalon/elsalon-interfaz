@@ -6,7 +6,7 @@
         </template>
         
 
-        <div class="prose my-10 break-words">
+        <div class="prose dark:prose-invert my-10 break-words">
             Cada usuario del salón posee un rol, que por ahora sólo está determinado entre <strong>alumnx</strong> y <strong>docente</strong>.
             Por defecto los usuarios nuevos se les asigna el rol alumnx.
             <br><br>

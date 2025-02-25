@@ -7,10 +7,10 @@
                 <NuxtLink :to="identidadUrl">
                     <div class="flex items-center gap-2">
                         <AvatarSalon :usuario="identidad" size="small" v-tooltip.top="tooltipIdentidad" style="font-size: .6rem;" />
-                        <span class="font-bold text-black" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</span>
+                        <span class="font-bold text-text-zinc-900 dark:text-zinc-100" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</span>
                     </div>
                 </NuxtLink>
-                <span class="text-zinc-600 text-xs">
+                <span class="text-zinc-600 dark:text-zinc-400 text-xs">
                     <time :datetime="comentario.createdAt">{{ $formatDate(comentario.createdAt) }}</time>
                 </span>
             </div>
@@ -22,7 +22,7 @@
                 :popup="true" class="text-xs" />
         </template>
 
-        <div v-show="!editandoComentario" class="prose prose-headings:my-1 leading-[1rem] break-words max-w-none">
+        <div v-show="!editandoComentario" class="prose dark:prose-invert prose-headings:my-1 leading-[1rem] break-words max-w-none">
             <ContenidoRendereado ref="contenidoRender" class="text-sm" :contenido="comentario" />
         </div>
 
@@ -33,7 +33,7 @@
         </DeferredContent>
 
         <div class="actions">
-            <Button v-show="isLast" link class="my-2 mr-2 text-xs text-zinc-600 leading-normal" label="Comentar"  style="padding: 0"
+            <Button v-show="isLast" link class="my-2 mr-2 text-xs text-zinc-600 dark:text-zinc-400 leading-normal" label="Comentar"  style="padding: 0"
                 @click="ToggleComment" />
             <Aprecio :contenidoid="comentario.id" contenidotipo="comentario"
                 :aprecioIniciales="comentario.aprecios" />

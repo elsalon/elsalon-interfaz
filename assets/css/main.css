@@ -5,6 +5,10 @@
 /* Primary and Surface Palettes */
 :root {
   outline: none !important;
+  --link-color: blue;
+  --link-color-dark: #2273FF;
+  --link-visited-color: purple;
+  --link-visited-color-dark: #C353DB;
   --p-primary-50: var(--p-surface-50);
   --p-primary-100: var(--p-surface-100);
   --p-primary-200: var(--p-surface-200);
@@ -96,24 +100,30 @@ html.dark{
 }
 
 .link{
-  color: blue;
+  color: var(--link-color);
   text-decoration: none;
+}
+.dark .link{
+  color: var(--link-color-dark);
 }
 .link:hover{
   text-decoration: underline;
 }
 .link:visited{
-  color: purple;
+  color: var(--link-visited-color);
+}
+.dark .link:visited{
+  color: var(--link-visited-color-dark);
 }
 
 /* estilos links vieja escuela */
-.dark .prose{
-  @apply prose-invert;
-}
 .prose a, .listaArchivos a{
-  color: blue;
+  color: var(--link-color);
   text-decoration: none;
   font-weight: unset;
+}
+.dark .prose a, .dark .listaArchivos a{
+  color: var(--link-color-dark);
 }
 .prose a:hover, .listaArchivos a:hover{
   text-decoration: underline;
@@ -122,7 +132,10 @@ html.dark{
   text-decoration: none;
 }
 .prose a:visited, .listaArchivos a:visited{
-  color: purple;
+  color: var(--link-visited-color);
+}
+.dark .prose a:visited,.dark .listaArchivos a:visited{
+  color: var(--link-visited-color-dark);
 }
 
 .prose iframe, .ql-editor iframe{
@@ -148,7 +161,7 @@ html.dark{
     cursor: unset;
   }
   a{
-    color: blue;
+    color: var(--link-color);
     text-decoration: none !important;
     font-weight: unset;
   }
@@ -156,7 +169,7 @@ html.dark{
     text-decoration: underline;
   }
   a:visited{
-    color: purple;
+    color: var(--link-visited-color);
   }
 }
   
@@ -180,11 +193,14 @@ form label{
   
 }
 .mention{
-  color: blue;
+  color: var(--link-color);
   &:hover{
     text-decoration: underline;
     cursor: pointer;
   }
+}
+.dark .mention{
+  color: var(--link-color-dark)
 }
 .ql-mention-list-container{
   z-index: 1000;
@@ -208,17 +224,17 @@ form label{
   }
 }
 .ql-toolbar{
-  @apply bg-white;
+  @apply bg-white dark:bg-zinc-100;
 }
 .ql-container {
-  @apply bg-white;
+  @apply bg-white dark:bg-zinc-100;
   max-width: unset;
   font-family: unset !important;
   border-top: none !important;
   overflow-y: auto;
 }
 .comment-input{
-  @apply bg-white;
+  @apply bg-white dark:bg-zinc-100;
   .ql-container{
     overflow: visible;
   }
@@ -279,7 +295,7 @@ ol{
 }
 
 .lista-salones .router-link-active{
-  @apply bg-zinc-100;
+  @apply bg-zinc-100 dark:bg-zinc-700;
   pointer-events: none;
 }
 
@@ -287,4 +303,10 @@ ol{
   @apply bg-gradient-to-r bg-clip-text  text-transparent 
   from-zinc-200 via-zinc-700 to-zinc-200
   animate-text;
+}
+
+.scrollbar{
+  @apply [&::-webkit-scrollbar]:w-1
+  [&::-webkit-scrollbar-track]:bg-none
+  [&::-webkit-scrollbar-thumb]:bg-gray-800
 }

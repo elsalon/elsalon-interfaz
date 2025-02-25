@@ -1,6 +1,6 @@
 <template>
     <NuxtLink @click.prevent="HandleNotificacionLink()" :to="linkNotificacion" class="p-3 mb-1 block"
-        :class="{ 'bg-zinc-200': !notificacion.leida }">
+        :class="{ 'bg-zinc-200 dark:bg-zinc-700': !notificacion.leida }">
         <div class="flex notification-item">
             <div>
                 <AvatarSalon :usuario="props.notificacion.identidad.value" size="small" class="mr-4" style="font-size: .6rem;" 
@@ -10,7 +10,7 @@
                 <div class="text-sm mr-2" v-html="props.notificacion.mensaje"></div>
 
                 <div class="flex items-center justify-between">
-                    <div class="text-zinc-600 text-xs">
+                    <div class="text-zinc-600 dark:text-zinc-400 text-xs">
                         <time :datetime="props.notificacion.createdAt">{{ $formatDate(props.notificacion.createdAt) }}</time>
                     </div>
                 </div>

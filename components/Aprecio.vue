@@ -2,15 +2,15 @@
     <div class="relative group/aprecio w-max flex">
         <!-- Btn Aprecio -->
          <div class="relative">
-             <Button link class="my-2 mr-1 text-xs text-zinc-600 leading-normal" :class="{ 'font-bold text-zinc-800': haApreciadoShowState }" style="padding: 0"
+             <Button link class="my-2 mr-1 text-xs text-zinc-600 dark:text-zinc-400 leading-normal" :class="{ 'font-bold text-zinc-800': haApreciadoShowState }" style="padding: 0"
                  :label="tooltipText" @click="handleAprecioClicked" />
             <div v-show="showAnim" class="absolute top-[8px] left-0 text-xs text-zinc-800/80 font-mono animate-[ping_1.5s_ease-out_infinite]">Aprecio</div>
          </div>
         <!-- Btn Cantidad -->
-        <div v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs  text-zinc-600  leading-normal"
+        <div v-show="totalDocs == 0" class="inline-block my-2 font-mono text-xs  text-zinc-600 dark:text-zinc-400 leading-normal"
             :class="{ 'opacity-30': fetching }">(0)</div>
 
-        <Button v-show="totalDocs > 0" v-tooltip.top="userNamesTooltip"  link class="my-2 text-xs  text-zinc-600  leading-normal"
+        <Button v-show="totalDocs > 0" v-tooltip.top="userNamesTooltip"  link class="my-2 text-xs  text-zinc-600 dark:text-zinc-400 leading-normal"
             :class="{ 'opacity-30': fetching }" style="padding: 0" :label="`(${totalDocs})`"
             @click="AbrirTodosLosAprecios()" />
 

@@ -10,7 +10,9 @@
                         <span> ({{ formatBytes(archivo.size) }})</span>
                     </div>
                     <button @click="attachedFiles.splice(attachedFiles.indexOf(f), 1)"
-                        class="hover:text-zinc-800">X</button>
+                        class="hover:text-zinc-800">
+                        <i class="pi pi-times"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -249,7 +251,7 @@ onMounted(async () => {
 
         // Custom button definition
         const AttachButton = Quill.import('ui/icons')
-        AttachButton['attach'] = '<i class="pi pi-file"></i>'
+        AttachButton['attach'] = '<i class="pi pi-file text-slate-950 dark:text-slate-950 hover:text-blue-500 dark:hover:text-blue-500"></i>'
 
         quill = new Quill(editorContainer.value, {
             theme: 'snow',

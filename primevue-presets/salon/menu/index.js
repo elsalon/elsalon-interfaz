@@ -102,7 +102,7 @@ export default {
 
             // Colors
             'bg-surface-0 dark:bg-surface-900',
-            'text-surface-400 dark:text-surface-600'
+            'text-surface-400 dark:text-white/80'
         ]
     },
     transition: {

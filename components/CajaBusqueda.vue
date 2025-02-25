@@ -1,7 +1,7 @@
 <template>
     <InputGroup>
         <InputText placeholder="Buscar" v-model="searchQuery" size="small" v-on:keyup.enter="Buscar"/>
-        <Button  icon="pi pi-search" severity="contrast" size="small" @click="Buscar"/>
+        <Button  icon="pi pi-search" severity="contrast" size="small" class="dark:bg-zinc-700 dark:text-zinc-100 dark:border-zinc-700" @click="Buscar"/>
     </InputGroup>
 </template>
 

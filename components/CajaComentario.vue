@@ -8,7 +8,7 @@
             </div>
             <div class="text-right mt-2 flex justify-end flex-row">
                 <!-- Btn Cancelar -->
-                <Button text @click="CancelComment" class="mr-auto " size="small" label="Cancelar" />
+                <Button text @click="CancelComment" class="mr-auto dark:text-zinc-400" size="small" label="Cancelar" />
                 <!-- Selector Identidad -->
                 <SelectorIdentidad v-model="autorSeleccionado" :esComentario="true" :disabled="uploading"/>
                 <!-- Btn Publica -->
