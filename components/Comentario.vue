@@ -1,7 +1,7 @@
 <template>
     <Panel :toggleable="false"
         class="mb-3 border-surface-0 text-sm group/comentario panelComentario transition-all duration-500 ease-in-out"
-        :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" ref="comentarioDom">
+        :class="{ 'opacity-30': loading, 'bg-orange-50 dark:bg-gray-900': resaltar }" ref="comentarioDom">
         <template #header>
             <div class="flex items-center gap-2">
                 <NuxtLink :to="identidadUrl">
@@ -22,7 +22,7 @@
                 :popup="true" class="text-xs" />
         </template>
 
-        <div v-show="!editandoComentario" class="prose dark:prose-invert prose-headings:my-1 leading-[1rem] break-words max-w-none">
+        <div v-show="!editandoComentario" class="prose  prose-headings:my-1 leading-[1rem] break-words max-w-none">
             <ContenidoRendereado ref="contenidoRender" class="text-sm" :contenido="comentario" />
         </div>
 

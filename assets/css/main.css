@@ -4,11 +4,12 @@
 
 /* Primary and Surface Palettes */
 :root {
-  outline: none !important;
+  @apply scrollbar;
   --link-color: blue;
   --link-color-dark: #2273FF;
   --link-visited-color: purple;
   --link-visited-color-dark: #C353DB;
+  outline: none !important;
   --p-primary-50: var(--p-surface-50);
   --p-primary-100: var(--p-surface-100);
   --p-primary-200: var(--p-surface-200);
@@ -54,23 +55,24 @@
   --p-text-hover-color: var(--p-surface-800);
   --p-text-muted-color: var(--p-surface-500);
   --p-text-hover-muted-color: var(--p-surface-600);
-}
-
-:root {
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-      color-scheme: light;
+    color-scheme: dark;
+    --vc-bg: var(--p-zinc-800);
   }
 }
 
 .salon-bg{
-  @apply bg-zinc-100;
+  @apply bg-zinc-100 transition-colors;
 }
 .dark .salon-bg{
   @apply bg-zinc-800;
+}
+.vc-container{
+  background: none !important;
 }
 
 html{
@@ -117,6 +119,9 @@ html.dark{
 }
 
 /* estilos links vieja escuela */
+.dark .prose{
+  @apply prose-invert
+}
 .prose a, .listaArchivos a{
   color: var(--link-color);
   text-decoration: none;
@@ -224,17 +229,17 @@ form label{
   }
 }
 .ql-toolbar{
-  @apply bg-white dark:bg-zinc-100;
+  @apply bg-white dark:bg-zinc-950;
 }
 .ql-container {
-  @apply bg-white dark:bg-zinc-100;
+  @apply bg-white dark:bg-zinc-800;
   max-width: unset;
   font-family: unset !important;
   border-top: none !important;
   overflow-y: auto;
 }
 .comment-input{
-  @apply bg-white dark:bg-zinc-100;
+  @apply bg-white dark:bg-zinc-800;
   .ql-container{
     overflow: visible;
   }

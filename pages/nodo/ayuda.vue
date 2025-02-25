@@ -6,7 +6,7 @@
         </template>
         
 
-        <div class="prose dark:prose-invert my-10 break-words">
+        <div class="prose  my-10 break-words">
             <p>El Salón es una plataforma impulsada por la cátedra Campos/Trilnick de la carrera Diseño de Imagen y Sonido en la FADU, UBA
              para abrir un canal de comunicación para visualización, devolución y entrega de proyectos entre docentes y alumnos</p>
 

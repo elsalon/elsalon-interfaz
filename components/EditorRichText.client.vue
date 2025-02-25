@@ -251,7 +251,7 @@ onMounted(async () => {
 
         // Custom button definition
         const AttachButton = Quill.import('ui/icons')
-        AttachButton['attach'] = '<i class="pi pi-file text-slate-950 dark:text-slate-950 hover:text-blue-500 dark:hover:text-blue-500"></i>'
+        AttachButton['attach'] = '<i class="pi pi-file text-slate-950 dark:text-zinc-600 hover:text-blue-500 dark:hover:text-blue-500"></i>'
 
         quill = new Quill(editorContainer.value, {
             theme: 'snow',

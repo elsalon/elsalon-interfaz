@@ -14,13 +14,13 @@
                 :class="{ 'flex-grow': index > 0 || eventos.docs.length == 1 }">
                 <!-- Title -->
                 <div class="mb-4 max-w-[200px] text-center h-14">
-                    <div class="text-sm font-semibold text-zinc-700 line-clamp-2 break-words max-w-[7rem]">
+                    <div class="text-sm font-semibold text-zinc-800 dark:text-zinc-100 line-clamp-2 break-words max-w-[7rem]">
                         {{ item.titulo }}
                     </div>
                 </div>
 
                 <!-- Marker -->
-                <div class="h-4 w-4 rounded-full border-4 border-black bg-white relative top-[-27px]" ref="markers">
+                <div class="h-4 w-4 rounded-full border-4 border-black dark:border-zinc-100 bg-white dark:bg-zinc-800 relative top-[-27px]" ref="markers">
                 </div>
 
                 <!-- Date -->
@@ -42,12 +42,12 @@
 
                 <!-- Marker -->
                 <div class="flex-shrink-0">
-                    <div class="h-4 w-4 rounded-full border-4 border-black bg-white"></div>
+                    <div class="h-4 w-4 rounded-full border-4 border-black dark:border-zinc-100 bg-white dark:bg-zinc-800"></div>
                 </div>
 
                 <!-- Content -->
                 <div class="ml-4 flex-1">
-                    <div class="text-sm font-semibold text-zinc-700 line-clamp-2">
+                    <div class="text-sm font-semibold text-zinc-800 dark:text-zinc-100 line-clamp-2">
                         {{ item.titulo }}
                     </div>
                     <div class="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
