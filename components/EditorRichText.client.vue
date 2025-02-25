@@ -3,14 +3,14 @@
         <div ref="editorContainer" tabindex="0"></div>
         <div class="attachedFiled">
 
-            <div v-for="archivo in attachedFiles" class="text-sm bg-neutral-100 text-neutral-400 p-2 mb-1 font-mono">
+            <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-200 text-zinc-500 p-2 mb-1 font-mono">
                 <div class="flex items">
                     <div class="grow">
                         <span>{{ archivo.name }}</span>
                         <span> ({{ formatBytes(archivo.size) }})</span>
                     </div>
                     <button @click="attachedFiles.splice(attachedFiles.indexOf(f), 1)"
-                        class="hover:text-neutral-800">X</button>
+                        class="hover:text-zinc-800">X</button>
                 </div>
             </div>
         </div>
@@ -249,7 +249,7 @@ onMounted(async () => {
 
         // Custom button definition
         const AttachButton = Quill.import('ui/icons')
-        AttachButton['attach'] = '<i class="pi pi-file dark:text-neutral-600 dark:hover:text-blue-500"></i>'
+        AttachButton['attach'] = '<i class="pi pi-file"></i>'
 
         quill = new Quill(editorContainer.value, {
             theme: 'snow',

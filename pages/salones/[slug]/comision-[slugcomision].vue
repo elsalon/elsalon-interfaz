@@ -20,15 +20,15 @@
         <div class="mb-10">
             <h3 class="text-l font-bold">Integrantes</h3>
             <div class="flex space-x-2">
-                <NuxtLink v-for="docente in comision.docentes" :key="docente.id" :to="`/usuarios/${docente.slug}`" :title="docente.nombre">
+                <NuxtLink v-for="docente in comision.docentes" :key="docente.id" :to="`/usuarios/${docente.slug}`" v-tooltip.top="docente.nombre">
                     <AvatarSalon :usuario="docente" size="large"/>
                 </NuxtLink>
-                <NuxtLink v-for="integrante in comision.integrantes" :key="integrante.id" :to="`/usuarios/${integrante.slug}`" :title="integrante.nombre">
+                <NuxtLink v-for="integrante in comision.integrantes" :key="integrante.id" :to="`/usuarios/${integrante.slug}`" v-tooltip.top="integrante.nombre">
                     <AvatarSalon :usuario="integrante" size="large"/>
                 </NuxtLink>
 
                 <!-- {{ comision.grupos }} -->
-                <NuxtLink v-for="grupo in comision.grupos" :key="grupo.id" :to="`/grupos/${grupo.slug}`" :title="grupo.nombre">
+                <NuxtLink v-for="grupo in comision.grupos" :key="grupo.id" :to="`/grupos/${grupo.slug}`" v-tooltip.top="grupo.nombre">
                     <AvatarSalon :usuario="grupo" size="large"/>
                 </NuxtLink>
                 <BtnUnirmeComision :comision="comision" @UsuarioCambioInscripcion="RecargarComision" :key="unirmeKey"/>

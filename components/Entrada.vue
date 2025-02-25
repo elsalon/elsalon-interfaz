@@ -37,8 +37,8 @@ const emit = defineEmits(['eliminar']);
 const identidad = computed(() => {
     return entrada.autoriaGrupal ? entrada.grupo : entrada.autor;
 })
-const tituloIdentidad = computed(() => {
-    return entrada.autoriaGrupal ? entrada.grupo.integrantes.map(x => x.nombre).join(", ") : entrada.autor.nombre;
+const tooltipIdentidad = computed(() => {
+    return entrada.autoriaGrupal ? entrada.grupo.integrantes.map(x => x.nombre).join(", ") : '';
 })
 const identidadUrl = computed(() => {
     return entrada.autoriaGrupal ? `/grupos/${identidad.value.slug}` : `/usuarios/${identidad.value.slug}`;
@@ -159,7 +159,7 @@ defineExpose({ ResaltarEntrada });
         :entrada="entrada"
         :identidadUrl="identidadUrl"
         :identidad="identidad"
-        :tituloIdentidad="tituloIdentidad"
+        :tooltipIdentidad="tooltipIdentidad"
         :UsuarioTieneAutoridad="UsuarioTieneAutoridad"
         :usuarioEsAdminODocente="usuarioEsAdminODocente"
         :EliminarEntrada="EliminarEntrada"

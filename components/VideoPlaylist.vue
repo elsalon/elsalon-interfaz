@@ -8,7 +8,7 @@
             <!-- PLAYER -->
             <div class="flex-grow items-center justify-center">
                 <div v-if="playlistFinished" class="w-full h-30 flex items-center justify-center">
-                    <span class="text-2xl text-neutral-500">Playlist terminó</span>
+                    <span class="text-2xl text-zinc-800">Playlist terminó</span>
                 </div>
                 <div :class="{'opacity-0': playlistFinished}">
                     <video ref="playerRef" playsinline controls></video>
@@ -16,7 +16,7 @@
             </div>
             <!-- PLAYLSIT -->
             <div class="w-1/4 px-2 overflow-y-auto">
-                <div v-for="(video,i) in playlist" class="cursor-pointer p-1 hover:bg-neutral-200 flex items-center gap-2"  :key="video.id" @click="LoadVideo(video, i)">
+                <div v-for="(video,i) in playlist" class="cursor-pointer p-1 hover:bg-zinc-200 flex items-center gap-2"  :key="video.id" @click="LoadVideo(video, i)">
                     <div class="w-2">
                         <div v-if="i == currentVideo" class="w-2 h-2 bg-black rounded-full"></div>
                     </div>

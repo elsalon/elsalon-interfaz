@@ -203,18 +203,22 @@ export default {
             'cursor-pointer overflow-hidden select-none',
 
             // Badge
-            '[&>[data-pc-name=badge]]:min-w-4 [&>[data-pc-name=badge]]:h-4 [&>[data-pc-name=badge]]:leading-4'
+            '[&>[data-pc-name=badge]]:min-w-4 [&>[data-pc-name=badge]]:h-4 [&>[data-pc-name=badge]]:leading-4',
+            {'w-full': props.fluid}
         ]
     }),
     label: ({ props }) => ({
         class: [
             'duration-200',
-            'font-medium',
+            
             'font-mono',
             {
                 'hover:underline': props.link
             },
-            { 'flex-1': props.label !== null, 'invisible w-0': props.label == null }
+            { 'flex-1': props.label !== null, 'invisible w-0': props.label == null },
+            'transition-none',
+            {'pl-8': props.fluid && props.loading && props.iconPos == 'right'},
+            {'pr-8': props.fluid && props.loading && props.iconPos == 'left'},
         ]
     }),
     icon: ({ props }) => ({

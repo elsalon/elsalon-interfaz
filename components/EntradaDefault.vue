@@ -5,29 +5,28 @@
         <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
         <div class="flex pb-2">
             <NuxtLink :to="identidadUrl">
-                <AvatarSalon :usuario="identidad" :title="tituloIdentidad" />
+                <AvatarSalon :usuario="identidad" v-tooltip.top="tooltipIdentidad"/>
             </NuxtLink>
             <!-- <EntradaDefault /> -->
             
                 <!-- Metadata entrada -->
                 <div class="ml-4">
                     <NuxtLink :to="identidadUrl" class="hover:underline">
-                        <h2 class="font-bold text-black dark:text-white" :title="tituloIdentidad">{{ identidad.nombre }}</h2>
+                        <h2 class="font-bold text-black" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
-                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline "
+                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline text-zinc-600" 
                             :to="`/salones/${entrada.sala.slug}`">{{ entrada.sala.nombre }}</NuxtLink>
-                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline" :to="identidadUrl">Bitácora
-                        </NuxtLink>
-                        <NuxtLink class="text-neutral-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
-                            <time :datetime="entrada.createdAt" class="text-neutral-400 text-xs">{{ $formatDate(entrada.createdAt) }}</time>
+                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline text-zinc-600 " :to="identidadUrl">Bitácora</NuxtLink>
+                        <NuxtLink class="text-zinc-600 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
+                            <time :datetime="entrada.createdAt" class="text-zinc-600 text-xs">{{ $formatDate(entrada.createdAt) }}</time>
                         </NuxtLink>
                         <!-- Entrada Fijada -->
-                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-neutral-400 ml-2" style="font-size: .65rem"
-                            title="Entrada Fijada"></i>
+                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-zinc-600 ml-2" style="font-size: .65rem"
+                            v-tooltip.top="'Entrada Fijada'"></i>
                         <!-- Entrada Destacada -->
-                        <i v-if="entrada.destacada" class="pi pi-star text-neutral-400 ml-2" style="font-size: .7rem"
-                            title="Entrada Destacada"></i>
+                        <i v-if="entrada.destacada" class="pi pi-star text-zinc-600 ml-2" style="font-size: .7rem"
+                            v-tooltip.top="'Entrada Destacada'"></i>
                     </div>
                 </div>
 
@@ -51,7 +50,7 @@
             <!-- Comentarios -->
             <div class="actions">
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
-                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 mr-2 text-xs text-neutral-600 dark:text-neutral-400" style="padding: 0;"
+                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 mr-2 text-xs text-zinc-600 leading-normal" style="padding: 0;"
                     label="Comentar" @click="ToggleCommentBox" />
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
             </div>
@@ -70,7 +69,7 @@ const { hooks } = useNuxtApp();
 const props = defineProps({
     entrada: Object,
     identidadUrl: String,
-    tituloIdentidad: String,
+    tooltipIdentidad: String,
     identidad: Object,
     archivos: Array,
     opcionesArticulo: Array,

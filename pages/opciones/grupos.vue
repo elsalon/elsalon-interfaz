@@ -1,6 +1,6 @@
 <template>
     <template v-if="salonStore.gruposDelUsuarioFetching">
-        <div class="my-4 text-center text-neutral-500 text-sm">
+        <div class="my-4 text-center text-zinc-600 text-sm">
             <span class="texto-cargando">
                 Cargando...
             </span>
@@ -11,7 +11,7 @@
     </template>
     <template v-else>
         <div class="text-center mt-10">
-            <p class="my-10 text-neutral-500">Podés crear grupos de trabajo con tus compañerxs para postear colectivamente y compartir una bitácora de progeso</p>
+            <p class="my-10 text-zinc-600">Podés crear grupos de trabajo con tus compañerxs para postear colectivamente y compartir una bitácora de progeso</p>
             <Button label="Crear primer grupo" @click="AbrirModalNuevoGrupo()" class="mb-10"/>
         </div>
     </template>

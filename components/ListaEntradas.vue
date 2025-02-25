@@ -2,9 +2,9 @@
   <NotificacionEntradasNuevas ref="notifEntradasNuevas" />
 
   <!-- Empty State -->
-  <div v-if="listaEntradas.length === 0" class="text-center text-neutral-500 text-sm">
+  <div v-if="listaEntradas.length === 0" class="text-center text-zinc-600 text-sm">
     <!-- CTA Primera publicacion -->
-    <p class="my-10 text-neutral-500">Todavía no hay entradas en esta sala</p>
+    <p class="my-10 text-zinc-600">Todavía no hay entradas en esta sala</p>
     <!-- <Button label="+ Escribir primera entrada" @click="visible=true" class="mb-10"/> -->
   </div>
 
@@ -23,7 +23,7 @@
   enter-active-class="transition-all duration-300 ease-out"
   leave-active-class="transition-all duration-300 ease-in">
     <div v-if="loading"
-     class="fixed left-1/2 transform -translate-x-1/2 text-sm flex items-center bg-white/80 dark:bg-neutral-950 p-1 transition-all duration-300 ease-in-out animate-slide-in-bottom"
+     class="fixed left-1/2 transform -translate-x-1/2 text-sm flex items-center bg-zinc-100/80 p-1 transition-all duration-300 ease-in-out animate-slide-in-bottom"
      :class="{ 'bottom-4': loading, '-bottom-full': !loading }">
       <span class="texto-cargando">
         Cargando...
@@ -31,7 +31,7 @@
     </div>
     </Transition>
     <!-- Pagination Status -->
-    <div v-show="!hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-neutral-500 text-sm">
+    <div v-show="!hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-zinc-600 text-sm">
       No hay más entradas
     </div>
   </div>

@@ -266,7 +266,7 @@ export default {
             {
                 'bg-surface-100 dark:bg-surface-800 text-surface-600 dark:text-white/70': context.date.today && !context.selected && !context.disabled,
                 'bg-transparent text-surface-600 dark:text-white/70': !context.selected && !context.disabled && !context.date.today,
-                'bg-neutral-800 text-white': context.selected && !context.disabled
+                'bg-zinc-800 text-white': context.selected && !context.disabled
             },
 
             // States

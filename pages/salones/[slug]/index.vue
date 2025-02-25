@@ -11,7 +11,7 @@
             </h2>
         </div>
 
-        <div class="text-center flex flex-wrap justify-around items-center w-full mb-10 bg-neutral-100 dark:bg-neutral-900 p-1">
+        <div class="text-center flex flex-wrap justify-around items-center w-full mb-10 bg-white p-1">
             <!-- Lista de avatares de miembros -->
             <ListaMiembrosSala :miembros="miembros" />
 
