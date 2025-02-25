@@ -77,7 +77,7 @@ const ActivateAnim = () => {
     showAnim.value = true;
     setTimeout(()=>{
         showAnim.value = false;
-    }, 700)
+    }, 650)
 }
 
 const handleAprecioClicked = async () => {
