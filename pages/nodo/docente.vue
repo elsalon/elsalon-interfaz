@@ -57,7 +57,7 @@
             y unirse a una. <strong>Los espacios dentro de las comisiones sólo sirven como un filtro,</strong> no son sub espacios para escribir. El 
             <a href="https://github.com/elsalon/elsalon-servidor/blob/main/src/collections/ComisionesEndpoints.js#L113" target="_blank">filtro</a> revela todas las 
             entradas de sus integrantes en ese espacio o su bitácora como también la de grupos cuyos integrantes estén en la comisión.
-            <div class="bg-zinc-100 text-zinc-600 my-2 p-2 text-center text-xs">
+            <div class="bg-zinc-200 text-zinc-600 my-2 p-2 text-center text-xs">
                 Esta vista todavía está en proceso así que puede fallar o decidamos quitarla
             </div>
 

@@ -25,7 +25,7 @@
             <template v-else>
                 <div class="grid grid-cols-1 md:grid-cols-2">
                     <NuxtLink v-for="doc in docs" :key="doc.id" :to="`/usuarios/${doc.autor.slug}`"
-                        class="flex gap-2 items-center p-1 hover:bg-zinc-100">
+                        class="flex gap-2 items-center p-2 hover:bg-zinc-200">
                         <AvatarSalon :usuario="doc.autor" />
                         {{ doc.autor.nombre }}
                     </NuxtLink>

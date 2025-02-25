@@ -1,6 +1,6 @@
 <template>
-    <NuxtLink @click.prevent="HandleNotificacionLink()" :to="linkNotificacion" class="p-3 m-1 block"
-        :class="{ 'bg-zinc-100': !notificacion.leida }">
+    <NuxtLink @click.prevent="HandleNotificacionLink()" :to="linkNotificacion" class="p-3 mb-1 block"
+        :class="{ 'bg-zinc-200': !notificacion.leida }">
         <div class="flex notification-item">
             <div>
                 <AvatarSalon :usuario="props.notificacion.identidad.value" size="small" class="mr-4" style="font-size: .6rem;" 

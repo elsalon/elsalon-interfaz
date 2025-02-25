@@ -1,7 +1,7 @@
 <template>
     <ClientOnly>
-        <Dialog :visible="notificacionesStore.dialogVisible" header="Notificaciones" :style="{ width: '25rem' }"
-            position="top" :dismissableMask="true">
+        <Dialog v-model:visible="notificacionesStore.dialogVisible" modal header="Notificaciones" :style="{ width: '25rem' }"
+        :dismissableMask="true"  position="top">
             <template #closeicon>
                 <Button icon="pi pi-times" severity="secondary" size="small" text
                     @click="notificacionesStore.dialogVisible = false" />
