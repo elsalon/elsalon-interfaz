@@ -19,7 +19,7 @@
 const slug = "biblioteca"
 const salonStore = useSalonStore();
 const salon = ref(null)
-salon.value = salonStore.salones.find(salon => salon.slug === slug)
+salon.value = salonStore.salas.find(salon => salon.slug === slug)
 console.log(salon.value, salon.value.id)
 salonStore.setContext('salon', salon.value.id)
 salonStore.SetPageTitle(salon.value.nombre)

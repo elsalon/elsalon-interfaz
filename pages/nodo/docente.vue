@@ -33,7 +33,7 @@
                             <li>entradas de autores y grupos a las que el usuario está enalazado</li>
                             <li>entradas destacadas</li>
                         </ul> -->
-                    <small><a href="https://github.com/elsalon/elsalon-servidor/blob/main/src/collections/Salones.ts#L142" target="_blank">Ver cómo se genera la cronología inicial</a></small>
+                    <small><a href="https://github.com/elsalon/elsalon-servidor/blob/main/src/collections/Salas.ts#L142" target="_blank">Ver cómo se genera la cronología inicial</a></small>
                     
                 </li>
                     <br>

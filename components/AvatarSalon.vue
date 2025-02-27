@@ -19,7 +19,7 @@
         },
         avatarType:{
             type: String,
-            default: 'user', // (relationto) users, grupos, salones
+            default: 'user', // (relationto) users, grupos, salas
         }
     });
     const { usuario } = props;
@@ -32,7 +32,7 @@
         const imageUrl = props.imagesize == 'thumbnail' ? usuario.avatar.sizes.thumbnail.url : usuario.avatar.url
         avatarUrl.value = imageUrl;
     }else{
-        if(props.avatarType == 'salones'){
+        if(props.avatarType == 'salas'){
             iniciales.value = usuario?.siglas;
         }else{
             iniciales.value = usuario?.nombre?.split(' ').map(n => n[0]).join('');

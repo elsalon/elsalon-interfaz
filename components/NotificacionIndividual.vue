@@ -54,8 +54,8 @@ if(props.notificacion.categoria === 'rol-docente'){
         case 'grupos':
             linkNotificacion.value = `/grupos/${props.notificacion.link.value.slug}`
             break;
-        case 'salones':
-            linkNotificacion.value = `/salones/${props.notificacion.link.value.slug}`
+        case 'salas':
+            linkNotificacion.value = `/salas/${props.notificacion.link.value.slug}`
             break;
     }
 }

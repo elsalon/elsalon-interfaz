@@ -32,7 +32,7 @@ if(!entrada.value.sala){
     }
 }else{
     contexto.value = entrada.value.sala;
-    contextoUrl.value = `/salones/${contexto.value.slug}`
+    contextoUrl.value = `/salas/${contexto.value.slug}`
 }
 if(contexto.value?.slug == "el-salon"){
     contexto.value = null
