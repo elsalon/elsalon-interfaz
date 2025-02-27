@@ -103,6 +103,6 @@ const queryParams = qs.stringify({
 const { data: eventos } = await useAsyncData(cacheKey, () => useAPI(`/api/eventos?${queryParams}`))
 const router = useRouter()
 const IrEventos = () => {
-    router.push(`/salones/${props.salon.slug}/eventos`)
+    router.push(`/salas/${props.salon.slug}/eventos`)
 }
 </script>

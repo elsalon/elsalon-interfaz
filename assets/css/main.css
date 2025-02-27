@@ -265,7 +265,7 @@ ol{
   display: none;
 }
 
-.lista-salones .router-link-active{
+.lista-salas .router-link-active{
   @apply bg-zinc-100;
   pointer-events: none;
 }

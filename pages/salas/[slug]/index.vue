@@ -45,7 +45,7 @@ const route = useRoute()
 const slug = route.params?.slug
 const salonStore = useSalonStore();
 const salon = ref(null)
-salon.value = salonStore.salones.find(salon => salon.slug === slug)
+salon.value = salonStore.salas.find(salon => salon.slug === slug)
 salonStore.setContext('salon', salon.value.id)
 salonStore.SetPageTitle(salon.value.nombre)
 const cacheKey = ref(`entradas-${salon.value.id}`)

@@ -2,12 +2,12 @@
     <NuxtLayout name="layout-contenido">
         <template #header>
             <RouterLink :to="`/`" class="link">S</RouterLink> /
-            <NuxtLink :to="`/salones/${salon.slug}`" class="link">{{ salon.siglas }}</NuxtLink> / Eventos
+            <NuxtLink :to="`/salas/${salon.slug}`" class="link">{{ salon.siglas }}</NuxtLink> / Eventos
         </template>
 
         <div class="text-center mb-2">
             <LogoSala :salon="salon" />
-            <NuxtLink class="text-3xl font-bold" :to="`/salones/${salon.slug}`">
+            <NuxtLink class="text-3xl font-bold" :to="`/salas/${salon.slug}`">
                 <h1>{{ salon.nombre }}</h1>
             </NuxtLink>
 
@@ -96,14 +96,14 @@ const slug = route.params?.slug
 const salonStore = useSalonStore();
 salonStore.SetPageTitle(`Eventos`)
 const salon = ref(null)
-salon.value = salonStore.salones.find(salon => salon.slug === slug)
+salon.value = salonStore.salas.find(salon => salon.slug === slug)
 let periodo = salon.value.archivo.periodos[0]
 
 const evtRefs = ref({})
 const router = useRouter()
 if (!salon.value.eventos.activar) {
     // Redirect
-    router.push(`/salones/${slug}`)
+    router.push(`/salas/${slug}`)
 }
 
 const { isHeaderVisible } = useScrollDirection(75)

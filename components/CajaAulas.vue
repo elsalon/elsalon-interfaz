@@ -44,7 +44,7 @@ const OnClose = async () =>{
     editing.value = false;
     try{
         const body = {aulas: aulas.value}
-        const salonRes = await useAPI(`/api/salones/${props.salon.id}`, {body, method: 'PATCH'})
+        const salonRes = await useAPI(`/api/salas/${props.salon.id}`, {body, method: 'PATCH'})
         salonStore.UpdateSala(salonRes.doc)
         toast.add({severity: 'contrast', detail: 'Aula actualizada', life: 3000})
     }catch(e){

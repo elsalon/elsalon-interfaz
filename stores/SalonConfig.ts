@@ -27,7 +27,7 @@ export const useSalonStore = defineStore('salon', {
   state: () => ({
     pageTitle: "Salón",
     etiquetas: [] as Etiqueta[],
-    salones: [] as Salon[],
+    salas: [] as Salon[],
     initialized: false,
     loading: false,
     currContext: null as String | null,
@@ -45,9 +45,9 @@ export const useSalonStore = defineStore('salon', {
       this.pageTitle = title;
     },
     async UpdateSala(salon: Salon) {
-      const i = this.salones.findIndex((s) => s.id === salon.id);
+      const i = this.salas.findIndex((s) => s.id === salon.id);
       if (i >= 0) {
-        this.salones[i] = salon;
+        this.salas[i] = salon;
       }
     },
     async setContext(context: string, salon: string = '') {
@@ -65,7 +65,7 @@ export const useSalonStore = defineStore('salon', {
         const { data } = await useFetch("/cache/config");
 
         if (data.value) {
-          this.salones = data.value.salones;
+          this.salas = data.value.salas;
           this.etiquetas = data.value.etiquetas;
         }
 
