@@ -1,6 +1,11 @@
 <template>
     <Dialog ref="onboardingDialog" @show="biggifyDialog" v-model:visible="showOnboarding" modal :closable="false" :draggable="false" class="">
-        <div class="slider-container">
+        <div 
+            class="slider-container"
+            @touchstart="handleTouchStart"
+            @touchmove="handleTouchMove"
+            @touchend="handleTouchEnd"
+        >
             <TransitionGroup name="slide" mode="out-in" tag="div" class="slider-grid">
             <div
                 v-for="(step, index) in pendingSteps"
@@ -45,6 +50,38 @@ console.log("fechaOnboarding:", user.fechaOnboarding, "Pending steps:", pendingS
 const activeStep = ref(0);
 const showOnboarding = ref(pendingSteps.length > 0)
 
+// Touch handling
+const touchStartX = ref(0);
+const touchEndX = ref(0);
+const minSwipeDistance = 50; // Minimum distance required for a swipe
+
+function handleTouchStart(e) {
+    touchStartX.value = e.touches[0].clientX;
+}
+
+function handleTouchMove(e) {
+    touchEndX.value = e.touches[0].clientX;
+}
+
+function handleTouchEnd() {
+    const swipeDistance = touchEndX.value - touchStartX.value;
+    
+    // Check if swipe is significant enough
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+        if (swipeDistance > 0 && activeStep.value > 0) {
+            // Swipe right - go to previous slide
+            activeStep.value--;
+        } else if (swipeDistance < 0 && activeStep.value < pendingSteps.length - 1) {
+            // Swipe left - go to next slide
+            activeStep.value++;
+        }
+    }
+    
+    // Reset touch coordinates
+    touchStartX.value = 0;
+    touchEndX.value = 0;
+}
+
 const completeOnboarding = async() => {
     const {getSession} = useAuth()
     showOnboarding.value = false;
@@ -74,6 +111,7 @@ function biggifyDialog() {
 .slider-container {
   width: 100%;
   overflow: hidden;
+  touch-action: pan-y; /* Allow vertical scrolling but handle horizontal swipes */
 }
 
 .slider-grid {

@@ -10,7 +10,7 @@
             </div>
 
         </div>
-        <div style="width:100%; aspect-ratio: 1;">
+        <div style="width:100%; max-width: 350px; aspect-ratio: 1; margin:0 auto">
             <Skeleton style="width:100%; height: 100%;"></Skeleton>
         </div>
         <p>
