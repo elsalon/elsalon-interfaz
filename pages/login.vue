@@ -10,7 +10,7 @@
       <div class="flex items-center justify-between">
         <label for="password" class="block text-900 mb-2">Password</label>
         <div class="text-sm">
-          <a href="/olvide" class=" text-zinc-500 hover:text-zinc-900" tabindex="5">¿Olvidaste tu contraseña?</a>
+          <a href="/olvide" class=" text-zinc-600 hover:text-zinc-900" tabindex="5">¿Olvidaste tu contraseña?</a>
         </div>
       </div>
       <Password v-model="password" inputProps="" fluid toggleMask :input-props="{ tabindex: 2 }" :feedback="false" required/>
@@ -21,9 +21,9 @@
         </div>
       </form>
   
-      <p class="mt-10 text-center text-sm text-zinc-500">
+      <p class="mt-10 text-center text-sm text-zinc-600">
         ¿No tenés usuario?
-        <a href="/registrar" class="font-semibold leading-6 text-zinc-500 hover:text-zinc-900" tabindex="4">Registrate</a>
+        <a href="/registrar" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900" tabindex="4">Registrate</a>
       </p>
 
       <Message v-if="mostrarAvisoRecuperar" severity="secondary" class="mt-6">Si ya tenías una cuenta en elsalon.org tenés que <a href="/olvide" class="link">recuperar tu contraseña</a></Message>

@@ -100,7 +100,7 @@ const comisionesItems = ref(comisiones.docs.map(comision => {
     return {
         label: comision.nombre,
         command: () => {
-            router.push(`/salones/${props.salon.slug}/comision-${comision.slug}`);
+            router.push(`/salas/${props.salon.slug}/comision-${comision.slug}`);
         }
     }
 }));
@@ -160,7 +160,7 @@ const handleSubmitNuevoGrupo = async () => {
         const res = await useAPI('/api/comisiones', { body, method });
         console.log(res);
         toast.add({ severity: 'contrast', summary: 'Comisión creada', detail: 'La comisión se creó correctamente', life: 3000 });
-        router.push(`/salones/${props.salon.slug}/comision-${res.doc.slug}`);
+        router.push(`/salas/${props.salon.slug}/comision-${res.doc.slug}`);
     } catch (e) {
         console.error(e);
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo crear la comisión', life: 3000 });

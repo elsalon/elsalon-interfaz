@@ -28,7 +28,7 @@
                     <!-- <h3 class="text-xl font-bold mt-4">Entradas</h3> -->
                     <!-- <ul> -->
                         <!-- <li > -->
-                            <NuxtLink v-for="result in searchResults.entradas" :key="result.id" :to="`/entradas/${result.id}`" class=" hover:bg-zinc-100 p-2 flex items-center gap-x-2">
+                            <NuxtLink v-for="result in searchResults.entradas" :key="result.id" :to="`/entradas/${result.id}`" class=" hover:bg-zinc-200 p-2 flex items-center gap-x-2">
                                 
                                 <img v-if="result.imagenes.length > 0" :src="result.imagenes[0].imagen.sizes.medium.url" class="h-16 aspect-square object-cover" />
                                 <img v-else :src="result.autor.avatar.sizes.medium.url" class="h-16 aspect-square object-cover" />
@@ -36,7 +36,7 @@
                                 
                                 <div>
                                     <div>{{ result.extracto }}</div>
-                                    <div class="text-sm text-zinc-500">{{ result.autor.nombre }}
+                                    <div class="text-sm text-zinc-600">{{ result.autor.nombre }}
                                         <time :datetime="result.createdAt">{{$formatDate(result.createdAt) }}</time>
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@
                     <!-- <h3 class="text-xl font-bold mt-4">Usuarios</h3> -->
                     <!-- <div class="flex flex-wrap gap-4"> -->
                         <NuxtLink v-for="usuario in searchResults.usuarios" :to="`/usuarios/${usuario.slug}`"
-                            :key="usuario.id" class="flex items-center hover:bg-zinc-100 p-2  gap-x-2">
+                            :key="usuario.id" class="flex items-center hover:bg-zinc-200 p-2  gap-x-2">
                             <AvatarSalon :usuario="usuario" class="w-16 h-16 object-cover" />
                             <span class="">{{ usuario.nombre }}</span>
                         </NuxtLink>
@@ -62,7 +62,7 @@
                     <!-- <h3 class="text-xl font-bold mt-4">Grupos</h3>
                     <div class="flex flex-wrap gap-4"> -->
                         <NuxtLink v-for="grupo in searchResults.grupos" :to="`/grupos/${grupo.slug}`" :key="grupo.id"
-                            class="flex items-center hover:bg-zinc-100 p-2  gap-x-2" >
+                            class="flex items-center hover:bg-zinc-200 p-2  gap-x-2" >
                             <AvatarSalon :usuario="grupo" class="w-16 h-16 object-cover" />
                             <span class="">{{ grupo.nombre }}</span>
                         </NuxtLink>

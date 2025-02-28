@@ -2,14 +2,14 @@
     <NuxtLayout name="layout-contenido">
         <template #header>
             <RouterLink :to="`/`" class="link">S</RouterLink> /
-            <NuxtLink :to="`/salones/${salon.slug}`" class="link">{{ salon.siglas }}</NuxtLink> /
+            <NuxtLink :to="`/salas/${salon.slug}`" class="link">{{ salon.siglas }}</NuxtLink> /
             <CajaNombreComision :comision="comision"/>
         </template>
         
 
         <div class="text-center mb-2">
             <LogoSala :salon="salon"/>
-            <NuxtLink class="text-3xl font-bold" :to="`/salones/${salon.slug}`"><h1>{{ salon.nombre }}</h1></NuxtLink>
+            <NuxtLink class="text-3xl font-bold" :to="`/salas/${salon.slug}`"><h1>{{ salon.nombre }}</h1></NuxtLink>
             <!-- <h2 class="text-xl font-bold"></h2> -->
                  
             <BtnListaComisiones :salon="salon" :periodo="periodo" />
@@ -44,7 +44,7 @@ const route = useRoute()
 const slug = route.params?.slug
 const salonStore = useSalonStore();
 const salon = ref(null)
-salon.value = salonStore.salones.find(salon => salon.slug === slug)
+salon.value = salonStore.salas.find(salon => salon.slug === slug)
 const slugComision = route.params?.slugcomision
 const res = await useAPI(`/api/comisiones?where[or][0][and][0][slug][equals]=${slugComision}`);
 const comision = ref(res.docs[0])

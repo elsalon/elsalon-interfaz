@@ -37,22 +37,22 @@ export default defineEventHandler(async () => {
   }
   console.log("Fetching fresh config");
 
-  const [salonesRes, etiquetasRes] = await Promise.all([
-    $fetch(runtimeConfig.apiBase + "/api/salones?sort=orden&limit=0"),
+  const [salasRes, etiquetasRes] = await Promise.all([
+    $fetch(runtimeConfig.apiBase + "/api/salas?sort=orden&limit=0"),
     $fetch(runtimeConfig.apiBase + "/api/etiquetas"),
   ]);
 
-  let salones, etiquetas;
+  let salas, etiquetas;
 
-  const salonesData = salonesRes.docs || [];
-  if (salonesData.length > 0) {
-    salones = salonesData.sort((a: any, b: any) => a.orden - b.orden);
-    salones.forEach((salon: Salon) => crearPeriodos(salon));
+  const salasData = salasRes.docs || [];
+  if (salasData.length > 0) {
+    salas = salasData.sort((a: any, b: any) => a.orden - b.orden);
+    salas.forEach((salon: Salon) => crearPeriodos(salon));
   }
 
 
   cache = {
-    salones: salonesRes.docs || [],
+    salas: salasRes.docs || [],
     etiquetas: etiquetasRes.docs || [],
   };
 

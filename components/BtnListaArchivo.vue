@@ -17,7 +17,7 @@ const archivoItems = ref(periodosDisponibles.map(periodo => {
     return {
         label: periodo.nombre,
         command: () => {
-            router.push(`/salones/${props.salon.slug}/archivo-${periodo.slug}`);
+            router.push(`/salas/${props.salon.slug}/archivo-${periodo.slug}`);
         }
     }
 }));

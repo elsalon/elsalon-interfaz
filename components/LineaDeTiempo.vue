@@ -1,6 +1,6 @@
 <template>
     <div v-if="eventos?.docs.length == 0 && puedeEditar" class="text-center my-14">
-        <p class="text-zinc-500 mb-3">Agregá eventos para visualizar la cursada en un calendario</p>
+        <p class="text-zinc-600 mb-3">Agregá eventos para visualizar la cursada en un calendario</p>
         <Button label="Crear primer evento" @click="IrEventos" size="small" />
     </div>
     <div v-if="eventos?.docs.length > 0" class="relative mt-2 mb-6 ml-4 md:ml-0 md:mb-8">
@@ -24,7 +24,7 @@
                 </div>
 
                 <!-- Date -->
-                <div class="text-xs text-zinc-500">
+                <div class="text-xs text-zinc-600">
                     <time :datatype="item.fecha">{{ $formatDateCorto(item.fecha) }}</time>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                     <div class="text-sm font-semibold text-zinc-700 line-clamp-2">
                         {{ item.titulo }}
                     </div>
-                    <div class="mt-1 text-xs text-zinc-500">
+                    <div class="mt-1 text-xs text-zinc-600">
                         {{ $formatDateCorto(item.fecha) }}
                     </div>
                 </div>
@@ -103,6 +103,6 @@ const queryParams = qs.stringify({
 const { data: eventos } = await useAsyncData(cacheKey, () => useAPI(`/api/eventos?${queryParams}`))
 const router = useRouter()
 const IrEventos = () => {
-    router.push(`/salones/${props.salon.slug}/eventos`)
+    router.push(`/salas/${props.salon.slug}/eventos`)
 }
 </script>

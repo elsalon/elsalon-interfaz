@@ -1,7 +1,7 @@
 <template>
     <ClientOnly>
-        <Dialog :visible="notificacionesStore.dialogVisible" header="Notificaciones" :style="{ width: '25rem' }"
-            position="top" :dismissableMask="true">
+        <Dialog v-model:visible="notificacionesStore.dialogVisible" modal header="Notificaciones" :style="{ width: '25rem' }"
+        :dismissableMask="true"  position="top">
             <template #closeicon>
                 <Button icon="pi pi-times" severity="secondary" size="small" text
                     @click="notificacionesStore.dialogVisible = false" />
@@ -12,11 +12,11 @@
                 <NotificacionIndividual :notificacion="notificacion" :key="notificacion.id" />
             </div>
 
-            <div v-if="notificacionesStore.fetching" class="p-3 text-sm text-zinc-500 text-center">
+            <div v-if="notificacionesStore.fetching" class="p-3 text-sm text-zinc-600 text-center">
                 <span class="texto-cargando">Cargando notificaciones...</span>
             </div>
             <div v-else-if="notificacionesStore.notificaciones.length == 0 && !fetching"
-                class="p-3 text-sm text-zinc-500 text-center">
+                class="p-3 text-sm text-zinc-600 text-center">
                 <span>No tenés notificaciones</span>
             </div>
 

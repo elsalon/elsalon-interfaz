@@ -28,7 +28,9 @@ export default {
                 '!max-h-full': state.maximized,
                 '!top-0': state.maximized,
                 '!left-0': state.maximized
-            }
+            },
+
+            'bg-zinc-100'
         ]
     }),
     header: {
@@ -48,7 +50,8 @@ export default {
             'bg-surface-0 dark:bg-surface-900',
             'text-surface-700 dark:text-surface-0/80',
             'border border-b-0',
-            'border-surface-200 dark:border-surface-700'
+            'border-surface-200 dark:border-surface-700',
+            'bg-zinc-100',
         ]
     },
     title: {
@@ -67,8 +70,8 @@ export default {
             // Shape
             {
                 grow: state.maximized,
-                'rounded-bl-lg': !instance.$slots.footer,
-                'rounded-br-lg': !instance.$slots.footer
+                // 'rounded-bl-lg': !instance.$slots.footer,
+                // 'rounded-br-lg': !instance.$slots.footer
             },
 
             // Colors
@@ -94,13 +97,14 @@ export default {
 
             // Shape
             'border-t-0',
-            'rounded-b-lg',
+            // 'rounded-b-lg',
 
             // Colors
             'bg-surface-0 dark:bg-surface-900',
             'text-surface-700 dark:text-surface-0/80',
             'border border-t-0 border-b-0',
-            'border-surface-200 dark:border-surface-700'
+            'border-surface-200 dark:border-surface-700',
+            'bg-zinc-100'
         ]
     },
     mask: ({ props }) => ({
