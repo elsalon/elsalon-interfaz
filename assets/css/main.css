@@ -205,8 +205,8 @@ form label{
   overflow-y: auto;
 }
 .comment-input{
-  @apply bg-white;
   .ql-container{
+    @apply bg-white;
     overflow: visible;
   }
 }

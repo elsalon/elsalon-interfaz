@@ -19,7 +19,6 @@ export default {
             'shadow-lg',
 
             // Colors
-            'bg-surface-0 dark:bg-surface-900',
             'text-surface-700 dark:text-white/80',
             'dark:border-surface-700',
 
