@@ -112,7 +112,7 @@ const Publicar = async () => {
             useNuxtApp().callHook("publicacion:creada", {resultado:"ok", entrada: response.doc})
             mixpanel.track("Entrada creada", {id: response.doc.id, sala: salaNombre, imagenes: response.doc.imagenes.length, archivos: response.doc.archivos.length, videos: cantVideos, menciones: response.doc.mencionados.length, autoriaGrupal: response.doc.autoriaGrupal})
         }
-        editorRef.value.clearDraft();
+        editor.value.clearDraft();
 	}catch(e){
         console.warn("Error posteando entrada", e)
         if(isEditing.value){

@@ -98,7 +98,7 @@ const Publicar = async () => {
             toast.add({ severity: 'contrast', detail: 'Comentario publicado', life: 3000});
             mixpanel.track("Comentario creado", {id: response.doc.id, entrada: props.entradaId})
         }
-        
+        editor.value.clearDraft();
 	}catch{
 		useNuxtApp().callHook("comentario:creado", {resultado:"error"})
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo publicar el comentario', life: 3000});

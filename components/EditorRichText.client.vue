@@ -113,8 +113,8 @@ const checkForDraft = async () => {
             // Set timestamp for display
             draftTimestamp.value = draft.timestamp || new Date().getTime();
             
-            // Show notification
-            hasDraft.value = true;
+            // Show notification only if we actually have content to restore
+            hasDraft.value = draft.html && draft.html.trim() !== '<p><br></p>' && draft.html.trim() !== '';
             
             // Mark content as unchanged since we just loaded it
             contentChanged = false;

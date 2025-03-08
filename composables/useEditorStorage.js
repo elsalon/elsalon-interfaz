@@ -50,10 +50,10 @@ export default function useEditorStorage() {
     try {
       const db = await dbPromise;
       const draft = await db.get('drafts', draftId);
-      console.log('Draft loaded:', draft);
+      console.log('Cargando borrador');
       return draft;
     } catch (error) {
-      console.error('Error loading draft:', error);
+      console.error('Error cargando borrador:', error);
       return null;
     }
   };
@@ -64,13 +64,13 @@ export default function useEditorStorage() {
    */
   const removeDraft = async (draftId) => {
     if (!import.meta.client || !draftId) return;
-    
+
     try {
       const db = await dbPromise;
       await db.delete('drafts', draftId);
-      console.log('Draft removed:', draftId);
+      console.log('Borrador eliminado:', draftId);
     } catch (error) {
-      console.error('Error removing draft:', error);
+      console.error('Error eliminando borrador:', error);
     }
   };
 
