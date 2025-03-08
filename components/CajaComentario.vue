@@ -3,7 +3,7 @@
         <div>
             <!-- Editor -->
             <div class="comment-input">
-                <EditorRichText ref="editor" :editingData="props.commentEdit" @publishHotKey="Publicar"/>
+                <EditorRichText ref="editor" :draftId="`comentario-${props.entradaId}`" :editingData="props.commentEdit" @publishHotKey="Publicar"/>
                 <!-- <QuillEditor placeholder="Comentario" v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/> -->
             </div>
             <div class="text-right mt-2 flex justify-end flex-row">

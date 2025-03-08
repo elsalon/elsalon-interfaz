@@ -275,3 +275,6 @@ ol{
   from-zinc-200 via-zinc-700 to-zinc-200
   animate-text;
 }
+.kbd{
+ @apply px-2 py-1.5 text-sm  text-gray-900 bg-gray-100 border border-gray-300 rounded-lg font-mono;
+}

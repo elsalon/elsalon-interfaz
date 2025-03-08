@@ -16,6 +16,17 @@
         </div>
         <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar" ref="fileInput" style="display: none;"
             @change="handleFileChange" />
+        
+        <!-- Draft notification banner -->
+        <div v-if="hasDraft" class="draft-banner bg-amber-100 p-2 my-2 border border-amber-300 rounded flex justify-between">
+            <span class="text-amber-800">
+                Hay un borrador guardado para este contenido. 
+                <button @click="loadSavedDraft" class="text-blue-600 hover:text-blue-800 underline">Restaurar</button>
+            </span>
+            <button @click="dismissDraft" class="text-amber-800 hover:text-amber-950">
+                <i class="pi pi-times"></i>
+            </button>
+        </div>
     </ClientOnly>
 </template>
 
@@ -25,6 +36,8 @@ const salonStore = useSalonStore();
 
 import Compressor from 'compressorjs';
 import formatBytes from '~/composables/useBytesDisplay';
+import useEditorStorage from '~/composables/useEditorStorage';
+
 // Generate a unique ID for each editor instance
 // const editorId = ref(`editor-${Math.random().toString(36).substring(2, 9)}`)
 const editorContainer = ref(null)
@@ -35,11 +48,87 @@ const toast = useToast();
 const attachedImages = ref([])
 const attachedFiles = ref([])
 const fileInput = ref(null)
+const hasDraft = ref(false)
 
 const emit = defineEmits(['publishHotKey'])
 const props = defineProps({
-    editingData: { type: Object, default: null }
+    editingData: { type: Object, default: null },
+    draftId: { type: String, required: true }, // Unique draft ID
 })
+
+// Get editor storage functions
+const { saveDraft, loadDraft, removeDraft, clearOldDrafts } = useEditorStorage();
+
+// Auto-save timer
+let autoSaveTimer = null;
+
+// Content changed flag
+let contentChanged = false;
+
+// Save draft to IndexedDB
+const saveCurrentDraft = () => {
+    if (!quill || !contentChanged) return;
+    
+    const html = quill.root.innerHTML;
+    
+    if (html.trim() === '') {
+        // Don't save empty content
+        return;
+    }
+    
+    saveDraft({
+        draftId: props.draftId,
+        html,
+        attachedImages: [...attachedImages.value],
+        attachedFiles: [...attachedFiles.value]
+    });
+    
+    contentChanged = false;
+};
+
+// Check for existing draft
+const checkForDraft = async () => {
+    if (props.editingData) {
+        // If we're editing existing content, don't check for draft
+        return;
+    }
+    
+    const draft = await loadDraft(props.draftId);
+    
+    if (draft && draft.html && draft.html.trim() !== '') {
+        hasDraft.value = true;
+    }
+};
+
+// Load saved draft
+const loadSavedDraft = async () => {
+    const draft = await loadDraft(props.draftId);
+    
+    if (draft && quill) {
+        quill.root.innerHTML = draft.html;
+        
+        if (draft.attachedImages && draft.attachedImages.length > 0) {
+            attachedImages.value = draft.attachedImages;
+        }
+        
+        if (draft.attachedFiles && draft.attachedFiles.length > 0) {
+            attachedFiles.value = draft.attachedFiles;
+        }
+        
+        hasDraft.value = false;
+    }
+};
+
+// Dismiss draft notification without loading
+const dismissDraft = () => {
+    hasDraft.value = false;
+};
+
+// Setup auto-save timer
+const setupAutoSave = () => {
+    // Save every 5 seconds if content changed
+    autoSaveTimer = setInterval(saveCurrentDraft, 5000);
+};
 
 const urlRegex = /\bhttps?:\/\/[^\s<]+(?![^<]*<\/a>)/;
 const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -51,7 +140,8 @@ const handleUploadFileClick = () => {
 }
 const handleFileChange = (e) => {
     const files = e.target.files;
-    attachedFiles.value.push(files[0])
+    attachedFiles.value.push(files[0]);
+    contentChanged = true;
 }
 
 
@@ -441,12 +531,28 @@ onMounted(async () => {
             }
         });
 
+        // Mark content as changed on text changes
+        quill.on('text-change', () => {
+            contentChanged = true;
+        });
+
         editorContainer.value.firstChild.onfocus = () => {
             window.addEventListener('keydown', handlePublishHotkey)
         }
         editorContainer.value.firstChild.onblur = () => {
             window.removeEventListener('keydown', handlePublishHotkey)
+            // Save on blur
+            saveCurrentDraft();
         }
+
+        // Setup auto-save
+        setupAutoSave();
+        
+        // Check for existing draft
+        await checkForDraft();
+        
+        // Clear drafts older than 3 days (72 hours)
+        clearOldDrafts(72);
     }
 
     if (props.editingData) {
@@ -460,21 +566,43 @@ onBeforeUnmount(() => {
     if (quill) {
         quill.off('text-change')
     }
+    
+    // Clear auto-save timer
+    if (autoSaveTimer) {
+        clearInterval(autoSaveTimer);
+    }
+    
+    // Final save before unmounting
+    saveCurrentDraft();
 })
 
 const clear = () => {
     quill.root.innerHTML = ''
     attachedImages.value = []
     attachedFiles.value = []
+    
+    // Remove draft when content is cleared
+    removeDraft(props.draftId);
 }
+
+// Add method to remove draft after successful publishing
+const clearDraft = () => {
+    removeDraft(props.draftId);
+}
+
 // Expose the function so the parent can access it
 defineExpose({
     parseEditorToUpload,
-    clear
+    clear,
+    clearDraft
 })
 </script>
 
 <style>
 @import 'quill/dist/quill.core.css';
 @import 'quill/dist/quill.snow.css';
+
+.draft-banner {
+  transition: all 0.3s ease;
+}
 </style>
