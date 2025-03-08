@@ -10,8 +10,8 @@
                         <span class="font-bold text-black" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</span>
                     </div>
                 </NuxtLink>
-                <span class="text-zinc-600 text-xs">
-                    <time :datetime="comentario.createdAt">{{ $formatDate(comentario.createdAt) }}</time>
+                <span class="text-zinc-600 text-xs" v-tooltip.top="$formatDate(comentario.createdAt)">
+                    <time :datetime="comentario.createdAt">{{ $formatDateRelative(comentario.createdAt) }}</time>
                 </span>
             </div>
         </template>
@@ -45,7 +45,7 @@
 import { useConfirm } from "primevue/useconfirm";
 const confirm = useConfirm();
 const toast = useToast();
-const { $formatDate } = useNuxtApp()
+const { $formatDate, $formatDateRelative } = useNuxtApp()
 const auth = useAuth()
 const props = defineProps({
     comentario: {
