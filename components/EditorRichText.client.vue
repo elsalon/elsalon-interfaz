@@ -2,7 +2,7 @@
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
         <div ref="editorContainer" tabindex="0"></div>
         <div class="attachedFiled">
-
+            
             <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-200 text-zinc-500 p-2 mb-1 font-mono">
                 <div class="flex items">
                     <div class="grow">
@@ -15,18 +15,17 @@
             </div>
         </div>
         <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar" ref="fileInput" style="display: none;"
-            @change="handleFileChange" />
-        
+        @change="handleFileChange" />
+
         <!-- Draft notification banner -->
-        <div v-if="hasDraft" class="draft-banner bg-amber-100 p-2 my-2 border border-amber-300 rounded flex justify-between">
-            <span class="text-amber-800">
-                Hay un borrador guardado para este contenido. 
-                <button @click="loadSavedDraft" class="text-blue-600 hover:text-blue-800 underline">Restaurar</button>
-            </span>
-            <button @click="dismissDraft" class="text-amber-800 hover:text-amber-950">
-                <i class="pi pi-times"></i>
-            </button>
+        <div v-if="hasDraft" class="draft-banner  text-zinc-500 p-2 mt-2 mx-1 text-xs flex">
+            <div class="grow">
+                Borrador recuperado {{ $formatDateRelative(draftTimestamp) }}. 
+                <button @click="clearDraft" text class="link">Eliminar</button>
+            </div>
+            <i class="pi pi-times" @click="dismissDraftAlert" style="cursor: pointer;"></i>
         </div>
+
     </ClientOnly>
 </template>
 
@@ -38,6 +37,7 @@ import Compressor from 'compressorjs';
 import formatBytes from '~/composables/useBytesDisplay';
 import useEditorStorage from '~/composables/useEditorStorage';
 
+const { $formatDateRelative } = useNuxtApp()
 // Generate a unique ID for each editor instance
 // const editorId = ref(`editor-${Math.random().toString(36).substring(2, 9)}`)
 const editorContainer = ref(null)
@@ -49,6 +49,7 @@ const attachedImages = ref([])
 const attachedFiles = ref([])
 const fileInput = ref(null)
 const hasDraft = ref(false)
+const draftTimestamp = ref('')
 
 const emit = defineEmits(['publishHotKey'])
 const props = defineProps({
@@ -80,13 +81,14 @@ const saveCurrentDraft = () => {
         draftId: props.draftId,
         html,
         attachedImages: [...attachedImages.value],
-        attachedFiles: [...attachedFiles.value]
+        attachedFiles: [...attachedFiles.value],
+        timestamp: new Date().getTime()
     });
     
     contentChanged = false;
 };
 
-// Check for existing draft
+// Check for existing draft and automatically load it
 const checkForDraft = async () => {
     if (props.editingData) {
         // If we're editing existing content, don't check for draft
@@ -96,32 +98,50 @@ const checkForDraft = async () => {
     const draft = await loadDraft(props.draftId);
     
     if (draft && draft.html && draft.html.trim() !== '') {
-        hasDraft.value = true;
+        // Auto-load the draft
+        if (quill) {
+            quill.root.innerHTML = draft.html;
+            
+            if (draft.attachedImages && draft.attachedImages.length > 0) {
+                attachedImages.value = draft.attachedImages;
+            }
+            
+            if (draft.attachedFiles && draft.attachedFiles.length > 0) {
+                attachedFiles.value = draft.attachedFiles;
+            }
+            
+            // Set timestamp for display
+            draftTimestamp.value = draft.timestamp || new Date().getTime();
+            
+            // Show notification
+            hasDraft.value = true;
+            
+            // Mark content as unchanged since we just loaded it
+            contentChanged = false;
+        }
     }
 };
 
-// Load saved draft
-const loadSavedDraft = async () => {
-    const draft = await loadDraft(props.draftId);
-    
-    if (draft && quill) {
-        quill.root.innerHTML = draft.html;
-        
-        if (draft.attachedImages && draft.attachedImages.length > 0) {
-            attachedImages.value = draft.attachedImages;
-        }
-        
-        if (draft.attachedFiles && draft.attachedFiles.length > 0) {
-            attachedFiles.value = draft.attachedFiles;
-        }
-        
-        hasDraft.value = false;
-    }
-};
-
-// Dismiss draft notification without loading
-const dismissDraft = () => {
+// Dismiss draft notification without clearing
+const dismissDraftAlert = () => {
     hasDraft.value = false;
+};
+
+// Clear the draft and reset editor
+const clearDraft = () => {
+    // Clear the editor
+    quill.root.innerHTML = '';
+    attachedImages.value = [];
+    attachedFiles.value = [];
+    
+    // Remove from storage
+    removeDraft(props.draftId);
+    
+    // Hide notification
+    hasDraft.value = false;
+    
+    // Set focus back to editor
+    quill.focus();
 };
 
 // Setup auto-save timer
@@ -548,7 +568,7 @@ onMounted(async () => {
         // Setup auto-save
         setupAutoSave();
         
-        // Check for existing draft
+        // Check for and load existing draft
         await checkForDraft();
         
         // Clear drafts older than 3 days (72 hours)
@@ -586,7 +606,7 @@ const clear = () => {
 }
 
 // Add method to remove draft after successful publishing
-const clearDraft = () => {
+const clearDraftAfterPublish = () => {
     removeDraft(props.draftId);
 }
 
@@ -594,7 +614,7 @@ const clearDraft = () => {
 defineExpose({
     parseEditorToUpload,
     clear,
-    clearDraft
+    clearDraft: clearDraftAfterPublish
 })
 </script>
 

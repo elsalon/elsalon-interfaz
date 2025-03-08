@@ -1,7 +1,7 @@
 <template>
     <ClientOnly>
         <div class="h-full flex flex-col container-small">
-            <EditorRichText ref="editor" :draftId="`entrada-${paginaActual.nombre}`" :editingData="props.entryEdit" @publishHotKey="Publicar"/>
+            <EditorRichText ref="editor" :draftId="`entrada-${paginaActual.slug}`" :editingData="props.entryEdit" @publishHotKey="Publicar"/>
              
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
             <div class="flex justify-end mt-4 md:space-y-0 ">

@@ -2,8 +2,8 @@ export default {
     root: ({ props }) => ({
         class: [
             // Spacing and Shape
-            'rounded-md',
-            'outline',
+            // 'rounded-md',
+            'outline outline-1',
 
             // Colors
             {
@@ -25,7 +25,7 @@ export default {
             {
                 'text-blue-700 dark:text-blue-300': props.severity == 'info',
                 'text-green-700 dark:text-green-300': props.severity == 'success',
-                'text-surface-700 dark:text-surface-300': props.severity == 'secondary',
+                'text-surface-500 dark:text-surface-300': props.severity == 'secondary',
                 'text-orange-700 dark:text-orange-300': props.severity == 'warn',
                 'text-red-700 dark:text-red-300': props.severity == 'error',
                 'text-surface-0 dark:text-surface-950': props.severity == 'contrast'
@@ -47,13 +47,14 @@ export default {
             'shrink-0 w-[1.125rem] h-[1.125rem]'
         ]
     },
-    text: {
+    text: ({ props }) => ({
         class: [
             // Font and Text
             'text-base leading-[normal]',
-            'font-medium'
+            'font-medium',
+            {'text-xs': props.size == 'small'}
         ]
-    },
+    }),
     closeButton: ({ props }) => ({
         class: [
             // Flexbox
