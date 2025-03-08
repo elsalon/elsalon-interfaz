@@ -64,7 +64,7 @@ export default function useEditorStorage() {
    */
   const removeDraft = async (draftId) => {
     if (!import.meta.client || !draftId) return;
-        
+    
     try {
       const db = await dbPromise;
       await db.delete('drafts', draftId);
