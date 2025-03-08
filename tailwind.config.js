@@ -18,6 +18,7 @@ module.exports = {
 
       animation: {
         'text': 'text 5s ease infinite',
+        'bouncefade': 'bouncefade 1s ease infinite'
       },
       keyframes: {
         'text': {
@@ -30,6 +31,20 @@ module.exports = {
             'background-position': 'right center'
           }
         },
+        'bouncefade': {
+          '0%': {
+            opacity: '1',
+            transform: 'translateY(0)'
+          },
+          '50%': {
+            opacity: '1',
+            transform: 'translateY(-7px)'
+          },
+          '100%': {
+            opacity: '0',
+            transform: 'translateY(0)'
+          },
+        }
       },
 
       colors: {

@@ -36,6 +36,7 @@ const salonStore = useSalonStore();
 import Compressor from 'compressorjs';
 import formatBytes from '~/composables/useBytesDisplay';
 import useEditorStorage from '~/composables/useEditorStorage';
+import { ref } from 'vue';
 
 const { $formatDateRelative } = useNuxtApp()
 // Generate a unique ID for each editor instance
@@ -66,26 +67,52 @@ let autoSaveTimer = null;
 // Content changed flag
 let contentChanged = false;
 
+// Add refs for save button state
+const isSaving = ref(false);
+const lastSaved = ref(null);
+const manualSave = ref(false);
+
+// Define custom save button handler
+const handleSaveClick = () => {
+    manualSave.value = true;
+    saveCurrentDraft(true);
+};
+
 // Save draft to IndexedDB
-const saveCurrentDraft = () => {
-    if (!quill || !contentChanged) return;
+const saveCurrentDraft = (manual = false) => {
+    if (!quill) return;
     
     const html = quill.root.innerHTML;
     
-    if (html.trim() === '') {
-        // Don't save empty content
+    if (html.trim() === '' || html.trim() === '<p><br></p>') {
         return;
     }
     
-    saveDraft({
-        draftId: props.draftId,
-        html,
-        attachedImages: [...attachedImages.value],
-        attachedFiles: [...attachedFiles.value],
-        timestamp: new Date().getTime()
-    });
-    
-    contentChanged = false;
+    // Only trigger animation if something changed or manual save
+    if (contentChanged || manual) {
+        // Show saving animation
+        isSaving.value = true;
+        
+        saveDraft({
+            draftId: props.draftId,
+            html,
+            attachedImages: [...attachedImages.value],
+            attachedFiles: [...attachedFiles.value],
+            timestamp: new Date().getTime()
+        });
+        
+        contentChanged = false;
+        
+        // Update last saved time
+        lastSaved.value = new Date();
+        
+        // Hide animation after a delay
+        setTimeout(() => {
+            isSaving.value = false;
+            // Reset manual save flag
+            manualSave.value = false;
+        }, 800);
+    }
 };
 
 // Check for existing draft and automatically load it
@@ -353,39 +380,29 @@ const parseExistingContent = () => {
 }
 
 onMounted(async () => {
-    if (process.client) {
-
+    if (import.meta.client) {
         const { default: Quill } = await import('quill')
 
-        // Custom button definition
-        const AttachButton = Quill.import('ui/icons')
-        AttachButton['attach'] = '<i class="pi pi-file"></i>'
-
+        // Add custom button icons
+        const Icons = Quill.import('ui/icons');
+        Icons['attach'] = '<i class="pi pi-file text-[14px] relative bottom-[2px]"></i>';
+        Icons['save'] = '<i class="pi pi-save text-[13px] relative bottom-[2px]"></i>';
+        
+        // Initialize Quill with reference to the DOM element
         quill = new Quill(editorContainer.value, {
             theme: 'snow',
             modules: {
                 toolbar: {
                     container: [
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'align': [] }],
-                        // 'blockquote',
+                        ['save', 'bold', 'italic', 'underline', 'strike'],
                         ['code-block'],
                         [{ 'list': 'bullet' }],
-                        // [{ 'header': 1 }, { 'header': 2 }],
                         ['link', 'image', 'video', 'attach'],
-                        // [{ 'script': 'sub' }, { 'script': 'super' }],
-                        // [{ 'indent': '-1' }, { 'indent': '+1' }],
-                        // [{ 'direction': 'rtl' }],
-                        // [{ 'size': ['small', false, 'large', 'huge'] }],
-                        // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                        // [{ 'color': [] }, { 'background': [] }],
-                        // [{ 'font': [] }],
                         ['clean'],
-                        // ['image'],
-                        // ['link'],
                     ],
                     handlers: {
-                        attach: handleUploadFileClick
+                        attach: handleUploadFileClick,
+                        save: handleSaveClick
                     }
                 },
                 mention: {
@@ -464,7 +481,59 @@ onMounted(async () => {
                     dataAttributes: ['id', 'value', 'denotationChar', 'link', 'target', 'disabled', 'relationTo'],
                 },
             }
-        })
+        });
+
+        // Give DOM time to update after Quill initialization
+        setTimeout(() => {
+            // Find the toolbar element after Quill initialization - using previousElementSibling as you discovered
+            const toolbarElement = editorContainer.value.previousElementSibling;
+            
+            if (!toolbarElement) {
+                console.error('Toolbar element not found');
+                return;
+            }
+            
+            // Get the save button that was created by Quill
+            const saveButtonElement = toolbarElement.querySelector('.ql-save');
+            
+            if (!saveButtonElement) {
+                console.error('Save button element not found');
+                return;
+            }
+            
+            // Add the save status indicator to the save button
+            const saveStatusIndicator = document.createElement('span');
+            saveStatusIndicator.className = 'save-status hidden absolute -right-0 -bottom-0 bg-green-500 text-white rounded-full w-3 h-3 flex items-center justify-center';
+            saveStatusIndicator.innerHTML = '<i class="pi pi-check text-[6px]"></i>';
+            
+            // Append it to the save button
+            saveButtonElement.style.position = 'relative';
+            saveButtonElement.appendChild(saveStatusIndicator);
+            
+            // Store references to these elements for the watch effect
+            window.saveStatusIndicator = saveStatusIndicator; // Using window to make it globally accessible
+        }, 100);
+
+        // Replace the watchEffect with a simpler approach using our stored reference
+        watchEffect(() => {
+            if (!isSaving.value) return;
+            
+            // Use the stored reference instead of querying the DOM again
+            const saveStatus = window.saveStatusIndicator;
+            if (!saveStatus) return;
+            
+            // Show animation
+            saveStatus.classList.remove('hidden');
+            saveStatus.classList.add('animate-bouncefade');
+            
+            // Hide animation after delay
+            setTimeout(() => {
+                if (saveStatus) {
+                    saveStatus.classList.add('hidden');
+                    saveStatus.classList.remove('animate-bouncefade');
+                }
+            }, 800);
+        });
 
         // Limpiar formato de texto al pegar
         quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
@@ -624,5 +693,32 @@ defineExpose({
 
 .draft-banner {
   transition: all 0.3s ease;
+}
+
+/* Add custom styles for save button */
+.ql-save {
+  position: relative;
+}
+
+.ql-save:hover {
+  color: #4f46e5; /* Indigo 600 */
+}
+
+.ql-save .save-status {
+  transition: all 0.2s ease;
+}
+
+/* Customize animation */
+@keyframes custom-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-bounce {
+  animation: custom-bounce 0.8s ease-in-out;
 }
 </style>
