@@ -51,6 +51,7 @@ const attachedFiles = ref([])
 const fileInput = ref(null)
 const hasDraft = ref(false)
 const draftTimestamp = ref('')
+let saveStatusIndicator = null;
 
 const emit = defineEmits(['publishHotKey'])
 const props = defineProps({
@@ -204,7 +205,7 @@ const handleEditorHotkeys = (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault()
         console.log("Hotkey guardar")
-        handleSaveClick()
+        saveCurrentDraft()
     }
 }
 
@@ -492,7 +493,7 @@ onMounted(async () => {
         });
 
         // Give DOM time to update after Quill initialization
-        setTimeout(() => {
+        
             // Find the toolbar element after Quill initialization - using previousElementSibling as you discovered
             const toolbarElement = editorContainer.value.previousElementSibling;
             
@@ -510,35 +511,29 @@ onMounted(async () => {
             }
             
             // Add the save status indicator to the save button
-            const saveStatusIndicator = document.createElement('span');
+            saveStatusIndicator = document.createElement('span');
             saveStatusIndicator.className = 'save-status hidden absolute -right-0 -bottom-0 bg-green-500 text-white rounded-full w-3 h-3 flex items-center justify-center';
             saveStatusIndicator.innerHTML = '<i class="pi pi-check text-[6px]"></i>';
             
             // Append it to the save button
             saveButtonElement.style.position = 'relative';
             saveButtonElement.appendChild(saveStatusIndicator);
-            
-            // Store references to these elements for the watch effect
-            window.saveStatusIndicator = saveStatusIndicator; // Using window to make it globally accessible
-        }, 100);
+        
 
         // Replace the watchEffect with a simpler approach using our stored reference
         watchEffect(() => {
             if (!isSaving.value) return;
-            
-            // Use the stored reference instead of querying the DOM again
-            const saveStatus = window.saveStatusIndicator;
-            if (!saveStatus) return;
+            if (!saveStatusIndicator) return;
             
             // Show animation
-            saveStatus.classList.remove('hidden');
-            saveStatus.classList.add('animate-bouncefade');
+            saveStatusIndicator.classList.remove('hidden');
+            saveStatusIndicator.classList.add('animate-bouncefade');
             
             // Hide animation after delay
             setTimeout(() => {
-                if (saveStatus) {
-                    saveStatus.classList.add('hidden');
-                    saveStatus.classList.remove('animate-bouncefade');
+                if (saveStatusIndicator) {
+                    saveStatusIndicator.classList.add('hidden');
+                    saveStatusIndicator.classList.remove('animate-bouncefade');
                 }
             }, 800);
         });
