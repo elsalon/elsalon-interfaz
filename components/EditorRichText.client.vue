@@ -192,11 +192,19 @@ const handleFileChange = (e) => {
 }
 
 
-const handlePublishHotkey = (e) => {
+const handleEditorHotkeys = (e) => {
+    // CTRL + ENTER publicar
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault()
         console.log("Hotkey Publicar comentario")
         emit('publishHotKey')
+    }
+
+    // CTRL + S guardar
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault()
+        console.log("Hotkey guardar")
+        handleSaveClick()
     }
 }
 
@@ -626,10 +634,10 @@ onMounted(async () => {
         });
 
         editorContainer.value.firstChild.onfocus = () => {
-            window.addEventListener('keydown', handlePublishHotkey)
+            window.addEventListener('keydown', handleEditorHotkeys)
         }
         editorContainer.value.firstChild.onblur = () => {
-            window.removeEventListener('keydown', handlePublishHotkey)
+            window.removeEventListener('keydown', handleEditorHotkeys)
             // Save on blur
             saveCurrentDraft();
         }
