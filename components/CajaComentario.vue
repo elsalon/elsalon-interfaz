@@ -2,7 +2,7 @@
     <ClientOnly fallback-tag="div" fallback="cargando editor">
         <div>
             <!-- Editor -->
-            <div class="comment-input">
+            <div class="comment-input bg-white border border-zinc-200">
                 <EditorRichText ref="editor" :editingData="props.commentEdit" @publishHotKey="Publicar"/>
                 <!-- <QuillEditor placeholder="Comentario" v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/> -->
             </div>
