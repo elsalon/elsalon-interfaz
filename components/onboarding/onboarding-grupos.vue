@@ -5,13 +5,12 @@
                 <h3 style="margin: 0px">Grupos</h3>
             </div>
             <div>
-
                 <Tag severity="contrast" value="Nuevo"/>
             </div>
 
         </div>
         <div style="width:100%; max-width: 350px; aspect-ratio: 1; margin:0 auto">
-            <Skeleton style="width:100%; height: 100%;"></Skeleton>
+            <img src="/static/onboarding/grupos.png"/>
         </div>
         <p>
             Podés crear grupos con otros usuarios para colaborar y publicar bajo una identidad compartida.

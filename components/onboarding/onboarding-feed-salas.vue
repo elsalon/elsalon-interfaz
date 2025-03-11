@@ -3,7 +3,7 @@
         <h3>Salones</h3>
         
         <div style="width:100%; max-width: 350px; aspect-ratio: 1; margin:0 auto">
-            <Skeleton style="width:100%; height: 100%;"></Skeleton>
+            <img src="/static/onboarding/salas.png"/>
         </div>
 
         <p>
