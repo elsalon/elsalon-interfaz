@@ -9,11 +9,11 @@
         <p>
             La página de inicio muestra una cronología que combina publicaciones destacadas, 
             junto con el de tus <strong>enlaces</strong>.
-            Lo que publiques aquí será visible para toda la comunidad.
+            Lo que publiques acá será visible para toda la comunidad.
         </p>
         <p>
-            En el menú desplegable están listadas las salas de <strong>todos los niveles</strong>. 
-            Enlazate para participar y estar al tanto.
+            En el menú desplegable encontrarás las salas de <strong>todos los niveles</strong>.
+            Enlazate para participar y estar al tanto de las actividades.
         </p>
     </div>
 </template>

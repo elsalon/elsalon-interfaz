@@ -6,7 +6,7 @@
         </div>
         <p>
             El Salón es una plataforma de <strong>código abierto</strong> 
-            que provee espacios de encuentro y colaboración en la formación del diseño. 
+            que provee espacios de encuentro y colaboración para la formación del diseño. 
             Podés compartir preguntas, entregas, proyectos y proceso.
             <br>
         </p>

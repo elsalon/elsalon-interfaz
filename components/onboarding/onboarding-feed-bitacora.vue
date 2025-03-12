@@ -7,7 +7,7 @@
         </div>
         
         <p>
-            La bitácora es un espacio individual y público donde compartir proceso, avances y reflexiones
+            La bitácora es un espacio individual y público donde podés compartir tu proceso, avances y reflexiones personales.
         </p>
     </div>
 </template>
