@@ -20,7 +20,7 @@
             <p>Esta página enumera las características principales comunes para todos lxs usuarixs. Para ver las capacidades de otros roles consultá <RouterLink to="/nodo/docente">rol docente</RouterLink>.</p>
 
 
-            <onboardingFeedElsalon class="my-10"/>
+            <onboardingFeedSalas class="my-10"/>
 
             <onboardingFeedSalones class="my-10"/>
 
@@ -34,11 +34,6 @@
 </template>
 
 <script setup>
-import onboardingBienvenida from "~/components/onboarding/onboarding-bienvenida.vue";
-import onboardingFeedElsalon from "~/components/onboarding/onboarding-feed-elsalon.vue";
-import onboardingFeedSalones from "~/components/onboarding/onboarding-feed-salones.vue";
-import onboardingFeedBitacora from "~/components/onboarding/onboarding-feed-bitacora.vue";
-import onboardingGrupos from "~/components/onboarding/onboarding-grupos.vue";
 
 const salonStore = useSalonStore();
 salonStore.SetPageTitle(`Ayuda`)

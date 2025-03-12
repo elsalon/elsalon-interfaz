@@ -10,7 +10,7 @@
 
         </div>
         <div style="width:100%; max-width: 350px; aspect-ratio: 1; margin:0 auto">
-            <img src="/static/onboarding/grupos.png"/>
+            <img src="/static/onboarding/grupos.png" class="!cursor-default"/>
         </div>
         <p>
             Podés crear grupos con otros usuarios para colaborar y publicar bajo una identidad compartida.

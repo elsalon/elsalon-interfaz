@@ -3,7 +3,7 @@
         <h3>Bitácora</h3>
 
         <div style="width:100%; max-width: 350px; aspect-ratio: 1; margin:0 auto">
-            <img src="/static/onboarding/bitacora.png"/>
+            <img src="/static/onboarding/bitacora.png" class="!cursor-default"/>
         </div>
         
         <p>
