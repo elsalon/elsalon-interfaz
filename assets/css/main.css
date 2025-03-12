@@ -295,3 +295,7 @@ ol{
   margin-right: 0px !important;
  }
 }
+
+.kbd{
+  @apply px-2 py-1.5 text-xs font-semibold text-gray-800 bg-zinc-200 border border-zinc-300 rounded-lg font-mono;
+}
