@@ -194,18 +194,19 @@ form label{
     }
   }
 }
-.ql-toolbar{
+.ql-toolbar.ql-snow{
   @apply bg-white;
+  border: none !important;
 }
-.ql-container {
+.ql-container.ql-snow{
   @apply bg-white;
+  border: none !important;
   max-width: unset;
   font-family: unset !important;
   border-top: none !important;
   overflow-y: auto;
 }
 .comment-input{
-  @apply bg-white;
   .ql-container{
     overflow: visible;
   }
@@ -270,8 +271,44 @@ ol{
   pointer-events: none;
 }
 
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-enter-from {
+  transform: translateX(100%);
+}
+
+.slide-leave-to {
+  transform: translateX(-100%);
+}
+
 .texto-cargando{
   @apply bg-gradient-to-r bg-clip-text  text-transparent 
   from-zinc-200 via-zinc-700 to-zinc-200
   animate-text;
+}
+
+.ql-toolbar.ql-snow .ql-formats{
+@media (max-width: 767px) {
+  margin-right: 0px !important;
+ }
+}
+
+.ql-snow .ql-editor .ql-code-block-container, .ql-code-block-container{
+  @apply !bg-zinc-200 p-2 !text-black;
+  white-space: pre;          /* Preserve whitespace and newlines */
+  overflow-wrap: normal;     /* Disable text wrapping */
+  word-wrap: normal;         /* Disable word wrapping */
+}
+
+.entrada-default .ql-code-block-container{
+  overflow: auto;
+  max-height: 50vh;
+  scrollbar-width: thin;
+}
+
+.ql-snow .ql-tooltip{
+  transform: translateX(150px) !important;
 }

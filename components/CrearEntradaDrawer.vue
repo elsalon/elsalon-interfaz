@@ -1,14 +1,21 @@
 <template>
     <ClientOnly>
-        <div class="h-full flex flex-col container-small">
-            <EditorRichText ref="editor" :editingData="props.entryEdit" @publishHotKey="Publicar"/>
-             
+        <div class="h-full w-full flex flex-col container-small justify-between">
+            <div class="flex flex-col border border-zinc-200 flex-grow max-h-[calc(100vh-11rem)] md:max-h-[calc(100vh-5rem)]">
+                <EditorRichText 
+                    ref="editor" 
+                    :editingData="props.entryEdit" 
+                    @publishHotKey="Publicar"
+                    class="min-h-[120px] overflow-auto"
+                />
+            </div>
+                
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
-            <div class="flex justify-end mt-4 md:space-y-0 ">
+            <div class="flex justify-end mt-2 md:space-y-0 h-10 overflow-hidden">
                 <!-- Selector Identidad -->
                 <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading"/>
                 <!-- Boton Publicar -->
-                <Button @click="Publicar" class="flex-grow md:flex-grow-0" :loading="uploading" md:fluid :label="isEditing ? 'Guardar' : publicarLabel" iconPos="right"></Button>
+                <Button @click="Publicar" class="flex-grow md:flex-grow-0 text-sm" :loading="uploading" md:fluid :label="isEditing ? 'Guardar' : publicarLabel" iconPos="right"></Button>
             </div>
         </div>
     </ClientOnly>

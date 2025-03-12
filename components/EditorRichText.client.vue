@@ -10,7 +10,7 @@
                         <span> ({{ formatBytes(archivo.size) }})</span>
                     </div>
                     <button @click="attachedFiles.splice(attachedFiles.indexOf(f), 1)"
-                        class="hover:text-zinc-800">X</button>
+                        class="hover:text-zinc-800"><i class="pi pi-times"></i></button>
                 </div>
             </div>
         </div>
@@ -243,7 +243,7 @@ const parseExistingContent = () => {
 }
 
 onMounted(async () => {
-    if (process.client) {
+    if (import.meta.client) {
 
         const { default: Quill } = await import('quill')
 
@@ -447,6 +447,8 @@ onMounted(async () => {
         editorContainer.value.firstChild.onblur = () => {
             window.removeEventListener('keydown', handlePublishHotkey)
         }
+        
+        quill.focus();
     }
 
     if (props.editingData) {

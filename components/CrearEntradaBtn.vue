@@ -1,7 +1,11 @@
 <template>
-    <Button id="btnEscribir" label="+ Escribir" @click="AbrirEditor" />
+    <Button id="btnEscribir" label="+ Escribir" @click="AbrirEditor" class="z-40"/>
 
-    <Dialog
+    <FullScreenModal v-model:isOpen="visible">
+        <CrearEntradaDrawer :entryEdit="editContent"/>
+    </FullScreenModal>
+
+    <!-- <Dialog
         ref="maxDialog"
         v-model:visible="visible"
         :header="editContent !== null ? 'Editar entrada' : 'Nueva entrada'"
@@ -10,7 +14,7 @@
         :blockScroll="true"
         :pt="{header: ['container-small flex justify-between w-full items-center']}">
         <CrearEntradaDrawer :entryEdit="editContent"/>
-    </Dialog>
+    </Dialog> -->
 </template>
 
 <script setup>
@@ -84,6 +88,5 @@ const handleHotkey = (e) => {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 1000;
 }
 </style>

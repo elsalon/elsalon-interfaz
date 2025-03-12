@@ -19,7 +19,7 @@
                             :to="GenerateSalaUrl(entrada.sala.slug)">{{ entrada.sala.nombre }}</NuxtLink>
                         <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline text-zinc-600 " :to="identidadUrl">Bitácora</NuxtLink>
                         <NuxtLink class="text-zinc-600 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
-                            <time :datetime="entrada.createdAt" class="text-zinc-600 text-xs">{{ $formatDate(entrada.createdAt) }}</time>
+                            <time :datetime="entrada.createdAt" class="text-zinc-600" v-tooltip.top="$formatDate(entrada.createdAt)">{{ $formatDateRelative(entrada.createdAt) }}</time>
                         </NuxtLink>
                         <!-- Entrada Fijada -->
                         <i v-if="entrada.fijada" class="pi pi-thumbtack text-zinc-600 ml-2" style="font-size: .65rem"
@@ -63,7 +63,7 @@
 <script setup>
 const salonStore = useSalonStore()
 const auth = useAuth()
-const { $formatDate } = useNuxtApp()
+const { $formatDate, $formatDateRelative } = useNuxtApp()
 const { hooks } = useNuxtApp();
 const { GenerateSalaUrl } = useGenerateSalaUrl()
 
@@ -89,6 +89,7 @@ const props = defineProps({
     usuarioEsAdminODocente: Boolean,
     CopiarLink: Function,
 });
+
 
 watch(() => props.entrada, () => {
     console.log("Entrada cambiada")
