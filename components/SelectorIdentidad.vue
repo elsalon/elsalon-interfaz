@@ -1,5 +1,5 @@
 <template>
-    <div v-show="salonStore.gruposDelUsuarioFetching" class="w-10 h-10 flex items-center justify-center">
+    <div v-show="salonStore.gruposDelUsuarioFetching" class="w-10 h-10 flex items-center justify-center overflow-hidden">
         <i class="pi pi-spin pi-spinner" />
     </div>
     <Select v-model="selectedValue" v-show="!salonStore.gruposDelUsuarioFetching" :options="autoresOpciones"
