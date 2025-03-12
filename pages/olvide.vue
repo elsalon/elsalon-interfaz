@@ -1,6 +1,9 @@
 <template>
   <NuxtLayout name="layout-credenciales">
-    <template #cta>Olvidé mi contraseña</template>
+    <template #cta>
+      <span v-if="!formSubmitted">Olvidé mi contraseña</span>
+      <span v-else></span>
+    </template>
 
     <div v-if="!formSubmitted">
       <form @submit.prevent="handleForgot" class="space-y-3">
