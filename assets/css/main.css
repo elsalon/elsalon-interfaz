@@ -296,6 +296,19 @@ ol{
  }
 }
 
-.kbd{
-  @apply px-2 py-1.5 text-xs font-semibold text-gray-800 bg-zinc-200 border border-zinc-300 rounded-lg font-mono;
+.ql-snow .ql-editor .ql-code-block-container, .ql-code-block-container{
+  @apply !bg-zinc-200 p-2 !text-black;
+  white-space: pre;          /* Preserve whitespace and newlines */
+  overflow-wrap: normal;     /* Disable text wrapping */
+  word-wrap: normal;         /* Disable word wrapping */
+}
+
+.entrada-default .ql-code-block-container{
+  overflow: auto;
+  max-height: 50vh;
+  scrollbar-width: thin;
+}
+
+.ql-snow .ql-tooltip{
+  transform: translateX(150px) !important;
 }

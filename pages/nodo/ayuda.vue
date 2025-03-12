@@ -37,12 +37,36 @@
 
             <h2>Atajos</h2>
 
-            <p>
-                <span class="kbd">CTRL</span> + <span class="kbd">E</span> Escribir nueva entrada
-            </p>
-            <p>
-                <span class="kbd">CTRL</span> + <span class="kbd">ENTER</span> Publicar
-            </p>
+            <div class="flex flex-col space-y-2">
+                <!-- <div>
+                    <kbd>CTRL / ⌘</kbd> + <kbd>K</kbd> Buscar
+                </div> -->
+                <!-- <div>
+                    <kbd>CTRL / ⌘</kbd> + <kbd>E</kbd> Escribir nueva entrada
+                </div> -->
+                <strong>Editor entrada / comentario</strong>
+                <!-- <div>
+                    <kbd>CTRL / ⌘</kbd> + <kbd>S</kbd> Guardar borrador
+                </div> -->
+                
+                <div>
+                    <kbd>CTRL / ⌘</kbd> + <kbd>B</kbd> Negrita
+                </div>
+                <div>
+                    <kbd>CTRL / ⌘</kbd> + <kbd>I</kbd> Italica
+                </div>
+                <div>
+                    <kbd>CTRL / ⌘</kbd> + <kbd>U</kbd> Subrayar
+                </div>
+                <div>
+                    <kbd>CTRL / ⌘</kbd> + <kbd>K</kbd> Link
+                </div>
+                <div>
+                    <kbd>CTRL / ⌘</kbd> + <kbd>ENTER</kbd> Publicar
+                </div>
+
+            </div>
+            
         </div>
 
     </NuxtLayout>
