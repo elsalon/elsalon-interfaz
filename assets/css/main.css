@@ -312,3 +312,10 @@ ol{
 .ql-snow .ql-tooltip{
   transform: translateX(150px) !important;
 }
+
+/* For browsers that DON'T support color-mix */
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .bg-surface-0{
+    background: #ffffff;
+  }
+}
