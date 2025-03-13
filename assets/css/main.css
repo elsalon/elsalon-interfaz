@@ -318,4 +318,13 @@ ol{
   .bg-surface-0{
     background: #ffffff;
   }
+  .text-primary-contrast{
+    color: #ffffff;
+  }
+  .bg-surface-100{
+    background: #F5F5F5;
+  }
+  .text-surface-900{
+    color: #171717;
+  }
 }
