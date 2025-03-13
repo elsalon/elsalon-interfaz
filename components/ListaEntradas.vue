@@ -31,7 +31,7 @@
     </div>
     </Transition>
     <!-- Pagination Status -->
-    <div v-show="!hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-zinc-600 text-sm">
+    <div v-show="!hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-zinc-400 text-sm">
       No hay más entradas
     </div>
   </div>
