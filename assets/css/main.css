@@ -327,4 +327,7 @@ ol{
   .text-surface-900{
     color: #171717;
   }
+  .\[\&\>\[data-pc-name\=pcbadge\]\]\:outline-surface-0>[data-pc-name=pcbadge]{
+    outline-color: #ffffff;
+  }
 }
