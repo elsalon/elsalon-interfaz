@@ -1,23 +1,26 @@
 <template>
   <NuxtLayout name="layout-credenciales">
+    
+    
     <form @submit.prevent="handleSubmit" class="space-y-3">
       <div>
         <label for="email" class="block mb-2">Email</label>
         <InputText id="email" type="email" fluid v-model="email" required autofocus tabindex="1"/>
       </div>
-  
-      <div>
-      <div class="flex items-center justify-between">
-        <label for="password" class="block text-900 mb-2">Password</label>
-        <div class="text-sm">
-          <a href="/olvide" class=" text-zinc-600 hover:text-zinc-900" tabindex="5">¿Olvidaste tu contraseña?</a>
-        </div>
-      </div>
-      <Password v-model="password" inputProps="" fluid toggleMask :input-props="{ tabindex: 2 }" :feedback="false" required/>
-    </div>
       
+      <div>
+        <div class="flex items-center justify-between">
+          <label for="password" class="block text-900 mb-2">Password</label>
+          <div class="text-sm">
+            <a href="/olvide" class=" text-zinc-600 hover:text-zinc-900" tabindex="5">¿Olvidaste tu contraseña?</a>
+          </div>
+        </div>
+        <Password v-model="password" inputProps="" fluid toggleMask :input-props="{ tabindex: 2 }" :feedback="false" required/>
+      </div>
+      
+      <Message v-if="true" severity="secondary" class="my-4 bg-white">Si ya tenías una cuenta en elsalon.org tenés que <a href="/olvide" class="link">recuperar tu contraseña</a></Message>
         <div>
-          <Button type="submit" label="Ingresar" class="block mt-3" :loading="loading" fluid iconPos="right"  tabindex="3"></Button>
+          <Button type="submit" label="Ingresar" class="block" :loading="loading" fluid iconPos="right"  tabindex="3"></Button>
         </div>
       </form>
   
@@ -26,7 +29,6 @@
         <a href="/registrar" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900" tabindex="4">Registrate</a>
       </p>
 
-      <Message v-if="mostrarAvisoRecuperar" severity="secondary" class="mt-6">Si ya tenías una cuenta en elsalon.org tenés que <a href="/olvide" class="link">recuperar tu contraseña</a></Message>
 
   </NuxtLayout>
  
