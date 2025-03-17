@@ -256,7 +256,7 @@ onMounted(async () => {
             modules: {
                 toolbar: {
                     container: [
-                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'header': 1 }, 'bold', 'italic', 'underline', ],
                         [{ 'align': [] }],
                         // 'blockquote',
                         ['code-block'],

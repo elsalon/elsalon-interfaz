@@ -145,6 +145,10 @@ html{
   a:visited{
     color: purple;
   }
+  h1{
+    font-size: 1.25rem !important;
+    line-height: 1.75rem !important;
+  }
 }
 
 .ql-align-center{
