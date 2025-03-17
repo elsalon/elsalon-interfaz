@@ -19,7 +19,7 @@
 
             <h2>Bugs y errores</h2>
 
-            <p>El Salón no es un proyecto cerrado ni terminado, sino en constante iteración. Para eso necesitamos tu ayuda. Si encontrás bugs o tenés sugerencias para su mejora te pedimos que completes <a href="https://airtable.com/appYUTup2E3Ya9J21/pagHgEnRYbhKUhek3/form">este formulario</a></p>
+            <p>El Salón no es un proyecto cerrado ni terminado, sino en constante iteración. Para eso necesitamos tu ayuda. Si encontrás bugs o tenés sugerencias para su mejora te pedimos que completes <a href="https://airtable.com/appYUTup2E3Ya9J21/pagHgEnRYbhKUhek3/form" target="_blank">este formulario.</a></p>
                 
             
             <h2>Tutorial</h2>

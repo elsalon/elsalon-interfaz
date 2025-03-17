@@ -1,6 +1,9 @@
 <template>
 	<NuxtLayout name="layout-credenciales">
-    <template v-if="!userSignedUp" #cta>Registrate</template>
+    <template #cta>
+      <span v-if="!userSignedUp">Registrate</span>
+      <span v-else></span>
+    </template>
     <template v-if="!userSignedUp">
       <form @submit.prevent="handleSignup" class="space-y-3">
         <div>
@@ -36,7 +39,8 @@
         </div>
       
         <div>
-          <Button type="submit" label="Registrar" class="block w-full mt-3" :loading="loading" :disabled="!isFormValid"></Button>
+          
+          <Button type="submit" label="Registrar" class="block mt-3" :loading="loading" :disabled="!isFormValid" fluid iconPos="right"/>
         </div>
       </form>
       
@@ -104,21 +108,28 @@ const handleSignup = async () => {
         password: password.value,
         nombre: nombre.value,
     }
-    const { error} = await signUp(credentials, undefined, { preventLoginFlow: true })
-      .catch(e => ({ error: e.data }))
-    console.error("Error",error )
-
-    if(error?.errors.length){
-      let detail = "Hubo un error registrando el usuario";
-      if(error?.errors[0]?.data?.some(e => e.field == "email")){
-        detail = "El mail no es válido"
+    
+    // Call signUp and handle both success and error cases
+    try {
+      const result = await signUp(credentials, undefined, { preventLoginFlow: true });
+      // If we get here without an error, signup was successful
+      userSignedUp.value = true;
+    } catch (signUpError) {
+      // Handle signUp errors
+      console.error("Error", signUpError);
+      
+      if (signUpError.data?.errors && signUpError.data.errors.length) {
+        let detail = "Hubo un error registrando el usuario";
+        if (signUpError.data.errors[0]?.data?.some(e => e.field == "email")) {
+          detail = "El mail no es válido";
+        }
+        toast.add({ severity: 'contrast', summary: 'Error', detail, life: 3000 });
+      } else {
+        toast.add({ severity: 'contrast', summary: 'Error', detail: "Error en el registro", life: 3000 });
       }
-      toast.add({ severity: 'contrast', summary: 'Error', detail, life: 3000});
-    }else{
-      userSignedUp.value = true
     }
-
   } catch (error) {
+    console.error("Unexpected error:", error);
     toast.add({ severity: 'contrast', summary: 'Error', detail: "Hubo un error en el registro", life: 3000});
   } finally {
     loading.value = false

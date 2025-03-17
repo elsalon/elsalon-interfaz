@@ -6,12 +6,12 @@
       		
 			<div>
                 <label for="password" class="block text-900 font-medium mb-2">Nueva Contraseña</label>
-                <InputText id="password" type="password" class="block w-full" v-model="password" required autofocus tabindex="1"/>
+                <Password v-model="password" id="password" inputProps="" fluid toggleMask :feedback="false" tabindex="1" />
             </div>
 
             <div>
                 <label for="password2" class="block text-900 font-medium mb-2">Repetí Contraseña</label>
-                <InputText id="password2" type="password" class="block w-full" v-model="password2" required tabindex="2"/>
+                <Password v-model="password2" id="password2" inputProps="" fluid :feedback="false" tabindex="2" />
             </div>
   
 			<div>

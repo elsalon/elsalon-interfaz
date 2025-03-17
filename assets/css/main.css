@@ -322,3 +322,22 @@ ol{
 .ql-snow .ql-tooltip{
   transform: translateX(150px) !important;
 }
+
+/* For browsers that DON'T support color-mix */
+@supports not (color: color-mix(in srgb, red, blue)) {
+  .bg-surface-0{
+    background: #ffffff;
+  }
+  .text-primary-contrast{
+    color: #ffffff;
+  }
+  .bg-surface-100{
+    background: #F5F5F5;
+  }
+  .text-surface-900{
+    color: #171717;
+  }
+  .\[\&\>\[data-pc-name\=pcbadge\]\]\:outline-surface-0>[data-pc-name=pcbadge]{
+    outline-color: #ffffff;
+  }
+}

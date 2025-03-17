@@ -23,6 +23,20 @@
             </div>
         
             <div class="my-8" v-else-if="searchResults">
+                <!-- Resultados Usuarios -->
+                <!-- <template v-if="searchResults.usuarios.length"> -->
+                    <!-- <h3 class="text-xl font-bold mt-4">Usuarios</h3> -->
+                    <!-- <div class="flex flex-wrap gap-4"> -->
+                        <NuxtLink v-for="usuario in searchResults.usuarios" :to="`/usuarios/${usuario.slug}`"
+                            :key="usuario.id" class="flex items-center hover:bg-zinc-200 p-2  gap-x-2">
+                            <AvatarSalon :usuario="usuario" class="w-16 h-16 object-cover" />
+                            <span class="">{{ usuario.nombre }}</span>
+                        </NuxtLink>
+                    <!-- </div> -->
+                <!-- </template> -->
+
+
+                
                 <!-- Resultados Entradas -->
                 <!-- <template v-if="searchResults.entradas.length"> -->
                     <!-- <h3 class="text-xl font-bold mt-4">Entradas</h3> -->
@@ -45,17 +59,6 @@
                     <!-- </ul> -->
                 <!-- </template> -->
 
-                <!-- Resultados Usuarios -->
-                <!-- <template v-if="searchResults.usuarios.length"> -->
-                    <!-- <h3 class="text-xl font-bold mt-4">Usuarios</h3> -->
-                    <!-- <div class="flex flex-wrap gap-4"> -->
-                        <NuxtLink v-for="usuario in searchResults.usuarios" :to="`/usuarios/${usuario.slug}`"
-                            :key="usuario.id" class="flex items-center hover:bg-zinc-200 p-2  gap-x-2">
-                            <AvatarSalon :usuario="usuario" class="w-16 h-16 object-cover" />
-                            <span class="">{{ usuario.nombre }}</span>
-                        </NuxtLink>
-                    <!-- </div> -->
-                <!-- </template> -->
 
                 <!-- Resultados Grupos -->
                 <!-- <template v-if="searchResults.grupos.length"> --> 
