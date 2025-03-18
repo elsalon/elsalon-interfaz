@@ -11,7 +11,8 @@
             </h2>
         </div>
 
-        <div class="text-center flex flex-wrap justify-around items-center w-full mb-10 bg-white p-1">
+        <!-- Menu principal Sala -->
+        <div class="text-center flex flex-wrap justify-around items-center w-full mb-2 bg-white p-1">
             <!-- Lista de avatares de miembros -->
             <ListaMiembrosSala :miembros="miembros" />
 
@@ -28,6 +29,15 @@
                 <BtnEnlazar @estadoEnlace="onEstadoEnlace" type="sala"/>
             </div>
         </div>
+        
+        <!-- Secciones -->
+        <div class="text-center flex flex-wrap justify-center gap-x-2 items-center w-full mb-6 p-1 text-sm">
+            <Button label="General" severity="contrast" size="small" class="" text />
+            <SeccionesSalaBtnAgregarSeccion :salon="salon" />
+            
+        </div>
+
+        <!-- Linea de Tiempo -->
         <div>
             <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon"/>
         </div>

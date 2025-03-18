@@ -32,7 +32,7 @@ export default {
             { 'text-primary-600 bg-transparent border-transparent': props.link },
 
             // Plain Button
-            { 'text-white bg-gray-500 border border-gray-500': props.plain && !props.outlined && !props.text },
+            { 'text-white bg-gray-500 border border-gray-500 outline-dashed': props.plain && !props.outlined && !props.text },
             // Plain Text Button
             { 'text-surface-500': props.plain && props.text },
             // Plain Outlined Button

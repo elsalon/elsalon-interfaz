@@ -22,7 +22,7 @@
 
         <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
             <label for="link" class="font-semibold md:w-1/3">link</label>
-            <InputText id="link" class="w-full" type="link" v-model="perfil.link"/>
+            <InputText id="link" class="w-full" type="url" v-model="perfil.link"/>
         </div>
 
         <div class="flex gap-2 mb-10 flex-col md:flex-row">
