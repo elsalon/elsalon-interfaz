@@ -20,7 +20,7 @@
 
             <div class="text-right flex justify-end gap-x-2">
                 <!-- Btn Cancelar -->
-                <Button type="submit" class="" label="Cancelar" severity="secondary" :disabled="loading"
+                <Button type="button" class="" label="Cancelar" severity="secondary" :disabled="loading"
                     @click="updateVisible(false)" />
                 <!-- Btn Guardar -->
                 <Button type="submit" class="" label="Guardar" :loading="loading" />
@@ -52,7 +52,7 @@ const props = defineProps({
         default: ''
     }
 });
-
+const salonStore = useSalonStore();
 const url = ref(props.url);
 const label = ref(props.label);
 const orden = ref(0);
@@ -99,12 +99,14 @@ const Guardar = async () => {
             const linkRes = await useAPI(`/api/linksExternos`, { method: 'POST', body })
             console.log("Link creado", linkRes)
             // const secciones = props.salon.secciones ? props.salon.secciones.map(seccion => typeof(seccion) == 'object' ? seccion.id : seccion) : []
-            const secciones = props.salon.secciones || [] 
+            console.log(props.salon.secciones)
+            let secciones = props.salon.secciones?.length ? props.salon.secciones.map(item => ({value: item.value.id, relationTo: item.relationTo})) : [] 
+            console.log(secciones)
             secciones.push({value: linkRes.doc.id, relationTo: 'linksExternos'})
             console.log(secciones)
             const salaRes = await useAPI(`/api/salas/${props.salon.id}`, { method: 'PATCH', body: { secciones }})
             console.log("Sala actualizada", salaRes)
-            await useFetch(`/cache/invalidate?salaId=${props.salon.id}`);
+            await salonStore.invalidateSala(props.salon.id);
         }
     } catch (e) {
         console.error(e)

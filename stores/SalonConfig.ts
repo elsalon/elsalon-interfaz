@@ -38,6 +38,7 @@ export const useSalonStore = defineStore('salon', {
     // finCuatri2: '12-31', // mes / dia 31 diciembre
     gruposDelUsuario: null as null,
     gruposDelUsuarioFetching: false,
+    invalidating: false,
   }),
 
   actions: {
@@ -55,7 +56,6 @@ export const useSalonStore = defineStore('salon', {
       this.contextoId = salon;
     },
     
-
     async fetchConfig() {
       if (this.initialized || this.loading) return;
 
@@ -76,6 +76,68 @@ export const useSalonStore = defineStore('salon', {
         this.loading = false;
       }
     },
+
+    /**
+     * Invalidate the cache for a specific sala and update the store
+     * @param salaId The ID of the sala to invalidate
+     * @returns The result of the invalidation operation
+     */
+    async invalidateSala(salaId: string) {
+      if (this.invalidating) return null;
+      
+      this.invalidating = true;
+      
+      try {
+        const response = await $fetch(`/cache/invalidate?salaId=${salaId}`);
+        
+        if (response.success && response.data) {
+          // Update the sala in the store directly
+          const index = this.salas.findIndex(sala => sala.id === salaId);
+          if (index !== -1) {
+            this.salas[index] = response.data;
+            console.log(`Sala ${salaId} updated in store`);
+          }
+        }
+        
+        return response;
+      } catch (error) {
+        console.error(`Error invalidating sala ${salaId}:`, error);
+        throw error;
+      } finally {
+        this.invalidating = false;
+      }
+    },
+
+    /**
+     * Invalidate the entire cache and refetch all data
+     */
+    async invalidateAllCache() {
+      if (this.invalidating) return null;
+      
+      this.invalidating = true;
+      
+      try {
+        const response = await $fetch('/cache/invalidate');
+        
+        if (response.success) {
+          // Reset initialized flag to trigger a fresh fetch
+          this.initialized = false;
+          
+          // Refetch all the data
+          await this.fetchConfig();
+          
+          console.log('Cache invalidated and data refreshed');
+        }
+        
+        return response;
+      } catch (error) {
+        console.error('Error invalidating cache:', error);
+        throw error;
+      } finally {
+        this.invalidating = false;
+      }
+    },
+
     async FetchGruposDelUsuario(force = false) {
       // If we need fresh data or don't have cached data, and we're not already fetching
       if ((force || !this.gruposDelUsuario) && !this.gruposDelUsuarioFetching) {
