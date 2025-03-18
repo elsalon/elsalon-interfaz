@@ -1,32 +1,31 @@
 <template>
-    <NotificacionesDialog ref="notificacionesDialog" />
-        <template v-if="auth?.data">
-            <!-- Avatar Con notificationes -->
-            <template v-if="notificacionesStore.nuevas > 0">
-                <OverlayBadge>
-                    <AvatarSalon :key="'avt' + myKey" class="cursor-pointer" :usuario="auth?.data.value.user"
-                        @click="toggleUserMenu" />
-                </OverlayBadge>
-            </template>
-            <!-- Avatar Sin notificationes -->
-            <template v-else>
-                <AvatarSalon :key="'avt' + myKey" class="cursor-pointer -right-px" :usuario="auth?.data.value.user"
+    <template v-if="auth?.data">
+        <!-- Avatar Con notificationes -->
+        <template v-if="notificacionesStore.nuevas > 0">
+            <OverlayBadge>
+                <AvatarSalon :key="'avt' + myKey" class="cursor-pointer" :usuario="auth?.data.value.user"
                     @click="toggleUserMenu" />
-            </template>
+            </OverlayBadge>
         </template>
+        <!-- Avatar Sin notificationes -->
+        <template v-else>
+            <AvatarSalon :key="'avt' + myKey" class="cursor-pointer -right-px" :usuario="auth?.data.value.user"
+                @click="toggleUserMenu" />
+        </template>
+    </template>
 
-        <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true">
-            <template #item="{ item, props }">
-                <a class="flex items-center" v-bind="props.action">
-                    <span :class="item.icon" class="mr-2" />
-                    <span>{{ item.label }} </span>
-                    <Badge size="small" v-if="item.badge > 0" class="ml-auto" :value="item.badge" />
-                    <span v-if="item.shortcut"
-                        class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{
-            item.shortcut }}</span>
-                </a>
-            </template>
-        </Menu>
+    <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true">
+        <template #item="{ item, props }">
+            <a class="flex items-center" v-bind="props.action">
+                <span :class="item.icon" class="mr-2" />
+                <span>{{ item.label }} </span>
+                <Badge size="small" v-if="item.badge > 0" class="ml-auto" :value="item.badge" />
+                <span v-if="item.shortcut"
+                    class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{
+        item.shortcut }}</span>
+            </a>
+        </template>
+    </Menu>
 </template>
 
 <script setup>
@@ -35,10 +34,6 @@ const notificacionesStore = useNotificacionesStore()
 const { myKey } = useReactiveAuth()
 const auth = useAuth()
 import { PrimeIcons } from '@primevue/core/api';
-
-const notificacionesDialog = ref();
-
-
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
 
@@ -86,7 +81,6 @@ const itemsUserMenu = computed(() => [
                 command: () => {
                     // Abrir drawer de notificaciones?
                     notificacionesStore.dialogVisible = true;
-                    // console.log(notificacionesDialog.value)
                 },
                 badge: notificacionesStore.nuevas
             },
