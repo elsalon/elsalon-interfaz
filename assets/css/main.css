@@ -111,6 +111,9 @@ html{
 .prose a:visited, .listaArchivos a:visited{
   color: purple;
 }
+.prose li{
+  list-style-position: inside;
+}
 
 .prose iframe, .ql-editor iframe{
   @apply w-full aspect-video;
