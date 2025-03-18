@@ -63,8 +63,13 @@ watch(() => autorSeleccionado.value, () => {
 })
 
 const mixpanel = useMixpanel()
+const toast = useToast()
 
 const Publicar = async () => {
+    if(editor.value.EditorIsEmpty()){
+        toast.add({ severity: 'error', summary: 'Error', detail: 'La entrada está vacía', life: 3000});
+        return
+    }
     uploading.value = true
     const {html, imagenes, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo} = await editor.value.parseEditorToUpload(publicarLabel)
     if(html == ""){
@@ -122,15 +127,14 @@ const Publicar = async () => {
         
 	}catch(e){
         console.warn("Error posteando entrada", e)
+        publicarLabel.value = `${publicarLabelContexto.value} como ${autorSeleccionado.value.nombre}`
         if(isEditing.value){
             useNuxtApp().callHook("publicacion:editada", {resultado:"error"})
         }else{
 		    useNuxtApp().callHook("publicacion:creada", {resultado:"error"})
         }
 	}finally{
-        setTimeout(() => {
-            uploading.value = false;
-        }, 2500);
+        uploading.value = false;
     }
 }
 

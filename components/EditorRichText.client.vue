@@ -63,6 +63,10 @@ const handlePublishHotkey = (e) => {
     }
 }
 
+const EditorIsEmpty = () => {
+    return quill.getLength() === 1 && !quill.getText().trim()
+}
+
 const parseEditorToUpload = async (btnLabel = null) => {
     const delta = quill.getContents()
     let html = quill.root.innerHTML
@@ -480,6 +484,7 @@ const clear = () => {
 }
 // Expose the function so the parent can access it
 defineExpose({
+    EditorIsEmpty,
     parseEditorToUpload,
     clear
 })
