@@ -56,6 +56,10 @@ const ClearEditor = () => {
 const mixpanel = useMixpanel()
 
 const Publicar = async () => {
+    if(editor.value.EditorIsEmpty()){
+        toast.add({ severity: 'error', summary: 'Error', detail: 'El comentario está vacío', life: 3000});
+        return
+    }
     uploading.value = true
     const {html, imagenes, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo} = await editor.value.parseEditorToUpload(comentarLabel)
     if(html == ""){
@@ -103,9 +107,7 @@ const Publicar = async () => {
 		useNuxtApp().callHook("comentario:creado", {resultado:"error"})
         toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudo publicar el comentario', life: 3000});
 	}finally{
-        setTimeout(() => {
-            uploading.value = false;
-        }, 2500);
+        uploading.value = false;
     }
 }
 

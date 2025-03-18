@@ -63,6 +63,10 @@ const handlePublishHotkey = (e) => {
     }
 }
 
+const EditorIsEmpty = () => {
+    return quill.getLength() === 1 && !quill.getText().trim()
+}
+
 const parseEditorToUpload = async (btnLabel = null) => {
     const delta = quill.getContents()
     let html = quill.root.innerHTML
@@ -256,7 +260,7 @@ onMounted(async () => {
             modules: {
                 toolbar: {
                     container: [
-                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'header': 1 }, 'bold', 'italic', 'underline', ],
                         [{ 'align': [] }],
                         // 'blockquote',
                         ['code-block'],
@@ -356,13 +360,22 @@ onMounted(async () => {
             }
         })
 
-        // Limpiar formato de texto al pegar
+        // Limpiar formato de texto al pegar, manteniendo formato básico y convirtiendo encabezados a h1
         quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
-            console.log("Clean clipboard")
+
             delta.ops = delta.ops.map(op => {
-                return {
-                    insert: op.insert
-                }
+
+            if (op.attributes) {
+            const { bold, italic, underline, link, script, code, blockquote, list, header, align } = op.attributes;
+            op.attributes = { bold, italic, underline, link, script, code, blockquote, list, align };
+            if (header) {
+            op.attributes.header = 1; // Convertir todos los encabezados a h1
+            }
+            }
+            return {
+            insert: op.insert,
+            attributes: op.attributes
+            }
             })
             return delta
         })
@@ -471,6 +484,7 @@ const clear = () => {
 }
 // Expose the function so the parent can access it
 defineExpose({
+    EditorIsEmpty,
     parseEditorToUpload,
     clear
 })

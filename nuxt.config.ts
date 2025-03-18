@@ -18,6 +18,10 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
     }
   },
+  routeRules: {
+    '/s/**': { redirect: '/salas/**' },
+    '/u/**': { redirect: '/usuarios/**' }
+  },
   // *****
   // Mixpanel Analytics
   // *****

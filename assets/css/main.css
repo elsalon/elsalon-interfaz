@@ -111,6 +111,9 @@ html{
 .prose a:visited, .listaArchivos a:visited{
   color: purple;
 }
+.prose li{
+  list-style-position: inside;
+}
 
 .prose iframe, .ql-editor iframe{
   @apply w-full aspect-video;
@@ -145,6 +148,20 @@ html{
   a:visited{
     color: purple;
   }
+  h1{
+    font-size: 1.25rem !important;
+    line-height: 1.75rem !important;
+  }
+}
+
+.ql-align-center{
+  text-align: center;
+}
+.ql-align-right{
+  text-align: right;
+}
+.ql-align-justify{
+  text-align: justify;
 }
   
 
@@ -326,5 +343,8 @@ ol{
   }
   .text-surface-900{
     color: #171717;
+  }
+  .\[\&\>\[data-pc-name\=pcbadge\]\]\:outline-surface-0>[data-pc-name=pcbadge]{
+    outline-color: #ffffff;
   }
 }

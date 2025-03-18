@@ -23,9 +23,9 @@
                 </span>
             </template>
             <template v-else>
-                <div class="grid grid-cols-1 md:grid-cols-2">
+                <div :class="{'grid grid-cols-1': docs.length === 1, 'grid grid-cols-1 md:grid-cols-2': docs.length > 1}">
                     <NuxtLink v-for="doc in docs" :key="doc.id" :to="`/usuarios/${doc.autor.slug}`"
-                        class="flex gap-2 items-center p-2 hover:bg-zinc-200">
+                        class="flex gap-2 items-center p-2 hover:bg-zinc-200 w-full">
                         <AvatarSalon :usuario="doc.autor" />
                         {{ doc.autor.nombre }}
                     </NuxtLink>

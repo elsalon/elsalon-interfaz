@@ -1,5 +1,5 @@
 <template>
-    <Avatar label="☰" class="select-none cursor-pointer bg-black text-white" size="large" shape=""
+    <Avatar label="☰" class="self-baseline select-none cursor-pointer bg-black text-white" size="large" shape=""
         @click="toggleSalasMenu" />
     <Drawer v-model:visible="menuSalasVisible" class="!w-full md:!w-80 lg:!w-[30rem]">
 
