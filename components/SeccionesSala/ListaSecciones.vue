@@ -24,7 +24,7 @@
 const user = useAuth().data.value.user;
 const userPuedeEditar = user.rol === 'docente' || user.isAdmin
 
-const secciones = computed(() => props.salon.secciones.sort((a, b) => a.value.orden - b.value.orden));
+const secciones = computed(() => props.salon.secciones?.sort((a, b) => a.value.orden - b.value.orden));
 
 const props = defineProps({
     salon: {
