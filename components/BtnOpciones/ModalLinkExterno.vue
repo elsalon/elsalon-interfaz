@@ -19,6 +19,8 @@
             </div>
 
             <div class="text-right flex justify-end gap-x-2">
+                <!-- Btn Eliminar -->
+                <Button v-if="props.id" type="button" class="mr-auto" label="Eliminar" severity="danger" :disabled="loading" @click="Eliminar()" />
                 <!-- Btn Cancelar -->
                 <Button type="button" class="" label="Cancelar" severity="secondary" :disabled="loading"
                     @click="updateVisible(false)" />
@@ -50,12 +52,16 @@ const props = defineProps({
     label: {
         type: String,
         default: ''
+    },
+    orden:{
+        type: Number,
+        default: 0
     }
 });
 const salonStore = useSalonStore();
 const url = ref(props.url);
 const label = ref(props.label);
-const orden = ref(0);
+const orden = ref(props.orden);
 const user = useAuth().data.value.user;
 
 const loading = ref(false);
@@ -89,25 +95,23 @@ const Guardar = async () => {
             orden: orden.value,
             autor: user.id,
         }
-        console.log("Links externos:", body)
         if (props.id) {
             // Update
-            const res = await useAPI(`/api/linksExternos/${props.id}`, { method: 'PUT', body })
-            console.log(res)
+            await useAPI(`/api/linksExternos/${props.id}`, { method: 'PUT', body })
         } else {
             // Create
             const linkRes = await useAPI(`/api/linksExternos`, { method: 'POST', body })
-            console.log("Link creado", linkRes)
-            // const secciones = props.salon.secciones ? props.salon.secciones.map(seccion => typeof(seccion) == 'object' ? seccion.id : seccion) : []
-            console.log(props.salon.secciones)
-            let secciones = props.salon.secciones?.length ? props.salon.secciones.map(item => ({value: item.value.id, relationTo: item.relationTo})) : [] 
-            console.log(secciones)
-            secciones.push({value: linkRes.doc.id, relationTo: 'linksExternos'})
-            console.log(secciones)
-            const salaRes = await useAPI(`/api/salas/${props.salon.id}`, { method: 'PATCH', body: { secciones }})
-            console.log("Sala actualizada", salaRes)
-            await salonStore.invalidateSala(props.salon.id);
+            // Agrego la nueva sección
+            let secciones = props.salon.secciones?.length ? props.salon.secciones.map(item => ({ value: item.value.id, relationTo: item.relationTo })) : []
+            secciones.push({ value: linkRes.doc.id, relationTo: 'linksExternos' })
+            // Actualizo la sala
+            await useAPI(`/api/salas/${props.salon.id}`, { method: 'PATCH', body: { secciones } })
         }
+        // Invalido el cache para refrescar
+        await salonStore.invalidateSala(props.salon.id);
+        url.value = '';
+        label.value = '';
+        orden.value = 0;
     } catch (e) {
         console.error(e)
     }
@@ -115,6 +119,25 @@ const Guardar = async () => {
         loading.value = false;
         updateVisible(false);
     }
+}
 
+const Eliminar = async () => {
+    loading.value = true;
+    try {
+        await useAPI(`/api/linksExternos/${props.id}`, { method: 'DELETE' })
+        // Elimino la sección
+        let secciones = props.salon.secciones?.length ? props.salon.secciones.map(item => ({ value: item.value.id, relationTo: item.relationTo })) : []
+        secciones = secciones.filter(item => item.value !== props.id);
+        // Actualizo la sala
+        await useAPI(`/api/salas/${props.salon.id}`, { method: 'PATCH', body: { secciones } })
+        // Invalido el cache para refrescar
+        await salonStore.invalidateSala(props.salon.id);
+    } catch (e) {
+        console.error(e)
+    }
+    finally {
+        loading.value = false;
+        updateVisible(false);
+    }
 }
 </script>
