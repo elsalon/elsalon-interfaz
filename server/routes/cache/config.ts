@@ -1,6 +1,6 @@
 import { defineEventHandler } from 'h3';
 import { useRuntimeConfig } from '#imports';
-
+import { setCacheReference } from './invalidate';
 
 interface Archivo {
   activar: Boolean;
@@ -35,10 +35,10 @@ export default defineEventHandler(async () => {
     console.log("Returning cached config");
     return cache;
   }
-  console.log("Fetching fresh config");
+  console.log("Fetching fresh config", runtimeConfig.apiBase + "/api/salas?sort=orden&limit=0&depth=1");
 
   const [salasRes, etiquetasRes] = await Promise.all([
-    $fetch(runtimeConfig.apiBase + "/api/salas?sort=orden&limit=0"),
+    $fetch(runtimeConfig.apiBase + "/api/salas?sort=orden&limit=0&depth=1"),
     $fetch(runtimeConfig.apiBase + "/api/etiquetas"),
   ]);
 
@@ -57,6 +57,10 @@ export default defineEventHandler(async () => {
   };
 
   cacheTimestamp = Date.now();
+  
+  // Share the cache reference with the invalidate endpoint
+  setCacheReference(cache, cacheTimestamp);
+  
   return cache;
 });
 
@@ -65,7 +69,9 @@ const finCuatri1 = '07-31'; // mes / dia 31 julio
 const comienzoCuatri2 = '08-01'; // mes / dia 1 agosto (aunque sea mas tarde)
 const finCuatri2 = '12-31'; // mes / dia 31 diciembre
 
-function crearPeriodos(salon: Salon) {
+// Make crearPeriodos function available to other modules
+export function crearPeriodos(salon: Salon) {
+  console.log("Creating periods for", salon.nombre, salon.secciones);
   // if(salon.archivo.activar){
   let periodos = []
   let now = new Date();

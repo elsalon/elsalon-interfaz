@@ -32,7 +32,8 @@
         
         <!-- Secciones -->
         <div class="text-center flex flex-wrap justify-center gap-x-2 items-center w-full mb-6 p-1 text-sm">
-            <Button label="General" severity="contrast" size="small" class="" text />
+            
+            <SeccionesSalaListaSecciones :salon="salon" />
             <SeccionesSalaBtnAgregarSeccion :salon="salon" />
             
         </div>
