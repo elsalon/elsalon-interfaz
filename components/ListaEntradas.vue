@@ -70,7 +70,7 @@ const entradaRefs = ref({});
 
 const entradaContainerClass = computed(() => {
   return {
-    'space-y-10 md:space-y-0 md:grid grid-cols-3 gap-4': props.grid === true || props.grid === 3,
+    'space-y-10 md:space-y-0 md:grid grid-cols-3 gap-[8rem]': props.grid === true || props.grid === 3,
     'space-y-10 md:space-y-0 md:grid grid-cols-2 gap-4': props.grid === 2,
     'space-y-10 md:space-y-0 md:grid grid-cols-4 gap-4': props.grid === 4,
     'space-y-10 md:space-y-0 md:grid grid-cols-5 gap-4': props.grid === 5,
