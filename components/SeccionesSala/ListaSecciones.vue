@@ -3,7 +3,7 @@
         <template v-if="seccion.relationTo=='linksExternos'">
             <div class="group">
                 <Button as="a" target="_blank" :href="seccion.value.url" :label="seccion.value.label" severity="contrast" size="small" class="group-hover:bg-gray-200" text />
-                <button v-if="userPuedeEditar" class="opacity-0 group-hover:opacity-100 p-1" @click="openEditModal(seccion)"><i class="pi pi-pencil" style="font-size: .7rem;"/></button>
+                <button v-if="userPuedeEditar" class="opacity-20 group-hover:opacity-100 p-1" @click="openEditModal(seccion)"><i class="pi pi-cog"/></button>
             </div>
         </template>
     </template>
