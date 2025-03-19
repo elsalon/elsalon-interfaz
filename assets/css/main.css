@@ -216,7 +216,7 @@ form label{
   }
 }
 .ql-toolbar.ql-snow{
-  @apply bg-white flex justify-center;
+  @apply bg-white flex justify-center text-black;
   border: none !important;
 }
 .ql-container.ql-snow{

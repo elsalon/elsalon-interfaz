@@ -66,7 +66,16 @@ const handlePublishHotkey = (e) => {
 }
 
 const EditorIsEmpty = () => {
-    return quill.getLength() === 1 && !quill.getText().trim()
+    let isEmpty = true
+    // Any file 
+    if (attachedFiles.value.length > 0) {
+        isEmpty = false
+    }
+    // any text
+    if (quill.getLength() > 1) {
+        isEmpty = false
+    }
+    return isEmpty
 }
 
 const parseEditorToUpload = async (btnLabel = null) => {
