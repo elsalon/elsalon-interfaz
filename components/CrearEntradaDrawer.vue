@@ -8,7 +8,10 @@
                     @publishHotKey="Publicar"
                     class="min-h-[120px] overflow-auto"
                 />
-                <div class="wordcounter absolute bottom-0 right-0 bg-white text-zinc-400 text-xs p-1 rounded-bl-lg opacity-0 transition-opacity duration-300" :class="{'opacity-100': wordCount > 10}">
+                <div 
+                v-if="!auth.data.value.user.opciones?.ocultarContadorPalabras"
+                v-tooltip.top="'Contador de palabras'"
+                class="wordcounter absolute bottom-0 right-0 bg-white text-zinc-400 text-xs p-1 rounded-bl-lg opacity-0 transition-opacity duration-300" :class="{'opacity-100': wordCount > 0}">
                     <i class="pi pi-pen-to-square"></i>
                     {{ wordCount }} 
                 </div>

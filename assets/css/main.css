@@ -216,7 +216,7 @@ form label{
   }
 }
 .ql-toolbar.ql-snow{
-  @apply bg-white flex justify-center text-black;
+  @apply bg-white text-center text-black;
   border: none !important;
 }
 .ql-container.ql-snow{
@@ -311,10 +311,13 @@ ol{
   animate-text;
 }
 
-.ql-toolbar.ql-snow .ql-formats{
 @media (max-width: 767px) {
-  margin-right: 0px !important;
- }
+  .ql-toolbar.ql-snow .ql-formats{
+    margin-right: 0px !important; 
+  }
+  .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button{
+    width: 26px;
+  }
 }
 
 .ql-snow .ql-editor .ql-code-block-container, .ql-code-block-container{
