@@ -1,13 +1,17 @@
 <template>
     <ClientOnly>
         <div class="h-full w-full flex flex-col container-small justify-between">
-            <div class="flex flex-col flex-grow max-h-[calc(100vh-11rem)] md:max-h-[calc(100vh-5rem)]">
+            <div class="flex flex-col flex-grow max-h-[calc(100vh-11rem)] md:max-h-[calc(100vh-5rem)] relative">
                 <EditorRichText 
                     ref="editor" 
                     :editingData="props.entryEdit" 
                     @publishHotKey="Publicar"
                     class="min-h-[120px] overflow-auto"
                 />
+                <div class="wordcounter absolute bottom-0 right-0 bg-white text-zinc-400 text-xs p-1 rounded-bl-lg opacity-0 transition-opacity duration-300" :class="{'opacity-100': wordCount > 10}">
+                    <i class="pi pi-pen-to-square"></i>
+                    {{ wordCount }} 
+                </div>
             </div>
                 
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
@@ -37,6 +41,8 @@ const props = defineProps(
     },
 )
 const autorSeleccionado = ref(null)
+
+const wordCount = computed(() => editor.value?.wordCount)
 
 if (props.entryEdit) {
     console.log("Editando entrada", props.entryEdit)

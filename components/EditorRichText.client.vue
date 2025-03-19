@@ -35,6 +35,7 @@ const toast = useToast();
 const attachedImages = ref([])
 const attachedFiles = ref([])
 const fileInput = ref(null)
+const wordCount = ref(0)
 
 const emit = defineEmits(['publishHotKey'])
 const props = defineProps({
@@ -245,6 +246,64 @@ const parseExistingContent = () => {
     attachedFiles.value = []
     attachedFiles.value = entrada.archivos.map(data => ({ id: data.archivo.id, name: data.archivo.filename, size: data.archivo.filesize, uploaded: true }))
 }
+// Debounce utility function
+function debounce(func, wait, immediate = false) {
+  let timeout;
+  return function() {
+    const context = this;
+    const args = arguments;
+    
+    const later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    
+    if (callNow) func.apply(context, args);
+  };
+}
+
+// Your existing word counting function
+function countMeaningfulWords(text) {
+  if (!text || typeof text !== 'string') return 0;
+  
+  // Remove URLs
+  let cleanText = text.replace(/https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g, '');
+  
+  // Remove HTML tags that might be part of pasted content
+  cleanText = cleanText.replace(/<[^>]*>/g, '');
+  
+  // Remove email addresses
+  cleanText = cleanText.replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '');
+  
+  // Remove special characters and extra whitespace
+  cleanText = cleanText.replace(/[^\w\s]|_/g, ' ').replace(/\s+/g, ' ').trim();
+  
+  // Split by whitespace and count non-empty words
+  const words = cleanText.split(' ').filter(word => {
+    // Filter out common meaningless words like single letters (except 'a' and 'I')
+    if (word.length <= 1 && !['a', 'A', 'i', 'I'].includes(word)) {
+      return false;
+    }
+    
+    // Filter out numbers by themselves
+    if (/^\d+$/.test(word)) {
+      return false;
+    }
+    
+    return word.length > 0;
+  });
+  
+  return words.length;
+}
+
+// Create a debounced version of the word counter
+const debouncedCountWords = debounce((text) => {
+  wordCount.value = countMeaningfulWords(text);
+}, 200);
 
 onMounted(async () => {
     if (import.meta.client) {
@@ -382,6 +441,15 @@ onMounted(async () => {
         })
 
         quill.on('text-change', (delta) => {
+            const text = quill.getText();
+            // For significant changes (paste operations), update immediately
+            if (delta.ops.some(op => op.insert && typeof op.insert === 'string' && op.insert.length > 30)) {
+                wordCount.value = countMeaningfulWords(text);
+            } else {
+                // For regular typing, use the debounced version
+                debouncedCountWords(text);
+            }
+
             const ops = delta.ops;
 
             // Check if the delta has relevant operations
@@ -411,7 +479,7 @@ onMounted(async () => {
 
             // Determine the relevant text length until the cursor position
             const relevantLength = sel.index - leafIndex;
-            const text = leaf.text.slice(0, relevantLength);
+            const leafText = leaf.text.slice(0, relevantLength);
 
             // Only proceed if the text is not part of a link
             if (leaf.parent.domNode.localName === 'a') {
@@ -424,9 +492,9 @@ onMounted(async () => {
                 return;
             }
 
-            const urlMatch = text.match(urlRegex);
-            const youtubeMatch = text.match(youtubeRegex);
-            const vimeoMatch = text.match(vimeoRegex);
+            const urlMatch = leafText.match(urlRegex);
+            const youtubeMatch = leafText.match(youtubeRegex);
+            const vimeoMatch = leafText.match(vimeoRegex);
 
             // If a URL is matched
             if (urlMatch) {
@@ -485,6 +553,7 @@ const clear = () => {
 }
 // Expose the function so the parent can access it
 defineExpose({
+    wordCount,
     EditorIsEmpty,
     parseEditorToUpload,
     clear
