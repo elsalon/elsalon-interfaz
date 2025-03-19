@@ -353,17 +353,22 @@ onMounted(async () => {
                         const div = document.createElement('div');
                         div.className = 'mention-item';
 
-                        if (item.avatar) {
-                            const img = document.createElement('img');
-                            img.src = item.avatar;
-                            img.className = 'mention-avatar';
-                            div.appendChild(img);
-                        } else {
-                            const iniciales = document.createElement('div');
-                            iniciales.className = 'mention-iniciales';
-                            const inicialesTxt = item.value.split(' ').map(n => n[0]).join('').substring(0, 3).toUpperCase();
-                            iniciales.innerText = inicialesTxt
-                            div.appendChild(iniciales);
+                        if(item.type === 'mention'){
+                            // Si es mencion agregamos el avatar
+                            if (item.avatar) {
+                                // Puede ser imagen
+                                const img = document.createElement('img');
+                                img.src = item.avatar;
+                                img.className = 'mention-avatar';
+                                div.appendChild(img);
+                            } else {
+                                // O iniciales
+                                const iniciales = document.createElement('div');
+                                iniciales.className = 'mention-iniciales';
+                                const inicialesTxt = item.value.split(' ').map(n => n[0]).join('').substring(0, 3).toUpperCase();
+                                iniciales.innerText = inicialesTxt
+                                div.appendChild(iniciales);
+                            }
                         }
 
                         div.appendChild(document.createTextNode(item.value));
@@ -389,20 +394,22 @@ onMounted(async () => {
                                     id: user.id,
                                     relationTo: 'users',
                                     value: user.nombre,
-                                    avatar: user.avatar?.sizes.thumbnail.url
+                                    avatar: user.avatar?.sizes.thumbnail.url,
+                                    type: 'mention',
                                 })),
                                 ...grupos.docs.map(group => ({
                                     id: group.id,
                                     relationTo: 'grupos',
                                     value: group.nombre,
-                                    avatar: group.avatar?.sizes.thumbnail.url
+                                    avatar: group.avatar?.sizes.thumbnail.url,
+                                    type: 'mention',
                                 }))
                             ];
                         } else if (mentionChar === "#") {
                             const etiquetas = salonStore.etiquetas.filter(etiqueta =>
                                 etiqueta.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
                             values = etiquetas.map(etiqueta => {
-                                return { id: etiqueta.id, value: etiqueta.nombre }
+                                return { id: etiqueta.id, value: etiqueta.nombre, type: 'etiqueta' }
                             })
                         }
 
