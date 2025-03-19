@@ -16,7 +16,13 @@
 
     <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true">
         <template #item="{ item, props }">
-            <a class="flex items-center" v-bind="props.action">
+            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                    <a :href="href" v-bind="props.action" @click="navigate">
+                        <span :class="item.icon" />
+                        <span class="ml-2">{{ item.label }}</span>
+                    </a>
+            </router-link>
+            <a v-else class="flex items-center" v-bind="props.action">
                 <span :class="item.icon" class="mr-2" />
                 <span>{{ item.label }} </span>
                 <Badge size="small" v-if="item.badge > 0" class="ml-auto" :value="item.badge" />
@@ -79,7 +85,7 @@ const itemsUserMenu = computed(() => [
                 label: 'Notificaciones',
                 icon: PrimeIcons.BELL,
                 command: () => {
-                    // Abrir drawer de notificaciones?
+                    // Abrir drawer de notificaciones
                     notificacionesStore.dialogVisible = true;
                 },
                 badge: notificacionesStore.nuevas
@@ -87,30 +93,22 @@ const itemsUserMenu = computed(() => [
             {
                 label: 'Bitácora',
                 icon: PrimeIcons.BOOK,
-                command: () => {
-                    navigateTo('/usuarios/' + auth?.data.value.user.slug)
-                }
+                route: `/usuarios/${auth?.data.value.user.slug}`
             },
             {
                 label: 'Grupos',
                 icon: PrimeIcons.USERS,
-                command: () => {
-                    navigateTo('/opciones/grupos')
-                },
+                route: '/opciones/grupos',
             },
             {
                 label: 'Ayuda',
                 icon: PrimeIcons.QUESTION_CIRCLE,
-                command: () => {
-                    navigateTo('/nodo/ayuda')
-                }
+                route: '/nodo/ayuda'
             },
             {
                 label: 'Opciones',
                 icon: PrimeIcons.COG,
-                command: () => {
-                    navigateTo('/opciones/perfil')
-                }
+                route: '/opciones'
             },
             {
                 label: 'Cerrar Sesión',
