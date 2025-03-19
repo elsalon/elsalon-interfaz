@@ -31,11 +31,12 @@ const mostrarTodosLosMiembros = ref(false)
     </div>
 
     <Dialog v-model:visible="mostrarTodosLosMiembros" modal header="Miembros" :style="{ width: '25rem' }" :dismissableMask="true">
-        <div class="space-y-1">
-            <div v-for="doc in miembros.docs" :key="doc.id" class="flex items-center">
+        <div :class="{'grid grid-cols-1': miembros.docs.length === 1, 'grid grid-cols-1 md:grid-cols-2': miembros.docs.length > 1}">
+            <NuxtLink v-for="doc in miembros.docs" :key="doc.id" :to="`/usuarios/${doc.autor.slug}`"
+                class="flex gap-2 items-center p-2 hover:bg-zinc-200 w-full">
                 <AvatarSalon :usuario="doc.autor" />
-                <NuxtLink :to="`/usuarios/${doc.autor.slug}`" class="ml-2">{{ doc.autor.nombre }}</NuxtLink>
-            </div>
+                {{ doc.autor.nombre }}
+            </NuxtLink>
         </div>
     </Dialog>
 </template>
