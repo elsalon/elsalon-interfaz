@@ -2,10 +2,10 @@
   <NotificacionEntradasNuevas ref="notifEntradasNuevas" />
 
   <!-- Empty State -->
-  <div v-if="listaEntradas.length === 0" class="text-center text-zinc-600 text-sm">
+  <div v-if="listaEntradas.length === 0" class="text-center h-40 mt-10 flex flex-col justify-center items-center">
     <!-- CTA Primera publicacion -->
-    <p class="my-10 text-zinc-600">Todavía no hay entradas en esta sala</p>
-    <!-- <Button label="+ Escribir primera entrada" @click="visible=true" class="mb-10"/> -->
+    <p class="font-bold">Todavía no hay entradas</p>
+    <p class="text-zinc-600">Podés enlazarte y escribir la primera</p>
   </div>
 
   <!-- Content -->
