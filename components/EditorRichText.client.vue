@@ -1,11 +1,12 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
         <div ref="editorContainer" tabindex="0"></div>
-        <div class="attachedFiled">
-
-            <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-200 text-zinc-500 p-2 mb-1 font-mono">
+        <div class="attachedFiled bg-white">
+        
+            <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-100 text-zinc-700 rounded-sm p-2 m-2 font-mono">
                 <div class="flex items">
                     <div class="grow">
+                        <i class="pi pi-paperclip mr-2"></i>
                         <span>{{ archivo.name }}</span>
                         <span> ({{ formatBytes(archivo.size) }})</span>
                     </div>
@@ -305,14 +306,23 @@ const debouncedCountWords = debounce((text) => {
   wordCount.value = countMeaningfulWords(text);
 }, 200);
 
+import { PrimeIcons } from '@primevue/core/api';
+
 onMounted(async () => {
     if (import.meta.client) {
 
         const { default: Quill } = await import('quill')
 
         // Custom button definition
-        const AttachButton = Quill.import('ui/icons')
-        AttachButton['attach'] = '<i class="pi pi-file"></i>'
+        const icons = Quill.import('ui/icons')
+        icons['code-block'] = '<i class="pi pi-code"></i>'
+        icons['list'] = '<i class="pi pi-list"></i>'
+        icons['video'] = '<i class="pi pi-youtube"></i>'
+        icons['image'] = '<i class="pi pi-image"></i>'
+        icons['link'] = '<i class="pi pi-link"></i>'
+        icons['attach'] = '<i class="pi pi-paperclip" title="Archivo adjunto"></i>'
+        icons['clean'] = '<i class="pi pi-eraser" title="Limpiar formato"></i>'
+
 
         quill = new Quill(editorContainer.value, {
             theme: 'snow',
