@@ -1,7 +1,7 @@
 <template>
     <div v-if="eventos?.docs.length == 0 && puedeEditar" class="text-center my-14">
         <p class="text-zinc-600 mb-3">Agregá eventos para visualizar la cursada en un calendario</p>
-        <Button label="Crear primer evento" @click="IrEventos" size="small" />
+        <Button label="Crear primer evento" as="a" :href="`/salas/${props.salon.slug}/eventos`" size="small" />
     </div>
     <div v-if="eventos?.docs.length > 0" class="relative mt-2 mb-6 ml-4 md:ml-0 md:mb-8">
         <!-- Desktop Timeline -->
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <Button icon="pi pi-calendar" class="relative" size="small" severity="contrast" rounded
-                aria-label="Bookmark" @click="IrEventos" />
+                aria-label="Bookmark" as="a" :href="`/salas/${props.salon.slug}/eventos`" />
         </div>
 
         <!-- Mobile Timeline -->
@@ -101,8 +101,4 @@ const queryParams = qs.stringify({
     },
 }, { encode: false })
 const { data: eventos } = await useAsyncData(cacheKey, () => useAPI(`/api/eventos?${queryParams}`))
-const router = useRouter()
-const IrEventos = () => {
-    router.push(`/salas/${props.salon.slug}/eventos`)
-}
 </script>

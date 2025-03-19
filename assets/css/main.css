@@ -31,6 +31,10 @@
   --p-content-border-radius: 6px;
 
   --plyr-color-main: var(--p-primary-700);
+
+  .vc-light{
+    --vc-bg: rgba(0, 0, 0, 0);
+  }
 }
 html{
   @apply bg-zinc-100;
