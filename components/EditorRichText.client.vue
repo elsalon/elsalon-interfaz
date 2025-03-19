@@ -257,6 +257,7 @@ onMounted(async () => {
 
         quill = new Quill(editorContainer.value, {
             theme: 'snow',
+            // placeholder: 'Escribe algo...',
             modules: {
                 toolbar: {
                     container: [
