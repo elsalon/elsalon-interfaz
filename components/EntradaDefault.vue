@@ -49,10 +49,11 @@
             <!-- <Divider /> -->
             <!-- Comentarios -->
             <div class="actions">
-                <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
-                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 mr-2 text-xs text-zinc-600 leading-normal" style="padding: 0;"
-                    label="Comentar" @click="ToggleCommentBox" />
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
+                <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
+                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 ml-2 text-xs text-zinc-600 leading-normal" style="padding: 0;"
+                    :label="listaComentarios.showCommentBox === '1' ? 'Cancelar Comentario' : 'Comentar'"
+                    @click="ToggleCommentBox" />
             </div>
             <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
                 :showCommentBox="showCommentBox" @userPosted="UserCommented" ref="listaComentarios" />

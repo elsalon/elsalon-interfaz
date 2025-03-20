@@ -16,7 +16,8 @@
                 @eliminar="EliminarComentario(comentario.id)" @toggleCommentBox="ToggleNewComment"
                 :ref="(el) => setComentarioRef(el, comentario.id)" :isLast="index === comentarios.length - 1" />
 
-            <Button v-show="comentarios.length>0" link class="mr-2 text-xs text-zinc-600 leading-normal !p-0" label="Comentar"
+            <Button v-show="comentarios.length>0" link class="mr-2 text-xs text-zinc-600 leading-normal !p-0" 
+                :label="showCommentBox === '1' ? 'Cancelar Comentario' : 'Comentar'"
                 @click="ToggleNewComment" />
 
             <Accordion :value="showCommentBox">
@@ -161,5 +162,5 @@ const EliminarComentario = (id) => {
     comentarios.value = comentarios.value.filter(comentario => comentario.id != id)
 }
 
-defineExpose({ ToggleNewComment, HideCommentbox, comentarios })
+defineExpose({ ToggleNewComment, HideCommentbox, comentarios, showCommentBox })
 </script>
