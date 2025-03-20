@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div
-                class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-words max-w-none">
+                class="prose prose-headings:text-xl prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words max-w-none">
                 <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
             </div>
             <div class="" v-if="entrada.archivos.length">

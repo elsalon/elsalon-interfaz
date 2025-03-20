@@ -16,6 +16,9 @@
                 @eliminar="EliminarComentario(comentario.id)" @toggleCommentBox="ToggleNewComment"
                 :ref="(el) => setComentarioRef(el, comentario.id)" :isLast="index === comentarios.length - 1" />
 
+            <Button v-show="comentarios.length>0" link class="mr-2 text-xs text-zinc-600 leading-normal !p-0" :class="{'opacity-0 pointer-events-none':showCommentBox === '1'}" label="Comentar"
+                @click="ToggleNewComment" />
+
             <Accordion :value="showCommentBox">
                 <AccordionPanel value="1">
                     <AccordionContent>

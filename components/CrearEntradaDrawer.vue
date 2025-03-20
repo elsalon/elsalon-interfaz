@@ -20,7 +20,7 @@
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
             <div class="flex justify-end mt-2 md:space-y-0 h-10 overflow-hidden">
                 <!-- Selector Identidad -->
-                <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading"/>
+                <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading" class="w-10 h-10"/>
                 <!-- Boton Publicar -->
                 <Button @click="Publicar" class="flex-grow md:flex-grow-0 text-sm" :loading="uploading" md:fluid :label="isEditing ? 'Guardar' : publicarLabel" iconPos="right"></Button>
             </div>

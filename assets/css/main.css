@@ -72,9 +72,9 @@ html{
 
 .entrada-default::after{
   content: "";
-  @apply block h-[1px] mt-7 mb-7 
-  /* bg-gray-200  */ /* Fondo color */ 
-  /* bg-gradient-to-r from-white via-gray-200 to-white; */ /* Fondo gradient */ 
+  /* @apply block h-[1px] mt-7 mb-7  */
+  /* bg-zinc-200  /* Fondo color  */
+  /* bg-gradient-to-r from-white via-zinc-200 to-white; /* Fondo gradient */ 
 }
 .container-small{
   max-width: 640px;

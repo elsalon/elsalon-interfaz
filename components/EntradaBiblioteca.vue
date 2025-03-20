@@ -10,7 +10,7 @@
 
         <article class="flex flex-col flex-grow">
             <div class="flex-grow">
-                <div class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-words">
+                <div class="prose prose-headings:text-xl prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words">
                     <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
                 </div>
                 <div v-if="entrada.archivos.length">
