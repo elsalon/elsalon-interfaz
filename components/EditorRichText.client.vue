@@ -339,13 +339,12 @@ onMounted(async () => {
             modules: {
                 toolbar: {
                     container: [
-                        [{ 'header': 1 }, 'bold', 'italic', 'underline', ],
-                        [{ 'align': [] }],
+                        [{ 'header': 1 }, 'bold', 'italic', 'underline', { 'align': [] }],
+                        
                         // 'blockquote',
-                        ['code-block'],
-                        [{ 'list': 'bullet' }],
+                        ['code-block', { 'list': 'bullet' }, 'link'],
                         // [{ 'header': 1 }, { 'header': 2 }],
-                        ['link', 'image', 'video', 'attach'],
+                        ['image', 'video', 'attach', 'clean'],
                         // [{ 'script': 'sub' }, { 'script': 'super' }],
                         // [{ 'indent': '-1' }, { 'indent': '+1' }],
                         // [{ 'direction': 'rtl' }],
@@ -353,7 +352,7 @@ onMounted(async () => {
                         // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
                         // [{ 'color': [] }, { 'background': [] }],
                         // [{ 'font': [] }],
-                        ['clean'],
+                        // ['clean'],
                         // ['image'],
                         // ['link'],
                     ],

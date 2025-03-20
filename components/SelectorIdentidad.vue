@@ -1,8 +1,8 @@
 <template>
-    <div v-show="salonStore.gruposDelUsuarioFetching" class="w-10 h-10 flex items-center justify-center overflow-hidden">
+    <div v-if="salonStore.gruposDelUsuarioFetching" class="w-10 h-10 flex items-center justify-center overflow-hidden">
         <i class="pi pi-spin pi-spinner" />
     </div>
-    <Select v-model="selectedValue" v-show="!salonStore.gruposDelUsuarioFetching" :options="autoresOpciones"
+    <Select v-model="selectedValue" v-if="!salonStore.gruposDelUsuarioFetching" :options="autoresOpciones"
         optionLabel="name" :disabled="disableSelectorIdentidad || loading" :class="{ 'text-xs': props.esComentario }"
         :pt="SelectStyleProperties">
         <template #value="slotProps">

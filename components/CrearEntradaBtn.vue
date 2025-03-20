@@ -4,17 +4,6 @@
     <FullScreenModal v-model:isOpen="visible">
         <CrearEntradaDrawer :entryEdit="editContent"/>
     </FullScreenModal>
-
-    <!-- <Dialog
-        ref="maxDialog"
-        v-model:visible="visible"
-        :header="editContent !== null ? 'Editar entrada' : 'Nueva entrada'"
-        class="w-full md:w-5/6 bg-white"
-        @show="biggifyDialog"
-        :blockScroll="true"
-        :pt="{header: ['container-small flex justify-between w-full items-center']}">
-        <CrearEntradaDrawer :entryEdit="editContent"/>
-    </Dialog> -->
 </template>
 
 <script setup>

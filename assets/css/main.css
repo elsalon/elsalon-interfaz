@@ -355,3 +355,7 @@ ol{
     outline-color: #ffffff;
   }
 }
+
+.btn-comentar span, .btn-publicar span{
+  @apply truncate;
+}
