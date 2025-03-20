@@ -3,7 +3,7 @@
     :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" >
     <article>
         <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
-        <div class="flex pb-2">
+        <div class="flex pb-1">
             <NuxtLink :to="identidadUrl">
                 <AvatarSalon :usuario="identidad" v-tooltip.top="tooltipIdentidad"/>
             </NuxtLink>
