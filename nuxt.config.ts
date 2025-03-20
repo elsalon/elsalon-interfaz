@@ -20,7 +20,8 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/s/**': { redirect: '/salas/**' },
-    '/u/**': { redirect: '/usuarios/**' }
+    '/u/**': { redirect: '/usuarios/**' },
+    '/dashboard': { redirect: '/' },
   },
   // *****
   // Mixpanel Analytics
