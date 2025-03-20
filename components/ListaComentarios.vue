@@ -11,7 +11,7 @@
             </span>
         </div>
 
-        <div class="pl-0 pt-2 border-l-1 border-zinc-100 relative">
+        <div class="pl-0 pt-2 border-l-1 border-zinc-100 relative" v-if="comentarios.length > 0">
             <Comentario v-for="(comentario, index) in comentarios" :comentario="comentario" :key="comentario.id"
                 @eliminar="EliminarComentario(comentario.id)" @toggleCommentBox="ToggleNewComment"
                 :ref="(el) => setComentarioRef(el, comentario.id)" :isLast="index === comentarios.length - 1" />
