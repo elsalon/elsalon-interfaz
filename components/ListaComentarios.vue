@@ -11,15 +11,13 @@
             </span>
         </div>
 
-        <div class="pl-0 pt-2 border-l-1 border-zinc-100 relative" >
+        <div class="pl-0 border-l-1 border-zinc-100 relative" >
             <template v-if="comentarios.length > 0">
                 <Comentario v-for="(comentario, index) in comentarios" :comentario="comentario" :key="comentario.id"
                     @eliminar="EliminarComentario(comentario.id)" @toggleCommentBox="ToggleNewComment"
                     :ref="(el) => setComentarioRef(el, comentario.id)" :isLast="index === comentarios.length - 1" />
 
-                <Button v-show="comentarios.length>  0" link class="mb-2 text-xs text-zinc-600 leading-normal !p-0" 
-                    :label="showCommentBox === '1' ? 'Cancelar Comentario' : 'Comentar'"
-                    @click="ToggleNewComment" />
+                <BtnComentar v-if="comentarios.length > 0" @click="ToggleNewComment" :labelCancelar="showCommentBox === '1'" />
             </template> 
 
             <Accordion :value="showCommentBox">
