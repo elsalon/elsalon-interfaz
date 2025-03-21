@@ -1,11 +1,12 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
         <div ref="editorContainer" tabindex="0"></div>
-        <div class="attachedFiled">
-
-            <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-200 text-zinc-500 p-2 mb-1 font-mono">
+        <div class="attachedFiled bg-white">
+        
+            <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-100 text-zinc-700 rounded-sm p-2 m-2 font-mono">
                 <div class="flex items">
                     <div class="grow">
+                        <i class="pi pi-paperclip mr-2"></i>
                         <span>{{ archivo.name }}</span>
                         <span> ({{ formatBytes(archivo.size) }})</span>
                     </div>
@@ -35,6 +36,8 @@ const toast = useToast();
 const attachedImages = ref([])
 const attachedFiles = ref([])
 const fileInput = ref(null)
+const wordCount = ref(0)
+const characterCount = ref(0)
 
 const emit = defineEmits(['publishHotKey'])
 const props = defineProps({
@@ -64,7 +67,16 @@ const handlePublishHotkey = (e) => {
 }
 
 const EditorIsEmpty = () => {
-    return quill.getLength() === 1 && !quill.getText().trim()
+    let isEmpty = true
+    // Any file 
+    if (attachedFiles.value.length > 0) {
+        isEmpty = false
+    }
+    // any text
+    if (quill.getLength() > 1) {
+        isEmpty = false
+    }
+    return isEmpty
 }
 
 const parseEditorToUpload = async (btnLabel = null) => {
@@ -245,6 +257,70 @@ const parseExistingContent = () => {
     attachedFiles.value = []
     attachedFiles.value = entrada.archivos.map(data => ({ id: data.archivo.id, name: data.archivo.filename, size: data.archivo.filesize, uploaded: true }))
 }
+// Debounce utility function
+function debounce(func, wait, immediate = false) {
+  let timeout;
+  return function() {
+    const context = this;
+    const args = arguments;
+    
+    const later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    
+    if (callNow) func.apply(context, args);
+  };
+}
+
+// Your existing word counting function
+function countMeaningfulWords(text) {
+  if (!text || typeof text !== 'string') return 0;
+  
+  // Remove URLs
+  let cleanText = text.replace(/https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g, '');
+  
+  // Remove HTML tags that might be part of pasted content
+  cleanText = cleanText.replace(/<[^>]*>/g, '');
+  
+  // Remove email addresses
+  cleanText = cleanText.replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '');
+  
+  // Remove special characters and extra whitespace
+  cleanText = cleanText.replace(/[^\w\s]|_/g, ' ').replace(/\s+/g, ' ').trim();
+  
+  // Split by whitespace and count non-empty words
+  const words = cleanText.split(' ').filter(word => {
+    // Filter out common meaningless words like single letters (except 'a' and 'I')
+    // if (word.length <= 1 && !['a', 'A', 'i', 'I'].includes(word)) {
+    //   return false;
+    // }
+    
+    // Filter out numbers by themselves
+    if (/^\d+$/.test(word)) {
+      return false;
+    }
+    
+    return word.length > 0;
+  });
+  
+  return {
+    words: words.length,
+    characters: cleanText.length
+  }
+}
+
+// Create a debounced version of the word counter
+const debouncedCountWords = debounce((text) => {
+    const meaningfulWords = countMeaningfulWords(text);
+  wordCount.value = meaningfulWords.words
+  characterCount.value = meaningfulWords.characters
+}, 200);
+
 
 onMounted(async () => {
     if (import.meta.client) {
@@ -252,21 +328,28 @@ onMounted(async () => {
         const { default: Quill } = await import('quill')
 
         // Custom button definition
-        const AttachButton = Quill.import('ui/icons')
-        AttachButton['attach'] = '<i class="pi pi-file"></i>'
+        const icons = Quill.import('ui/icons')
+        icons['code-block'] = '<i class="pi pi-code" title="Código"></i>'
+        icons['list'] = '<i class="pi pi-list" title="Lista"></i>'
+        icons['video'] = '<i class="pi pi-youtube" title="Agregar video embebido"></i>'
+        icons['image'] = '<i class="pi pi-image" title="Agregar imagen"></i>'
+        icons['link'] = '<i class="pi pi-link" title="Link"></i>'
+        icons['attach'] = '<i class="pi pi-paperclip" title="Archivo adjunto"></i>'
+        icons['clean'] = '<i class="pi pi-eraser" title="Limpiar formato"></i>'
+
 
         quill = new Quill(editorContainer.value, {
             theme: 'snow',
+            // placeholder: 'Escribe algo...',
             modules: {
                 toolbar: {
                     container: [
-                        [{ 'header': 1 }, 'bold', 'italic', 'underline', ],
-                        [{ 'align': [] }],
+                        [{ 'header': 1 }, 'bold', 'italic', 'underline', { 'align': [] }],
+                        
                         // 'blockquote',
-                        ['code-block'],
-                        [{ 'list': 'bullet' }],
+                        ['code-block', { 'list': 'bullet' }, 'link'],
                         // [{ 'header': 1 }, { 'header': 2 }],
-                        ['link', 'image', 'video', 'attach'],
+                        ['image', 'video', 'attach', 'clean'],
                         // [{ 'script': 'sub' }, { 'script': 'super' }],
                         // [{ 'indent': '-1' }, { 'indent': '+1' }],
                         // [{ 'direction': 'rtl' }],
@@ -274,7 +357,7 @@ onMounted(async () => {
                         // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
                         // [{ 'color': [] }, { 'background': [] }],
                         // [{ 'font': [] }],
-                        ['clean'],
+                        // ['clean'],
                         // ['image'],
                         // ['link'],
                     ],
@@ -293,17 +376,22 @@ onMounted(async () => {
                         const div = document.createElement('div');
                         div.className = 'mention-item';
 
-                        if (item.avatar) {
-                            const img = document.createElement('img');
-                            img.src = item.avatar;
-                            img.className = 'mention-avatar';
-                            div.appendChild(img);
-                        } else {
-                            const iniciales = document.createElement('div');
-                            iniciales.className = 'mention-iniciales';
-                            const inicialesTxt = item.value.split(' ').map(n => n[0]).join('').substring(0, 3).toUpperCase();
-                            iniciales.innerText = inicialesTxt
-                            div.appendChild(iniciales);
+                        if(item.type === 'mention'){
+                            // Si es mencion agregamos el avatar
+                            if (item.avatar) {
+                                // Puede ser imagen
+                                const img = document.createElement('img');
+                                img.src = item.avatar;
+                                img.className = 'mention-avatar';
+                                div.appendChild(img);
+                            } else {
+                                // O iniciales
+                                const iniciales = document.createElement('div');
+                                iniciales.className = 'mention-iniciales';
+                                const inicialesTxt = item.value.split(' ').map(n => n[0]).join('').substring(0, 3).toUpperCase();
+                                iniciales.innerText = inicialesTxt
+                                div.appendChild(iniciales);
+                            }
                         }
 
                         div.appendChild(document.createTextNode(item.value));
@@ -329,20 +417,22 @@ onMounted(async () => {
                                     id: user.id,
                                     relationTo: 'users',
                                     value: user.nombre,
-                                    avatar: user.avatar?.sizes.thumbnail.url
+                                    avatar: user.avatar?.sizes.thumbnail.url,
+                                    type: 'mention',
                                 })),
                                 ...grupos.docs.map(group => ({
                                     id: group.id,
                                     relationTo: 'grupos',
                                     value: group.nombre,
-                                    avatar: group.avatar?.sizes.thumbnail.url
+                                    avatar: group.avatar?.sizes.thumbnail.url,
+                                    type: 'mention',
                                 }))
                             ];
                         } else if (mentionChar === "#") {
                             const etiquetas = salonStore.etiquetas.filter(etiqueta =>
                                 etiqueta.nombre.toLowerCase().includes(searchTerm.toLowerCase()))
                             values = etiquetas.map(etiqueta => {
-                                return { id: etiqueta.id, value: etiqueta.nombre }
+                                return { id: etiqueta.id, value: etiqueta.nombre, type: 'etiqueta' }
                             })
                         }
 
@@ -381,6 +471,15 @@ onMounted(async () => {
         })
 
         quill.on('text-change', (delta) => {
+            const text = quill.getText();
+            // For significant changes (paste operations), update immediately
+            if (delta.ops.some(op => op.insert && typeof op.insert === 'string' && op.insert.length > 30)) {
+                wordCount.value = countMeaningfulWords(text);
+            } else {
+                // For regular typing, use the debounced version
+                debouncedCountWords(text);
+            }
+
             const ops = delta.ops;
 
             // Check if the delta has relevant operations
@@ -410,7 +509,7 @@ onMounted(async () => {
 
             // Determine the relevant text length until the cursor position
             const relevantLength = sel.index - leafIndex;
-            const text = leaf.text.slice(0, relevantLength);
+            const leafText = leaf.text.slice(0, relevantLength);
 
             // Only proceed if the text is not part of a link
             if (leaf.parent.domNode.localName === 'a') {
@@ -423,9 +522,9 @@ onMounted(async () => {
                 return;
             }
 
-            const urlMatch = text.match(urlRegex);
-            const youtubeMatch = text.match(youtubeRegex);
-            const vimeoMatch = text.match(vimeoRegex);
+            const urlMatch = leafText.match(urlRegex);
+            const youtubeMatch = leafText.match(youtubeRegex);
+            const vimeoMatch = leafText.match(vimeoRegex);
 
             // If a URL is matched
             if (urlMatch) {
@@ -484,6 +583,8 @@ const clear = () => {
 }
 // Expose the function so the parent can access it
 defineExpose({
+    wordCount,
+    characterCount,
     EditorIsEmpty,
     parseEditorToUpload,
     clear

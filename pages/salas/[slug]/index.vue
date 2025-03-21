@@ -11,7 +11,8 @@
             </h2>
         </div>
 
-        <div class="text-center flex flex-wrap justify-around items-center w-full mb-10 bg-white p-1">
+        <!-- Menu principal Sala -->
+        <div class="text-center flex flex-wrap justify-around items-center w-full mb-2 bg-white p-1">
             <!-- Lista de avatares de miembros -->
             <ListaMiembrosSala :miembros="miembros" />
 
@@ -28,9 +29,20 @@
                 <BtnEnlazar @estadoEnlace="onEstadoEnlace" type="sala"/>
             </div>
         </div>
-        <div>
-            <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon"/>
+        
+        <!-- Secciones -->
+        <div  v-if="estadoEnlace == 2"
+            class="text-center flex flex-wrap justify-center gap-x-2 items-center w-full mb-4 p-1 text-sm">
+            <SeccionesSalaListaSecciones :salon="salon" />
+            <SeccionesSalaBtnAgregarSeccion :salon="salon" />            
         </div>
+
+        <!-- Linea de Tiempo -->
+        <div>
+            <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon" class="mb-2"/>
+        </div>
+
+        <div class="h-10"></div>
         <div>
             <ListaEntradas :query="query" :cacheKey="cacheKey" />
         </div>
@@ -44,16 +56,24 @@ const estadoEnlace = ref(false)
 const route = useRoute()
 const slug = route.params?.slug
 const salonStore = useSalonStore();
-const salon = ref(null)
-salon.value = salonStore.salas.find(salon => salon.slug === slug)
-salonStore.setContext('salon', salon.value.id)
-salonStore.SetPageTitle(salon.value.nombre)
-const cacheKey = ref(`entradas-${salon.value.id}`)
 
+const salon = computed(() => {
+  const found = salonStore.salas.find(s => s.slug === slug)
+  if (!found) console.warn(`Salon with slug "${slug}" not found`)
+  return found
+})
+
+// Update these lines to handle possible undefined value during initial load
+// and use optional chaining
+salonStore.setContext('salon', salon.value?.id)
+salonStore.SetPageTitle(salon.value?.nombre || '')
+const cacheKey = ref(`entradas-${salon.value?.id || ''}`)
+
+// Make sure to add null checks throughout your query
 var query = {
     where: {
         and: [
-            { sala: { equals: salon.value.id } },
+            { sala: { equals: salon.value?.id } },
         ]
     }
 }

@@ -2,13 +2,15 @@
     <div class="group/entrada transition-all duration-500 ease-in-out entrada-biblioteca flex md:flex-col"
         :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }">
 
-        <figure v-if="entrada.imagenes.length > 0" class="mr-5 md:mr-0 ">
-            <img :src="entrada.imagenes[0].imagen.sizes.medium.url" class="max-w-32 object-cover aspect-[6/9] md:w-full md:max-w-none" />
-        </figure>
+        <NuxtLink :to="`/entradas/${entrada.id}`">
+            <figure v-if="entrada.imagenes.length > 0" class="mr-5 md:mr-0 ">
+                <img :src="entrada.imagenes[0].imagen.sizes.medium.url" class="max-w-32 object-cover aspect-[6/9] md:w-full md:max-w-none" />
+            </figure>
+        </NuxtLink>
 
         <article class="flex flex-col flex-grow">
             <div class="flex-grow">
-                <div class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-words">
+                <div class="prose prose-headings:text-xl prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words">
                     <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
                 </div>
                 <div v-if="entrada.archivos.length">

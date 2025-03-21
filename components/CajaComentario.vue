@@ -2,17 +2,15 @@
     <ClientOnly fallback-tag="div" fallback="cargando editor">
         <div>
             <!-- Editor -->
-            <div class="comment-input bg-white border border-zinc-200">
+            <div class="comment-input bg-white">
                 <EditorRichText ref="editor" :editingData="props.commentEdit" @publishHotKey="Publicar"/>
                 <!-- <QuillEditor placeholder="Comentario" v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/> -->
             </div>
             <div class="text-right mt-2 flex justify-end flex-row">
-                <!-- Btn Cancelar -->
-                <Button text @click="CancelComment" class="mr-auto " size="small" label="Cancelar" />
                 <!-- Selector Identidad -->
-                <SelectorIdentidad v-model="autorSeleccionado" :esComentario="true" :disabled="uploading"/>
+                <SelectorIdentidad v-model="autorSeleccionado" :esComentario="true" :disabled="uploading" />
                 <!-- Btn Publica -->
-                <Button  @click="Publicar" iconPos="right" :loading="uploading" size="small" :label="isEditing ? 'Guardar' : comentarLabel" class="w-2/3 md:w-auto"></Button>
+                <Button  @click="Publicar" iconPos="right" :loading="uploading" size="small" :label="isEditing ? 'Guardar' : comentarLabel" class="w-full md:w-auto btn-comentar text-xs md:text-sm"></Button>
             </div>
         </div>
     </ClientOnly>

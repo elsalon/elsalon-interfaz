@@ -3,7 +3,7 @@
     :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" >
     <article>
         <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
-        <div class="flex pb-2">
+        <div class="flex pb-1">
             <NuxtLink :to="identidadUrl">
                 <AvatarSalon :usuario="identidad" v-tooltip.top="tooltipIdentidad"/>
             </NuxtLink>
@@ -15,7 +15,7 @@
                         <h2 class="font-bold text-black" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
-                        <NuxtLink v-if="entrada.sala" class="text-sm mr-2 hover:underline text-zinc-600" 
+                        <NuxtLink v-if="entrada.sala" class="text-sm mr-1 hover:underline text-zinc-600" 
                             :to="GenerateSalaUrl(entrada.sala.slug)">{{ entrada.sala.nombre }}</NuxtLink>
                         <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline text-zinc-600 " :to="identidadUrl">Bitácora</NuxtLink>
                         <NuxtLink class="text-zinc-600 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
@@ -38,7 +38,7 @@
                 </div>
             </div>
             <div
-                class="prose prose-headings:text-xl prose-headings:my-1 leading-normal prose-img:my-2 break-words max-w-none">
+                class="prose prose-headings:text-xl prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words max-w-none">
                 <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
             </div>
             <div class="" v-if="entrada.archivos.length">
@@ -49,10 +49,11 @@
             <!-- <Divider /> -->
             <!-- Comentarios -->
             <div class="actions">
-                <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
-                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 mr-2 text-xs text-zinc-600 leading-normal" style="padding: 0;"
-                    label="Comentar" @click="ToggleCommentBox" />
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
+                <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
+                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 ml-2 text-xs text-zinc-600 leading-normal" style="padding: 0;"
+                    :label="listaComentarios?.showCommentBox === '1' ? 'Cancelar Comentario' : 'Comentar'"
+                    @click="ToggleCommentBox" />
             </div>
             <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
                 :showCommentBox="showCommentBox" @userPosted="UserCommented" ref="listaComentarios" />

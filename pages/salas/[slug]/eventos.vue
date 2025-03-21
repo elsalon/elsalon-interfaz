@@ -43,7 +43,7 @@
                                 <!-- Btn Comenzar Editar -->
                                  <div class="event-actions flex">
                                         <Button v-if="puedeEditar" icon="pi pi-trash" severity="danger" text rounded aria-label="Filter"  @click="PromptEliminarEvento(evento)"/>
-                                        <Button v-if="puedeEditar" icon="pi pi-pencil"  text rounded aria-label="Filter"  @click="ComenzarEditarEvento(evento)"/>
+                                        <Button v-if="puedeEditar" icon="pi pi-cog"  text rounded aria-label="Filter"  @click="ComenzarEditarEvento(evento)"/>
                                  </div>
                             </div>
                             <div class="text-xs md:text-sm text-zinc-600">
@@ -58,30 +58,29 @@
 
         <!-- Ventana Crear / Editar evento -->
         <Dialog v-model:visible="mostrarVentanaEdit" modal :header="ventanaEditHeader" :style="{ width: '25rem' }" :dismissableMask="true">
-            
-            <div class="flex gap-2 mb-4 flex-col md:flex-row">
-                <label for="fecha" class="font-semibold w-1/4">fecha</label>
-                <DatePicker dateFormat="dd/mm/yy" id="fecha" v-model="eventoEditando.fecha" class="w-full" :minDate="new Date(periodo.startDate)" :maxDate="new Date(periodo.endDate)" showTime hourFormat="24" fluid />
-            </div>
-
-            <div class="flex gap-2 mb-4 flex-col md:flex-row">
-                <label for="titulo" class="font-semibold w-1/4">título</label>
-                <InputText id="titulo" class="w-full" v-model="eventoEditando.titulo" required minlength="3" autofocus />
-            </div>
-            
-            <div class="flex gap-2 mb-10 flex-col md:flex-row">
-                <label for="desc" class="font-semibold w-1/4">desc</label>
-                <Textarea id="desc" class="w-full leading-normal" v-model="eventoEditando.descripcion" rows="5" cols="30" />
-            </div>
-
-            <div class="text-right flex justify-end gap-x-2">
-                <!-- Btn Eliminar -->
-                <!-- <Button type="submit" class="mr-auto" severity="danger" icon="pi pi-trash" :disabled="loadingEdit" @click="PromptEliminarEvento"/> -->
-                <!-- Btn Cancelar -->
-                <Button type="submit" class="" label="Cancelar" severity="secondary" :disabled="loadingEdit" @click="mostrarVentanaEdit=false"/>
-                <!-- Btn Guardar -->
-                <Button type="submit" class="" :label="ventanaEditHeader" :loading="loadingEdit" @click="GuardarEvento" />
-            </div>
+            <form @submit.prevent="GuardarEvento">
+                <div class="flex gap-2 mb-4 flex-col md:flex-row">
+                    <label for="fecha" class="font-semibold w-1/4">fecha</label>
+                    <DatePicker dateFormat="dd/mm/yy" id="fecha" v-model="eventoEditando.fecha" autofocus required class="w-full" :minDate="new Date(periodo.startDate)" :maxDate="new Date(periodo.endDate)" showTime hourFormat="24" fluid />
+                </div>
+    
+                <div class="flex gap-2 mb-4 flex-col md:flex-row">
+                    <label for="titulo" class="font-semibold w-1/4">título</label>
+                    <InputText id="titulo" class="w-full" v-model="eventoEditando.titulo" required minlength="3"  />
+                </div>
+                
+                <div class="flex gap-2 mb-10 flex-col md:flex-row">
+                    <label for="desc" class="font-semibold w-1/4">desc</label>
+                    <Textarea id="desc" class="w-full leading-normal" v-model="eventoEditando.descripcion" rows="5" cols="30" />
+                </div>
+    
+                <div class="text-right flex justify-end gap-x-2">
+                    <!-- Btn Cancelar -->
+                    <Button type="button" label="Cancelar" severity="secondary" :disabled="loadingEdit" @click="mostrarVentanaEdit=false"/>
+                    <!-- Btn Guardar -->
+                    <Button type="submit" class="" :label="ventanaEditHeader" :loading="loadingEdit" />
+                </div>
+            </form>
         </Dialog>
 
 

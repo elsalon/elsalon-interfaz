@@ -31,6 +31,10 @@
   --p-content-border-radius: 6px;
 
   --plyr-color-main: var(--p-primary-700);
+
+  .vc-light{
+    --vc-bg: rgba(0, 0, 0, 0);
+  }
 }
 html{
   @apply bg-zinc-100;
@@ -68,9 +72,9 @@ html{
 
 .entrada-default::after{
   content: "";
-  @apply block h-[1px] mt-7 mb-7 
-  /* bg-gray-200  */ /* Fondo color */ 
-  /* bg-gradient-to-r from-white via-gray-200 to-white; */ /* Fondo gradient */ 
+  /* @apply block h-[1px] mt-7 mb-7  */
+  /* bg-zinc-200  /* Fondo color  */
+  /* bg-gradient-to-r from-white via-zinc-200 to-white; /* Fondo gradient */ 
 }
 .container-small{
   max-width: 640px;
@@ -212,7 +216,7 @@ form label{
   }
 }
 .ql-toolbar.ql-snow{
-  @apply bg-white;
+  @apply bg-white text-center text-black;
   border: none !important;
 }
 .ql-container.ql-snow{
@@ -307,10 +311,13 @@ ol{
   animate-text;
 }
 
-.ql-toolbar.ql-snow .ql-formats{
 @media (max-width: 767px) {
-  margin-right: 0px !important;
- }
+  .ql-toolbar.ql-snow .ql-formats{
+    margin-right: 0px !important; 
+  }
+  .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button{
+    width: 26px;
+  }
 }
 
 .ql-snow .ql-editor .ql-code-block-container, .ql-code-block-container{
@@ -347,4 +354,8 @@ ol{
   .\[\&\>\[data-pc-name\=pcbadge\]\]\:outline-surface-0>[data-pc-name=pcbadge]{
     outline-color: #ffffff;
   }
+}
+
+.btn-comentar span, .btn-publicar span{
+  @apply truncate;
 }

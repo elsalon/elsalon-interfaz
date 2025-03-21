@@ -1,31 +1,41 @@
 <template>
 
 <!-- {{ configuracion }} -->
-    <div class="flex gap-2 mb-4 mt-0 flex-row font-mono">
+    <div class="flex gap-2 flex-row font-mono">
         <Checkbox inputId="notificacionesNavegador" v-model="permisoNotificacionesNavegador" binary :disabled="permisoNotificacionesNavegador" />
         <label for="notificacionesNavegador" class="font-semibold w-96" v-tooltip.bottom="'Al hacer clic, el navegador te pedirá permiso para enviar notificaciones. Se desactivan manualmente en los ajustes del navegador'">Notificaciones Navegador</label>
     </div>
 
-    <div class="h-5"></div>
+    <div class="h-10"></div>
 
 <form @submit.prevent="handleSubmit" class="space-y-3">
     
-    <div class="flex gap-2 mb-4 mt-0 flex-row">
+    <div class="flex gap-2 flex-row">
         <Checkbox inputId="notificacionesMailActivas" v-model="configuracion.notificacionesMail.activas" binary />
         <label for="notificacionesMailActivas" class="font-semibold w-96">Notificaciones por Mail</label>
     </div>
 
-    <div class="flex gap-2 mb-4 mt-0 flex-row">
+    <div class="flex gap-2 flex-row">
         <Checkbox inputId="mencionNueva" v-model="configuracion.notificacionesMail.mencionNueva" binary :disabled="!configuracion.notificacionesMail.activas"/>
         <label for="mencionNueva" class="w-96">Mencion Nueva</label>
     </div>
 
-    <div class="flex gap-2 mb-4 mt-0 flex-row">
+    <div class="flex gap-2 flex-row">
         <Checkbox inputId="comentarioNuevo" v-model="configuracion.notificacionesMail.comentarioNuevo" binary :disabled="!configuracion.notificacionesMail.activas"/>
         <label for="comentarioNuevo" class="w-96">Comentario Nuevo</label>
     </div>
 
-    <div class="text-right mb-10">
+    <div class="h-5"></div>
+
+    <div class="flex gap-2 flex-row">
+        <Checkbox inputId="mostrarContadorPalabras" v-model="configuracion.opciones.mostrarContadorPalabras" binary/>
+        <label for="mostrarContadorPalabras" class="w-96">Mostrar Contador Palabras 
+            <span class="text-zinc-400 font-mono">(Experimental)</span>
+        </label>
+        
+    </div>
+
+    <div class="text-right">
         <Button type="submit" class="" label="Guardar" :loading="loading" />
     </div>
 </form>
@@ -37,16 +47,20 @@ salonStore.SetPageTitle(`Configuración`)
 
 const toast = useToast();
 import { useToast } from "primevue/usetoast";
-const {data, getSession } = useAuth()
+const auth = useAuth()
+const user = auth.data.value.user
 
 const loading = ref(false)
 
 const configuracion = ref({
     notificacionesMail: {
-        activas: data.value.user?.notificacionesMail.activas,
-        mencionNueva: data.value.user?.notificacionesMail.mencionNueva,
-        comentarioNuevo: data.value.user?.notificacionesMail.comentarioNuevo,
+        activas: user?.notificacionesMail.activas,
+        mencionNueva: user?.notificacionesMail.mencionNueva,
+        comentarioNuevo: user?.notificacionesMail.comentarioNuevo,
     },
+    opciones: {
+        mostrarContadorPalabras: user?.opciones.mostrarContadorPalabras,
+    }
 })
 
 const permisoNotificacionesNavegador = ref()

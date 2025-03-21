@@ -2,10 +2,10 @@
   <NotificacionEntradasNuevas ref="notifEntradasNuevas" />
 
   <!-- Empty State -->
-  <div v-if="listaEntradas.length === 0" class="text-center text-zinc-600 text-sm">
+  <div v-if="listaEntradas.length === 0" class="text-center h-40 mt-10 flex flex-col justify-center items-center">
     <!-- CTA Primera publicacion -->
-    <p class="my-10 text-zinc-600">Todavía no hay entradas en esta sala</p>
-    <!-- <Button label="+ Escribir primera entrada" @click="visible=true" class="mb-10"/> -->
+    <p class="font-bold">Todavía no hay entradas</p>
+    <p class="text-zinc-600">Podés enlazarte y escribir la primera</p>
   </div>
 
   <!-- Content -->
@@ -70,12 +70,12 @@ const entradaRefs = ref({});
 
 const entradaContainerClass = computed(() => {
   return {
-    'space-y-10 md:space-y-0 md:grid grid-cols-3 gap-4': props.grid === true || props.grid === 3,
+    'space-y-10 md:space-y-0 md:grid grid-cols-3 gap-[8rem]': props.grid === true || props.grid === 3,
     'space-y-10 md:space-y-0 md:grid grid-cols-2 gap-4': props.grid === 2,
     'space-y-10 md:space-y-0 md:grid grid-cols-4 gap-4': props.grid === 4,
     'space-y-10 md:space-y-0 md:grid grid-cols-5 gap-4': props.grid === 5,
     'space-y-10 md:space-y-0 md:grid grid-cols-6 gap-4': props.grid === 6,
-    'entrada-default-container': props.grid === false,
+    'space-y-24 entrada-default-container': props.grid === false,
   }
 })
 
