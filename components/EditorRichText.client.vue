@@ -37,6 +37,7 @@ const attachedImages = ref([])
 const attachedFiles = ref([])
 const fileInput = ref(null)
 const wordCount = ref(0)
+const characterCount = ref(0)
 
 const emit = defineEmits(['publishHotKey'])
 const props = defineProps({
@@ -295,9 +296,9 @@ function countMeaningfulWords(text) {
   // Split by whitespace and count non-empty words
   const words = cleanText.split(' ').filter(word => {
     // Filter out common meaningless words like single letters (except 'a' and 'I')
-    if (word.length <= 1 && !['a', 'A', 'i', 'I'].includes(word)) {
-      return false;
-    }
+    // if (word.length <= 1 && !['a', 'A', 'i', 'I'].includes(word)) {
+    //   return false;
+    // }
     
     // Filter out numbers by themselves
     if (/^\d+$/.test(word)) {
@@ -307,15 +308,19 @@ function countMeaningfulWords(text) {
     return word.length > 0;
   });
   
-  return words.length;
+  return {
+    words: words.length,
+    characters: cleanText.length
+  }
 }
 
 // Create a debounced version of the word counter
 const debouncedCountWords = debounce((text) => {
-  wordCount.value = countMeaningfulWords(text);
+    const meaningfulWords = countMeaningfulWords(text);
+  wordCount.value = meaningfulWords.words
+  characterCount.value = meaningfulWords.characters
 }, 200);
 
-import { PrimeIcons } from '@primevue/core/api';
 
 onMounted(async () => {
     if (import.meta.client) {
@@ -579,6 +584,7 @@ const clear = () => {
 // Expose the function so the parent can access it
 defineExpose({
     wordCount,
+    characterCount,
     EditorIsEmpty,
     parseEditorToUpload,
     clear

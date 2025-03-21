@@ -28,8 +28,8 @@
     <div class="h-5"></div>
 
     <div class="flex gap-2 flex-row">
-        <Checkbox inputId="ocultarContadorPalabras" v-model="configuracion.opciones.ocultarContadorPalabras" binary/>
-        <label for="ocultarContadorPalabras" class="w-96">Ocultar Contador Palabras</label>
+        <Checkbox inputId="mostrarContadorPalabras" v-model="configuracion.opciones.mostrarContadorPalabras" binary/>
+        <label for="mostrarContadorPalabras" class="w-96">Mostrar Contador Palabras</label>
     </div>
 
     <div class="text-right">
@@ -56,7 +56,7 @@ const configuracion = ref({
         comentarioNuevo: user?.notificacionesMail.comentarioNuevo,
     },
     opciones: {
-        ocultarContadorPalabras: user?.opciones.ocultarContadorPalabras,
+        mostrarContadorPalabras: user?.opciones.mostrarContadorPalabras,
     }
 })
 
