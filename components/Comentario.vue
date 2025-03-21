@@ -32,7 +32,7 @@
             @cancelComment="handleUserCancelComment" />
         </DeferredContent>
 
-        <div class="actions">
+        <div class="actions mt-3">
             <Aprecio :contenidoid="comentario.id" contenidotipo="comentario"
                 :aprecioIniciales="comentario.aprecios" />
         </div>

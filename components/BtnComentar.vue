@@ -1,6 +1,6 @@
 <template>
-    <Button class="text-xs  leading-normal !p-1 self-center bg-zinc-200 border-zinc-200 text-zinc-500
-        hover:bg-zinc-300 hover:border-zinc-300 hover:text-zinc-600"
+    <Button class="text-xs !p-1 self-center bg-zinc-200 border-zinc-200 text-zinc-600
+        hover:bg-zinc-300 hover:border-zinc-300"
         :label="labelCancelar ? 'Cancelar Comentario' : 'Comentar'"
         @click="ButtonClicked()" />
 </template>

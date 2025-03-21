@@ -1,5 +1,5 @@
 <template>
-    <div class="relative group/aprecio w-max flex mr-4 mt-1">
+    <div class="relative group/aprecio w-max flex mr-4">
         <!-- Btn Aprecio -->
          <div class="relative">
              <Button link class="!p-1 text-xs text-zinc-600 leading-normal" :class="{ 'font-bold text-zinc-800': haApreciadoShowState }" style="padding: 0"

@@ -16,8 +16,8 @@
                 <Comentario v-for="(comentario, index) in comentarios" :comentario="comentario" :key="comentario.id"
                     @eliminar="EliminarComentario(comentario.id)" @toggleCommentBox="ToggleNewComment"
                     :ref="(el) => setComentarioRef(el, comentario.id)" :isLast="index === comentarios.length - 1" />
-
-                <BtnComentar v-if="comentarios.length > 0" @click="ToggleNewComment" :labelCancelar="showCommentBox === '1'" />
+                
+                <BtnComentar @click="ToggleNewComment" :labelCancelar="showCommentBox === '1'" />
             </template> 
 
             <Accordion :value="showCommentBox">
