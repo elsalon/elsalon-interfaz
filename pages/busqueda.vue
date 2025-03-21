@@ -4,22 +4,23 @@
             <RouterLink :to="`/`" class="link">S</RouterLink> /
             Búsqueda
         </template>
-        <form @submit.prevent="IniciarBusqueda">
+        <form @submit.prevent="IniciarBusqueda" class="text-center">
 
             <InputText v-model="searchQuery" type="search" size="large" placeholder="Búsqueda" class="block w-full" />
-
-            <div class="card flex flex-wrap gap-4 mt-4">
-                <div v-for="category of categories" :key="category.key" class="flex items-center">
+            
+            <div class="card flex flex-wrap justify-center gap-4 mt-4">
+                <div v-for="category of categories" :key="category.key" class="flex items-center ">
                     <Checkbox v-model="selectedCategories" :inputId="category.key" name="category"
-                        :value="category.key" />
+                    :value="category.key" />
                     <label :for="category.key" class="ml-2">{{ category.name }}</label>
                 </div>
             </div>
-
-            <Button type="submit" label="Buscar" class="mt-4" @click="IniciarBusqueda" iconPos="right" :loading="isSearching" />
+            
+            <Button type="submit" label="Buscar" class="mt-4 w-full md:w-auto" @click="IniciarBusqueda" iconPos="right" :disabled="isSearching" />
         </form>
-        <div class="mt-4" v-if="SinResultado">
-            <p>No se encontraron resultados para <strong>{{ lastQuery }}</strong></p>
+        <div class="text-center h-30 mt-10" v-if="SinResultado">
+            <p class="font-bold">"{{ lastQuery }}"</p>
+            <p class="text-zinc-600">No se encontraron resultados</p>
         </div>
 
         <div class="my-8" v-else-if="searchResults">
