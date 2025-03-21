@@ -48,12 +48,10 @@
         <div class="despues-entrada ml-0">
             <!-- <Divider /> -->
             <!-- Comentarios -->
-            <div class="actions">
-                <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
+            <div class="actions mt-1" :class="{ 'mb-3': listaComentarios?.comentarios?.length != 0 }">
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
-                <Button v-show="!listaComentarios?.comentarios?.length > 0" link class="my-2 ml-2 text-xs text-zinc-600 leading-normal" style="padding: 0;"
-                    :label="listaComentarios?.showCommentBox === '1' ? 'Cancelar Comentario' : 'Comentar'"
-                    @click="ToggleCommentBox" />
+                <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
+                <BtnComentar v-if="!listaComentarios?.comentarios?.length > 0" @click="ToggleCommentBox" :labelCancelar="listaComentarios?.showCommentBox === '1' "/>
             </div>
             <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
                 :showCommentBox="showCommentBox" @userPosted="UserCommented" ref="listaComentarios" />
