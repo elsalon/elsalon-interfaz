@@ -31,15 +31,18 @@
         </div>
         
         <!-- Secciones -->
-        <div class="text-center flex flex-wrap justify-center gap-x-2 items-center w-full mb-6 p-1 text-sm">
+        <div  v-if="estadoEnlace == 2"
+            class="text-center flex flex-wrap justify-center gap-x-2 items-center w-full mb-4 p-1 text-sm">
             <SeccionesSalaListaSecciones :salon="salon" />
             <SeccionesSalaBtnAgregarSeccion :salon="salon" />            
         </div>
 
         <!-- Linea de Tiempo -->
         <div>
-            <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon"/>
+            <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon" class="mb-2"/>
         </div>
+
+        <div class="h-10"></div>
         <div>
             <ListaEntradas :query="query" :cacheKey="cacheKey" />
         </div>
