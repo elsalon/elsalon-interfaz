@@ -48,7 +48,7 @@
         <div class="despues-entrada ml-0">
             <!-- <Divider /> -->
             <!-- Comentarios -->
-            <div class="actions mt-2" :class="{ 'mb-3': listaComentarios?.comentarios?.length != 0 }">
+            <div class="actions mt-1" :class="{ 'mb-3': listaComentarios?.comentarios?.length != 0 }">
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
                 <BtnComentar v-if="!listaComentarios?.comentarios?.length > 0" @click="ToggleCommentBox" :labelCancelar="listaComentarios?.showCommentBox === '1' "/>
