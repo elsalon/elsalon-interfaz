@@ -29,7 +29,10 @@
 
     <div class="flex gap-2 flex-row">
         <Checkbox inputId="mostrarContadorPalabras" v-model="configuracion.opciones.mostrarContadorPalabras" binary/>
-        <label for="mostrarContadorPalabras" class="w-96">Mostrar Contador Palabras</label>
+        <label for="mostrarContadorPalabras" class="w-96">Mostrar Contador Palabras 
+            <span class="text-zinc-400 font-mono">(Experimental)</span>
+        </label>
+        
     </div>
 
     <div class="text-right">
