@@ -33,7 +33,7 @@
   --plyr-color-main: var(--p-primary-700);
 
   .vc-light{
-    --vc-bg: rgba(0, 0, 0, 0);
+    --vc-bg: #f4f4f5; /* zinc 100 */
   }
 }
 html{
