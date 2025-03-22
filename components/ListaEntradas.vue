@@ -69,10 +69,10 @@ const entradaRefs = ref({});
 const entradaContainerClass = computed(() => {
   return {
     'space-y-10 md:space-y-0 md:grid grid-cols-3 gap-[8rem]': props.grid === true || props.grid === 3,
-    'space-y-10 md:space-y-0 md:grid grid-cols-2 gap-4': props.grid === 2,
-    'space-y-10 md:space-y-0 md:grid grid-cols-4 gap-4': props.grid === 4,
-    'space-y-10 md:space-y-0 md:grid grid-cols-5 gap-4': props.grid === 5,
-    'space-y-10 md:space-y-0 md:grid grid-cols-6 gap-4': props.grid === 6,
+    'space-y-10 md:space-y-0 md:grid grid-cols-2 gap-x-4 gap-y-8': props.grid === 2,
+    'space-y-10 md:space-y-0 md:grid grid-cols-4 gap-x-4 gap-y-8': props.grid === 4,
+    'space-y-10 md:space-y-0 md:grid grid-cols-5 gap-x-4 gap-y-8': props.grid === 5,
+    'space-y-10 md:space-y-0 md:grid grid-cols-6 gap-x-4 gap-y-8': props.grid === 6,
     'space-y-24 entrada-default-container': props.grid === false,
   }
 })
