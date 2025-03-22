@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="w-full text-center">
-            <Button v-if="hasNextPage && !fetchingComentarios" link class="mb-2 !text-zinc-600 text-xs"
+            <Button v-if="hasNextPage && !fetchingComentarios" link class="mb-2 !text-zinc-600 text-xs leading-normal"
                 @click="fetchComentarios" :label="`Ver más comentarios (${comentariosRestantes})`"/>
         </div>
 
-        <div v-if="fetchingComentarios" class="mb-2 w-full text-center text-zinc-600 text-sm">
+        <div v-if="fetchingComentarios" class="mb-2 p-2 w-full text-center text-zinc-600 text-xs leading-normal">
             <span class="texto-cargando">
                 Cargando comentarios...
             </span>
@@ -158,5 +158,5 @@ const EliminarComentario = (id) => {
     comentarios.value = comentarios.value.filter(comentario => comentario.id != id)
 }
 
-defineExpose({ ToggleNewComment, HideCommentbox, comentarios, showCommentBox })
+defineExpose({ ToggleNewComment, HideCommentbox, comentarios, showCommentBox, hasNextPage })
 </script>
