@@ -7,7 +7,7 @@
                 <NuxtLink :to="identidadUrl">
                     <div class="flex items-center gap-2">
                         <AvatarSalon :usuario="identidad" size="small" v-tooltip.top="tooltipIdentidad" style="font-size: .6rem;" />
-                        <span class="font-bold text-black" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</span>
+                        <span class="font-bold text-black line-clamp-1" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</span>
                     </div>
                 </NuxtLink>
                 <span class="text-zinc-600 text-xs" v-tooltip.top="$formatDate(comentario.createdAt)">
