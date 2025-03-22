@@ -9,8 +9,8 @@
         </NuxtLink>
 
         <article class="flex flex-col flex-grow">
-            <div class="flex-grow">
-                <div class="prose prose-headings:text-xl prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words">
+            <div class="flex-grow mb-2">
+                <div class="prose prose-headings:text-xl prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words line-clamp-6">
                     <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
                 </div>
                 <div v-if="entrada.archivos.length">
@@ -19,9 +19,9 @@
             </div>
             <div class="despues-entrada flex">
                 <div>
-                    <NuxtLink :to="identidadUrl" class="link flex items-center gap-x-2">
+                    <NuxtLink :to="identidadUrl" class="flex items-center gap-x-2 hover:underline">
                         <AvatarSalon :usuario="identidad" size="small" />
-                        <h2 class=" text-zinc-600  text-sm">{{ identidad.nombre }}</h2>
+                        <h2 class="text-zinc-600 text-sm line-clamp-1">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <NuxtLink class="text-zinc-600 text-xs hover:underline" :to="`/entradas/${entrada.id}`">
                         <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>

@@ -10,7 +10,7 @@
 
         <CrearEntradaBtn />
         <!-- TODO Query -->
-        <ListaEntradas :query="query" :cacheKey="cacheKey" entradaTheme="biblioteca" :grid="3"/>
+        <ListaEntradas :query="query" :cacheKey="cacheKey" entradaTheme="biblioteca" :grid="5"/>
     </NuxtLayout>
 </template>
 

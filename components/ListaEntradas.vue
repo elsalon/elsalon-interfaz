@@ -13,22 +13,20 @@
     <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada"
       @eliminar="EliminarEntrada(entrada.id)" :ref="(el) => setEntradaRef(el, entrada.id)" :theme="entradaTheme" />
   </div>
+  <div class="h-10"></div>
   <div>
     <!-- Loading Indicator -->
-    <Transition
-  enter-from-class="translate-y-full opacity-0"
-  enter-to-class="translate-y-0 opacity-100"
-  leave-from-class="translate-y-0 opacity-100"
-  leave-to-class="translate-y-full opacity-0"
-  enter-active-class="transition-all duration-300 ease-out"
-  leave-active-class="transition-all duration-300 ease-in">
-    <div v-if="loading"
-     class="fixed left-1/2 transform -translate-x-1/2 text-sm flex items-center bg-zinc-100/80 p-1 transition-all duration-300 ease-in-out animate-slide-in-bottom"
-     :class="{ 'bottom-4': loading, '-bottom-full': !loading }">
-      <span class="texto-cargando">
-        Cargando...
-      </span>
-    </div>
+    <Transition enter-from-class="translate-y-full opacity-0" enter-to-class="translate-y-0 opacity-100"
+      leave-from-class="translate-y-0 opacity-100" leave-to-class="translate-y-full opacity-0"
+      enter-active-class="transition-all duration-300 ease-out"
+      leave-active-class="transition-all duration-300 ease-in">
+      <div v-if="loading"
+        class="fixed left-1/2 transform -translate-x-1/2 text-sm flex items-center bg-zinc-100/80 p-1 transition-all duration-300 ease-in-out animate-slide-in-bottom"
+        :class="{ 'bottom-4': loading, '-bottom-full': !loading }">
+        <span class="texto-cargando">
+          Cargando...
+        </span>
+      </div>
     </Transition>
     <!-- Pagination Status -->
     <div v-show="!hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-zinc-400 text-sm">
@@ -71,10 +69,10 @@ const entradaRefs = ref({});
 const entradaContainerClass = computed(() => {
   return {
     'space-y-10 md:space-y-0 md:grid grid-cols-3 gap-[8rem]': props.grid === true || props.grid === 3,
-    'space-y-10 md:space-y-0 md:grid grid-cols-2 gap-4': props.grid === 2,
-    'space-y-10 md:space-y-0 md:grid grid-cols-4 gap-4': props.grid === 4,
-    'space-y-10 md:space-y-0 md:grid grid-cols-5 gap-4': props.grid === 5,
-    'space-y-10 md:space-y-0 md:grid grid-cols-6 gap-4': props.grid === 6,
+    'space-y-10 md:space-y-0 md:grid grid-cols-2 gap-x-4 gap-y-8': props.grid === 2,
+    'space-y-10 md:space-y-0 md:grid grid-cols-4 gap-x-4 gap-y-8': props.grid === 4,
+    'space-y-10 md:space-y-0 md:grid grid-cols-5 gap-x-4 gap-y-8': props.grid === 5,
+    'space-y-10 md:space-y-0 md:grid grid-cols-6 gap-x-4 gap-y-8': props.grid === 6,
     'space-y-24 entrada-default-container': props.grid === false,
   }
 })
@@ -197,23 +195,23 @@ const FetchNewerFromDate = async (date) => {
 
   // Query original y le saco el lastActivityy)
   let queryWhere = props.query;
-  
+
   // New condition
   const lastActivityCondition = { lastActivity: { greater_than: date } };
 
-  if(listaEntradas.value.length > 0){
+  if (listaEntradas.value.length > 0) {
     // Solo agregamos la fecha si ya hay entradas
     // Sino buscamos las query original 
-    if(queryWhere.where?.and){
+    if (queryWhere.where?.and) {
       // delete old lastActivity condition
       queryWhere.where.and = queryWhere.where.and.filter(item => !item.lastActivity) || {};
       queryWhere.where.and.push(lastActivityCondition)
-    }else if(queryWhere.where){
+    } else if (queryWhere.where) {
       queryWhere.where = queryWhere.where.filter(item => !item.lastActivity) || {};
       queryWhere.where = lastActivityCondition;
     }
   }
-    
+
   let newerItemsQuery = {
     populate: 'entradas,comentarios', // custom query param
     depth: 2,

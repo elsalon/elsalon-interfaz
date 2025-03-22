@@ -1,25 +1,28 @@
 <template>
     <div class="group/entrada transition-all duration-500 ease-in-out p-1 entrada-default"
-    :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" >
-    <article>
-        <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
-        <div class="flex pb-1">
-            <NuxtLink :to="identidadUrl">
-                <AvatarSalon :usuario="identidad" v-tooltip.top="tooltipIdentidad"/>
-            </NuxtLink>
-            <!-- <EntradaDefault /> -->
-            
+        :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }">
+        <article>
+            <!-- Para ocultar nombres hasta hover: opacity-0 group-hover:opacity-100 transition-opacity  -->
+            <div class="flex pb-1">
+                <NuxtLink :to="identidadUrl">
+                    <AvatarSalon :usuario="identidad" v-tooltip.top="tooltipIdentidad" />
+                </NuxtLink>
+                <!-- <EntradaDefault /> -->
+
                 <!-- Metadata entrada -->
                 <div class="ml-4">
                     <NuxtLink :to="identidadUrl" class="hover:underline">
-                        <h2 class="font-bold text-black" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</h2>
+                        <h2 class="font-bold text-black line-clamp-1" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
-                        <NuxtLink v-if="entrada.sala" class="text-sm mr-1 hover:underline text-zinc-600" 
+                        <NuxtLink v-if="entrada.sala" class="text-sm mr-1 hover:underline text-zinc-600"
                             :to="GenerateSalaUrl(entrada.sala.slug)">{{ entrada.sala.nombre }}</NuxtLink>
-                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline text-zinc-600 " :to="identidadUrl">Bitácora</NuxtLink>
+                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline text-zinc-600 "
+                            :to="identidadUrl">Bitácora</NuxtLink>
                         <NuxtLink class="text-zinc-600 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
-                            <time :datetime="entrada.createdAt" class="text-zinc-600" v-tooltip.top="$formatDate(entrada.createdAt)">{{ $formatDateRelative(entrada.createdAt) }}</time>
+                            <time :datetime="entrada.createdAt" class="text-zinc-600"
+                                v-tooltip.top="$formatDate(entrada.createdAt)">{{ $formatDateRelative(entrada.createdAt)
+                                }}</time>
                         </NuxtLink>
                         <!-- Entrada Fijada -->
                         <i v-if="entrada.fijada" class="pi pi-thumbtack text-zinc-600 ml-2" style="font-size: .65rem"
@@ -33,8 +36,8 @@
                 <!-- Menú ajustes entrada -->
                 <div class="flex-grow md:invisible group-hover/entrada:visible text-right">
                     <Button text @click="ToggleArticleOptions">...</Button>
-                    <Menu v-if="opcionesArticulo.length>0" :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo"
-                        :popup="true" class="text-xs" />
+                    <Menu v-if="opcionesArticulo.length > 0" :ref="el => menuRefs[entrada.id] = el"
+                        id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" />
                 </div>
             </div>
             <div
@@ -48,13 +51,16 @@
         <div class="despues-entrada ml-0">
             <!-- <Divider /> -->
             <!-- Comentarios -->
-            <div class="actions mt-1" :class="{ 'mb-3': listaComentarios?.comentarios?.length != 0 }">
+            <!-- Agrego un margen abajo solo si hay comentarios pero no aparece el "Ver mas comentarios" -->
+            <div class="actions mt-1" :class="{ 'mb-3': comentariosState.length > 0 && !hasNextPage }">
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
-                <BtnComentar v-if="!listaComentarios?.comentarios?.length > 0" @click="ToggleCommentBox" :labelCancelar="listaComentarios?.showCommentBox === '1' "/>
+                <BtnComentar v-if="!comentariosState.length > 0" @click="ToggleCommentBox"
+                    :labelCancelar="showCommentBox === '1'" />
             </div>
             <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
-                :showCommentBox="showCommentBox" @userPosted="UserCommented" ref="listaComentarios" />
+                v-model:comentarios="comentariosState" v-model:hasNextPage="hasNextPage"
+                v-model:showCommentBox="showCommentBox" @userPosted="UserCommented" ref="listaComentarios" />
         </div>
     </div>
 </template>
@@ -97,6 +103,11 @@ watch(() => props.entrada, () => {
 
 const listaComentarios = ref()
 const contenidoRender = ref()
+
+// Initialize state with the same data passed to the child component
+const comentariosState = ref(props.entrada.comentarios?.docs || [])
+const hasNextPage = ref(props.entrada.comentarios?.hasNextPage || false)
+const showCommentBox = ref("0") // Default closed
 
 const UserCommented = () => {
     listaComentarios.value.HideCommentbox();
