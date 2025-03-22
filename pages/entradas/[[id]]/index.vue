@@ -7,6 +7,7 @@
             </template>
         </template>     
         <Entrada :key="entrada.id" :entrada="entrada" />
+        <div class="h-10"></div>
     </NuxtLayout>
 </template>
 
