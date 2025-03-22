@@ -35,7 +35,9 @@ const mostrarTodosLosMiembros = ref(false)
             <NuxtLink v-for="doc in miembros.docs" :key="doc.id" :to="`/usuarios/${doc.autor.slug}`"
                 class="flex gap-2 items-center p-2 hover:bg-zinc-200 w-full">
                 <AvatarSalon :usuario="doc.autor" />
-                {{ doc.autor.nombre }}
+                <span class="line-clamp-2">
+                    {{ doc.autor.nombre }}
+                </span>
             </NuxtLink>
         </div>
     </Dialog>
