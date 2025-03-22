@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="w-full text-center">
-            <Button v-if="hasNextPage && !fetchingComentarios" link class="mb-2 !text-zinc-600 text-xs leading-normal"
+            <Button v-if="hasNextPageLocal && !fetchingComentarios" link class="mb-2 !text-zinc-600 text-xs leading-normal"
                 @click="fetchComentarios" :label="`Ver más comentarios (${comentariosRestantes})`"/>
         </div>
 
@@ -12,18 +12,18 @@
         </div>
 
         <div class="pl-0 border-l-1 border-zinc-100 relative" >
-            <template v-if="comentarios.length > 0">
-                <Comentario v-for="(comentario, index) in comentarios" :comentario="comentario" :key="comentario.id"
+            <template v-if="comentariosLocal.length > 0">
+                <Comentario v-for="(comentario, index) in comentariosLocal" :comentario="comentario" :key="comentario.id"
                     @eliminar="EliminarComentario(comentario.id)" @toggleCommentBox="ToggleNewComment"
-                    :ref="(el) => setComentarioRef(el, comentario.id)" :isLast="index === comentarios.length - 1" />
+                    :ref="(el) => setComentarioRef(el, comentario.id)" :isLast="index === comentariosLocal.length - 1" />
                 
-                <BtnComentar @click="ToggleNewComment" :labelCancelar="showCommentBox === '1'" />
+                <BtnComentar @click="ToggleNewComment" :labelCancelar="showCommentBoxLocal === '1'" />
             </template> 
 
-            <Accordion :value="showCommentBox">
+            <Accordion :value="showCommentBoxLocal">
                 <AccordionPanel value="1">
                     <AccordionContent>
-                        <CajaComentario v-if="showCommentBox == '1'" :entradaId="entradaId"
+                        <CajaComentario v-if="showCommentBoxLocal == '1'" :entradaId="entradaId"
                             @userPosted="handleUserPostedComment" @cancelComment="handleUserCancelComment"
                             :key="cajaComentarioKey" ref="cajaComentario" />
                     </AccordionContent>
@@ -45,33 +45,57 @@ const props = defineProps({
     comentariosIniciales: {
         type: Object,
         required: true,
+    },
+    comentarios: {
+        type: Array,
+        default: () => []
+    },
+    hasNextPage: {
+        type: Boolean,
+        default: false
+    },
+    showCommentBox: {
+        type: String,
+        default: "0"
     }
 })
-const hasNextPage = ref(false)
-const comentariosRestantes = ref(0)
-const comentarios = ref([])
-// computed property newestCommentDate
-const newestCommentDate = computed(() => comentarios.value.length > 0 ? comentarios.value[comentarios.value.length - 1].createdAt : null)
-const oldestCommentDate = computed(() => comentarios.value.length > 0 ? comentarios.value[0].createdAt : null)
 
-const showCommentBox = ref("0")
+const hasNextPageLocal = computed({
+    get: () => props.hasNextPage,
+    set: (val) => emit('update:hasNextPage', val)
+})
+
+const comentariosRestantes = ref(0)
+const comentariosLocal = computed({
+    get: () => props.comentarios.length > 0 ? props.comentarios : props.comentariosIniciales.docs,
+    set: (val) => emit('update:comentarios', val)
+})
+const newestCommentDate = computed(() => comentariosLocal.value.length > 0 ? comentariosLocal.value[comentariosLocal.value.length - 1].createdAt : null)
+const oldestCommentDate = computed(() => comentariosLocal.value.length > 0 ? comentariosLocal.value[0].createdAt : null)
+
+const showCommentBoxLocal = computed({
+    get: () => props.showCommentBox,
+    set: (val) => emit('update:showCommentBox', val)
+})
 
 const cajaComentarioKey = ref(0)
 const fetchingComentarios = ref(false)
 const cajaComentario = ref(null)
 
-const emit = defineEmits(['userPosted'])
+const emit = defineEmits(['userPosted', 'update:comentarios', 'update:hasNextPage', 'update:showCommentBox'])
+
+onMounted(() => {
+    comentariosLocal.value = props.comentariosIniciales.docs
+    hasNextPageLocal.value = props.comentariosIniciales.hasNextPage
+    comentariosRestantes.value = props.comentariosIniciales.totalDocs - comentariosLocal.value.length
+})
 
 const ToggleNewComment = () => {
-    showCommentBox.value = showCommentBox.value == '0' ? '1' : '0';
+    showCommentBoxLocal.value = showCommentBoxLocal.value === '0' ? '1' : '0';
 }
 const HideCommentbox = () => {
-    showCommentBox.value = '0';
+    showCommentBoxLocal.value = '0';
 }
-
-comentarios.value = props.comentariosIniciales.docs;
-hasNextPage.value = props.comentariosIniciales.hasNextPage;
-comentariosRestantes.value = props.comentariosIniciales.totalDocs - comentarios.value.length
 
 const comentarioRefs = ref({});
 
@@ -101,11 +125,11 @@ const fetchComentarios = async () => {
     const res = await useAPI(`/api/comentarios?${queryParams}`)
 
     var newComments = res.docs.filter(newComment =>
-        !comentarios.value.some(existingComment => existingComment.id === newComment.id)
+        !comentariosLocal.value.some(existingComment => existingComment.id === newComment.id)
     )
     newComments = newComments.reverse()
-    comentarios.value = [...newComments, ...comentarios.value]
-    hasNextPage.value = res.hasNextPage;
+    comentariosLocal.value = [...newComments, ...comentariosLocal.value]
+    hasNextPageLocal.value = res.hasNextPage;
     comentariosRestantes.value = res.totalDocs - res.docs.length
 
     fetchingComentarios.value = false
@@ -131,8 +155,8 @@ const fetchNewerComments = async () => {
     }
     const queryParams = qs.stringify(query, { encode: false });
     const res = await useAPI(`/api/comentarios?${queryParams}`)
-    const newComments = res.docs.filter(newComment => !comentarios.value.some(existingComment => existingComment.id === newComment.id))
-    comentarios.value = [...comentarios.value, ...newComments]
+    const newComments = res.docs.filter(newComment => !comentariosLocal.value.some(existingComment => existingComment.id === newComment.id))
+    comentariosLocal.value = [...comentariosLocal.value, ...newComments]
 
     if (newComments.length > 0) {
         newestCommentDate.value = newComments[0].createdAt
@@ -155,8 +179,8 @@ const handleUserCancelComment = () => {
 }
 
 const EliminarComentario = (id) => {
-    comentarios.value = comentarios.value.filter(comentario => comentario.id != id)
+    comentariosLocal.value = comentariosLocal.value.filter(comentario => comentario.id != id)
 }
 
-defineExpose({ ToggleNewComment, HideCommentbox, comentarios, showCommentBox, hasNextPage })
+defineExpose({ ToggleNewComment, HideCommentbox, comentarios: comentariosLocal, showCommentBox: showCommentBoxLocal, hasNextPage: hasNextPageLocal })
 </script>
