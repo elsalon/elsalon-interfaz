@@ -19,9 +19,9 @@
             </div>
             <div class="despues-entrada flex">
                 <div>
-                    <NuxtLink :to="identidadUrl" class="link flex items-center gap-x-2">
+                    <NuxtLink :to="identidadUrl" class="flex items-center gap-x-2 hover:underline">
                         <AvatarSalon :usuario="identidad" size="small" class="aspect-square" />
-                        <h2 class=" text-zinc-600 text-sm line-clamp-1">{{ identidad.nombre }}</h2>
+                        <h2 class="text-zinc-600 text-sm line-clamp-1">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <NuxtLink class="text-zinc-600 text-xs hover:underline" :to="`/entradas/${entrada.id}`">
                         <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>
