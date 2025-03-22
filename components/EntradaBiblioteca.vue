@@ -2,6 +2,22 @@
     <div class="group/entrada transition-all duration-500 ease-in-out entrada-biblioteca flex md:flex-col"
         :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }">
 
+        <div class="entrada-meta flex items-center mb-1">
+            <NuxtLink :to="identidadUrl" class="flex items-center gap-x-2 hover:underline mr-1">
+                <AvatarSalon :usuario="identidad" size="small" />
+                <h2 class="text-zinc-600 text-sm line-clamp-1">{{ identidad.nombre }}</h2>
+            </NuxtLink>
+            <NuxtLink class="text-zinc-600 text-xs hover:underline" :to="`/entradas/${entrada.id}`" v-tooltip.top="$formatDate(entrada.createdAt)">
+                <time :datetime="entrada.createdAt">{{ $formatDateRelative(entrada.createdAt) }}</time>
+            </NuxtLink>
+            <div v-if="UsuarioTieneAutoridad" class="flex-grow md:invisible group-hover/entrada:visible text-right">
+                <Button text @click="ToggleArticleOptions">...</Button>
+                <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo"
+                    :popup="true" class="text-xs" />
+            </div>
+        </div>
+
+
         <NuxtLink :to="`/entradas/${entrada.id}`">
             <figure v-if="entrada.imagenes.length > 0" class="mr-5 md:mr-0 ">
                 <img :src="entrada.imagenes[0].imagen.sizes.medium.url" class="max-w-32 object-cover aspect-[6/9] md:w-full md:max-w-none" />
@@ -17,22 +33,6 @@
                     <ListaArchivos :archivos="entrada.archivos" />
                 </div>
             </div>
-            <div class="despues-entrada flex">
-                <div>
-                    <NuxtLink :to="identidadUrl" class="flex items-center gap-x-2 hover:underline">
-                        <AvatarSalon :usuario="identidad" size="small" />
-                        <h2 class="text-zinc-600 text-sm line-clamp-1">{{ identidad.nombre }}</h2>
-                    </NuxtLink>
-                    <NuxtLink class="text-zinc-600 text-xs hover:underline" :to="`/entradas/${entrada.id}`">
-                        <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>
-                    </NuxtLink>
-                </div>
-                <div v-if="UsuarioTieneAutoridad" class="flex-grow md:invisible group-hover/entrada:visible text-right">
-                    <Button text @click="ToggleArticleOptions">...</Button>
-                    <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo"
-                        :popup="true" class="text-xs" />
-                </div>
-            </div>
         </article>
     </div>
 </template>
@@ -40,7 +40,7 @@
 <script setup>
 const salonStore = useSalonStore()
 const auth = useAuth()
-const { $formatDate } = useNuxtApp()
+const {$formatDate, $formatDateRelative } = useNuxtApp()
 const { hooks } = useNuxtApp();
 
 const props = defineProps({
