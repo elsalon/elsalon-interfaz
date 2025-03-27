@@ -1,7 +1,7 @@
 <template>
     <template v-if="auth?.data">
         <!-- Avatar Con notificationes -->
-        <template v-if="notificacionesStore.nuevas == 0">
+        <template v-if="notificacionesStore.nuevas > 0">
             <OverlayBadge>
                 <AvatarSalon :key="'avt' + myKey" class="cursor-pointer -right-px" :usuario="auth?.data.value.user"
                     @click="toggleUserMenu" />
