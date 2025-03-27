@@ -251,11 +251,8 @@ const parseExistingContent = () => {
     const { entrada, html } = props.editingData
     // console.log('parseExistingContent', entrada, html)
     quill.root.innerHTML = html
-    attachedImages.value = []
-    attachedImages.value = entrada.imagenes.map(data => ({ imagen: data.imagen.id }))
-    // console.log('adjuntos', entrada.archivos)
-    attachedFiles.value = []
-    attachedFiles.value = entrada.archivos.map(data => ({ id: data.archivo.id, name: data.archivo.filename, size: data.archivo.filesize, uploaded: true }))
+    attachedImages.value = entrada.imagenes?.map(data => ({ imagen: data.imagen.id })) || []
+    attachedFiles.value = entrada.archivos?.map(data => ({ id: data.archivo.id, name: data.archivo.filename, size: data.archivo.filesize, uploaded: true })) || []
 }
 // Debounce utility function
 function debounce(func, wait, immediate = false) {

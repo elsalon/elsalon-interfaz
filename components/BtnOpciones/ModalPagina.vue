@@ -1,15 +1,10 @@
 <template>
-    <Dialog modal :visible="localVisible" @update:visible="updateVisible" header="Link Externo"
+    <Dialog modal :visible="localVisible" @update:visible="updateVisible" header="Página"
         :style="{ width: '25rem' }" :dismissableMask="true">
         <form @submit.prevent="Guardar">
-            <div class="flex gap-2 mt-1 mb-4 flex-col md:flex-row items-center">
-                <label for="url" class="font-semibold w-1/4">url</label>
-                <InputText type="url" placeholder="https://proyectoidis.org" id="url" class="w-full" v-model="url"
-                    required minlength="3" autofocus />
-            </div>
-            <div class="flex gap-2 mt-1 mb-4 flex-col md:flex-row items-center">
-                <label for="etiqueta" class="font-semibold w-1/4">etiqueta</label>
-                <InputText id="etiqueta" placeholder="Proyecto IDIS" class="w-full" v-model="label" required
+            <div class="flex gap-2 mt-1 mb-4 flex-col md:flex-row items-center ">
+                <label for="titulo" class="font-semibold w-1/4">título</label>
+                <InputText id="titulo" placeholder="Notas finales" class="w-full" v-model="titulo" required
                     minlength="3" />
             </div>
 
@@ -45,11 +40,7 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    url: {
-        type: String,
-        default: ''
-    },
-    label: {
+    titulo: {
         type: String,
         default: ''
     },
@@ -58,9 +49,10 @@ const props = defineProps({
         default: 0
     }
 });
+
+const router = useRouter();
 const salonStore = useSalonStore();
-const url = ref(props.url);
-const label = ref(props.label);
+const titulo = ref(props.titulo);
 const orden = ref(props.orden);
 const user = useAuth().data.value.user;
 
@@ -85,32 +77,34 @@ function updateVisible(value) {
 const Guardar = async () => {
     loading.value = true;
     try {
-        if (!url.value || !label.value) {
+        if (!titulo.value) {
             loading.value = false;
             return;
         }
         const body = {
-            nombre: label.value,
+            nombre: titulo.value,
             orden: orden.value,
             autor: user.id,
             sala: props.salon.id,
             componente: [{
-                blockType: 'linkExterno',
-                url: url.value,
+                blockType: 'pagina'
             }]
         }
+        let res = null;
         if (props.id) {
             // Update
             await useAPI(`/api/secciones/${props.id}`, { method: 'PUT', body })
         } else {
             // Create
-            await useAPI(`/api/secciones`, { method: 'POST', body })
+            res = await useAPI(`/api/secciones`, { method: 'POST', body })
         }
         // Invalido el cache para refrescar
         await salonStore.invalidateSala(props.salon.id);
-        url.value = '';
-        label.value = '';
+        titulo.value = '';
         orden.value = 0;
+        if(res){
+            router.push(`/salas/${props.salon.slug}/pagina/${res.doc.slug}`)
+        }
     } catch (e) {
         console.error(e)
     }
@@ -123,9 +117,8 @@ const Guardar = async () => {
 const Eliminar = async () => {
     loading.value = true;
     try {
-        // Elimino la sección
         await useAPI(`/api/secciones/${props.id}`, { method: 'DELETE' })
-        // Invalido el cache para refrescar
+        // Elimino la sección
         await salonStore.invalidateSala(props.salon.id);
     } catch (e) {
         console.error(e)

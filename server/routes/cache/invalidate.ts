@@ -1,6 +1,6 @@
 import { defineEventHandler, getQuery } from 'h3';
 import { useRuntimeConfig } from '#imports';
-import { crearPeriodos } from './config';
+import { parseSalaCache } from './config';
 
 // Reference to the shared cache object
 let cacheRef: any = null;
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
         cacheRef.salas[existingSalaIndex] = salaRes;
         
         // Create periods for the updated sala
-        crearPeriodos(cacheRef.salas[existingSalaIndex]);
+        await parseSalaCache(cacheRef.salas[existingSalaIndex]);
         
         return {
           success: true,

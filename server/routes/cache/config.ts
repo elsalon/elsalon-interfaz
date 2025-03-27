@@ -16,6 +16,7 @@ interface Salon {
   color: string;
   slug: string;
   archivo: Archivo;
+  secciones: any[];
 }
 
 interface Etiqueta {
@@ -27,9 +28,9 @@ interface Etiqueta {
 let cache: any = null;
 let cacheTimestamp = 0;
 const CACHE_DURATION = 1000 * 60 * 60 * 3; // 3 hours
+const runtimeConfig = useRuntimeConfig().public;
 
 export default defineEventHandler(async () => {
-  const runtimeConfig = useRuntimeConfig().public;
 
   if (cache && Date.now() - cacheTimestamp < CACHE_DURATION) {
     console.log("Returning cached config");
@@ -38,8 +39,8 @@ export default defineEventHandler(async () => {
   console.log("Fetching fresh config", runtimeConfig.apiBase + "/api/salas?sort=orden&limit=0&depth=1");
 
   const [salasRes, etiquetasRes] = await Promise.all([
-    $fetch(runtimeConfig.apiBase + "/api/salas?sort=orden&limit=0&depth=1"),
-    $fetch(runtimeConfig.apiBase + "/api/etiquetas"),
+    $fetch<{ docs: any[] }>(runtimeConfig.apiBase + "/api/salas?sort=orden&limit=0&depth=1"),
+    $fetch<{ docs: any[] }>(runtimeConfig.apiBase + "/api/etiquetas"),
   ]);
 
   let salas, etiquetas;
@@ -47,7 +48,7 @@ export default defineEventHandler(async () => {
   const salasData = salasRes.docs || [];
   if (salasData.length > 0) {
     salas = salasData.sort((a: any, b: any) => a.orden - b.orden);
-    salas.forEach((salon: Salon) => crearPeriodos(salon));
+    salas.forEach(async (salon: Salon) => await parseSalaCache(salon));
   }
 
 
@@ -69,9 +70,10 @@ const finCuatri1 = '07-31'; // mes / dia 31 julio
 const comienzoCuatri2 = '08-01'; // mes / dia 1 agosto (aunque sea mas tarde)
 const finCuatri2 = '12-31'; // mes / dia 31 diciembre
 
-// Make crearPeriodos function available to other modules
-export function crearPeriodos(salon: Salon) {
-  console.log("Creating periods for", salon.nombre, salon.secciones);
+// Make parseSalaCache function available to other modules
+export async function parseSalaCache(salon: Salon) {
+  await FetchSecciones(salon);
+  console.log("Parseando", salon.nombre, "para limpiar campos y agregar periodos");
   // if(salon.archivo.activar){
   let periodos = []
   let now = new Date();
@@ -106,4 +108,21 @@ export function crearPeriodos(salon: Salon) {
     }
     salon.archivo.periodos = periodos;
   }
+}
+
+const camposSeccionEliiminar = ['extracto','contenido','imagenes','archivos','embedsYoutube','embedsVimeo']
+async function FetchSecciones(sala: Salon){
+  console.log("Fetch secciones", sala.nombre);
+  console.log(`${runtimeConfig.apiBase}/api/secciones?where[sala][equals]=${sala.id}&depth=0`);
+  // TODO Filtrar tambien dentro de periodo
+  let secciones = await $fetch<{ docs: any[] }>(`${runtimeConfig.apiBase}/api/secciones?where[sala][equals]=${sala.id}&depth=0`);
+  console.log(secciones.docs)
+  // Elimino los campos excepto blockType para reducir el tamaño del cache
+  secciones.docs?.forEach((seccion: any) => {
+    // camposSeccionEliiminar.forEach((campo) => {
+    //   delete seccion.componente[0][campo];
+    // })
+    // seccion.componente[0] = {blockType: seccion.componente[0].blockType};
+  });
+  sala.secciones = secciones.docs || [];
 }

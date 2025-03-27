@@ -6,6 +6,8 @@
     </template>
 
     <BtnOpcionesModalLinkExterno v-model:visible="mostrarModalLinkExterno" :salon="salon"/>
+
+    <BtnOpcionesModalPagina v-model:visible="mostrarModalPagina" :salon="salon"/>
 </template>
 
 <script setup>
@@ -18,11 +20,19 @@ const userPuedeEditar = user.rol === 'docente' || user.isAdmin
 const menu = ref();
 
 const mostrarModalLinkExterno = ref(false);
+const mostrarModalPagina = ref(false);
+
 const items = ref([
     {
         label: 'Link externo',
         command: () => {
             mostrarModalLinkExterno.value = true
+        }
+    },
+    {
+        label: 'Página',
+        command: () => {
+            mostrarModalPagina.value = true
         }
     }
 
