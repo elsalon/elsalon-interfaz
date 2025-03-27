@@ -48,7 +48,7 @@
                 <ListaArchivos :archivos="entrada.archivos" />
             </div>
         </article>
-        <div class="despues-entrada ml-0">
+        <div class="entrada-meta ml-0">
             <!-- <Divider /> -->
             <!-- Comentarios -->
             <!-- Agrego un margen abajo solo si hay comentarios pero no aparece el "Ver mas comentarios" -->
