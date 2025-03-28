@@ -18,7 +18,7 @@ const mostrarTodosLosMiembros = ref(false)
     <div class="flex-1 md:w-1/2  items-center">
         <div class="text-md text-muted-color" v-if="miembros?.docs">
             <div v-if="miembros.totalDocs == 0" class="text-muted text-sm">Sin miembros</div>
-            <div v-else class="flex justify-center space-x-1 items-center">
+            <div v-else class="flex justify-center gap-x-1 items-center">
                 <NuxtLink v-for="miembro in miembros.docs.slice(0,maxAvatares)" :key="miembro.id"
                     :to="`/usuarios/${miembro.autor.slug}`" v-tooltip.top="miembro.autor.nombre" class="h-6">
                     <AvatarSalon :usuario="miembro.autor" size="small" imagesize="small" />

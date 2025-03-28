@@ -1,6 +1,6 @@
 <template>
-    <Button v-if="!usuarioPertenece" class="h-12" type="button" label="Unirme" severity="secondary" @click="UnirmeComisionIndividuo" aria-haspopup="true" aria-controls="unirMenu" iconPos="right" :disabled="loading" />
-    <Button v-if="usuarioPertenece" class="h-12" type="button" label="Abandonar" severity="secondary" @click="AbandonarComisionIndividuo" aria-haspopup="true" aria-controls="abandonarMenu" iconPos="right" :loading="loading" />
+    <Button v-if="!usuarioPertenece" type="button" label="Unir a comisión" severity="contrast" @click="UnirmeComisionIndividuo" aria-haspopup="true" aria-controls="unirMenu" iconPos="right" :disabled="loading" />
+    <Button v-if="usuarioPertenece" type="button" label="Abandonar comisión" size="small" severity="secondary" @click="AbandonarComisionIndividuo" aria-haspopup="true" aria-controls="abandonarMenu" iconPos="right" :loading="loading" />
 </template>
 
 <script setup>

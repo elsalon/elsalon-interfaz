@@ -50,7 +50,7 @@
             </div>
 
             <div class="flex justify-end gap-2">
-                <Button type="button" iconPos="right" :loading="creandoNuevaComision" label="Cancelar" severity="secondary"
+                <Button type="button" iconPos="right" :disabled="creandoNuevaComision" label="Cancelar" severity="secondary"
                     @click="crearComisionVisible = false"></Button>
                 <Button type="submit" iconPos="right" :loading="creandoNuevaComision" label="Crear"></Button>
             </div>

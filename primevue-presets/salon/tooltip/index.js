@@ -40,6 +40,6 @@ export default {
         ]
     }),
     text: {
-        class: ['p-2', 'bg-black', 'text-white', 'leading-none', 'text-xs', 'whitespace-pre-line', 'break-words']
+        class: ['p-2', 'bg-black', 'text-white', 'leading-none', 'text-xs', 'whitespace-pre-line', 'break-words', 'max-w-[350px]'],
     }
 };

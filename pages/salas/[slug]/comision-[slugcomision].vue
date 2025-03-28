@@ -17,23 +17,32 @@
         </div>
         
         <!-- Docentes A Cargo y Alumnos -->
-        <div class="mb-10">
-            <h3 class="text-l font-bold">Integrantes</h3>
-            <div class="flex space-x-2">
-                <NuxtLink v-for="docente in comision.docentes" :key="docente.id" :to="`/usuarios/${docente.slug}`" v-tooltip.top="docente.nombre">
-                    <AvatarSalon :usuario="docente" size="large"/>
+        <div class="text-center flex justify-evenly items-center gap-x-2 w-full mb-2 bg-white p-1">
+            <div class="flex justify-center flex-wrap gap-x-1 items-center self-center">
+                <!-- Docentes -->
+                <NuxtLink v-for="docente in comision.docentes" class="h-6" :key="docente.id" :to="`/usuarios/${docente.slug}`" v-tooltip.top="docente.nombre">
+                    <AvatarSalon :usuario="docente" size="small" imagesize="small" />
                 </NuxtLink>
-                <NuxtLink v-for="integrante in comision.integrantes" :key="integrante.id" :to="`/usuarios/${integrante.slug}`" v-tooltip.top="integrante.nombre">
-                    <AvatarSalon :usuario="integrante" size="large"/>
+                <!-- Alumnxs -->
+                <NuxtLink v-for="integrante in comision.integrantes" class="h-6" :key="integrante.id" :to="`/usuarios/${integrante.slug}`" v-tooltip.top="integrante.nombre">
+                    <AvatarSalon :usuario="integrante" size="small" imagesize="small" />
                 </NuxtLink>
-
-                <!-- {{ comision.grupos }} -->
-                <NuxtLink v-for="grupo in comision.grupos" :key="grupo.id" :to="`/grupos/${grupo.slug}`" v-tooltip.top="grupo.nombre">
-                    <AvatarSalon :usuario="grupo" size="large"/>
+                <!-- Grupos -->
+                <NuxtLink v-for="grupo in comision.grupos" class="h-6" :key="grupo.id" :to="`/grupos/${grupo.slug}`" v-tooltip.top="grupo.nombre">
+                    <AvatarSalon :usuario="grupo" size="small" imagesize="small" />
                 </NuxtLink>
-                <BtnUnirmeComision :comision="comision" @UsuarioCambioInscripcion="RecargarComision" :key="unirmeKey"/>
             </div>
+            
+            <!-- Btn Abandonar -->
+            <BtnUnirmeComision :comision="comision" @UsuarioCambioInscripcion="RecargarComision" :key="unirmeKey"/>
+            
+            <!-- Btn tooltip info comision -->
+             <div class="w-6 h-6" tabindex="1" v-tooltip.top.focus="'Las comisiones funcionan como un filtro, reuniendo en un solo lugar las entradas y bitácoras de sus integrantes y grupos, sin ser un espacio de publicación directa.'">
+                <i class="pi pi-question-circle text-zinc-600 hover:text-zinc-900"></i>
+             </div>
         </div>
+
+        <div class="h-8"></div>
 
         <ListaEntradas :apiUrl="`/api/comisiones/${comision.id}/feed`" :query="query" :key="unirmeKey" :cacheKey="cacheKey"/>
     </NuxtLayout>
