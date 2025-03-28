@@ -11,7 +11,7 @@
         <div v-for="item in salonStore.salas" class="ml-1 lista-salas">
             <NuxtLink :to="GenerateSalaUrl(item.slug)" class="flex items-center mb-1 hover:font-bold">
                 <span class="mr-2">
-                    <Avatar v-if="item?.avatar" :image="item.avatar.sizes.medium.url" shape=""
+                    <Avatar v-if="item?.avatar" :image="item.avatar.sizes.thumbnail.url" shape=""
                         class="md:w-12 md:h-12" />
                     <Avatar v-else :label="item.siglas"
                         :style="{ backgroundColor: item.color || '#000', color: '#fff' }" shape=""
