@@ -4,6 +4,8 @@ const route = useRoute()
 const salonStore = useSalonStore();
 const toast = useToast();
 const mixpanel = useMixpanel()
+const user = useAuth().data.value.user;
+const userPuedeEditar = user.rol === 'docente' || user.isAdmin;
 
 const slugPagina = route.params?.slugPagina
 const slug = route.params?.slug
@@ -23,6 +25,10 @@ const editor = ref()
 const buttonLabel = ref("Guardar")
 
 const Editar = () => {
+    if(!userPuedeEditar){
+        toast.add({ severity: 'error', summary: 'Error', detail: 'No tienes permisos para editar', life: 3000});
+        return
+    }
     paginaEdit.value = { entrada: pagina.value.componente[0], html: contenidoRender.value.contenidoRendereado }
     isEditing.value = true
 }
@@ -102,12 +108,14 @@ const Publicar = async () => {
                         <!-- CTA Sin contenido -->
                         <p class="font-bold">Página vacía</p>
                         <p class="text-zinc-600">Editá para crear contenido</p>
-                        <Button type="button" label="Editar" class="mt-4" @click="Editar"/>
+                        <Button v-if="userPuedeEditar" type="button" label="Editar" class="mt-4" @click="Editar"/>
                     </div>
                 </template>
                 
-                <ContenidoRendereado ref="contenidoRender" :contenido="pagina.componente[0]" :id="pagina.updatedAt"/>
-                <div class="text-right mt-4" v-if="pagina.componente[0].contenido">
+                <div class="prose prose-headings:my-1 prose-p:my-0 leading-[1rem] break-words max-w-none">
+                    <ContenidoRendereado ref="contenidoRender" :contenido="pagina.componente[0]" :id="pagina.updatedAt"/>
+                </div>
+                <div class="text-right mt-4" v-if="pagina.componente[0].contenido && userPuedeEditar">
                     <Button type="button" label="Editar" @click="Editar" text/>
                 </div>
                 
