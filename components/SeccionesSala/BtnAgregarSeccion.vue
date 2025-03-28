@@ -24,17 +24,17 @@ const mostrarModalPagina = ref(false);
 
 const items = ref([
     {
+        label: 'Página',
+        command: () => {
+            mostrarModalPagina.value = true
+        }
+    },
+    {
         label: 'Link externo',
         command: () => {
             mostrarModalLinkExterno.value = true
         }
     },
-    {
-        label: 'Página',
-        command: () => {
-            mostrarModalPagina.value = true
-        }
-    }
 
 ]);
 
