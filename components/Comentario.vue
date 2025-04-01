@@ -3,7 +3,7 @@
         class="border-surface-0 text-sm group/comentario panelComentario transition-all duration-500 ease-in-out"
         :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" ref="comentarioDom">
         <template #header>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 mb-1">
                 <NuxtLink :to="identidadUrl">
                     <div class="flex items-center gap-2">
                         <AvatarSalon :usuario="identidad" size="small" v-tooltip.top="tooltipIdentidad" style="font-size: .6rem;" />
