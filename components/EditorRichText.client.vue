@@ -466,89 +466,91 @@ onMounted(async () => {
             })
             return delta
         })
-
         quill.on('text-change', (delta) => {
-            const text = quill.getText();
-            // For significant changes (paste operations), update immediately
-            if (delta.ops.some(op => op.insert && typeof op.insert === 'string' && op.insert.length > 30)) {
-                wordCount.value = countMeaningfulWords(text);
-            } else {
-                // For regular typing, use the debounced version
-                debouncedCountWords(text);
-            }
+    const text = quill.getText();
 
-            const ops = delta.ops;
+    if (delta.ops.some(op => op.insert && typeof op.insert === 'string' && op.insert.length > 30)) {
+        wordCount.value = countMeaningfulWords(text);
+    } else {
+        debouncedCountWords(text);
+    }
 
-            // Check if the delta has relevant operations
-            if (!ops || ops.length < 1 || ops.length > 2) {
-                return;
-            }
+    const ops = delta.ops;
+    if (!ops || ops.length < 1) return;
 
-            const lastOp = ops[ops.length - 1];
+    const lastOp = ops[ops.length - 1];
+    // Check if the last operation is a string insert and if it includes whitespace
+    if (!lastOp.insert || typeof lastOp.insert !== 'string' || !lastOp.insert.match(/\s/)) {
+        return;
+    }
 
-            // Check if the last operation is a string insert and if it includes whitespace
-            if (!lastOp.insert || typeof lastOp.insert !== 'string' || !lastOp.insert.match(/\s/)) {
-                return;
-            }
+    const sel = quill.getSelection();
+    if (!sel) return;
 
-            // Get the selection and current leaf node
-            const sel = quill.getSelection();
-            if (!sel) {
-                return;
-            }
+    const [leaf] = quill.getLeaf(sel.index);
+    const leafIndex = quill.getIndex(leaf);
+    if (!leaf.text) return;
 
-            const [leaf] = quill.getLeaf(sel.index);
-            const leafIndex = quill.getIndex(leaf);
+    const relevantLength = sel.index - leafIndex;
+    const leafText = leaf.text.slice(0, relevantLength);
 
-            if (!leaf.text) {
-                return;
-            }
+    if (leaf.parent.domNode.localName === 'a') return;
 
-            // Determine the relevant text length until the cursor position
-            const relevantLength = sel.index - leafIndex;
-            const leafText = leaf.text.slice(0, relevantLength);
+    const urlMatch = leafText.match(urlRegex);
 
-            // Only proceed if the text is not part of a link
-            if (leaf.parent.domNode.localName === 'a') {
-                return;
-            }
+    // Handle normal URLs
+    if (urlMatch) {
+        const url = urlMatch[0];
+        const link = `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>&nbsp;`;
+        quill.deleteText(leafIndex, relevantLength);
+        quill.clipboard.dangerouslyPasteHTML(leafIndex, link);
+    }
 
-            // Check if we are at the end of the text and whether it ends with whitespace
-            const nextLetter = leaf.text[relevantLength];
-            if (nextLetter != null && nextLetter.match(/\S/)) {
-                return;
-            }
+});
 
-            const urlMatch = leafText.match(urlRegex);
-            const youtubeMatch = leafText.match(youtubeRegex);
-            const vimeoMatch = leafText.match(vimeoRegex);
+// Handle paste event for instant conversion
+quill.root.addEventListener('paste', (event) => {
+    event.preventDefault();
+    
+    const clipboardData = event.clipboardData || window.clipboardData;
+    if (!clipboardData) return;
 
-            // If a URL is matched
-            if (urlMatch) {
-                console.log('URL:', urlMatch[0]);
-                const url = urlMatch[0];
-                const link = `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
-                quill.deleteText(leafIndex, relevantLength); // Remove the original text
-                quill.clipboard.dangerouslyPasteHTML(leafIndex, link); // Insert the link
-            }
+    const pastedText = clipboardData.getData('text');
+    if (!pastedText) return;
 
-            // If a YouTube URL is matched
-            if (youtubeMatch) {
-                console.log('YouTube:', youtubeMatch[1])
-                const videoId = youtubeMatch[1];
-                const iframe = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                quill.deleteText(leafIndex, relevantLength); // Remove the original text
-                quill.clipboard.dangerouslyPasteHTML(leafIndex, iframe); // Insert the iframe
-            }
+    const sel = quill.getSelection();
+    if (!sel) return;
 
-            // If a Vimeo URL is matched
-            if (vimeoMatch) {
-                const videoId = vimeoMatch[1];
-                const iframe = `<iframe src="https://player.vimeo.com/video/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                quill.deleteText(leafIndex, relevantLength); // Remove the original text
-                quill.clipboard.dangerouslyPasteHTML(leafIndex, iframe); // Insert the iframe
-            }
-        });
+    const [leaf] = quill.getLeaf(sel.index);
+    const leafIndex = quill.getIndex(leaf);
+
+    if (!leaf.text) {
+        return;
+    }
+
+    // Determine the relevant text length until the cursor position
+    const relevantLength = sel.index - leafIndex;
+
+    // const urlMatch = pastedText.match(urlRegex);
+    const youtubeMatch = pastedText.match(youtubeRegex);
+    const vimeoMatch = pastedText.match(vimeoRegex);
+
+    let insertHtml = pastedText;
+    
+    if (youtubeMatch) {
+        const videoId = youtubeMatch[1];
+        insertHtml = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>&#8203;`;
+    } else if (vimeoMatch) {
+        const videoId = vimeoMatch[1];
+        insertHtml = `<iframe src="https://player.vimeo.com/video/${videoId}" frameborder="0" allowfullscreen></iframe>&#8203;`;
+    }
+    
+    quill.deleteText(leafIndex, relevantLength); // Remove the original text
+    quill.clipboard.dangerouslyPasteHTML(sel.index, insertHtml);
+    
+    
+});
+
 
         editorContainer.value.firstChild.onfocus = () => {
             window.addEventListener('keydown', handlePublishHotkey)
