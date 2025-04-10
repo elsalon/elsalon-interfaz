@@ -1,14 +1,15 @@
 <template>
     <div class="relative" v-tooltip.bottom="'Aulas'">
-        <Inplace v-if="canEdit" @open="OnOpen" @close="OnClose" class="block">
+        <Inplace v-if="canEdit" @open="OnOpen" :active="editing" class="block">
             <template #display>
                 <span v-if="mostrarCta" class="text-muted-color text-sm">Editar Aulas</span>
                 <span class="font-bold">{{ aulas }}</span>
             </template>
-            <template #content="{ closeCallback }">
+            <template #content>
                 <span class="inline-flex items-center gap-2">
-                    <InputText v-model="aulas" autofocus size="small" style="width: 150px; text-align: center;"/>
-                    <Button icon="pi pi-check" text severity="contrast" @click="closeCallback" />
+                    <InputText v-model="aulas" autofocus size="small" style="width: 150px; text-align: center;" :disabled="loading"/>
+                    <Button v-if="!loading" icon="pi pi-check" text severity="contrast" @click="saveChanges" :disabled="loading" />
+                    <i v-if="loading" class="pi pi-spin pi-spinner text-sm"></i>
                 </span>
             </template>
         </Inplace>
@@ -30,6 +31,7 @@ const props = defineProps({
 
 const aulas = ref(props.salon.aulas);
 const editing = ref(false);
+const loading = ref(false);
 
 const mostrarCta = computed(() => {
     if(!canEdit) return false
@@ -39,17 +41,28 @@ const mostrarCta = computed(() => {
 const OnOpen = () => {
     editing.value = true;
 }
-const OnClose = async () =>{
-    // console.log("Cerrando inplace")
-    editing.value = false;
-    try{
+
+const saveChanges = async () => {
+    loading.value = true;
+    try {
         const body = {aulas: aulas.value}
-        const salonRes = await useAPI(`/api/salas/${props.salon.id}`, {body, method: 'PATCH'})
-        // salonStore.UpdateSala(salonRes.doc)
+        await useAPI(`/api/salas/${props.salon.id}`, {body, method: 'PATCH'})
         await salonStore.invalidateSala(props.salon.id);
         toast.add({severity: 'contrast', detail: 'Aula actualizada', life: 3000})
-    }catch(e){
+        // Only close the inplace after the fetch is complete
+        editing.value = false;
+    } catch(e) {
         console.log(e)
+        toast.add({severity: 'error', detail: 'Error al actualizar el aula', life: 3000})
+    } finally {
+        loading.value = false;
+    }
+}
+
+const OnClose = () => {
+    // We'll only use this for cancellation now
+    if (!loading.value) {
+        editing.value = false;
     }
 }
 </script>
