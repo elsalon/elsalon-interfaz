@@ -8,8 +8,17 @@
             <CajaBusqueda />
         </div>
 
-        <div v-for="item in salonStore.salas" class="ml-1 lista-salas">
-            <NuxtLink :to="GenerateSalaUrl(item.slug)" class="flex items-center mb-1 hover:font-bold">
+
+        <div  class="ml-1 lista-salas">
+            <!-- Link bitáctora -->
+            <NuxtLink :to="`/usuarios/${auth?.data.value.user.slug}`" class="flex items-center mb-1 hover:font-bold">
+                <span class="mr-2">
+                    <AvatarSalon class="md:w-12 md:h-12" :usuario="auth?.data.value.user"/>
+                </span>
+                <span class="md:text-lg">Bitácora</span>
+            </NuxtLink>
+            <!-- Links salas -->
+            <NuxtLink v-for="item in salonStore.salas" :to="GenerateSalaUrl(item.slug)" class="flex items-center mb-1 hover:font-bold">
                 <span class="mr-2">
                     <Avatar v-if="item?.avatar" :image="item.avatar.sizes.thumbnail.url" shape=""
                         class="md:w-12 md:h-12" />
@@ -24,7 +33,7 @@
 </template>
 
 <script setup>
-
+const auth = useAuth()
 const salonStore = useSalonStore();
 const { GenerateSalaUrl } = useGenerateSalaUrl()
 const menuSalasVisible = ref(false)
