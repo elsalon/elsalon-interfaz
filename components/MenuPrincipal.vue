@@ -12,9 +12,9 @@
         <div  class="ml-1 lista-salas">
             <!-- Link bitáctora -->
             <NuxtLink :to="`/usuarios/${auth?.data.value.user.slug}`" class="flex items-center mb-1 hover:font-bold">
-                <span class="mr-2">
-                    <AvatarSalon class="md:w-12 md:h-12" :usuario="auth?.data.value.user"/>
-                </span>
+                
+                <AvatarSalon class="mr-2 md:w-12 md:h-12" :usuario="auth?.data.value.user"/>
+                
                 <span class="md:text-lg">Bitácora</span>
             </NuxtLink>
             <!-- Links salas -->
