@@ -11,7 +11,7 @@
 
                 <div class="flex items-center justify-between">
                     <div class="text-zinc-600 text-xs">
-                        <time :datetime="props.notificacion.createdAt">{{ $formatDate(props.notificacion.createdAt) }}</time>
+                        <time :datetime="props.notificacion.actualizacion">{{ $formatDate(props.notificacion.actualizacion) }}</time>
                     </div>
                 </div>
             </div>

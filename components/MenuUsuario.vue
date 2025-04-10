@@ -45,7 +45,6 @@ const toast = useToast();
 
 // listen for notificacionesNuevas change
 watch(() => notificacionesStore.nuevas, (val, oldVal) => {
-    console.log('Nuevas notificaciones', val, oldVal)
     if (oldVal != null && val > 0) {
         // No es el primer fetch y hay nuevas notificaciones
         toast.add({ severity: 'contrast', detail: 'Tenés nuevas notificaciones', life: 3000 });

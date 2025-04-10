@@ -3,7 +3,6 @@ import qs from 'qs'
 export const useNotificacionesStore = defineStore('notificaciones', {
   state: () => ({
     dialogVisible: false,
-
     notificaciones: [],
     restantes: 0,
 
@@ -36,18 +35,19 @@ export const useNotificacionesStore = defineStore('notificaciones', {
     },
 
     async fetchNotificacionesTodas(fromDate = new Date()) {
+      console.log("fetch", {fromDate})
       const user = useAuth().data.value.user; // Access the user data
       const limit = 5
 
       this.fetching = true
       const query = {
-        sort: '-updatedAt',
+        sort: '-actualizacion',
         limit,
         depth: 3,
         where: {
           and: [
             { autor: { equals: user.id } },
-            { updatedAt: { less_than_equal: fromDate } },
+            { actualizacion: { less_than_equal: fromDate } },
           ]
         }
       }
@@ -59,6 +59,8 @@ export const useNotificacionesStore = defineStore('notificaciones', {
     },
 
     MergeNotificaciones(docs) {
+      // Remove notificaciones present in docs
+      this.notificaciones = this.notificaciones.filter(n => !docs.some(d => d.id === n.id))
       if (this.notificaciones == null) {
         this.notificaciones = docs
       } else {
@@ -66,21 +68,29 @@ export const useNotificacionesStore = defineStore('notificaciones', {
       }
       // Remove duplicate
       this.notificaciones = this.notificaciones.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i)
-      // sort updatedAt
-      this.notificaciones.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+      // sort actualizacion
+      this.notificaciones.sort((a, b) => new Date(b.actualizacion) - new Date(a.actualizacion))
     },
 
     async fetchNotificacionesMas() {
       const ultimaNotificacion = this.notificaciones[this.notificaciones.length - 1]
+      console.log('Ultima notificacion', ultimaNotificacion)
       if (!ultimaNotificacion) return
-      this.fetchNotificacionesTodas(new Date(ultimaNotificacion.updatedAt))
+      this.fetchNotificacionesTodas(new Date(ultimaNotificacion.actualizacion))
     },
 
 
     async MarcarTodasLeidas() {
       console.log('Marcar todas leidas')
-      await useAPI(`/api/notificaciones/todasleidas`, { method: 'PATCH' })
-      this.notificaciones.value.forEach(n => n.leida = true)
+      try{
+        this.fetching = true
+        await useAPI(`/api/notificaciones/todasleidas`, { method: 'PATCH' })
+        this.notificaciones.forEach(n => n.leida = true)
+      }catch(e) {
+        console.error('Error al marcar todas las notificaciones como leídas:', e)
+      }finally {
+        this.fetching = false
+      }
     },
 
     startPolling() {
