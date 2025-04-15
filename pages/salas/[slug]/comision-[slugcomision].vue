@@ -22,7 +22,7 @@
         
         <!-- Docentes A Cargo y Alumnos -->
         <div class="text-center flex justify-evenly items-center gap-x-2 w-full mb-2 bg-white p-1">
-            <div class="flex justify-center flex-wrap gap-x-1 items-center self-center">
+            <div class="flex flex-wrap gap-1 items-center self-center">
                 <!-- Docentes -->
                 <NuxtLink v-for="docente in comision.docentes" class="h-6" :key="docente.id" :to="`/usuarios/${docente.slug}`" v-tooltip.top="docente.nombre">
                     <AvatarSalon :usuario="docente" size="small" imagesize="small" />

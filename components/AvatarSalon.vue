@@ -1,6 +1,6 @@
 <template>
-    <Avatar v-if="tieneImagen" :image="avatarUrl" :size="props.size" style="background-color: #fff" shape="" class="aspect-square"/>
-    <Avatar v-else :label="iniciales" :size="props.size" :style="{'background-color': backgroundColor}" style="color: #fff" shape="" class="aspect-square"/>
+    <Avatar v-if="tieneImagen" :image="avatarUrl" :size="props.size" style="background-color: #fff" shape="" class="aspect-square align-top"/>
+    <Avatar v-else :label="iniciales" :size="props.size" :style="{'background-color': backgroundColor}" style="color: #fff" shape="" class="aspect-square align-top"/>
 </template>
 
 <script setup>
