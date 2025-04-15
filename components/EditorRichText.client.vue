@@ -44,7 +44,7 @@ const props = defineProps({
     editingData: { type: Object, default: null }
 })
 
-const urlRegex = /\bhttps?:\/\/[^\s<]+(?![^<]*<\/a>)/;
+const urlRegex = /(https?:\/\/[^\s]+)/g;
 const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:shorts\/|[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 const vimeoRegex = /(?:https?:\/\/)?(?:www\.|player\.)?vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|video\/|)(\d+)(?:[a-zA-Z0-9_-]+)?/i;
 
@@ -466,91 +466,115 @@ onMounted(async () => {
             })
             return delta
         })
-        quill.on('text-change', (delta) => {
+        quill.on('text-change', (delta, oldContents, source) => {
     const text = quill.getText();
 
+    // Handle word counting
     if (delta.ops.some(op => op.insert && typeof op.insert === 'string' && op.insert.length > 30)) {
-        wordCount.value = countMeaningfulWords(text);
+        const counts = countMeaningfulWords(text);
+        wordCount.value = counts.words;
+        characterCount.value = counts.characters;
     } else {
         debouncedCountWords(text);
     }
 
-    const ops = delta.ops;
-    if (!ops || ops.length < 1) return;
+    // Only process user inputs (not programmatic changes)
+    if (source !== 'user') return;
 
-    const lastOp = ops[ops.length - 1];
-    // Check if the last operation is a string insert and if it includes whitespace
-    if (!lastOp.insert || typeof lastOp.insert !== 'string' || !lastOp.insert.match(/\s/)) {
-        return;
-    }
-
+    // Check if the last operation includes typing a space or newline
+    let lastOp = delta.ops[delta.ops.length - 1];
+    const insertedSpace = lastOp && 
+                        lastOp.insert && 
+                        typeof lastOp.insert === 'string' && 
+                        (lastOp.insert.includes(' ') || lastOp.insert.includes('\n'));
+    
+    if (!insertedSpace) return;
+    
+    // Get current selection
     const sel = quill.getSelection();
     if (!sel) return;
-
-    const [leaf] = quill.getLeaf(sel.index);
-    const leafIndex = quill.getIndex(leaf);
-    if (!leaf.text) return;
-
-    const relevantLength = sel.index - leafIndex;
-    const leafText = leaf.text.slice(0, relevantLength);
-
-    if (leaf.parent.domNode.localName === 'a') return;
-
-    const urlMatch = leafText.match(urlRegex);
-
-    // Handle normal URLs
-    if (urlMatch) {
-        const url = urlMatch[0];
-        const link = `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>&nbsp;`;
-        quill.deleteText(leafIndex, relevantLength);
-        quill.clipboard.dangerouslyPasteHTML(leafIndex, link);
-    }
-
+    
+    // Get the current line
+    const [currentLine, offset] = quill.getLine(sel.index);
+    if (!currentLine) return;
+    
+    // Get the text of the current line
+    const lineText = currentLine.text || '';
+    
+    // Find the last space before the current cursor position
+    const lineIndex = quill.getIndex(currentLine);
+    const cursorPosInLine = sel.index - lineIndex;
+    
+    // Get the last word (between the previous space and the current space)
+    const textBeforeCursor = lineText.substring(0, cursorPosInLine);
+    const words = textBeforeCursor.split(/\s+/);
+    const lastWord = words[words.length - 2]; // -2 because -1 would be empty after the space
+    
+    if (!lastWord) return;
+    
+    // Check if the word is a URL
+    const urlMatch = lastWord.match(urlRegex);
+    if (!urlMatch) return;
+    
+    // Calculate the absolute position of the word in the document
+    const lastWordPos = textBeforeCursor.lastIndexOf(lastWord);
+    if (lastWordPos === -1) return;
+    
+    const absoluteStart = lineIndex + lastWordPos;
+    const urlLength = lastWord.length;
+    
+    // Don't process if we're already inside a link
+    const currentFormat = quill.getFormat(absoluteStart, urlLength);
+    if (currentFormat.link) return;
+    
+    // Format as link
+    console.log("Formatting URL:", lastWord, "at position:", absoluteStart, "length:", urlLength);
+    quill.formatText(absoluteStart, urlLength, 'link', urlMatch[0]);
 });
 
-// Handle paste event for instant conversion
-quill.root.addEventListener('paste', (event) => {
-    event.preventDefault();
-    
-    const clipboardData = event.clipboardData || window.clipboardData;
-    if (!clipboardData) return;
-
-    const pastedText = clipboardData.getData('text');
-    if (!pastedText) return;
-
-    const sel = quill.getSelection();
-    if (!sel) return;
-
-    const [leaf] = quill.getLeaf(sel.index);
-    const leafIndex = quill.getIndex(leaf);
-
-    if (!leaf.text) {
-        return;
-    }
-
-    // Determine the relevant text length until the cursor position
-    const relevantLength = sel.index - leafIndex;
-
-    // const urlMatch = pastedText.match(urlRegex);
-    const youtubeMatch = pastedText.match(youtubeRegex);
-    const vimeoMatch = pastedText.match(vimeoRegex);
-
-    let insertHtml = pastedText;
-    
-    if (youtubeMatch) {
-        const videoId = youtubeMatch[1];
-        insertHtml = `<iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>&#8203;`;
-    } else if (vimeoMatch) {
-        const videoId = vimeoMatch[1];
-        insertHtml = `<iframe src="https://player.vimeo.com/video/${videoId}" frameborder="0" allowfullscreen></iframe>&#8203;`;
-    }
-    
-    quill.deleteText(leafIndex, relevantLength); // Remove the original text
-    quill.clipboard.dangerouslyPasteHTML(sel.index, insertHtml);
-    
-    
-});
-
+        // Add custom paste handler
+        quill.root.addEventListener('paste', (event) => {
+            // Get paste data
+            const clipboardData = event.clipboardData || window.clipboardData;
+            if (!clipboardData) return;
+            
+            const pastedText = clipboardData.getData('text');
+            if (!pastedText) return;
+            
+            // Check if the pasted content is specifically a URL
+            const youtubeMatch = pastedText.match(youtubeRegex);
+            const vimeoMatch = pastedText.match(vimeoRegex);
+            const urlMatch = pastedText.match(urlRegex);
+            
+            // Only interfere if it's a special URL type
+            if (youtubeMatch || vimeoMatch || (urlMatch && urlMatch[0] === pastedText)) {
+                // IMPORTANT: We need to stop the default behavior completely
+                event.preventDefault();
+                event.stopPropagation();
+                
+                const selection = quill.getSelection(true);
+                if (!selection) return;
+                
+                if (youtubeMatch) {
+                    const videoId = youtubeMatch[1];
+                    // Use Quill's built-in video embed
+                    quill.insertEmbed(selection.index, 'video', `https://www.youtube.com/embed/${videoId}`);
+                    // Move cursor after insertion
+                    quill.setSelection(selection.index + 1);
+                } else if (vimeoMatch) {
+                    const videoId = vimeoMatch[1];
+                    quill.insertEmbed(selection.index, 'video', `https://player.vimeo.com/video/${videoId}`);
+                    // Move cursor after insertion
+                    quill.setSelection(selection.index + 1);
+                } else if (urlMatch) {
+                    // Insert the URL as a link only
+                    quill.insertText(selection.index, pastedText, {'link': pastedText});
+                    // Move cursor after insertion
+                    quill.setSelection(selection.index + pastedText.length);
+                }
+            }
+            // Let default paste handler work for non-URL content
+        }, true); // <-- Add capture phase to ensure we're first
 
         editorContainer.value.firstChild.onfocus = () => {
             window.addEventListener('keydown', handlePublishHotkey)
