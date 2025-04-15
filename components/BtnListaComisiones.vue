@@ -3,7 +3,18 @@
     <Button v-if="!noHayComisiones" text type="button" label="Ver Comisión" @click="comisionesToggle"
         aria-haspopup="true" aria-controls="overlay_menu" />
     <Button v-else text type="button" label="Ver Comisión" disabled />
-    <Menu ref="comisionesMenu" id="overlay_menu" :model="comisionesItems" :popup="true" />
+    <Menu ref="comisionesMenu" id="overlay_menu" :model="comisionesItems" :popup="true">
+        <template #item="{ item, props }">
+            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                <a :href="href" v-bind="props.action" @click="navigate">
+                    <span class="ml-2">{{ item.label }}</span>
+                </a>
+            </router-link>
+            <a v-else class="flex items-center" v-bind="props.action">
+                <span class="ml-2">{{ item.label }}</span>
+            </a>
+        </template>
+    </Menu> 
 
 
     <!-- DIALOG CREAR NUEVA COMISION -->
@@ -99,9 +110,7 @@ const comisiones = await useAPI(`/api/comisiones/?${queryParams}`, { method: 'GE
 const comisionesItems = ref(comisiones.docs.map(comision => {
     return {
         label: comision.nombre,
-        command: () => {
-            router.push(`/salas/${props.salon.slug}/comision-${comision.slug}`);
-        }
+        route: `/salas/${props.salon.slug}/comision-${comision.slug}`,
     }
 }));
 

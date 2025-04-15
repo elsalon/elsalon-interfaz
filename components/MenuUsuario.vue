@@ -17,10 +17,10 @@
     <Menu ref="userMenu" id="overlay_menu" :model="itemsUserMenu" :popup="true">
         <template #item="{ item, props }">
             <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
-                    <a :href="href" v-bind="props.action" @click="navigate">
-                        <span :class="item.icon" />
-                        <span class="ml-2">{{ item.label }}</span>
-                    </a>
+                <a :href="href" v-bind="props.action" @click="navigate">
+                    <span :class="item.icon" />
+                    <span class="ml-2">{{ item.label }}</span>
+                </a>
             </router-link>
             <a v-else class="flex items-center" v-bind="props.action">
                 <span :class="item.icon" class="mr-2" />
