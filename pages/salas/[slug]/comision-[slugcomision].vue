@@ -3,13 +3,17 @@
         <template #header>
             <RouterLink :to="`/`" class="link">S</RouterLink> /
             <NuxtLink :to="`/salas/${salon.slug}`" class="link">{{ salon.siglas }}</NuxtLink> /
-            <CajaNombreComision :comision="comision"/>
+            {{ comision.nombre }}
         </template>
         
 
         <div class="text-center mb-2">
             <LogoSala :salon="salon"/>
             <NuxtLink class="text-3xl font-bold" :to="`/salas/${salon.slug}`"><h1>{{ salon.nombre }}</h1></NuxtLink>
+            
+            <h2 class="text-xl font-bold">
+                <CajaNombreComision :comision="comision"/>
+            </h2>
             <!-- <h2 class="text-xl font-bold"></h2> -->
                  
             <BtnListaComisiones :salon="salon" :periodo="periodo" />

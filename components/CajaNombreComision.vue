@@ -1,16 +1,37 @@
 <template>
-        <Inplace v-if="canEdit" @open="OnOpen" @close="OnClose" class="inline">
+    <div class="inline">
+        <Inplace
+            v-if="canEdit"
+            :active="editing"
+            @open="OnOpen"
+            :closable="true"
+            class="inline"
+        >
             <template #display>
                 {{ nombre }}
             </template>
-            <template #content="{ closeCallback }">
+            <template #content>
                 <span class="inline-flex items-center gap-2">
-                    <InputText v-model="nombre" autofocus size="small" style="width: 150px; text-align: center;"/>
-                    <Button icon="pi pi-check" text severity="contrast" @click="closeCallback" />
+                    <InputText
+                        v-model="nombre"
+                        autofocus
+                        size="small"
+                        style="width: 150px; text-align: center;"
+                        :disabled="loading"
+                    />
+                    <Button
+                        icon="pi pi-check"
+                        text
+                        severity="contrast"
+                        @click="saveChanges"
+                        :disabled="loading"
+                    />
+                    <i v-if="loading" class="pi pi-spin pi-spinner text-sm"></i>
                 </span>
             </template>
         </Inplace>
         <span v-else>{{ nombre }}</span>
+    </div>
 </template>
 
 
@@ -27,19 +48,29 @@ const props = defineProps({
 const nombre = ref(props.comision.nombre);
 
 const editing = ref(false);
+const loading = ref(false);
 
 const OnOpen = () => {
-    editing.value = true;
+    editing.value = true
 }
-const OnClose = async () =>{
-    // console.log("Cerrando inplace")
-    editing.value = false;
-    try{
-        const body = {nombre: nombre.value}
-        await useAPI(`/api/comisiones/${props.comision.id}`, {body, method: "PUT"})
-        toast.add({severity: 'contrast', detail: 'Comisión actualizada', life: 3000})
-    }catch(e){
+
+// Save changes on button click, then close
+const saveChanges = async () => {
+    loading.value = true
+    try {
+        const body = { nombre: nombre.value }
+        await useAPI(`/api/comisiones/${props.comision.id}`, { body, method: "PUT" })
+        toast.add({ severity: 'contrast', detail: 'Comisión actualizada', life: 3000 })
+        editing.value = false
+    } catch (e) {
         console.log(e)
+    } finally {
+        loading.value = false
     }
+}
+
+// Use this only for cancel if needed (only if not loading)
+const OnClose = () => {
+    if (!loading.value) editing.value = false
 }
 </script>
