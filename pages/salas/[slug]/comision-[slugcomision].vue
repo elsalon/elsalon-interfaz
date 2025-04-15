@@ -76,11 +76,21 @@ let query = {}
 const periodo = salon.value.archivo.periodos[0]
 const cacheKey = `comision-${salon.value.id}-${periodo.slug}`
 if(salon.value.archivo.activar){
-    const startDate = encodeURIComponent(periodo.startDate);
-    const endDate = encodeURIComponent(periodo.endDate);
+    // query.where.and.push({ createdAt: { greater_than_equal: startDate } })
+    // query.where.and.push({ createdAt: { less_than_equal: endDate } })
     query = {
-        startDate,
-        endDate,
+        where: {
+            and: [
+                { createdAt: { greater_than_equal: periodo.startDate } },
+                { createdAt: { less_than_equal: periodo.endDate } }
+            ]
+        }
     }
+    // const startDate = encodeURIComponent(periodo.startDate);
+    // const endDate = encodeURIComponent(periodo.endDate);
+    // query = {
+    //     startDate,
+    //     endDate,
+    // }
 }
 </script>

@@ -130,48 +130,47 @@ const listaEntradas = computed(() => {
   return [...entradasFijadas.value, ...filteredEntries];
 })
 
-
-// Fetch paginated entries
 const fetchNextItems = async () => {
   loading.value = true
 
-  // Get the last item's lastActivity timestamp
-  const lastItem = entradasPaginadas.value[entradasPaginadas.value.length - 1];
-  const lastLastActivity = lastItem ? lastItem.lastActivity : null;
-  // Build the base query
+  const lastItem = entradasPaginadas.value[entradasPaginadas.value.length - 1]
+  const lastLastActivity = lastItem ? lastItem.lastActivity : null
+
   const baseQuery = {
     depth: 2,
     sort: '-lastActivity',
     createdLessThan: lastLastActivity,
     ...props.query,
-  };
+    populate: 'entradas,comentarios'
+  }
 
-  // Add the lastActivity condition if there's a last item
   if (lastLastActivity) {
-    const lastActivityCondition = { lastActivity: { less_than: lastLastActivity } };
+    const lastActivityCondition = { lastActivity: { less_than: lastLastActivity } }
 
     if (baseQuery.where) {
-      // If there's an existing `where` clause, merge it with the new condition
-      if (baseQuery.where.and) {
-        baseQuery.where.and.push(lastActivityCondition);
+      // If where is an 'and' array, replace or add lastActivity condition
+      if (Array.isArray(baseQuery.where.and)) {
+        // Remove any existing lastActivity condition
+        baseQuery.where.and = baseQuery.where.and.filter(
+          cond => !cond.lastActivity
+        )
+        baseQuery.where.and.push(lastActivityCondition)
       } else {
-        baseQuery.where = { and: [baseQuery.where, lastActivityCondition] };
+        // If where exists but is not an 'and' array, wrap it and add our condition
+        baseQuery.where = { and: [baseQuery.where, lastActivityCondition] }
       }
     } else {
-      // If no `where` clause exists, create one
-      baseQuery.where = lastActivityCondition;
+      // No where clause, just add it
+      baseQuery.where = lastActivityCondition
     }
   }
-  baseQuery.populate = 'entradas,comentarios'; // custom query param
 
-  const queryParams = qs.stringify(baseQuery, { encode: false });
+  const queryParams = qs.stringify(baseQuery, { encode: false })
 
   try {
     const res = await useAPI(`${props.apiUrl}?${queryParams}`)
     console.log('Fetched items:', res)
     hasNextPage.value = res.hasNextPage
-
-    // Append new items to existing array
     entradasPaginadas.value = [...entradasPaginadas.value, ...res.docs]
   } catch (error) {
     console.error('Error fetching items:', error)
@@ -179,6 +178,7 @@ const fetchNextItems = async () => {
     loading.value = false
   }
 }
+
 
 // Intersection Observer callback
 const handleIntersect = async (entries) => {
