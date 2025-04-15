@@ -59,7 +59,7 @@ const saveChanges = async () => {
     loading.value = true
     try {
         const body = { nombre: nombre.value }
-        await useAPI(`/api/comisiones/${props.comision.id}`, { body, method: "PUT" })
+        await useAPI(`/api/comisiones/${props.comision.id}`, { body, method: "PATCH" })
         toast.add({ severity: 'contrast', detail: 'Comisión actualizada', life: 3000 })
         editing.value = false
     } catch (e) {
