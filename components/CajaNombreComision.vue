@@ -38,7 +38,8 @@
 <script setup>
 const auth = useAuth()
 const canEdit = auth.data.value?.user?.rol === 'docente' || auth.data.value?.user?.isAdmin
-const salonStore = useSalonStore()
+const router = useRouter()
+const route = useRoute()
 const toast = useToast();
 
 const props = defineProps({
@@ -59,8 +60,16 @@ const saveChanges = async () => {
     loading.value = true
     try {
         const body = { nombre: nombre.value }
-        await useAPI(`/api/comisiones/${props.comision.id}`, { body, method: "PATCH" })
+        const res = await useAPI(`/api/comisiones/${props.comision.id}`, { body, method: "PATCH" })
         toast.add({ severity: 'contrast', detail: 'Comisión actualizada', life: 3000 })
+        const newSlug = res.doc.slug
+        console.log("slug", newSlug)
+        // Replace url
+        // Replace URL if slug changed
+        if (newSlug !== props.comision.slug) {
+            const newPath = route.fullPath.replace(props.comision.slug, newSlug)
+            router.replace(newPath)
+        }
         editing.value = false
     } catch (e) {
         console.log(e)
