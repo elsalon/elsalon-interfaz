@@ -47,7 +47,6 @@ const saveChanges = async () => {
     try {
         const body = {aulas: aulas.value}
         await useAPI(`/api/salas/${props.salon.id}`, {body, method: 'PATCH'})
-        await salonStore.invalidateSala(props.salon.id);
         toast.add({severity: 'contrast', detail: 'Aula actualizada', life: 3000})
         // Only close the inplace after the fetch is complete
         editing.value = false;

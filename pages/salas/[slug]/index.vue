@@ -7,7 +7,7 @@
         <div class="text-center mb-2">
             <LogoSala :salon="salon" />
             <h2 class="text-xl">
-                <CajaAulas :salon="salon" />
+                <CajaAulas :salon="salaData" />
             </h2>
         </div>
 
@@ -62,6 +62,16 @@ const salon = computed(() => {
   if (!found) console.warn(`Salon with slug "${slug}" not found`)
   return found
 })
+
+const salaQueryCacheKey = "sala"+ slug;
+const { data: salaQuery } = await useAsyncData(salaQueryCacheKey, () => useAPI(`/api/salas?where[slug][equals]=${slug}`))
+if (salaQuery.value.docs.length === 0) {
+    throw createError({
+        statusCode: 404,
+        statusMessage: 'Not Found',
+    })
+}
+const salaData = salaQuery.value.docs[0]
 
 // Update these lines to handle possible undefined value during initial load
 // and use optional chaining
