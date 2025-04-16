@@ -10,7 +10,7 @@
 
   <!-- Content -->
   <div v-else :class="entradaContainerClass">
-    <Entrada v-for="entrada in listaEntradas" :key="entrada.id" :entrada="entrada"
+    <Entrada v-for="entrada in listaEntradas" :key="entrada.id + entrada.updatedAt" :entrada="entrada"
       @eliminar="EliminarEntrada(entrada.id)" :ref="(el) => setEntradaRef(el, entrada.id)" :theme="entradaTheme" />
   </div>
   <div class="h-10"></div>
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { useAsyncData } from "#app";
 import qs from 'qs';
 const notifEntradasNuevas = ref(null);
@@ -87,6 +87,7 @@ const { hooks } = useNuxtApp()
 let OnCreateEntryHook = null;
 let OnEntradaFijadaHook = null;
 let OnEntradaDesfijadaHook = null;
+let OnPublicacionEditadaHook = null; // Add this new hook
 
 // Fetch inicial de entradas
 const queryParams = qs.stringify({
@@ -238,6 +239,34 @@ const handlePublicacionCreada = async (data) => {
   }
 }
 
+const handlePublicacionEditada = async (data) => {
+  if (data.resultado == "ok") {
+    // Find and update the entry in both fijadas and normal entries
+    const entradaId = data.entrada.id;
+    
+    // Update in fijadas array if it exists there
+    const fijadaIndex = entradasFijadas.value.findIndex(entrada => entrada.id === entradaId);
+    if (fijadaIndex !== -1) {
+      // Preserve the fijada id before replacing
+      const fijadaId = entradasFijadas.value[fijadaIndex].fijada;
+      entradasFijadas.value[fijadaIndex] = { ...data.entrada, fijada: fijadaId };
+    }
+    
+    // Update in normal entries array
+    const normalIndex = entradasPaginadas.value.findIndex(entrada => entrada.id === entradaId);
+    if (normalIndex !== -1) {
+      entradasPaginadas.value[normalIndex] = data.entrada;
+    }
+    
+    // Highlight the updated entry
+    nextTick(() => {
+      if (entradaRefs.value[entradaId]) {
+        entradaRefs.value[entradaId].ResaltarEntrada();
+      }
+    });
+  }
+}
+
 const EliminarEntrada = async (id) => {
   try {
     // Puede estar en fijadas o en paginadas. Lo saco de ambos
@@ -276,6 +305,9 @@ onMounted(() => {
     idsEntradasFijadas.value = idsEntradasFijadas.value.filter(id => id !== entrada.id)
     entradasFijadas.value = entradasFijadas.value.filter(item => item.id !== entrada.id)
   })
+  
+  // Add the new hook for edited publications
+  OnPublicacionEditadaHook = hooks.hook('publicacion:editada', handlePublicacionEditada)
 })
 
 // Clean up
@@ -285,6 +317,8 @@ onUnmounted(() => {
   }
   if (OnCreateEntryHook) OnCreateEntryHook()
   if (OnEntradaFijadaHook) OnEntradaFijadaHook()
+  if (OnEntradaDesfijadaHook) OnEntradaDesfijadaHook()
+  if (OnPublicacionEditadaHook) OnPublicacionEditadaHook() // Clean up the new hook
 })
 
 </script>

@@ -181,19 +181,4 @@ const opcionDestacar = {
 if (props.usuarioEsAdminODocente) {
     opcionesArticulo.value = [...opcionesArticulo.value, opcionDestacar];
 }
-
-let removeOnEditHook = null;
-const handlePublicacionEditada = async (data) => {
-    if (data.resultado == "ok" && data.entrada.id == props.entrada.id) {
-        contenidoRender.value.ReloadContent(data.entrada);
-    }
-}
-
-onMounted(async () => {
-    removeOnEditHook = hooks.hook('publicacion:editada', handlePublicacionEditada)
-});
-
-onUnmounted(() => {
-    if (removeOnEditHook) removeOnEditHook()
-})
 </script>

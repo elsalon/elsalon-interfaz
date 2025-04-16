@@ -117,14 +117,6 @@ const EliminarEntrada = async () => {
     }
 }
 
-let removeOnEditHook = null;
-
-const handlePublicacionEditada = async (data) => {
-    if (data.resultado == "ok" && data.entrada.id == entrada.id) {
-        ResaltarEntrada();
-    }
-}
-
 const ResaltarEntrada = () => {
     resaltar.value = true;
     console.log("Resaltando entrada");
@@ -136,13 +128,6 @@ const ResaltarEntrada = () => {
         resaltar.value = false;
     }, 1200);
 }
-onMounted(async () => {
-    removeOnEditHook = hooks.hook('publicacion:editada', handlePublicacionEditada)
-});
-
-onUnmounted(() => {
-    if (removeOnEditHook) removeOnEditHook()
-})
 
 defineExpose({ ResaltarEntrada });
 
