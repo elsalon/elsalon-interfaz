@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar" ref="fileInput" style="display: none;"
+        <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar,.epub" ref="fileInput" style="display: none;"
             @change="handleFileChange" />
     </ClientOnly>
 </template>
