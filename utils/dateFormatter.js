@@ -45,7 +45,7 @@ export function formatDateRelative(timestamp, locale = 'es') {
     const isThisYear = date.getFullYear() === now.getFullYear();
 
     if (isToday) {
-        return `Hoy a las ${date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}`;
+        return `hoy a las ${date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}`;
     } else if (isThisYear) {
         return date.toLocaleDateString(locale, options.thisYear);
     } else {

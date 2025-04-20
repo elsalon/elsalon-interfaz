@@ -17,7 +17,7 @@
                     <div class="flex items-center">
                         <NuxtLink v-if="entrada.sala" class="text-sm mr-1 hover:underline text-zinc-600"
                             :to="GenerateSalaUrl(entrada.sala.slug)">{{ entrada.sala.nombre }}</NuxtLink>
-                        <NuxtLink v-else="identidadUrl" class="text-sm mr-2 hover:underline text-zinc-600 "
+                        <NuxtLink v-else="identidadUrl" class="text-sm mr-1 hover:underline text-zinc-600 "
                             :to="identidadUrl">Bitácora</NuxtLink>
                         <NuxtLink class="text-zinc-600 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
                             <time :datetime="entrada.createdAt" class="text-zinc-600"
