@@ -112,7 +112,7 @@ const Publicar = async () => {
                     </div>
                 </template>
                 
-                <div class="prose prose-headings:my-1 prose-headings:font-semibold prose-p:my-0 leading-[1rem] break-words max-w-none">
+                <div class="prose prose-headings:font-semibold prose-headings:text-xl prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words max-w-none">
                     <ContenidoRendereado ref="contenidoRender" :contenido="pagina.componente[0]" :id="pagina.updatedAt"/>
                 </div>
                 <div class="text-right mt-4" v-if="pagina.componente[0].contenido && userPuedeEditar">
