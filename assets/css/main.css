@@ -183,7 +183,7 @@ form label{
   @apply font-mono;
 }
 .ql-editor {
-  @apply prose prose prose-headings:my-1 leading-normal max-w-none;
+  @apply prose prose prose-headings:font-semibold prose-headings:my-1 leading-normal max-w-none;
   overflow: none;
   
 }
