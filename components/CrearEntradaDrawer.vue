@@ -20,10 +20,10 @@
             </div>
 
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
-            <div v-if="paginaActual.slug == 'el-salon'" class="w-6 h-6 text-center m-auto" tabindex="1" v-tooltip.top.focus="'Lo que publiques en este espacio será visible para todxs lxs usuarixs de la plataforma. Si preferís compartir algo con un grupo más reducido, también podés publicar en los espacios de materias o bitácoras.'">
+            <div v-if="paginaActual.slug == 'el-salon'" class="my-2 w-6 h-6 text-center m-auto" tabindex="1" v-tooltip.top.focus="'Lo que publiques en este espacio será visible para todxs lxs usuarixs de la plataforma. Si preferís compartir algo con un grupo más reducido, también podés publicar en los espacios de materias o bitácoras.'">
                 <i class="pi pi-question-circle text-zinc-600 hover:text-zinc-900"></i>
             </div>
-            
+
             <div class="flex justify-end mt-2 md:space-y-0 h-10 overflow-hidden">
                 <!-- Selector Identidad -->
                 <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading" class="w-10 h-10 flex-grow" />
