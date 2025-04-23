@@ -38,8 +38,8 @@
         </div>
 
         <!-- Linea de Tiempo -->
-        <div>
-            <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon" class="mb-2"/>
+        <div class="mb-2">
+            <LineaDeTiempo v-if="salon.eventos.activar && estadoEnlace == 2" :salon="salon" />
         </div>
 
         <div class="h-10"></div>
@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-const estadoEnlace = ref(false)
+const estadoEnlace = ref(0)
 const route = useRoute()
 const slug = route.params?.slug
 const salonStore = useSalonStore();
