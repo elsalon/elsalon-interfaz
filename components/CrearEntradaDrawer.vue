@@ -97,15 +97,19 @@ const Publicar = async () => {
 
     const { paginaActual } = useSalon() // TODO ordenar estos dos que quedaron redundantes
     let sala, salaNombre;
-    if (salonStore.currContext == "bitacora" || salonStore.currContext == "grupo") {
-        sala = null
-        salaNombre = salonStore.currContext == "bitacora" ? "Bitácora" : "Bitácora grupal"
-    } else {
-        sala = paginaActual.value.id
-        salaNombre = paginaActual.value.nombre
+    if (isEditing.value){
+        sala = props.entryEdit.entrada.sala.id
+        salaNombre = props.entryEdit.entrada.sala.nombre
+    }else{
+        if (salonStore.currContext == "bitacora" || salonStore.currContext == "grupo") {
+            sala = null
+            salaNombre = salonStore.currContext == "bitacora" ? "Bitácora" : "Bitácora grupal"
+        } else {
+            sala = paginaActual.value.id
+            salaNombre = paginaActual.value.nombre
+        }
     }
 
-    console.log({ paginaActual })
     console.log("Publicando en sala id", sala)
 
     let method = 'POST'
