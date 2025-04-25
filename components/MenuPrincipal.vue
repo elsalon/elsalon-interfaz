@@ -13,7 +13,7 @@
             <!-- Link bitáctora -->
             <NuxtLink :to="`/usuarios/${auth?.data.value.user.slug}`" class="flex items-center mb-1 hover:font-bold">
                 
-                <AvatarSalon class="mr-2 md:w-12 md:h-12" :usuario="auth?.data.value.user"/>
+                <AvatarSalon class="mr-2 w-8 h-8 md:w-12 md:h-12" :usuario="auth?.data.value.user"/>
                 
                 <span class="md:text-lg">Bitácora</span>
             </NuxtLink>
@@ -22,7 +22,7 @@
                 <span class="mr-2">
                     <Avatar v-if="item?.avatar" :image="item.avatar.sizes.thumbnail.url" shape=""
                         class="md:w-12 md:h-12" />
-                    <Avatar v-else :label="item.siglas"
+                    <Avatar v-else :label="item.siglas ||'S'"
                         :style="{ backgroundColor: item.color || '#000', color: '#fff' }" shape=""
                         class="md:w-12 md:h-12 text-xs md:text-base" />
                 </span>
