@@ -63,7 +63,7 @@
                 <!-- Marker -->
                 <div class="flex-shrink-0">
                     <Button icon="pi pi-calendar" class="relative left-[-11px]" size="small" severity="contrast" rounded
-                        aria-label="Bookmark" @click="IrEventos" />
+                        aria-label="Bookmark" as="a" :href="`/salas/${props.salon.slug}/eventos`"  />
                 </div>
             </div>
         </div>
