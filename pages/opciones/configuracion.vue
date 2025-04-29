@@ -95,7 +95,7 @@ const handleSubmit = async () => {
         const userRes = await useAPI(`/api/users/${user.id}`, {body: configuracion.value, method: 'PATCH'});
         console.log(userRes)
         
-        // await getSession() // esto funciona pero por algun motivo no es reactivo
+        await auth.getSession();
     
         toast.add({ severity: 'contrast', detail: 'Configuración guardada', life: 3000});   
     }catch(e){
