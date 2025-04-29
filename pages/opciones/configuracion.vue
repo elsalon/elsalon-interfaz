@@ -32,7 +32,13 @@
         <label for="mostrarContadorPalabras" class="w-96">Mostrar Contador Palabras 
             <span class="text-zinc-400 font-mono">(Experimental)</span>
         </label>
-        
+    </div>
+
+    <div class="flex gap-2 flex-row">
+        <Checkbox inputId="mostrarPlaylistVideos" v-model="configuracion.opciones.mostrarPlaylistVideos" binary/>
+        <label for="mostrarPlaylistVideos" class="w-96">Mostrar Playlist Videos 
+            <span class="text-zinc-400 font-mono">Se activa cuando un hilo tiene más de dos videos embebidos (Experimental)</span>
+        </label>
     </div>
 
     <div class="text-right">
@@ -60,6 +66,7 @@ const configuracion = ref({
     },
     opciones: {
         mostrarContadorPalabras: user?.opciones.mostrarContadorPalabras,
+        mostrarPlaylistVideos: user?.opciones.mostrarPlaylistVideos,
     }
 })
 

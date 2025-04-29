@@ -59,7 +59,7 @@
                      <BtnComentar v-if="!comentariosState.length > 0" @click="ToggleCommentBox"
                          :labelCancelar="showCommentBox === '1'" />
                  </div>
-
+                 
                 <Button v-if="HabilitarPlaylist" class="ml-auto group/playlist font-mono text-xs hover:text-black animate-pulse hover:animate-none" @click="AbrirPlaylist" link >
                     <span class="mr-1 md:opacity-0 group-hover/playlist:opacity-100 transition-opacity">Playlist</span>
                     <i class="pi pi-play-circle" />
@@ -76,7 +76,6 @@
 const salonStore = useSalonStore()
 const auth = useAuth()
 const { $formatDate, $formatDateRelative } = useNuxtApp()
-const { hooks } = useNuxtApp();
 const { GenerateSalaUrl } = useGenerateSalaUrl()
 
 const props = defineProps({
@@ -109,6 +108,9 @@ watch(() => props.entrada, () => {
 });
 
 const HabilitarPlaylist = computed(() => {
+    if(!auth.data.value.user.opciones?.mostrarPlaylistVideos){
+        return false
+    }
     // contar video en entrada
     const vidsEntrada = ContarVideos(props.entrada)
     // contar videos en comentarios
