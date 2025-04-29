@@ -26,7 +26,8 @@
     "quill-mention": "^6.0.1",
     "tailwindcss-primeui": "^0.3.4",
     "vue": "latest",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "vue3-emoji-picker": "^1.1.8"
   },
   "devDependencies": {
     "@primevue/nuxt-module": "^4.0.5",

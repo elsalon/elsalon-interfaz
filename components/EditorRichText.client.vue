@@ -1,8 +1,9 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
+        
         <div ref="editorContainer" tabindex="0"></div>
         <div class="attachedFiled bg-white">
-        
+            
             <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-100 text-zinc-700 rounded-sm p-2 m-2 font-mono">
                 <div class="flex items">
                     <div class="grow">
@@ -11,16 +12,18 @@
                         <span> ({{ formatBytes(archivo.size) }})</span>
                     </div>
                     <button @click="attachedFiles.splice(attachedFiles.indexOf(f), 1)"
-                        class="hover:text-zinc-800"><i class="pi pi-times"></i></button>
+                    class="hover:text-zinc-800"><i class="pi pi-times"></i></button>
                 </div>
             </div>
         </div>
         <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar,.epub" ref="fileInput" style="display: none;"
-            @change="handleFileChange" />
+        @change="handleFileChange" />
+        <EmojiPicker v-if="showEmojiPicker" ref="emojiPicker" :native="true" @select="onSelectEmoji" />
     </ClientOnly>
 </template>
 
 <script setup>
+import EmojiPicker from 'vue3-emoji-picker'
 import "quill-mention/autoregister";
 const salonStore = useSalonStore();
 
@@ -39,6 +42,8 @@ const fileInput = ref(null)
 const wordCount = ref(0)
 const characterCount = ref(0)
 
+const showEmojiPicker = ref(false)
+
 const emit = defineEmits(['publishHotKey'])
 const props = defineProps({
     editingData: { type: Object, default: null }
@@ -52,11 +57,22 @@ const vimeoRegex = /(?:https?:\/\/)?(?:www\.|player\.)?vimeo\.com\/(?:channels\/
 const handleUploadFileClick = () => {
     fileInput.value.click();
 }
+const handleEmojiPickerClick = () => {
+    showEmojiPicker.value = !showEmojiPicker.value
+}
 const handleFileChange = (e) => {
     const files = e.target.files;
     attachedFiles.value.push(files[0])
 }
 
+const onSelectEmoji = (emoji) => {
+  // Add the emoji at the current cursor position
+  const selection = quill.getSelection(true);
+  if (selection) {
+    quill.insertText(selection.index, emoji.i);
+    quill.setSelection(selection.index + emoji.i.length);
+  }
+}
 
 const handlePublishHotkey = (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
@@ -332,6 +348,7 @@ onMounted(async () => {
         icons['image'] = '<i class="pi pi-image" title="Agregar imagen"></i>'
         icons['link'] = '<i class="pi pi-link" title="Link"></i>'
         icons['attach'] = '<i class="pi pi-paperclip" title="Archivo adjunto"></i>'
+        icons['emoji'] = '<i class="pi pi-face-smile" title="Emojis"></i>'
         icons['clean'] = '<i class="pi pi-eraser" title="Limpiar formato"></i>'
 
 
@@ -344,7 +361,7 @@ onMounted(async () => {
                         [{ 'header': 1 }, 'bold', 'italic', 'underline', { 'align': [] }],
                         
                         // 'blockquote',
-                        ['code-block', { 'list': 'bullet' }, 'link'],
+                        ['code-block', { 'list': 'bullet' }, 'link', 'emoji'],
                         // [{ 'header': 1 }, { 'header': 2 }],
                         ['image', 'video', 'attach', 'clean'],
                         // [{ 'script': 'sub' }, { 'script': 'super' }],
@@ -359,7 +376,8 @@ onMounted(async () => {
                         // ['link'],
                     ],
                     handlers: {
-                        attach: handleUploadFileClick
+                        attach: handleUploadFileClick,
+                        emoji: handleEmojiPickerClick,
                     }
                 },
                 mention: {
@@ -591,13 +609,31 @@ onMounted(async () => {
         // myContent.value = props.editingData
         parseExistingContent()
     }
+    document.addEventListener('click', handleClickOutside);
 })
 
 onBeforeUnmount(() => {
     if (quill) {
-        quill.off('text-change')
+        quill.off('text-change');
     }
+    document.removeEventListener('click', handleClickOutside);
 })
+
+const handleClickOutside = (event) => {
+  // Check if emoji picker is open
+  if (showEmojiPicker.value) {
+    // Get references to the emoji picker and its toggle button
+    const emojiPickerEl = document.querySelector('.v3-emoji-picker');
+    const emojiButton = document.querySelector('.ql-emoji');
+    
+    // Close if clicked outside both the picker and the button
+    if (emojiPickerEl && 
+        !emojiPickerEl.contains(event.target) && 
+        !emojiButton?.contains(event.target)) {
+      showEmojiPicker.value = false;
+    }
+  }
+}
 
 const clear = () => {
     quill.root.innerHTML = ''
@@ -617,4 +653,14 @@ defineExpose({
 <style>
 @import 'quill/dist/quill.core.css';
 @import 'quill/dist/quill.snow.css';
+@import 'vue3-emoji-picker/css'
+</style>
+
+<style scoped>
+
+.v3-emoji-picker {
+    position: absolute;
+    top: 50px;
+    right: 20px;
+}
 </style>
