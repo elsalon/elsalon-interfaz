@@ -132,36 +132,31 @@ const handleOpenVideoPlaylist = async (data) => {
 
 const ProcesarEntradaAPlaylist = async (entrada) => {
     console.log("Procesando entrada", entrada)
-    let extraComentarios = [];
+    let allComentarios = [];
     let newPlaylist = []
-    if(entrada.comentarios.totalDocs > entrada.comentarios.docs.length){
-        // No estan cargados todos los comentarios, tengo que cargar más.
-        console.log("Cargando más comentarios")
-        const oldestCommentDate = entrada.comentarios.docs[0].createdAt;
-        let query = {
-            where: {
-                and: [
-                    {entrada: {equals: entrada.id}},
-                    {createdAt: {less_than: oldestCommentDate}},
-                ]
-            },
-            sort: '-createdAt',
-            limit: 0,
-        }
-        // Cargo solo los extra, no los que ya tengo
-        const queryParams = qs.stringify(query, { encode: false });
-        const res = await useAPI(`/api/comentarios?${queryParams}`)
-        extraComentarios = res.docs
-        console.log("Extra comentarios", extraComentarios)
+    
+    // Always fetch all comments to ensure we have the latest
+    let query = {
+        where: {
+            entrada: {equals: entrada.id}
+        },
+        sort: 'createdAt',
+        limit: 0 // Get all comments
     }
     
+    const queryParams = qs.stringify(query, { encode: false });
+    const res = await useAPI(`/api/comentarios?${queryParams}`)
+    allComentarios = res.docs
+    console.log("Todos los comentarios", allComentarios)
+    
+    // Start with videos from the main entry
     newPlaylist = CrearItemPlaylist(entrada)
-    extraComentarios.forEach((comentario) => {
-        newPlaylist = [...newPlaylist ,...CrearItemPlaylist(comentario)]
+    
+    // Add videos from all comments
+    allComentarios.forEach((comentario) => {
+        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
     })
-    entrada.comentarios.docs.forEach((comentario) => {
-        newPlaylist = [...newPlaylist ,...CrearItemPlaylist(comentario)]
-    })
+    
     return newPlaylist;
 }
 
