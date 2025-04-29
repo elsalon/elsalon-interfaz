@@ -66,6 +66,9 @@ const playlist = ref([])
 const currentVideo = ref(0)
 const playlistFinished = ref(false)
 
+const isClosing = ref(false)
+const originalUrl = ref(null)
+
 const InitPlayer = () => {
     console.log("Initializing player")
 
@@ -123,6 +126,9 @@ const NextVideo = () => {
 
 const handleOpenVideoPlaylist = async (data) => {
     console.log("OPENED VIDEO PLAYLIST", data)
+    // Store the current URL before changing it
+    originalUrl.value = window.location.pathname
+    
     visible.value = true
     loading.value = true
     
@@ -195,17 +201,24 @@ const CrearItemPlaylist = (contenido) => {
 }
 
 watch(() => visible.value, (newValue) => {
-    if (!newValue && player) {
-        player.destroy()
-        player = null
-        
-        // Restore original URL when closing the playlist
-        const currentPath = window.location.pathname
-        if (currentPath.includes('/playlist')) {
-            const entryPath = currentPath.replace('/playlist', '')
-            window.history.replaceState(null, '', entryPath)
-        }
+  if (!newValue && !isClosing.value && originalUrl.value) {
+    isClosing.value = true
+    
+    // Restore the original URL that was stored when opening the playlist
+    window.history.replaceState(null, '', originalUrl.value)
+    
+    // Reset flags after a brief delay
+    setTimeout(() => {
+      isClosing.value = false
+      originalUrl.value = null
+    }, 100)
+    
+    // Clean up the player if it exists
+    if (player) {
+      player.destroy()
+      player = null
     }
+  }
 })
 
 onMounted(() => {

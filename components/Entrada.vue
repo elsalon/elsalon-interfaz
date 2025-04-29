@@ -64,6 +64,19 @@ const handlePublicacionEditada = async (data) => {
 
 onMounted(() => {
   removeOnEditHook = useNuxtApp().hooks.hook('publicacion:editada', handlePublicacionEditada);
+  
+  // Check if we should open the playlist based on URL
+  const currentPath = window.location.pathname;
+  if (currentPath.includes('/playlist') && props.entrada?.id) {
+    // Small delay to ensure all components are mounted
+    setTimeout(() => {
+      useNuxtApp().callHook("videoplaylist:open", {entrada: props.entrada});
+      
+      // This URL modification is redundant since handleOpenVideoPlaylist 
+      // will also set the URL, but leaving it for clarity
+      window.history.replaceState(null, '', currentPath);
+    }, 100);
+  }
 });
 
 onUnmounted(() => {

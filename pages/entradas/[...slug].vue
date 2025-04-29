@@ -11,12 +11,19 @@
     </NuxtLayout>
 </template>
 
-
 <script setup>
 const elsalon = useSalonStore();
 elsalon.setContext('entrada')
 const route = useRoute()
-const entradaId = route.params?.id
+
+// Extract the entradaId from slug
+const slugParts = Array.isArray(route.params.slug) ? route.params.slug : [route.params.slug]
+const entradaId = slugParts[0]
+const isPlaylist = slugParts.length > 1 && slugParts[1] === 'playlist'
+
+// We don't need to modify URL here since the Entrada component 
+// will handle showing the playlist if the URL contains 'playlist'
+
 const cacheKey = `entrada-${entradaId}`
 const { data: entrada } = await useAsyncData(cacheKey, () => useAPI(`/api/entradas/${entradaId}`))
 
