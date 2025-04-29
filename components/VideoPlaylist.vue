@@ -21,7 +21,10 @@
             
             <!-- PLAYLIST SECTION - sidebar on desktop, bottom on mobile -->
             <div class="w-full md:w-1/4 mt-4 md:mt-0 md:flex md:flex-col">
-                <h3 class="font-medium mb-2 pl-6">Videos</h3>
+                <div class="flex justify-between items-center my-2">
+                    <span class="font-medium mb-2 pl-6">Videos</span>
+                    <span class="text-xs text-gray-400 mr-2">{{currentVideo+1}}/{{ playlist.length }}</span>
+                </div>
                 <div class="max-h-[300px] md:max-h-[calc(100vh-150px)] overflow-y-auto pr-2 scrollbar-container">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-2">
                         <div 
@@ -122,6 +125,12 @@ const handleOpenVideoPlaylist = async (data) => {
     console.log("OPENED VIDEO PLAYLIST", data)
     visible.value = true
     loading.value = true
+    
+    // Update URL without affecting browser history
+    if (data.entrada && data.entrada.id) {
+        window.history.replaceState(null, '', `/entradas/${data.entrada.id}/playlist`)
+    }
+    
     playlist.value = await ProcesarEntradaAPlaylist(data.entrada)
     console.log("Generado playlist", playlist.value)
     nextTick(() => {
@@ -189,6 +198,13 @@ watch(() => visible.value, (newValue) => {
     if (!newValue && player) {
         player.destroy()
         player = null
+        
+        // Restore original URL when closing the playlist
+        const currentPath = window.location.pathname
+        if (currentPath.includes('/playlist')) {
+            const entryPath = currentPath.replace('/playlist', '')
+            window.history.replaceState(null, '', entryPath)
+        }
     }
 })
 
