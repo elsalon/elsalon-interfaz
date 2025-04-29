@@ -26,7 +26,7 @@
 
             <div class="flex justify-end mt-2 md:space-y-0 h-10 overflow-hidden">
                 <!-- Selector Identidad -->
-                <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading" class="w-10 h-10 flex-grow" />
+                <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading" class="w-10 h-10" />
                 <!-- Boton Publicar -->
                 <Button @click="Publicar"
                     class="w-full md:w-auto flex-grow md:flex-grow-0 text-xs md:text-sm btn-publicar"

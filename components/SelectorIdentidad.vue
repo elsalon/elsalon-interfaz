@@ -1,5 +1,5 @@
 <template>
-    <div v-if="salonStore.gruposDelUsuarioFetching" :class="props.class" class="flex items-center justify-center overflow-hidden">
+    <div v-if="salonStore.gruposDelUsuarioFetching" :class="props.class" class="w-10 h-10 flex items-center justify-center overflow-hidden">
         <i class="pi pi-spin pi-spinner" />
     </div>
     <Select v-model="selectedValue" v-if="!salonStore.gruposDelUsuarioFetching" :options="autoresOpciones"
