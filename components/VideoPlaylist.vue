@@ -22,7 +22,7 @@
             <!-- PLAYLIST SECTION - sidebar on desktop, bottom on mobile -->
             <div class="w-full md:w-1/4 mt-4 md:mt-0 md:flex md:flex-col">
                 <div class="flex justify-between items-center my-2">
-                    <span class="font-medium mb-2 pl-6">Videos</span>
+                    <span class="font-medium mb-2 pl-6">Videos </span>
                     <span class="text-xs text-gray-400 mr-2">{{currentVideo+1}}/{{ playlist.length }}</span>
                 </div>
                 <div class="max-h-[300px] md:max-h-[calc(100vh-150px)] overflow-y-auto pr-2 scrollbar-container">
