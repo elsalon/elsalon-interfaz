@@ -57,6 +57,11 @@
                 <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
                 <BtnComentar v-if="!comentariosState.length > 0" @click="ToggleCommentBox"
                     :labelCancelar="showCommentBox === '1'" />
+
+                <Button v-if="HabilitarPlaylist" class="ml-auto group/playlist font-mono text-xs hover:text-black animate-pulse hover:animate-none" @click="AbrirPlaylist" link >
+                    <span class="mr-1 opacity-0 group-hover/playlist:opacity-100 transition-opacity">Playlist</span>
+                    <i class="pi pi-play-circle" />
+                </Button>
             </div>
             <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
                 v-model:comentarios="comentariosState" v-model:hasNextPage="hasNextPage"
@@ -100,6 +105,24 @@ watch(() => props.entrada, () => {
     console.log("Entrada cambiada")
     contenidoRender.value.ReloadContents(props.entrada)
 });
+
+const HabilitarPlaylist = computed(() => {
+    // contar video en entrada
+    const vidsEntrada = ContarVideos(props.entrada)
+    // contar videos en comentarios
+    const vidsComentarios = props.entrada.comentarios.docs.reduce((acc, com) => {
+        return acc + ContarVideos(com)
+    }, 0)
+    // Si hay mas de 2 videos en la entrada o comentarios
+    return vidsEntrada + vidsComentarios > 2
+})
+
+const ContarVideos = (contenido) => {
+    return contenido.embedsYoutube.length + contenido.embedsVimeo.length
+}
+const AbrirPlaylist = () => {
+    useNuxtApp().callHook("videoplaylist:open", {entrada: props.entrada})
+}
 
 const listaComentarios = ref()
 const contenidoRender = ref()

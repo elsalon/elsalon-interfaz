@@ -1,6 +1,6 @@
 <template>
 
-    <Dialog v-model:visible="visible" header=" " position="full"  ref="maxDialog" :blockScroll="true" @show="biggifyDialog">
+    <Drawer v-model:visible="visible" header=" " position="full">
         <div v-if="loading" class="w-full h-full flex items-center justify-center">
             <span class="texto-cargando">Cargando...</span> 
         </div>
@@ -8,7 +8,7 @@
             <!-- PLAYER -->
             <div class="flex-grow items-center justify-center">
                 <div v-if="playlistFinished" class="w-full h-30 flex items-center justify-center">
-                    <span class="text-2xl text-zinc-800">Playlist terminó</span>
+                    <span class="text-2xl text-gray-500">Playlist terminó</span>
                 </div>
                 <div :class="{'opacity-0': playlistFinished}">
                     <video ref="playerRef" playsinline controls></video>
@@ -16,7 +16,7 @@
             </div>
             <!-- PLAYLSIT -->
             <div class="w-1/4 px-2 overflow-y-auto">
-                <div v-for="(video,i) in playlist" class="cursor-pointer p-1 hover:bg-zinc-200 flex items-center gap-2"  :key="video.id" @click="LoadVideo(video, i)">
+                <div v-for="(video,i) in playlist" class="cursor-pointer p-1 hover:bg-gray-200 flex items-center gap-2"  :key="video.id" @click="LoadVideo(video, i)">
                     <div class="w-2">
                         <div v-if="i == currentVideo" class="w-2 h-2 bg-black rounded-full"></div>
                     </div>
@@ -27,7 +27,8 @@
                 </div>
             </div>
         </div>
-    </Dialog>
+    </Drawer>
+
 
 </template>
 
@@ -48,12 +49,6 @@ let player = null
 const playlist = ref([])
 const currentVideo = ref(0)
 const playlistFinished = ref(false)
-
-const maxDialog = ref();
-
-function biggifyDialog() {
-    maxDialog.value.maximized = true;
-}
 
 const InitPlayer = () => {
     console.log("Initializing player")
@@ -146,6 +141,7 @@ const ProcesarEntradaAPlaylist = async (entrada) => {
         extraComentarios = res.docs
         console.log("Extra comentarios", extraComentarios)
     }
+    
     newPlaylist = CrearItemPlaylist(entrada)
     extraComentarios.forEach((comentario) => {
         newPlaylist = [...newPlaylist ,...CrearItemPlaylist(comentario)]
@@ -160,7 +156,7 @@ const CrearItemPlaylist = (contenido) => {
     let items = []
     let identidad = contenido.autoriaGrupal ? contenido.grupo : contenido.autor;
     if(contenido.embedsYoutube !== ""){
-        contenido.embedsYoutube.split(",").forEach((videoId) => {
+        contenido.embedsYoutube.forEach((videoId) => {
             items.push({
                 identidad: identidad,
                 id: videoId,
@@ -169,7 +165,7 @@ const CrearItemPlaylist = (contenido) => {
         })
     }
     if(contenido.embedsVimeo !== ""){
-        contenido.embedsVimeo.split(",").forEach((videoId) => {
+        contenido.embedsVimeo.forEach((videoId) => {
             items.push({
                 identidad: identidad,
                 id: videoId,
