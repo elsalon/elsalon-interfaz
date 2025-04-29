@@ -18,7 +18,15 @@
         </div>
         <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar,.epub" ref="fileInput" style="display: none;"
         @change="handleFileChange" />
-        <EmojiPicker v-if="showEmojiPicker" ref="emojiPicker" :native="true" @select="onSelectEmoji" :disable-skin-tones="true" :static-texts="{ placeholder: 'Buscar'}" />
+        <EmojiPicker 
+            v-if="showEmojiPicker" 
+            ref="emojiPicker" 
+            :native="true" 
+            @select="onSelectEmoji" 
+            :disable-skin-tones="true" 
+            :static-texts="{ placeholder: 'Buscar'}" 
+            :group-names="emojisNameGroups"
+            />
     </ClientOnly>
 </template>
 
@@ -60,6 +68,17 @@ const handleUploadFileClick = () => {
 const handleEmojiPickerClick = () => {
     showEmojiPicker.value = !showEmojiPicker.value
 }
+const emojisNameGroups = {
+  "smileys_people": "Entidades",
+  "animals_nature": "Naturaleza",
+  "food_drink": "Ingeribles",
+  "activities": "Actividades",
+  "travel_places": "Espacios",
+  "objects": "Objetos",
+  "symbols": "Simbología",
+  "flags": "Banderas"
+}
+
 const handleFileChange = (e) => {
     const files = e.target.files;
     attachedFiles.value.push(files[0])
