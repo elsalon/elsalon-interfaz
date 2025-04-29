@@ -73,6 +73,19 @@ const InitPlayer = () => {
     console.log("Initializing player")
 
     player = new Plyr(playerRef.value, {
+        youtube: {
+            rel: 0, // Disables related videos
+            modestbranding: 1,   // Removes YouTube logo
+            iv_load_policy: 3,   // Hides annotations
+            cc_load_policy: 1,   // Starts captions if available
+            cc_lang_pref: 'es'   // Preferred caption language
+        },
+        vimeo: {
+            byline: false,
+            portrait: false,
+            title: false,
+            dnt: true,
+        },
         controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
         autoplay: false, // Autoplay is often blocked unless muted
     })
