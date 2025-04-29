@@ -102,32 +102,6 @@ const props = defineProps({
 });
 
 
-watch(() => props.entrada, () => {
-    console.log("Entrada cambiada")
-    contenidoRender.value.ReloadContents(props.entrada)
-});
-
-const HabilitarPlaylist = computed(() => {
-    if(!auth.data.value.user.opciones?.mostrarPlaylistVideos){
-        return false
-    }
-    // contar video en entrada
-    const vidsEntrada = ContarVideos(props.entrada)
-    // contar videos en comentarios
-    const vidsComentarios = props.entrada.comentarios.docs.reduce((acc, com) => {
-        return acc + ContarVideos(com)
-    }, 0)
-    // Si hay mas de 2 videos en la entrada o comentarios
-    return vidsEntrada + vidsComentarios > 2
-})
-
-const ContarVideos = (contenido) => {
-    return contenido.embedsYoutube.length + contenido.embedsVimeo.length
-}
-const AbrirPlaylist = () => {
-    useNuxtApp().callHook("videoplaylist:open", {entrada: props.entrada})
-}
-
 const listaComentarios = ref()
 const contenidoRender = ref()
 
@@ -136,12 +110,46 @@ const comentariosState = ref(props.entrada.comentarios?.docs || [])
 const hasNextPage = ref(props.entrada.comentarios?.hasNextPage || false)
 const showCommentBox = ref("0") // Default closed
 
+watch(() => props.entrada, () => {
+    contenidoRender.value.ReloadContents(props.entrada)
+});
+
+
+const ContarVideos = (contenido) => {
+    return contenido.embedsYoutube.length + contenido.embedsVimeo.length
+}
+
+const HabilitarPlaylist = computed(() => {
+    if(!auth.data.value.user.opciones?.mostrarPlaylistVideos){
+        return false
+    }
+
+    // contar video en entrada
+    const vidsEntrada = ContarVideos(props.entrada)
+    // contar videos en comentarios
+    const vidsComentarios = comentariosState.value.reduce((acc, com) => {
+        return acc + ContarVideos(com)
+    }, 0)
+    // Si hay mas de 2 videos en la entrada o comentarios
+    return vidsEntrada + vidsComentarios > 2
+})
+
+const AbrirPlaylist = () => {
+    useNuxtApp().callHook("videoplaylist:open", {entrada: props.entrada})
+}
+
 const UserCommented = () => {
-    listaComentarios.value.HideCommentbox();
+    listaComentarios.value.HideCommentbox()
+    
+    // Force a check for videos in the latest comment
+    if (comentariosState.value.length > 0) {
+        const nuevoComentario = comentariosState.value[comentariosState.value.length - 1]
+        const videosEnNuevoComentario = ContarVideos(nuevoComentario)
+    }
 }
 
 const ToggleCommentBox = () => {
-    listaComentarios.value.ToggleNewComment();
+    listaComentarios.value.ToggleNewComment()
 }
 
 const menuRefs = ref({})

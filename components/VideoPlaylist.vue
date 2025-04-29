@@ -70,8 +70,6 @@ const isClosing = ref(false)
 const originalUrl = ref(null)
 
 const InitPlayer = () => {
-    console.log("Initializing player")
-
     player = new Plyr(playerRef.value, {
         youtube: {
             rel: 0, // Disables related videos
@@ -90,23 +88,23 @@ const InitPlayer = () => {
         autoplay: false, // Autoplay is often blocked unless muted
     })
 
-    player.on('playing', () => {
-        console.log("Video started playing")
-    })
+    // player.on('playing', () => {
+    //     console.log("Video started playing")
+    // })
 
     player.on('ended', () => {
-        console.log("Video playback finished")
+        // console.log("Video playback finished")
         NextVideo();
     })
 }
 
 const LoadVideo = (item, index = 0) => {
     if (!player) {
-        console.log("Player not initialized")
+        // console.log("Player not initialized")
         InitPlayer() // Initialize player first
     }
 
-    console.log("Loading video", item)
+    // console.log("Loading video", item)
 
     player.source = {
         type: 'video',
@@ -121,7 +119,7 @@ const LoadVideo = (item, index = 0) => {
     playlistFinished.value = false;
     
     player.once('ready', () => {
-        console.log("New video loaded")
+        // console.log("New video loaded")
         player.play().catch(err => console.warn("Autoplay failed:", err))
     })
 }
@@ -131,14 +129,14 @@ const NextVideo = () => {
         currentVideo.value++
         LoadVideo(playlist.value[currentVideo.value], currentVideo.value)
     } else {
-        console.log("Playlist finished")
+        // console.log("Playlist finished")
         currentVideo.value = null;
         playlistFinished.value = true;
     }
 }
 
 const handleOpenVideoPlaylist = async (data) => {
-    console.log("OPENED VIDEO PLAYLIST", data)
+    // console.log("OPENED VIDEO PLAYLIST", data)
     // Store the current URL before changing it
     originalUrl.value = window.location.pathname
     
@@ -151,7 +149,7 @@ const handleOpenVideoPlaylist = async (data) => {
     }
     
     playlist.value = await ProcesarEntradaAPlaylist(data.entrada)
-    console.log("Generado playlist", playlist.value)
+    // console.log("Generado playlist", playlist.value)
     nextTick(() => {
         LoadVideo(playlist.value[0])
         loading.value = false
@@ -159,7 +157,7 @@ const handleOpenVideoPlaylist = async (data) => {
 }
 
 const ProcesarEntradaAPlaylist = async (entrada) => {
-    console.log("Procesando entrada", entrada)
+    // console.log("Procesando entrada", entrada)
     let allComentarios = [];
     let newPlaylist = []
     
@@ -175,7 +173,7 @@ const ProcesarEntradaAPlaylist = async (entrada) => {
     const queryParams = qs.stringify(query, { encode: false });
     const res = await useAPI(`/api/comentarios?${queryParams}`)
     allComentarios = res.docs
-    console.log("Todos los comentarios", allComentarios)
+    // console.log("Todos los comentarios", allComentarios)
     
     // Start with videos from the main entry
     newPlaylist = CrearItemPlaylist(entrada)
