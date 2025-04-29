@@ -44,22 +44,9 @@ const handleEscKey = (event) => {
 
 // Store original padding to restore it later
 let originalPadding = '';
+let scrollbarWatcher = null;
 
-// Calculate scrollbar width on mount to use it later
-let scrollbarWidth = 0;
 onMounted(() => {
-  // Calculate scrollbar width
-  const outer = document.createElement('div');
-  outer.style.visibility = 'hidden';
-  outer.style.overflow = 'scroll';
-  document.body.appendChild(outer);
-
-  const inner = document.createElement('div');
-  outer.appendChild(inner);
-
-  scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
-  outer.parentNode.removeChild(outer);
-
   // Add global event listener for ESC key
   document.addEventListener('keydown', handleEscKey);
 });
@@ -67,34 +54,88 @@ onMounted(() => {
 // Prevent scroll and compensate for scrollbar disappearance
 watch(() => props.isOpen, (isOpen) => {
   if (isOpen) {
-    // Store original padding
+    // Store original values
     originalPadding = document.body.style.paddingRight;
-
-    // Add padding equal to scrollbar width to prevent content shift
-    const hasScrollbar = window.innerWidth > document.documentElement.clientWidth;
-    if (hasScrollbar) {
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    
+    // Apply initial scrollbar handling
+    handleScrollbarCompensation();
+    
+    // Set up a mutation observer to detect content changes
+    if (!scrollbarWatcher) {
+      scrollbarWatcher = new MutationObserver(() => {
+        // Re-apply scrollbar compensation when content changes
+        if (props.isOpen) {
+          handleScrollbarCompensation();
+        }
+      });
+      
+      // Watch for changes in the modal content
+      if (modalRef.value) {
+        scrollbarWatcher.observe(modalRef.value, { 
+          childList: true, 
+          subtree: true,
+          attributes: true,
+          characterData: true 
+        });
+      }
     }
-
-    // Disable scroll
-    document.body.style.overflow = 'hidden';
+    
+    // Focus modal for accessibility
+    if (modalRef.value) {
+      modalRef.value.focus();
+    }
   } else {
+    // Stop watching for changes when modal is closed
+    if (scrollbarWatcher) {
+      scrollbarWatcher.disconnect();
+      scrollbarWatcher = null;
+    }
+    
     // Restore original state
-    document.body.style.overflow = '';
-    document.body.style.paddingRight = originalPadding;
+    document.body.classList.remove('modal-open');
+    document.body.style.setProperty('padding-right', originalPadding);
   }
 }, { immediate: true });
 
+// Helper function to handle scrollbar compensation
+const handleScrollbarCompensation = () => {
+  console.log('Handling scrollbar compensation...');
+  
+  // Ensure we're applying these styles directly and with !important
+  document.body.classList.add('modal-open');
+  
+  // First, measure if we have a scrollbar before changing any styles
+  const hasScrollbar = window.innerWidth > document.documentElement.clientWidth;
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  
+  console.log('Has scrollbar:', hasScrollbar, 'width:', scrollbarWidth);
+  
+  // Add padding to compensate for scrollbar removal
+  if (hasScrollbar && scrollbarWidth > 0) {
+    document.body.style.setProperty('padding-right', `${scrollbarWidth}px`, 'important');
+  }
+};
+
 // Clean up when component is unmounted
 onBeforeUnmount(() => {
-  document.body.style.overflow = '';
+  document.body.classList.remove('modal-open');
   document.body.style.paddingRight = originalPadding;
   document.removeEventListener('keydown', handleEscKey);
+  
+  if (scrollbarWatcher) {
+    scrollbarWatcher.disconnect();
+    scrollbarWatcher = null;
+  }
 });
 </script>
 
-<style scoped>
-/* Fade transition - keeping this as regular CSS since transitions are cleaner this way */
+<style>
+/* Global style to prevent scrolling when modal is open */
+body.modal-open {
+  overflow: hidden !important;
+}
+
+/* Your existing scoped styles */
 .modal-fade-enter-active,
 .modal-fade-leave-active {
   transition: opacity 0.3s ease;

@@ -52,14 +52,16 @@
             <!-- <Divider /> -->
             <!-- Comentarios -->
             <!-- Agrego un margen abajo solo si hay comentarios pero no aparece el "Ver mas comentarios" -->
-            <div class="actions mt-1" :class="{ 'mb-3': comentariosState.length > 0 && !hasNextPage }">
+            <div class="actions mt-1 flex" :class="{ 'mb-3': comentariosState.length > 0 && !hasNextPage }">
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
-                <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
-                <BtnComentar v-if="!comentariosState.length > 0" @click="ToggleCommentBox"
-                    :labelCancelar="showCommentBox === '1'" />
+                 <div>
+                     <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
+                     <BtnComentar v-if="!comentariosState.length > 0" @click="ToggleCommentBox"
+                         :labelCancelar="showCommentBox === '1'" />
+                 </div>
 
                 <Button v-if="HabilitarPlaylist" class="ml-auto group/playlist font-mono text-xs hover:text-black animate-pulse hover:animate-none" @click="AbrirPlaylist" link >
-                    <span class="mr-1 opacity-0 group-hover/playlist:opacity-100 transition-opacity">Playlist</span>
+                    <span class="mr-1 md:opacity-0 group-hover/playlist:opacity-100 transition-opacity">Playlist</span>
                     <i class="pi pi-play-circle" />
                 </Button>
             </div>
