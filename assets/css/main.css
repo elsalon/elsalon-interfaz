@@ -352,3 +352,20 @@ ol{
 .btn-comentar span, .btn-publicar span{
   @apply truncate;
 }
+
+
+.v3-emoji-picker {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  .v3-sticky{
+    color:rgb(82, 82, 91);
+    font-size: 0.75rem;
+  }
+  .v3-footer{
+    display: none;
+  }
+  .v3-emojis button:hover{
+   background: rgb(233, 233, 233) !important; 
+  }
+}

@@ -18,7 +18,7 @@
         </div>
         <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar,.epub" ref="fileInput" style="display: none;"
         @change="handleFileChange" />
-        <EmojiPicker v-if="showEmojiPicker" ref="emojiPicker" :native="true" @select="onSelectEmoji" />
+        <EmojiPicker v-if="showEmojiPicker" ref="emojiPicker" :native="true" @select="onSelectEmoji" :disable-skin-tones="true" :static-texts="{ placeholder: 'Buscar'}" />
     </ClientOnly>
 </template>
 
@@ -654,13 +654,4 @@ defineExpose({
 @import 'quill/dist/quill.core.css';
 @import 'quill/dist/quill.snow.css';
 @import 'vue3-emoji-picker/css'
-</style>
-
-<style scoped>
-
-.v3-emoji-picker {
-    position: absolute;
-    top: 50px;
-    right: 20px;
-}
 </style>
