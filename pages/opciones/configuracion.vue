@@ -30,9 +30,16 @@
     <div class="flex gap-2 flex-row">
         <Checkbox inputId="mostrarContadorPalabras" v-model="configuracion.opciones.mostrarContadorPalabras" binary/>
         <label for="mostrarContadorPalabras" class="w-96">Mostrar Contador Palabras 
-            <span class="text-zinc-400 font-mono">(Experimental)</span>
+            <span class="text-zinc-400 font-mono">Experimental</span>
         </label>
-        
+    </div>
+
+    <div class="flex gap-2 flex-row">
+        <Checkbox inputId="mostrarPlaylistVideos" v-model="configuracion.opciones.mostrarPlaylistVideos" binary/>
+        <label for="mostrarPlaylistVideos" class="w-96">Mostrar Playlist Videos 
+            <span class="text-zinc-400 font-mono">Experimental</span>
+            <span class="text-zinc-400 font-mono text-sm block">Se activa cuando un hilo tiene varios videos embebidos</span>
+        </label>
     </div>
 
     <div class="text-right">
@@ -60,6 +67,7 @@ const configuracion = ref({
     },
     opciones: {
         mostrarContadorPalabras: user?.opciones.mostrarContadorPalabras,
+        mostrarPlaylistVideos: user?.opciones.mostrarPlaylistVideos,
     }
 })
 
@@ -88,7 +96,7 @@ const handleSubmit = async () => {
         const userRes = await useAPI(`/api/users/${user.id}`, {body: configuracion.value, method: 'PATCH'});
         console.log(userRes)
         
-        // await getSession() // esto funciona pero por algun motivo no es reactivo
+        await auth.getSession();
     
         toast.add({ severity: 'contrast', detail: 'Configuración guardada', life: 3000});   
     }catch(e){

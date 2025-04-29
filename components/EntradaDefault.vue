@@ -52,11 +52,18 @@
             <!-- <Divider /> -->
             <!-- Comentarios -->
             <!-- Agrego un margen abajo solo si hay comentarios pero no aparece el "Ver mas comentarios" -->
-            <div class="actions mt-1" :class="{ 'mb-3': comentariosState.length > 0 && !hasNextPage }">
+            <div class="actions mt-1 flex" :class="{ 'mb-3': comentariosState.length > 0 && !hasNextPage }">
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
-                <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
-                <BtnComentar v-if="!comentariosState.length > 0" @click="ToggleCommentBox"
-                    :labelCancelar="showCommentBox === '1'" />
+                 <div>
+                     <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
+                     <BtnComentar v-if="!comentariosState.length > 0" @click="ToggleCommentBox"
+                         :labelCancelar="showCommentBox === '1'" />
+                 </div>
+                 
+                <Button v-if="HabilitarPlaylist" class="ml-auto group/playlist font-mono text-xs hover:text-black animate-pulse hover:animate-none" @click="AbrirPlaylist" link >
+                    <span class="mr-1 md:opacity-0 group-hover/playlist:opacity-100 transition-opacity">Playlist</span>
+                    <i class="pi pi-play-circle" />
+                </Button>
             </div>
             <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
                 v-model:comentarios="comentariosState" v-model:hasNextPage="hasNextPage"
@@ -69,7 +76,6 @@
 const salonStore = useSalonStore()
 const auth = useAuth()
 const { $formatDate, $formatDateRelative } = useNuxtApp()
-const { hooks } = useNuxtApp();
 const { GenerateSalaUrl } = useGenerateSalaUrl()
 
 const props = defineProps({
@@ -100,6 +106,27 @@ watch(() => props.entrada, () => {
     console.log("Entrada cambiada")
     contenidoRender.value.ReloadContents(props.entrada)
 });
+
+const HabilitarPlaylist = computed(() => {
+    if(!auth.data.value.user.opciones?.mostrarPlaylistVideos){
+        return false
+    }
+    // contar video en entrada
+    const vidsEntrada = ContarVideos(props.entrada)
+    // contar videos en comentarios
+    const vidsComentarios = props.entrada.comentarios.docs.reduce((acc, com) => {
+        return acc + ContarVideos(com)
+    }, 0)
+    // Si hay mas de 2 videos en la entrada o comentarios
+    return vidsEntrada + vidsComentarios > 2
+})
+
+const ContarVideos = (contenido) => {
+    return contenido.embedsYoutube.length + contenido.embedsVimeo.length
+}
+const AbrirPlaylist = () => {
+    useNuxtApp().callHook("videoplaylist:open", {entrada: props.entrada})
+}
 
 const listaComentarios = ref()
 const contenidoRender = ref()

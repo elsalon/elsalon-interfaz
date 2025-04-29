@@ -1,45 +1,62 @@
 <template>
-
-    <Dialog v-model:visible="visible" header=" " position="full"  ref="maxDialog" :blockScroll="true" @show="biggifyDialog">
+    <FullScreenModal v-model:isOpen="visible">
+        <!-- Loading state -->
         <div v-if="loading" class="w-full h-full flex items-center justify-center">
             <span class="texto-cargando">Cargando...</span> 
         </div>
-        <div class="flex w-full h-full" v-show="!loading">
-            <!-- PLAYER -->
-            <div class="flex-grow items-center justify-center">
-                <div v-if="playlistFinished" class="w-full h-30 flex items-center justify-center">
-                    <span class="text-2xl text-zinc-800">Playlist terminó</span>
-                </div>
-                <div :class="{'opacity-0': playlistFinished}">
-                    <video ref="playerRef" playsinline controls></video>
+        
+        <!-- Content -->
+        <div class="flex flex-col md:flex-row h-full w-full mx-auto p-2 md:p-4 gap-4" v-show="!loading">
+            <!-- PLAYER SECTION - takes more space on desktop -->
+            <div class="w-full md:w-3/4 flex items-center">
+                <div class="w-full">
+                    <div v-if="playlistFinished" class="w-full py-8 flex items-center justify-center">
+                        <span class="text-2xl text-gray-500">Playlist terminó</span>
+                    </div>
+                    <div :class="{'opacity-0': playlistFinished}" class="aspect-video w-full shadow-sm overflow-hidden">
+                        <video ref="playerRef" playsinline controls class="w-full h-full"></video>
+                    </div>
                 </div>
             </div>
-            <!-- PLAYLSIT -->
-            <div class="w-1/4 px-2 overflow-y-auto">
-                <div v-for="(video,i) in playlist" class="cursor-pointer p-1 hover:bg-zinc-200 flex items-center gap-2"  :key="video.id" @click="LoadVideo(video, i)">
-                    <div class="w-2">
-                        <div v-if="i == currentVideo" class="w-2 h-2 bg-black rounded-full"></div>
+            
+            <!-- PLAYLIST SECTION - sidebar on desktop, bottom on mobile -->
+            <div class="w-full md:w-1/4 mt-4 md:mt-0 md:flex md:flex-col">
+                <div class="flex justify-between items-center my-2">
+                    <span class="font-medium mb-2 pl-6">Videos </span>
+                    <span class="text-xs text-gray-400 mr-2">{{currentVideo+1}}/{{ playlist.length }}</span>
+                </div>
+                <div class="max-h-[300px] md:max-h-[calc(100vh-150px)] overflow-y-auto pr-2 scrollbar-container">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-2">
+                        <div 
+                            v-for="(video,i) in playlist" 
+                            :key="video.id" 
+                            @click="LoadVideo(video, i)"
+                            class="cursor-pointer p-2 rounded-md hover:bg-gray-100 transition-colors flex items-center gap-2"
+                            :class="{'bg-gray-100': i == currentVideo}"
+                        >
+                            <div class="w-2 h-full flex items-center">
+                                <div v-if="i == currentVideo" class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            </div>
+                            <AvatarSalon :usuario="video.identidad" size="small" style="font-size: .6rem;"/>
+                            <div class="truncate flex-grow">
+                                {{ video.identidad.nombre }}
+                            </div> 
+                        </div>
                     </div>
-                    <AvatarSalon :usuario="video.identidad" size="small" style="font-size: .6rem;"/>
-                    <div>
-                        {{ video.identidad.nombre }}
-                    </div> 
                 </div>
             </div>
         </div>
-    </Dialog>
-
+    </FullScreenModal>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick, watch, onUnmounted } from 'vue'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 const { hooks } = useNuxtApp();
 import qs from 'qs';
 
 let startVideoPlaylistHook = null;
-
 
 const visible = ref(false)
 const loading = ref(true)
@@ -49,16 +66,26 @@ const playlist = ref([])
 const currentVideo = ref(0)
 const playlistFinished = ref(false)
 
-const maxDialog = ref();
-
-function biggifyDialog() {
-    maxDialog.value.maximized = true;
-}
+const isClosing = ref(false)
+const originalUrl = ref(null)
 
 const InitPlayer = () => {
     console.log("Initializing player")
 
     player = new Plyr(playerRef.value, {
+        youtube: {
+            rel: 0, // Disables related videos
+            modestbranding: 1,   // Removes YouTube logo
+            iv_load_policy: 3,   // Hides annotations
+            cc_load_policy: 1,   // Starts captions if available
+            cc_lang_pref: 'es'   // Preferred caption language
+        },
+        vimeo: {
+            byline: false,
+            portrait: false,
+            title: false,
+            dnt: true,
+        },
         controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
         autoplay: false, // Autoplay is often blocked unless muted
     })
@@ -112,8 +139,17 @@ const NextVideo = () => {
 
 const handleOpenVideoPlaylist = async (data) => {
     console.log("OPENED VIDEO PLAYLIST", data)
+    // Store the current URL before changing it
+    originalUrl.value = window.location.pathname
+    
     visible.value = true
     loading.value = true
+    
+    // Update URL without affecting browser history
+    if (data.entrada && data.entrada.id) {
+        window.history.replaceState(null, '', `/entradas/${data.entrada.id}/playlist`)
+    }
+    
     playlist.value = await ProcesarEntradaAPlaylist(data.entrada)
     console.log("Generado playlist", playlist.value)
     nextTick(() => {
@@ -124,35 +160,31 @@ const handleOpenVideoPlaylist = async (data) => {
 
 const ProcesarEntradaAPlaylist = async (entrada) => {
     console.log("Procesando entrada", entrada)
-    let extraComentarios = [];
+    let allComentarios = [];
     let newPlaylist = []
-    if(entrada.comentarios.totalDocs > entrada.comentarios.docs.length){
-        // No estan cargados todos los comentarios, tengo que cargar más.
-        console.log("Cargando más comentarios")
-        const oldestCommentDate = entrada.comentarios.docs[0].createdAt;
-        let query = {
-            where: {
-                and: [
-                    {entrada: {equals: entrada.id}},
-                    {createdAt: {less_than: oldestCommentDate}},
-                ]
-            },
-            sort: '-createdAt',
-            limit: 0,
-        }
-        // Cargo solo los extra, no los que ya tengo
-        const queryParams = qs.stringify(query, { encode: false });
-        const res = await useAPI(`/api/comentarios?${queryParams}`)
-        extraComentarios = res.docs
-        console.log("Extra comentarios", extraComentarios)
+    
+    // Always fetch all comments to ensure we have the latest
+    let query = {
+        where: {
+            entrada: {equals: entrada.id}
+        },
+        sort: 'createdAt',
+        limit: 0 // Get all comments
     }
+    
+    const queryParams = qs.stringify(query, { encode: false });
+    const res = await useAPI(`/api/comentarios?${queryParams}`)
+    allComentarios = res.docs
+    console.log("Todos los comentarios", allComentarios)
+    
+    // Start with videos from the main entry
     newPlaylist = CrearItemPlaylist(entrada)
-    extraComentarios.forEach((comentario) => {
-        newPlaylist = [...newPlaylist ,...CrearItemPlaylist(comentario)]
+    
+    // Add videos from all comments
+    allComentarios.forEach((comentario) => {
+        newPlaylist = [...newPlaylist, ...CrearItemPlaylist(comentario)]
     })
-    entrada.comentarios.docs.forEach((comentario) => {
-        newPlaylist = [...newPlaylist ,...CrearItemPlaylist(comentario)]
-    })
+    
     return newPlaylist;
 }
 
@@ -160,7 +192,7 @@ const CrearItemPlaylist = (contenido) => {
     let items = []
     let identidad = contenido.autoriaGrupal ? contenido.grupo : contenido.autor;
     if(contenido.embedsYoutube !== ""){
-        contenido.embedsYoutube.split(",").forEach((videoId) => {
+        contenido.embedsYoutube.forEach((videoId) => {
             items.push({
                 identidad: identidad,
                 id: videoId,
@@ -169,7 +201,7 @@ const CrearItemPlaylist = (contenido) => {
         })
     }
     if(contenido.embedsVimeo !== ""){
-        contenido.embedsVimeo.split(",").forEach((videoId) => {
+        contenido.embedsVimeo.forEach((videoId) => {
             items.push({
                 identidad: identidad,
                 id: videoId,
@@ -182,10 +214,24 @@ const CrearItemPlaylist = (contenido) => {
 }
 
 watch(() => visible.value, (newValue) => {
-    if (!newValue && player) {
-        player.destroy()
-        player = null
+  if (!newValue && !isClosing.value && originalUrl.value) {
+    isClosing.value = true
+    
+    // Restore the original URL that was stored when opening the playlist
+    window.history.replaceState(null, '', originalUrl.value)
+    
+    // Reset flags after a brief delay
+    setTimeout(() => {
+      isClosing.value = false
+      originalUrl.value = null
+    }, 100)
+    
+    // Clean up the player if it exists
+    if (player) {
+      player.destroy()
+      player = null
     }
+  }
 })
 
 onMounted(() => {
@@ -196,3 +242,35 @@ onUnmounted(() => {
     if (startVideoPlaylistHook) startVideoPlaylistHook()
 })
 </script>
+
+<style scoped>
+/* Custom scrollbar for playlist */
+.scrollbar-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollbar-container::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.scrollbar-container::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 768px) {
+  .flex-col {
+    gap: 1rem;
+  }
+  
+  /* Make playlist items more touch-friendly on mobile */
+  .cursor-pointer {
+    padding: 0.5rem;
+  }
+}
+</style>
