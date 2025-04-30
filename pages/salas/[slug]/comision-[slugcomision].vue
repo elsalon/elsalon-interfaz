@@ -113,7 +113,6 @@ const handleSubmitAgregarIntegrantes = async () => {
     
     let nuevosIntegrantesIds = nuevosIntegrantes.value.map(integrante => integrante.id)
     let listaIntegrantes = [...new Set([...integrantes, ...nuevosIntegrantesIds])]
-    console.log(listaIntegrantes)
     try{
         const res = await useAPI(`/api/comisiones/${comision.value.id}`, {
             method: 'PATCH',
