@@ -363,7 +363,7 @@ onMounted(async () => {
                     }
                 },
                 mention: {
-                    allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+                    allowedChars: /^[A-Za-z0-9\sáéíóúÁÉÍÓÚñÑüÜçÇàèìòùÀÈÌÒÙäëïöüÄËÏÖÜ\-]*$/,
                     mentionDenotationChars: ["@", "#"],
                     renderLoading: function () {
                         return 'Buscando usuarios o grupos...'
@@ -402,11 +402,13 @@ onMounted(async () => {
 
                         if (mentionChar === "@") {
                             if (searchTerm.length < 2) return
-                            const search = searchTerm.trim()
+                            let search = searchTerm.trim()
+                            search = search.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
                             console.log('search', search)
                             const [users, grupos] = await Promise.all([
-                                useAPI(`/api/users?where[nombre][like]=${search}&limit=5`),
-                                useAPI(`/api/grupos?where[nombre][like]=${search}&limit=5`)
+                                useAPI(`/api/users?where[slug][like]=${search}&limit=5`),
+                                useAPI(`/api/grupos?where[slug][like]=${search}&limit=5`)
                             ]);
 
                             values = [
@@ -433,14 +435,7 @@ onMounted(async () => {
                             })
                         }
 
-                        if (searchTerm.length === 0) {
-                            renderList(values, searchTerm);
-                        } else {
-                            const matches = values.filter(item =>
-                                item.value.toLowerCase().includes(searchTerm.toLowerCase())
-                            );
-                            renderList(matches, searchTerm);
-                        }
+                        renderList(values, searchTerm);
                     },
                     dataAttributes: ['id', 'value', 'denotationChar', 'link', 'target', 'disabled', 'relationTo'],
                 },
