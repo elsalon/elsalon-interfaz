@@ -90,8 +90,9 @@ const busquedaUsuarios = async (event) => {
         return
     }
     // console.log("Buscando", event.query)
+    const nombre = event.query.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     const { docs } = await useAPI(
-        `/api/users?where[nombre][contains]=${event.query}&limit=10`
+        `/api/users?where[slug][contains]=${nombre}&limit=10`
     )
     sugerenciasUsuarios.value = docs
 }

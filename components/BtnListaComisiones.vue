@@ -142,7 +142,8 @@ const busquedaDocentes = async (event) => {
         return;
     }
     console.log("Buscando", event.query);
-    const { docs } = await useAPI(`/api/users?where[nombre][contains]=${event.query}&where[rol][equals]=docente&limit=10`); // contains o like ? -> doc: https://payloadcms.com/docs/queries/overview#operators
+    const nombre = event.query.normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Normalizo el nombre para evitar problemas con acentos
+    const { docs } = await useAPI(`/api/users?where[slug][contains]=${nombre}&where[rol][equals]=docente&limit=10`); // contains o like ? -> doc: https://payloadcms.com/docs/queries/overview#operators
     sugerenciasDocentes.value = docs;
 }
 

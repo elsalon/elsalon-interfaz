@@ -59,25 +59,6 @@
         <Dialog v-model:visible="agregarIntegrantesVisible" modal header="Agregar integrantes" style="min-width: 35vw;">
             <form @submit.prevent="handleSubmitAgregarIntegrantes" class="space-y-3">
                 <SelectorUsuarios v-model="nuevosIntegrantes" />
-                <!-- <div class="flex gap-2 mb-4 flex-col md:flex-row">
-                    <label for="username" class="font-semibold w-1/4">nombre</label>
-                    <InputText id="username" class="w-full" v-model="grupoEdit.nombre" required minlength="3" autofocus />
-                </div>
-
-                <div class="flex gap-2 mb-4 flex-col md:flex-row">
-                    <label for="avatar" class="font-semibold w-1/4">imagen</label>
-                    <input type="file" id="avatar" accept="image/png, image/gif, image/jpeg" ref="avatarFileInput" class="w-full caja-input"/>
-                </div>
-
-                <div class="flex gap-2 mb-4 mt-0 flex-col md:flex-row">
-                    <label for="link" class="font-semibold w-1/4">link</label>
-                    <InputText id="link" class="w-full" type="link" v-model="grupoEdit.link"/>
-                </div>
-
-                <div class="flex gap-2 mb-10 flex-col md:flex-row">
-                    <label for="desc" class="font-semibold w-1/4">desc</label>
-                    <Textarea id="desc" class="w-full leading-normal" v-model="grupoEdit.desc" autoResize rows="5" cols="30" />
-                </div> -->
                 
                 <div class="text-right mb-10">
                     <Button type="submit" class="" label="Agregar" iconPos="right" :loading="loading" />

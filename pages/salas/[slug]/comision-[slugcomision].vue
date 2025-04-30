@@ -35,6 +35,9 @@
                 <NuxtLink v-for="grupo in comision.grupos" class="h-6" :key="grupo.id" :to="`/grupos/${grupo.slug}`" v-tooltip.top="grupo.nombre">
                     <AvatarSalon :usuario="grupo" size="small" imagesize="small" />
                 </NuxtLink>
+
+                <!-- Boton agregar integrantes -->
+                <Button v-if="puedeAgregarIntegrantes" class="h-6 w-6" severity="secondary" icon="pi pi-plus" iconPos="left"  v-tooltip.top="'Agregar integrantes'" @click="agregarIntegrantesVisible = true"/>
             </div>
             
             <!-- Btn Abandonar -->
@@ -46,13 +49,30 @@
              </div>
         </div>
 
-        <div class="h-8"></div>
+        <!-- Modal agregar integrantes -->
+        <Dialog v-model:visible="agregarIntegrantesVisible" modal header="Agregar integrantes" style="min-width: 35vw;">
+            <form @submit.prevent="handleSubmitAgregarIntegrantes" class="space-y-3">
+                <SelectorUsuarios v-model="nuevosIntegrantes" />
+                <div class="text-right mb-10">
+                    <Button type="submit" class="" label="Agregar" iconPos="right" :loading="loading" />
+                </div>
 
+            </form>
+        </Dialog>
+
+        <!-- Lista entradas comision -->
         <ListaEntradas :apiUrl="`/api/comisiones/${comision.id}/feed`" :query="query" :key="unirmeKey" :cacheKey="cacheKey"/>
     </NuxtLayout>
 </template>
 
 <script setup>
+const toast = useToast();
+const auth = useAuth();
+const puedeAgregarIntegrantes = auth.data.value.user.rol == 'docente' || auth.data.value.user.isAdmin
+const agregarIntegrantesVisible = ref(false)
+const nuevosIntegrantes = ref([]);
+const loading = ref(false)
+
 const route = useRoute()
 const slug = route.params?.slug
 const salonStore = useSalonStore();
@@ -83,6 +103,30 @@ if(salon.value.archivo.activar){
                 { createdAt: { less_than_equal: periodo.endDate } }
             ]
         }
+    }
+}
+
+
+const handleSubmitAgregarIntegrantes = async () => {
+    loading.value = true
+    let integrantes = comision.value.integrantes?.map(integrante => integrante.id) || []
+    
+    let nuevosIntegrantesIds = nuevosIntegrantes.value.map(integrante => integrante.id)
+    let listaIntegrantes = [...new Set([...integrantes, ...nuevosIntegrantesIds])]
+    try{
+        const res = await useAPI(`/api/comisiones/${comision.value.id}`, {
+            method: 'PATCH',
+            body: { integrantes: listaIntegrantes }
+        })
+        toast.add({ severity: 'success', summary: 'Éxito', detail: 'Integrantes agregados correctamente',  life: 3000 });
+        RecargarComision()
+        agregarIntegrantesVisible.value = false
+        nuevosIntegrantes.value = []
+    }catch(e){
+        console.error('Error al agregar integrantes', e)
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Error al agregar integrantes', life: 3000 });
+    }finally{
+        loading.value = false
     }
 }
 </script>
