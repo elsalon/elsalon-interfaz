@@ -118,13 +118,13 @@ const handleSubmitAgregarIntegrantes = async () => {
             method: 'PATCH',
             body: { integrantes: listaIntegrantes }
         })
-        toast.add({ severity: 'success', summary: 'Éxito', detail: 'Integrantes agregados correctamente' });
+        toast.add({ severity: 'success', summary: 'Éxito', detail: 'Integrantes agregados correctamente',  life: 3000 });
         RecargarComision()
         agregarIntegrantesVisible.value = false
         nuevosIntegrantes.value = []
     }catch(e){
         console.error('Error al agregar integrantes', e)
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Error al agregar integrantes' });
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Error al agregar integrantes', life: 3000 });
     }finally{
         loading.value = false
     }
