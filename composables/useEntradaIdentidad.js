@@ -20,12 +20,19 @@ export const useEntradaIdentidad = (entrada, auth) => {
       : entrada.autor.id == auth.data.value.user.id;
   
     const usuarioEsAdminODocente = auth.data.value.user.isAdmin || auth.data.value.user.rol == "docente";
+
+    const tooltipIdentidad = computed(() => {
+      return entrada.autoriaGrupal 
+        ? entrada.grupo.integrantes.map(x => x.nombre).join(", ") 
+        : entrada.autor.nombre;
+    });
   
     return {
       identidad,
       tituloIdentidad,
       identidadUrl,
       UsuarioTieneAutoridad,
-      usuarioEsAdminODocente
+      usuarioEsAdminODocente,
+      tooltipIdentidad,
     };
   };

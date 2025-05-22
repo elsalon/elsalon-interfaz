@@ -19,8 +19,8 @@
           required />
       </div>
 
-      <Message v-if="mostrarAvisoRecuperar" severity="secondary" class="my-4 bg-white">Si ya tenías una cuenta en
-        elsalon.org tenés que <a href="/olvide" class="link">recuperar tu contraseña</a></Message>
+      <!-- <Message v-if="mostrarAvisoRecuperar" severity="secondary" class="my-4 bg-white">Si ya tenías una cuenta en
+        elsalon.org tenés que <a href="/olvide" class="link">recuperar tu contraseña</a></Message> -->
 
       <div>
         <Button type="submit" label="Ingresar" class="block" :loading="loading" fluid iconPos="right"
