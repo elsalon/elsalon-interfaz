@@ -1,5 +1,5 @@
 <template>
-    <Dialog v-model:visible="visible" modal header="Fijar entrada" :style="{ width: '25rem' }" :dismissableMask="true">
+    <Dialog v-model:visible="visible" modal :header="`Fijar entrada en ${paginaActual.nombre}`" :style="{ width: '25rem' }" :dismissableMask="true">	
 
         <span class="text-surface-500 dark:text-surface-400 block mb-8">Elegí por cuanto tiempo fijar esta
             entrada</span>
@@ -10,6 +10,10 @@
             <label :for="opcion.value">{{ opcion.label }}</label>
         </div>
 
+        <Message v-if="paginaActual.slug == 'el-salon'" severity="secondary" class="my-4 bg-white text-xs">
+            La entrada se fijará en el espacio de El Salón, y será visible para todxs lxs usuarixs de la plataforma. 
+        </Message>
+        
         <div class="flex justify-end gap-2">
             <Button type="button" label="Cancelar" severity="secondary" @click="visible = false" :disabled="loading"></Button>
             <Button type="button" iconPos="right" label="Fijar" @click="Fijar" :loading="loading"></Button>
@@ -24,6 +28,7 @@ const visible = ref(false);
 let removeFijar = null;
 const loading = ref(false)
 const salonStore = useSalonStore();
+const { paginaActual } = useSalon()
 const toast = useToast();
 
 const opciones = [
