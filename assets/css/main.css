@@ -363,7 +363,7 @@ ol{
     font-size: 0.75rem;
   }
   .v3-footer{
-    display: none;
+    display: none !important;
   }
   .v3-emojis button:hover{
    background: rgb(233, 233, 233) !important; 
