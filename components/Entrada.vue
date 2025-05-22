@@ -21,7 +21,7 @@ const entradaDom = ref();
 const resaltar = ref(false);
 
 // Import composables
-const { identidad, tituloIdentidad, identidadUrl, UsuarioTieneAutoridad, usuarioEsAdminODocente } 
+const { identidad, tituloIdentidad, identidadUrl, UsuarioTieneAutoridad, usuarioEsAdminODocente, tooltipIdentidad } 
   = useEntradaIdentidad(props.entrada, auth);
 
 const { loading, CopiarLink, DestacarEntrada, FijarEntrada, EliminarEntrada } 
@@ -96,6 +96,7 @@ defineExpose({ ResaltarEntrada });
         :entrada="entrada"
         :identidadUrl="identidadUrl"
         :identidad="identidad"
+        :tooltipIdentidad="tooltipIdentidad"
         :tituloIdentidad="tituloIdentidad"
         :UsuarioTieneAutoridad="UsuarioTieneAutoridad"
         :usuarioEsAdminODocente="usuarioEsAdminODocente"
