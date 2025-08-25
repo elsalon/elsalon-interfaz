@@ -105,7 +105,7 @@ export default defineNuxtConfig({
         getSession: { path: 'api/users/me', method: 'get' }
       },
       token: {
-        maxAgeInSeconds: 60 * 60 * 24 * 15, // 15 days
+        maxAgeInSeconds: 60 * 60 * 24 * 60,// 60 days
         signInResponseTokenPointer: '/token',
         type: 'Bearer',
         headerName: 'Authorization'
