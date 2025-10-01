@@ -112,7 +112,7 @@ export default {
             'shadow-md',
 
             // Size
-            'overflow-auto'
+            'overflow-auto scrollbar'
         ]
     },
     list: {

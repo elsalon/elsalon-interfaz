@@ -1,6 +1,6 @@
 <template>
     <div v-if="eventos?.docs.length == 0 && puedeEditar" class="text-center my-14">
-        <p class="text-zinc-600 mb-3">Agregá eventos para visualizar la cursada en un calendario</p>
+        <p class="text-zinc-600 dark:text-zinc-400 mb-3">Agregá eventos para visualizar la cursada en un calendario</p>
         <Button label="Crear primer evento" as="a" :href="`/salas/${props.salon.slug}/eventos`" size="small" />
     </div>
     <div v-if="eventos?.docs.length > 0" class="relative mt-2 mb-6 ml-4 md:ml-0 md:mb-8">
@@ -14,17 +14,17 @@
                 :class="{ 'flex-grow': index > 0 || eventos.docs.length == 1 }">
                 <!-- Title -->
                 <div class="mb-4 max-w-[200px] text-center h-14">
-                    <div class="text-sm font-semibold text-zinc-700 line-clamp-2 break-words max-w-[7rem]">
+                    <div class="text-sm font-semibold text-zinc-800 dark:text-zinc-100 line-clamp-2 break-words max-w-[7rem]">
                         {{ item.titulo }}
                     </div>
                 </div>
 
                 <!-- Marker -->
-                <div class="h-4 w-4 rounded-full border-4 border-black bg-white relative top-[-27px]" ref="markers">
+                <div class="h-4 w-4 rounded-full border-4 border-black dark:border-zinc-100 bg-white dark:bg-zinc-800 relative top-[-27px]" ref="markers">
                 </div>
 
                 <!-- Date -->
-                <div class="text-xs text-zinc-600">
+                <div class="text-xs text-zinc-600 dark:text-zinc-400">
                     <time :datatype="item.fecha">{{ $formatDateCorto(item.fecha) }}</time>
                 </div>
             </div>
@@ -42,15 +42,15 @@
 
                 <!-- Marker -->
                 <div class="flex-shrink-0">
-                    <div class="h-4 w-4 rounded-full border-4 border-black bg-white"></div>
+                    <div class="h-4 w-4 rounded-full border-4 border-black dark:border-zinc-100 bg-white dark:bg-zinc-800"></div>
                 </div>
 
                 <!-- Content -->
                 <div class="ml-4 flex-1">
-                    <div class="text-sm font-semibold text-zinc-700 line-clamp-2">
+                    <div class="text-sm font-semibold text-zinc-800 dark:text-zinc-100 line-clamp-2">
                         {{ item.titulo }}
                     </div>
-                    <div class="mt-1 text-xs text-zinc-600">
+                    <div class="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
                         {{ $formatDateCorto(item.fecha) }}
                     </div>
                 </div>

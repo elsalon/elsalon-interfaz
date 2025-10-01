@@ -114,7 +114,7 @@ export default {
             'max-h-[200px]',
 
             // Misc
-            'overflow-auto'
+            'overflow-auto scrollbar'
         ]
     },
     list: {

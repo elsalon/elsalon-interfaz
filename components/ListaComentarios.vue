@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="w-full text-center">
-            <Button v-if="hasNextPageLocal && !fetchingComentarios" link class="mb-2 !text-zinc-600 text-xs leading-normal"
+            <Button v-if="hasNextPageLocal && !fetchingComentarios" link class="mb-2 text-zinc-600 dark:text-zinc-400 text-xs leading-normal"
                 @click="fetchComentarios" :label="`Ver más comentarios (${comentariosRestantes})`"/>
         </div>
 
-        <div v-if="fetchingComentarios" class="mb-2 p-2 w-full text-center text-zinc-600 text-xs leading-normal">
+        <div v-if="fetchingComentarios" class="mb-2 p-2 w-full text-center text-zinc-600 dark:text-zinc-400 text-xs leading-normal">
             <span class="texto-cargando">
                 Cargando comentarios...
             </span>

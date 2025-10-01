@@ -1,16 +1,16 @@
 <template>
     <Panel :toggleable="false"
         class="border-surface-0 text-sm group/comentario panelComentario transition-all duration-500 ease-in-out"
-        :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }" ref="comentarioDom">
+        :class="{ 'opacity-30': loading, 'bg-orange-50 dark:bg-gray-900': resaltar }" ref="comentarioDom">
         <template #header>
             <div class="flex items-center gap-2 mb-1">
                 <NuxtLink :to="identidadUrl">
                     <div class="flex items-center gap-2">
                         <AvatarSalon :usuario="identidad" size="small" v-tooltip.top="tooltipIdentidad" style="font-size: .6rem;" />
-                        <span class="font-bold text-black line-clamp-1" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</span>
+                        <span class="font-bold text-text-zinc-900 dark:text-zinc-100 line-clamp-1" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</span>
                     </div>
                 </NuxtLink>
-                <span class="text-zinc-600 text-xs" v-tooltip.top="$formatDate(comentario.createdAt)">
+                <span class="text-zinc-600 dark:text-zinc-400 text-xs" v-tooltip.top="$formatDate(comentario.createdAt)">
                     <time :datetime="comentario.createdAt">{{ $formatDateRelative(comentario.createdAt) }}</time>
                 </span>
             </div>
@@ -22,7 +22,7 @@
                 :popup="true" class="text-xs" />
         </template>
 
-        <div v-show="!editandoComentario" class="prose prose-headings:font-semibold prose-headings:text-xl prose-headings:my-1 prose-p:my-0 leading-[1rem] break-words max-w-none">
+        <div v-show="!editandoComentario" class="prose prose-headings:font-semibold prose-headings:text-xl  prose-headings:my-1 prose-p:my-0 leading-[1rem] break-words max-w-none">
             <ContenidoRendereado ref="contenidoRender" class="text-sm" :contenido="comentario" />
         </div>
 
@@ -32,7 +32,9 @@
             @cancelComment="handleUserCancelComment" />
         </DeferredContent>
 
-        <div class="actions mt-1" :class="{'mb-3': !isLast}">
+        <div class="actions">
+            <Button v-show="isLast" link class="my-2 mr-2 text-xs text-zinc-600 leading-normal" label="Comentar"  style="padding: 0"
+                @click="ToggleComment" />
             <Aprecio :contenidoid="comentario.id" contenidotipo="comentario"
                 :aprecioIniciales="comentario.aprecios" />
         </div>

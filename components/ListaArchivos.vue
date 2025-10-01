@@ -6,7 +6,7 @@
                 {{ archivo.archivo.filename }}
             </span>
         </a>
-        <span class="text-zinc-600 md:opacity-0 group-hover:opacity-100 transition-opacity duration-100 text-xs ml-2">{{ formatBytes(archivo.archivo.filesize) }}</span>
+        <span class="text-zinc-600 md:opacity-0 group-hover:opacity-100 transition-opacity duration-100 dark:text-zinc-400 text-xs ml-2">{{ formatBytes(archivo.archivo.filesize) }}</span>
     </div>
 </template>
 

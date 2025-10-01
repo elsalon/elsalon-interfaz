@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     '@primevue/nuxt-module',
     'mixpanel-nuxt',
     '@samk-dev/nuxt-vcalendar',
+    "@nuxtjs/color-mode",
   ],
   runtimeConfig: {
     public: {
@@ -37,8 +38,14 @@ export default defineNuxtConfig({
   // *****
   // primevue
   // *****
+  colorMode: {
+    preference: "system", // Default theme
+    fallback: "light", // Fallback if system preference is not available
+    classSuffix: "", // No suffix needed (default: .dark)
+  },
   primevue: {
     options: {
+        darkModeSelector: '.dark',
         unstyled: true,
         locale: {
           accept: 'Aceptar',
