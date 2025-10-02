@@ -1,8 +1,8 @@
 <template>
 
-    <Button v-if="!noHayComisiones" text type="button" label="Ver Comisión" @click="comisionesToggle"
+    <Button v-if="!noHayComisiones" text severity="secondary" type="button" label="Ver Comisión" @click="comisionesToggle"
         aria-haspopup="true" aria-controls="overlay_menu" />
-    <Button v-else text type="button" label="Ver Comisión" disabled />
+    <Button v-else text type="button" severity="secondary" label="Ver Comisión" disabled />
     <Menu ref="comisionesMenu" id="overlay_menu" :model="comisionesItems" :popup="true">
         <template #item="{ item, props }">
             <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
