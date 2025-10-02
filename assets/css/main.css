@@ -65,21 +65,26 @@
   }
 }
 
-.salon-bg{
-  @apply bg-zinc-100 transition-colors;
-}
-.dark .salon-bg{
-  @apply bg-zinc-800;
-}
-.vc-container{
-  background: none !important;
+:root {
+  --app-background: var(--p-surface-100);
 }
 
-html{
-  @apply transition-colors bg-zinc-100;
+.dark {
+  --app-background: var(--p-surface-800);
 }
-html.dark{
-  @apply bg-zinc-800;
+
+.salon-bg {
+  @apply transition-colors;
+  background-color: var(--app-background);
+}
+
+html {
+  @apply transition-colors;
+  background-color: var(--app-background);
+}
+
+.vc-container {
+  background: none !important;
 }
 
 .entrada-default::after{
