@@ -63,6 +63,17 @@
     color-scheme: dark;
     --vc-bg: var(--p-zinc-800);
   }
+
+  .ql-stroke{
+    stroke:white !important;  
+  }
+  .ql-fill{
+    fill:white !important;  
+  }
+  .ql-snow .pi{
+    color: white !important
+  }
+  
 }
 
 :root {
@@ -250,11 +261,11 @@ form label{
   }
 }
 .ql-toolbar.ql-snow{
-  @apply bg-white dark:bg-zinc-950 text-center text-black;
+  @apply bg-white dark:bg-surface-700 text-center text-black;
   border: none !important;
 }
 .ql-container.ql-snow{
-  @apply bg-white dark:bg-zinc-800;
+  @apply bg-white dark:bg-surface-700;
   border: none !important;
   max-width: unset;
   font-family: unset !important;
@@ -262,7 +273,7 @@ form label{
   overflow-y: auto;
 }
 .comment-input{
-  @apply bg-white dark:bg-zinc-800;
+  @apply bg-white dark:bg-surface-700;
   .ql-container{
     overflow: visible;
   }
@@ -339,6 +350,7 @@ ol{
   animate-text;
 }
 
+
 @media (max-width: 767px) {
   .ql-toolbar.ql-snow .ql-formats{
     margin-right: 0px !important; 
@@ -349,7 +361,7 @@ ol{
 }
 
 .ql-snow .ql-editor .ql-code-block-container, .ql-code-block-container{
-  @apply !bg-zinc-200 p-2 !text-black;
+  @apply p-2 !text-black;
   white-space: pre;          /* Preserve whitespace and newlines */
   overflow-wrap: normal;     /* Disable text wrapping */
   word-wrap: normal;         /* Disable word wrapping */
@@ -396,3 +408,4 @@ ol{
 .dark .scrollbar{
   @apply [&::-webkit-scrollbar-thumb]:bg-zinc-100
 }
+
