@@ -97,20 +97,29 @@ const Publicar = async () => {
         return;
     }
 
-    const { paginaActual } = useSalon() // TODO ordenar estos dos que quedaron redundantes
-    let sala, salaNombre;
-    if (isEditing.value){
-        sala = props.entryEdit.entrada.sala.id
-        salaNombre = props.entryEdit.entrada.sala.nombre
-    }else{
-        if (salonStore.currContext == "bitacora" || salonStore.currContext == "grupo") {
-            sala = null
-            salaNombre = salonStore.currContext == "bitacora" ? "Bitácora" : "Bitácora grupal"
-        } else {
-            sala = paginaActual.value.id
-            salaNombre = paginaActual.value.nombre
+    const resolveSalaByContext = () => {
+        if (salonStore.currContext === 'bitacora' || salonStore.currContext === 'grupo') {
+            return {
+                sala: null,
+                salaNombre: salonStore.currContext === 'bitacora' ? 'Bitácora' : 'Bitácora grupal',
+            }
+        }
+        return {
+            sala: paginaActual.value?.id ?? null,
+            salaNombre: paginaActual.value?.nombre ?? '',
         }
     }
+
+    let salaData = resolveSalaByContext()
+
+    if (isEditing.value && !['bitacora', 'grupo'].includes(salonStore.currContext)) {
+        salaData = {
+            sala: props.entryEdit.entrada.sala?.id ?? null,
+            salaNombre: props.entryEdit.entrada.sala?.nombre ?? '',
+        }
+    }
+
+    const { sala, salaNombre } = salaData
 
     console.log("Publicando en sala id", sala)
 
