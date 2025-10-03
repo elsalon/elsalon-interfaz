@@ -35,7 +35,7 @@
 
                 <!-- Menú ajustes entrada -->
                 <div class="flex-grow md:invisible group-hover/entrada:visible text-right">
-                    <Button text @click="ToggleArticleOptions">...</Button>
+                    <Button severity="contrast" text @click="ToggleArticleOptions">...</Button>
                     <Menu v-if="opcionesArticulo.length > 0" :ref="el => menuRefs[entrada.id] = el"
                         id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" />
                 </div>
