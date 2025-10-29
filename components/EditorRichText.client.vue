@@ -216,7 +216,13 @@ const uploadFile = async (file) => {
 const uploadImage = async (file) => {
     const formData = new FormData()
     const randFilename = useRandomFilenameBlob(file)
-    const imageFile = await CompressImage(file)
+    // Check if the file is a GIF; if so, skip compression to preserve animation
+    let imageFile;
+    if (file.type === 'image/gif') {
+        imageFile = file; // Upload GIF as-is
+    } else {
+        imageFile = await CompressImage(file); // Compress other image types
+    }
     formData.append('file', imageFile, randFilename)
     try {
         const { doc } = await useUploadFile('/api/imagenes', formData);
@@ -441,6 +447,31 @@ onMounted(async () => {
                 },
             }
         })
+
+        const toolbar = quill.getModule('toolbar');
+        toolbar.addHandler('image', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/jpg, image/jpeg, image/png, image/gif';
+            input.click();
+            input.onchange = async () => {
+                const file = input.files[0];
+                if (!file) return;
+                const range = quill.getSelection();
+                
+                // set up file reader
+			    const reader = new FileReader();
+                const blob = file.getAsFile ? file.getAsFile() : file;
+                reader.onload = (e) => {
+                    const base64ImageSrc = e.target.result;
+                    // insert image to editor
+                    quill.insertEmbed(range.index, 'image', base64ImageSrc);
+                    // move cursor to right side of image (easier to continue typing)
+                    quill.setSelection(range.index + 1);
+                };
+                reader.readAsDataURL(blob);
+            }
+        });
 
         // Limpiar formato de texto al pegar, manteniendo formato básico y convirtiendo encabezados a h1
         quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
