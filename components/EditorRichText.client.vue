@@ -2,7 +2,7 @@
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
         <div ref="editorContainer" tabindex="0"></div>
         <div class="attachedFiled bg-white">
-        
+            
             <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-100 text-zinc-700 rounded-sm p-2 m-2 font-mono">
                 <div class="flex items">
                     <div class="grow">
@@ -11,12 +11,17 @@
                         <span> ({{ formatBytes(archivo.size) }})</span>
                     </div>
                     <button @click="attachedFiles.splice(attachedFiles.indexOf(f), 1)"
-                        class="hover:text-zinc-800"><i class="pi pi-times"></i></button>
+                    class="hover:text-zinc-800"><i class="pi pi-times"></i></button>
                 </div>
             </div>
         </div>
         <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar,.epub" ref="fileInput" style="display: none;"
-            @change="handleFileChange" />
+        @change="handleFileChange" />
+        <div id="dropzone" class="fixed w-full h-full top-0 left-0 pointer-events-none z-99999 bg-gray-200 opacity-0 transition-opacity duration-300 p-2">
+            <div class="flex items-center justify-center h-full border-4 border-dashed border-sky-400">
+                <span class="text-2xl text-zinc-700">Arrastrá y soltá imagenes o archivos</span>
+            </div>
+        </div>
     </ClientOnly>
 </template>
 
@@ -253,6 +258,35 @@ const CompressImage = async (blob) => {
     });
 }
 
+
+const isAcceptedFile = (file) => {
+    const acceptedExtensions = ['.zip', '.rar', '.7zip', '.pdf', '.tar', '.epub'];
+    return acceptedExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+};
+
+const insertImageFromFile = (file, range) => {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        const blob = file.getAsFile ? file.getAsFile() : file;
+        reader.onload = (e) => {
+            const base64ImageSrc = e.target.result;
+            quill.insertEmbed(range.index, 'image', base64ImageSrc);
+            quill.setSelection(range.index + 1);
+            resolve();
+        };
+        reader.readAsDataURL(blob);
+    });
+};
+
+const handleDroppedFile = async (file) => {
+    if (file.type.startsWith('image/')) {
+        const range = quill.getSelection() || { index: quill.getLength() };
+        await insertImageFromFile(file, range);
+    } else if (isAcceptedFile(file)) {
+        attachedFiles.value.push(file);
+    }
+};
+
 const parseExistingContent = () => {
     const { entrada, html } = props.editingData
     // console.log('parseExistingContent', entrada, html)
@@ -448,6 +482,7 @@ onMounted(async () => {
             }
         })
 
+        // Handle agregar imagen (agregue permitir gif)
         const toolbar = quill.getModule('toolbar');
         toolbar.addHandler('image', () => {
             const input = document.createElement('input');
@@ -457,20 +492,61 @@ onMounted(async () => {
             input.onchange = async () => {
                 const file = input.files[0];
                 if (!file) return;
-                const range = quill.getSelection();
-                
-                // set up file reader
-			    const reader = new FileReader();
-                const blob = file.getAsFile ? file.getAsFile() : file;
-                reader.onload = (e) => {
-                    const base64ImageSrc = e.target.result;
-                    // insert image to editor
-                    quill.insertEmbed(range.index, 'image', base64ImageSrc);
-                    // move cursor to right side of image (easier to continue typing)
-                    quill.setSelection(range.index + 1);
-                };
-                reader.readAsDataURL(blob);
+                const range = quill.getSelection() || { index: quill.getLength() };
+                insertImageFromFile(file, range);
             }
+        });
+
+        // Disable quill default drag-and-drop behavior
+        quill.root.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+        quill.root.addEventListener('dragover', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        let dragCounter = 0;
+
+        document.addEventListener('dragenter', (e) => {
+            dragCounter++;
+            if (dragCounter === 1) {
+                const dropzone = document.getElementById('dropzone');
+                dropzone.classList.remove('opacity-0');
+                dropzone.classList.add('opacity-80');
+                dropzone.style.pointerEvents = 'auto';
+            }
+        });
+
+        document.addEventListener('dragleave', (e) => {
+            dragCounter--;
+            if (dragCounter === 0) {
+                const dropzone = document.getElementById('dropzone');
+                dropzone.classList.remove('opacity-80');
+                dropzone.classList.add('opacity-0');
+                dropzone.style.pointerEvents = 'none';
+            }
+        });
+
+        // Add custom drag-and-drop handlers for images
+        const dropzone = document.getElementById('dropzone');
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault(); // Allow drop
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                handleDroppedFile(file).catch(console.error);
+            }
+            // Hide dropzone and reset counter after drop
+            dropzone.classList.remove('opacity-80');
+            dropzone.classList.add('opacity-0');
+            dropzone.style.pointerEvents = 'none';
+            dragCounter = 0;
         });
 
         // Limpiar formato de texto al pegar, manteniendo formato básico y convirtiendo encabezados a h1
