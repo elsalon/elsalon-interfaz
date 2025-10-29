@@ -1,12 +1,12 @@
 <template>
-    <div class="flex gap-2 flex-row font-mono dark:text-zinc-100">
+    <div class="flex gap-2 flex-row font-mono text-zinc-900 dark:text-zinc-100">
         <Checkbox inputId="notificacionesNavegador" v-model="permisoNotificacionesNavegador" binary :disabled="permisoNotificacionesNavegador" />
         <label for="notificacionesNavegador" class="font-semibold w-96" v-tooltip.bottom="'Al hacer clic, el navegador te pedirá permiso para enviar notificaciones. Se desactivan manualmente en los ajustes del navegador'">Notificaciones Navegador</label>
     </div>
 
     <div class="h-10"></div>
 
-<form @submit.prevent="handleSubmit" class="space-y-3 dark:text-zinc-100">
+<form @submit.prevent="handleSubmit" class="space-y-3 text-zinc-900 dark:text-zinc-100">
     
     <div class="flex gap-2 flex-row">
         <Checkbox inputId="notificacionesMailActivas" v-model="configuracion.notificacionesMail.activas" binary />
@@ -40,6 +40,12 @@
         </label>
     </div>
 
+    <div class="">
+        <label for="theme" class="w-96">Tema
+        </label><br>
+            <SelectButton v-on:change="themeChanged" inputId="theme" v-model="configuracion.opciones.theme" :options="themeOptions" optionLabel="label" optionValue="value" />  
+    </div>
+
     <div class="text-right">
         <Button type="submit" class="" label="Guardar" :loading="loading" />
     </div>
@@ -66,8 +72,21 @@ const configuracion = ref({
     opciones: {
         mostrarContadorPalabras: user?.opciones.mostrarContadorPalabras,
         mostrarPlaylistVideos: user?.opciones.mostrarPlaylistVideos,
+        theme: user?.opciones.theme || 'auto',
     }
 })
+
+const themeOptions = ref([
+    { value: 'system', label: 'Sistema' },
+    { value: 'light', label: 'Claro' },
+    { value: 'dark', label: 'Oscuro' }
+])
+
+const colorMode = useColorMode()
+const themeChanged = () => {
+    colorMode.preference = configuracion.value.opciones.theme
+}
+
 
 const permisoNotificacionesNavegador = ref()
 watch(permisoNotificacionesNavegador, (val) => {

@@ -21,7 +21,7 @@
             <div class="flex flex-wrap gap-4">
                 <NuxtLink v-for="usuario in grupo.integrantes" :to="`/usuarios/${usuario.slug}`" :key="usuario.id" class="flex items-center gap-x-2">
                     <AvatarSalon :usuario="usuario" class="w-8 h-8" />
-                    <span class="text-sm text-text-zinc-900 dark:text-zinc-100">{{ usuario.nombre }}</span>
+                    <span class="text-sm text-zinc-900 dark:text-zinc-100">{{ usuario.nombre }}</span>
                 </NuxtLink>
             </div>
         </div>

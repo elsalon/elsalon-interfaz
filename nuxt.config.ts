@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '~/plugins/api.ts',
     '~/plugins/notificationStartPolling.js',
     { src: '~/plugins/plyr.js', mode: 'client' },
+    '~/plugins/set-color-mode.client.js',
   ],
   modules: [
     '@sidebase/nuxt-auth',
