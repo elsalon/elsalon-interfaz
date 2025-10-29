@@ -2,7 +2,7 @@
     <template v-if="auth?.data">
         <!-- Avatar Con notificationes -->
         <template v-if="notificacionesStore.nuevas > 0">
-            <OverlayBadge>
+            <OverlayBadge severity="contrast">
                 <AvatarSalon :key="'avt' + myKey" class="cursor-pointer -right-px" :usuario="auth?.data.value.user"
                     @click="toggleUserMenu" />
             </OverlayBadge>
@@ -25,7 +25,7 @@
             <a v-else class="flex items-center" v-bind="props.action">
                 <span :class="item.icon" class="mr-2" />
                 <span>{{ item.label }} </span>
-                <Badge size="small" v-if="item.badge > 0" class="ml-auto" :value="item.badge" />
+                <Badge size="small" severity="contrast" v-if="item.badge > 0" class="ml-auto" :value="item.badge" />
                 <span v-if="item.shortcut"
                     class="ml-auto border border-surface rounded bg-emphasis text-muted-color text-xs p-1">{{
         item.shortcut }}</span>

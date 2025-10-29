@@ -1,6 +1,6 @@
 <template>
     <div class="group/entrada transition-all entrada-biblioteca flex md:flex-col"
-        :class="{ 'opacity-30': loading, 'bg-orange-50': resaltar }">
+        :class="{ 'opacity-30': loading, 'bg-orange-50 dark:bg-gray-900': resaltar }">
 
         
         
@@ -12,22 +12,23 @@
         
         <article class="flex flex-col flex-grow overflow-auto">
             <div class="flex-grow mb-2">
-                <div class="prose prose-headings:text-xl prose-headings:font-semibold prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words line-clamp-6">
+                <div class="prose  prose-headings:text-xl prose-headings:font-semibold prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words line-clamp-6">
                     <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
                 </div>
                 <div v-if="entrada.archivos.length">
                     <ListaArchivos :archivos="entrada.archivos" />
                 </div>
             </div>
-            
-            <div class="entrada-meta flex items-center mb-1 md:opacity-0 group-hover/entrada:opacity-100 transition-opacity duration-300">
-                <NuxtLink :to="identidadUrl" class="flex items-center gap-x-2 hover:underline mr-1">
-                    <AvatarSalon :usuario="identidad" size="small" />
-                    <h2 class="text-zinc-600 text-sm line-clamp-1">{{ identidad.nombre }}</h2>
-                </NuxtLink>
-                <NuxtLink class="text-zinc-600 text-xs hover:underline" :to="`/entradas/${entrada.id}`" v-tooltip.top="$formatDate(entrada.createdAt)">
-                    <time :datetime="entrada.createdAt">{{ $formatDateRelative(entrada.createdAt) }}</time>
-                </NuxtLink>
+            <div class="despues-entrada flex">
+                <div>
+                    <NuxtLink :to="identidadUrl" class="link flex items-center gap-x-2">
+                        <AvatarSalon :usuario="identidad" size="small" />
+                        <h2 class=" text-zinc-600  text-sm">{{ identidad.nombre }}</h2>
+                    </NuxtLink>
+                    <NuxtLink class="text-zinc-600 text-xs hover:underline" :to="`/entradas/${entrada.id}`">
+                        <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>
+                    </NuxtLink>
+                </div>
                 <div v-if="UsuarioTieneAutoridad" class="flex-grow md:invisible group-hover/entrada:visible text-right">
                     <Button text @click="ToggleArticleOptions">...</Button>
                     <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo"

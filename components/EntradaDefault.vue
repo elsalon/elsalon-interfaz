@@ -12,36 +12,36 @@
                 <!-- Metadata entrada -->
                 <div class="ml-4">
                     <NuxtLink :to="identidadUrl" class="hover:underline">
-                        <h2 class="font-bold text-black line-clamp-1" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</h2>
+                        <h2 class="font-bold text-zinc-900 dark:text-zinc-100 line-clamp-1" v-tooltip.top="tooltipIdentidad">{{ identidad.nombre }}</h2>
                     </NuxtLink>
                     <div class="flex items-center">
-                        <NuxtLink v-if="entrada.sala" class="text-sm mr-1 hover:underline text-zinc-600"
+                        <NuxtLink v-if="entrada.sala" class="text-sm mr-1 hover:underline text-zinc-600 dark:text-zinc-400"
                             :to="GenerateSalaUrl(entrada.sala.slug)">{{ entrada.sala.nombre }}</NuxtLink>
-                        <NuxtLink v-else="identidadUrl" class="text-sm mr-1 hover:underline text-zinc-600 "
+                        <NuxtLink v-else="identidadUrl" class="text-sm mr-1 hover:underline text-zinc-600 dark:text-zinc-400"
                             :to="identidadUrl">Bitácora</NuxtLink>
-                        <NuxtLink class="text-zinc-600 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
-                            <time :datetime="entrada.createdAt" class="text-zinc-600"
+                        <NuxtLink class="text-zinc-600 dark:text-zinc-400 text-sm hover:underline" :to="`/entradas/${entrada.id}`">
+                            <time :datetime="entrada.createdAt" class="text-zinc-600 dark:text-zinc-400"
                                 v-tooltip.top="$formatDate(entrada.createdAt)">{{ $formatDateRelative(entrada.createdAt)
                                 }}</time>
                         </NuxtLink>
                         <!-- Entrada Fijada -->
-                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-zinc-600 ml-2" style="font-size: .65rem"
+                        <i v-if="entrada.fijada" class="pi pi-thumbtack text-zinc-600 dark:text-zinc-400 ml-2" style="font-size: .65rem"
                             v-tooltip.top="'Entrada Fijada'"></i>
                         <!-- Entrada Destacada -->
-                        <i v-if="entrada.destacada" class="pi pi-star text-zinc-600 ml-2" style="font-size: .7rem"
+                        <i v-if="entrada.destacada" class="pi pi-star text-zinc-600 dark:text-zinc-400 ml-2" style="font-size: .7rem"
                             v-tooltip.top="'Entrada Destacada'"></i>
                     </div>
                 </div>
 
                 <!-- Menú ajustes entrada -->
                 <div class="flex-grow md:invisible group-hover/entrada:visible text-right">
-                    <Button text @click="ToggleArticleOptions">...</Button>
+                    <Button severity="contrast" text @click="ToggleArticleOptions">...</Button>
                     <Menu v-if="opcionesArticulo.length > 0" :ref="el => menuRefs[entrada.id] = el"
                         id="overlay_menu_article" :model="opcionesArticulo" :popup="true" class="text-xs" />
                 </div>
             </div>
             <div
-                class="prose prose-headings:font-semibold prose-headings:text-xl prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words max-w-none">
+                class="prose prose-headings:font-semibold  prose-headings:text-xl prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words max-w-none">
                 <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
             </div>
             <div class="" v-if="entrada.archivos.length">

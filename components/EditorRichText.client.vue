@@ -367,15 +367,8 @@ onMounted(async () => {
         const { default: Quill } = await import('quill')
 
         // Custom button definition
-        const icons = Quill.import('ui/icons')
-        icons['code-block'] = '<i class="pi pi-code" title="Código"></i>'
-        icons['list'] = '<i class="pi pi-list" title="Lista"></i>'
-        icons['video'] = '<i class="pi pi-youtube" title="Agregar video embebido"></i>'
-        icons['image'] = '<i class="pi pi-image" title="Agregar imagen"></i>'
-        icons['link'] = '<i class="pi pi-link" title="Link"></i>'
-        icons['attach'] = '<i class="pi pi-paperclip" title="Archivo adjunto"></i>'
-        icons['clean'] = '<i class="pi pi-eraser" title="Limpiar formato"></i>'
-
+        const AttachButton = Quill.import('ui/icons')
+        AttachButton['attach'] = '<i class="pi pi-file"></i>'
 
         quill = new Quill(editorContainer.value, {
             theme: 'snow',

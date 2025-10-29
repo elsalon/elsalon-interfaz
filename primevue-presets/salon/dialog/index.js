@@ -11,7 +11,7 @@ export default {
             'm-0',
 
             // Color
-            'bg-surface-0 dark:bg-surface-900',
+            'bg-zinc-100 dark:bg-zinc-800',
             '[&:last-child]:border-b',
             'border-surface-200 dark:border-surface-700',
 
@@ -30,7 +30,7 @@ export default {
                 '!left-0': state.maximized
             },
 
-            'bg-zinc-100'
+            'salon-bg'
         ]
     }),
     header: {
@@ -47,11 +47,11 @@ export default {
             // 'rounded-tr-lg',
 
             // Colors
-            'bg-surface-0 dark:bg-surface-900',
+            'bg-zinc-100 dark:bg-zinc-800',
             'text-surface-700 dark:text-surface-0/80',
             'border border-b-0',
             'border-surface-200 dark:border-surface-700',
-            'bg-zinc-100',
+            'salon-bg',
         ]
     },
     title: {
@@ -100,11 +100,11 @@ export default {
             // 'rounded-b-lg',
 
             // Colors
-            'bg-surface-0 dark:bg-surface-900',
+            'bg-zinc-100 dark:bg-zinc-800',
             'text-surface-700 dark:text-surface-0/80',
             'border border-t-0 border-b-0',
             'border-surface-200 dark:border-surface-700',
-            'bg-zinc-100'
+            'salon-bg'
         ]
     },
     mask: ({ props }) => ({

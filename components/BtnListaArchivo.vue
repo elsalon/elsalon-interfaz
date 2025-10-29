@@ -1,5 +1,5 @@
 <template>
-    <Button text type="button" label="Archivo" @click="archivoToggle" aria-haspopup="true" aria-controls="overlay_menu" />
+    <Button text type="button" severity="secondary" label="Archivo" @click="archivoToggle" aria-haspopup="true" aria-controls="overlay_menu" />
     <Menu ref="archivoMenu" id="overlay_menu" :model="archivoItems" :popup="true" />
 </template>
 

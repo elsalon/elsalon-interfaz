@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <transition name="modal-fade">
-      <div v-if="isOpen" class="fixed inset-0 bg-zinc-100 flex items-center justify-center z-50"
+      <div v-if="isOpen" class="fixed inset-0 salon-bg flex items-center justify-center z-50"
         @click.self="closeModal" @keydown.esc="closeModal" tabindex="0" ref="modalRef">
         <div class="w-full h-full overflow-auto pt-14 md:pt-6 pb-2 flex flex-col">
           <button class="absolute top-6 right-6 flex items-center justify-center transition-colors" text
