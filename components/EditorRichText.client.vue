@@ -17,7 +17,7 @@
         </div>
         <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar,.epub" ref="fileInput" style="display: none;"
         @change="handleFileChange" />
-        <div id="dropzone" class="fixed w-full h-full top-0 left-0 pointer-events-none z-99999 bg-gray-200 opacity-0 transition-opacity duration-300 p-2">
+        <div id="dropzone" class="fixed w-full h-full top-0 left-0 pointer-events-none z-[999] bg-gray-200 opacity-0 transition-opacity duration-300 p-2">
             <div class="flex items-center justify-center h-full border-4 border-dashed border-sky-400">
                 <span class="text-2xl text-zinc-700">Arrastrá y soltá imagenes o archivos</span>
             </div>
@@ -284,6 +284,8 @@ const handleDroppedFile = async (file) => {
         await insertImageFromFile(file, range);
     } else if (isAcceptedFile(file)) {
         attachedFiles.value.push(file);
+    }else{
+        toast.add({ severity: 'error', summary: 'Error', detail: `Tipo de archivo no soportado: ${file.name}`, life: 3000 });
     }
 };
 
