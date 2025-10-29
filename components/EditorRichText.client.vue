@@ -2,7 +2,7 @@
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
         <div ref="editorContainer" tabindex="0"></div>
         <div class="attachedFiled bg-white">
-            
+            <slot name="footerBeforeAttach"></slot>
             <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-100 text-zinc-700 rounded-sm p-2 m-2 font-mono">
                 <div class="flex items">
                     <div class="grow">

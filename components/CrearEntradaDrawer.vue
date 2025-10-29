@@ -3,20 +3,23 @@
         <div class="h-full w-full flex flex-col container-small justify-between">
             <div class="flex flex-col flex-grow max-h-[calc(100vh-11rem)] md:max-h-[calc(100vh-5rem)] relative">
                 <EditorRichText ref="editor" :editingData="props.entryEdit" @publishHotKey="Publicar"
-                    class="min-h-[120px] overflow-auto" />
+                    class="min-h-[120px] overflow-auto">
+                    <template #footerBeforeAttach>
+                        <div v-if="auth.data.value.user.opciones?.mostrarContadorPalabras"
+                            class="group wordcounter bottom-0 right-4 text-right bg-white/75 text-xs text-[.7rem] p-1 rounded-bl-lg opacity-0 transition-opacity duration-300"
+                            :class="{ 'opacity-100': wordCount > 0 }">
+                            <div>
+                                <span class="text-zinc-300">Palabras </span>
+                                <span class="text-zinc-500">{{ wordCount }} </span>
+                            </div>
+                            <div>
+                                <span class="text-zinc-300">Caracteres </span>
+                                <span class="text-zinc-500">{{ characterCount }} </span>
+                            </div>
+                        </div>
+                    </template>
+                </EditorRichText>
                     
-                <div v-if="auth.data.value.user.opciones?.mostrarContadorPalabras"
-                    class="group wordcounter absolute bottom-0 right-4 text-right bg-white/75 text-xs text-[.7rem] p-1 rounded-bl-lg opacity-0 transition-opacity duration-300"
-                    :class="{ 'opacity-100': wordCount > 0 }">
-                    <div>
-                        <span class="text-zinc-300">Palabras </span>
-                        <span class="text-zinc-500">{{ wordCount }} </span>
-                    </div>
-                    <div>
-                        <span class="text-zinc-300">Caracteres </span>
-                        <span class="text-zinc-500">{{ characterCount }} </span>
-                    </div>
-                </div>
             </div>
 
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
