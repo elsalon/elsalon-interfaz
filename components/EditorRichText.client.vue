@@ -17,9 +17,9 @@
         </div>
         <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar,.epub" ref="fileInput" style="display: none;"
         @change="handleFileChange" />
-        <div id="dropzone" class="fixed w-full h-full top-0 left-0 pointer-events-none z-[999] bg-gray-300 opacity-0 transition-opacity duration-300 p-2 dark:bg-gray-800">
+        <div id="dropzone" class="fixed w-full h-full top-0 left-0 pointer-events-none z-[999] bg-white opacity-0 transition-opacity duration-300 p-2 dark:bg-gray-800">
             <div class="flex items-center justify-center h-full border-4 border-dashed border-sky-400">
-                <span class="text-2xl text-zinc-700 dark:text-zinc-200">Arrastrá y soltá imagenes o archivos</span>
+                <span class="text-2xl text-zinc-700 dark:text-zinc-200">Arrastrá imágenes, gifs o archivos</span>
             </div>
         </div>
     </ClientOnly>
