@@ -6,7 +6,7 @@
         <div class="w-full h-full overflow-auto pt-14 md:pt-6 pb-2 flex flex-col">
           <button class="absolute top-6 right-6 flex items-center justify-center transition-colors" text
             @click="closeModal">
-            <i class="pi pi-times"></i>
+            <i class="pi pi-times text-surface-500 dark:text-surface-300"></i>
           </button>
           <div class="flex flex-grow items-center justify-center">
             <slot></slot>

@@ -1,9 +1,9 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
         <div ref="editorContainer" tabindex="0"></div>
-        <div class="attachedFiled bg-white">
+        <div class="attachedFiled bg-white dark:bg-surface-800">
             <slot name="footerBeforeAttach"></slot>
-            <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-100 text-zinc-700 rounded-sm p-2 m-2 font-mono">
+            <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-100 text-zinc-700 rounded-sm p-2 m-2 font-mono dark:bg-zinc-700 dark:text-zinc-200">
                 <div class="flex items">
                     <div class="grow">
                         <i class="pi pi-paperclip mr-2"></i>
@@ -17,9 +17,9 @@
         </div>
         <input type="file" accept=".zip,.rar,.7zip,.pdf,.tar,.epub" ref="fileInput" style="display: none;"
         @change="handleFileChange" />
-        <div id="dropzone" class="fixed w-full h-full top-0 left-0 pointer-events-none z-[999] bg-gray-200 opacity-0 transition-opacity duration-300 p-2">
+        <div id="dropzone" class="fixed w-full h-full top-0 left-0 pointer-events-none z-[999] bg-gray-300 opacity-0 transition-opacity duration-300 p-2 dark:bg-gray-800">
             <div class="flex items-center justify-center h-full border-4 border-dashed border-sky-400">
-                <span class="text-2xl text-zinc-700">Arrastrá y soltá imagenes o archivos</span>
+                <span class="text-2xl text-zinc-700 dark:text-zinc-200">Arrastrá y soltá imagenes o archivos</span>
             </div>
         </div>
     </ClientOnly>

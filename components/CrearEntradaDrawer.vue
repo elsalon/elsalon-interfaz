@@ -6,14 +6,14 @@
                     class="min-h-[120px] overflow-auto">
                     <template #footerBeforeAttach>
                         <div v-if="auth.data.value.user.opciones?.mostrarContadorPalabras"
-                            class="group wordcounter bottom-0 right-4 text-right bg-white/75 text-xs dark:bg-transparent text-[.7rem] p-1 rounded-bl-lg opacity-0 transition-opacity duration-300"
-                            :class="{ 'opacity-100': wordCount > 0 }">
+                            class="group wordcounter background-transparent text-right text-xs text-[.7rem] p-1 opacity-0 transition-opacity duration-300"
+                            :class="{ 'opacity-100': wordCount > 0 }" style="background: none">
                             <div>
-                                <span class="text-zinc-300 dark:text-zinc-300">Palabras </span>
+                                <span class="text-zinc-300 dark:text-zinc-500">Palabras </span>
                                 <span class="text-zinc-500 dark:text-zinc-300">{{ wordCount }} </span>
                             </div>
                             <div>
-                                <span class="text-zinc-300 dark:text-zinc-300">Caracteres </span>
+                                <span class="text-zinc-300 dark:text-zinc-500">Caracteres </span>
                                 <span class="text-zinc-500 dark:text-zinc-300">{{ characterCount }} </span>
                             </div>
                         </div>

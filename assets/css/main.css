@@ -58,21 +58,21 @@
   color-scheme: light;
 }
 
+.dark .ql-stroke{
+  stroke:white !important;  
+}
+.dark .ql-fill{
+  fill:white !important;  
+}
+.dark .ql-snow .pi{
+  color: white !important
+}
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
     --vc-bg: var(--p-zinc-800);
   }
 
-  .ql-stroke{
-    stroke:white !important;  
-  }
-  .ql-fill{
-    fill:white !important;  
-  }
-  .ql-snow .pi{
-    color: white !important
-  }
   
 }
 
@@ -261,11 +261,11 @@ form label{
   }
 }
 .ql-toolbar.ql-snow{
-  @apply bg-white dark:bg-surface-700 text-center text-black;
+  @apply bg-white dark:bg-surface-800 text-center text-black;
   border: none !important;
 }
 .ql-container.ql-snow{
-  @apply bg-white dark:bg-surface-700;
+  @apply bg-white dark:bg-surface-800;
   border: none !important;
   max-width: unset;
   font-family: unset !important;
@@ -273,7 +273,7 @@ form label{
   overflow-y: auto;
 }
 .comment-input{
-  @apply bg-white dark:bg-surface-700;
+  @apply bg-white dark:bg-surface-800;
   .ql-container{
     overflow: visible;
   }
