@@ -1,6 +1,6 @@
 <template>
     <template v-if="auth?.data">
-        <Button @click="toggleTheme" :icon="themeIcon" text class="dark:text-zinc-300" :title="colorMode.preference" />
+        <Button @click="toggleTheme" :icon="themeIcon" text class="dark:text-zinc-300" :title="ToggleThemeTitle[colorMode.preference]" />
         <!-- Avatar Con notificationes -->
         <template v-if="notificacionesStore.nuevas > 0">
             <OverlayBadge severity="contrast">
@@ -46,6 +46,12 @@ const toast = useToast();
 const colorMode = useColorMode();
 
 let saveThemeTimeout = null;
+
+const ToggleThemeTitle = {
+    'light': 'Tema claro',
+    'dark': 'Tema oscuro',
+    'system': 'Tema sistema'
+}
 
 const saveThemeToDatabase = async (theme) => {
     try {
