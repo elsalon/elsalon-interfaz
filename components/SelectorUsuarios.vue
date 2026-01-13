@@ -7,27 +7,17 @@
         :suggestions="sugerenciasUsuarios"
         @complete="busquedaUsuarios"
         emptySearchMessage="No se encontraron usuarios"
-        placeholder="Escribí sus nombres para buscar"
+        placeholder="Buscá por nombre"
     >
         <!-- Lista de usuarios elegidos -->
         <template #chip="slotProps">
-            <div class="flex items-center">
-                <template v-if="slotProps.value.avatar">
-                    <Chip 
-                        :label="slotProps.value.nombre" 
-                        :image="slotProps.value.avatar.sizes.thumbnail.url" 
-                        removable
-                        @remove="itemRemoved(slotProps)" 
-                    />
-                </template>
-                <template v-else>
-                    <Chip 
-                        :label="slotProps.value.nombre" 
-                        removable 
-                        @remove="itemRemoved(slotProps)" 
-                    />
-                </template>
-            </div>
+            <Chip 
+                :key="slotProps.value.id"
+                :label="slotProps.value.nombre" 
+                :image="slotProps.value.avatar?.sizes?.thumbnail?.url"
+                removable
+                @remove="removeUserById(slotProps.value.id)" 
+            />
         </template>
         <!-- Lista de usuarios en la búsqueda -->
         <template #option="slotProps">
@@ -97,10 +87,9 @@ const busquedaUsuarios = async (event) => {
     sugerenciasUsuarios.value = docs
 }
 
-// Function to remove a selected item
-const itemRemoved = (item) => {
-    internalValue.value = internalValue.value.filter(
-        (usuario) => usuario.id !== item.value.id
-    )
+// Function to remove a selected item by ID
+const removeUserById = (userId) => {
+    const newArray = internalValue.value.filter(usuario => usuario.id !== userId)
+    internalValue.value = newArray
 }
 </script>

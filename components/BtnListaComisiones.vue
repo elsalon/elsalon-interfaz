@@ -30,7 +30,7 @@
 
                 <AutoComplete v-model="nuevaComision.docentes" inputId="multiple-ac-1" multiple fluid
                     :suggestions="sugerenciasDocentes" @complete="busquedaDocentes"
-                    placeholder="Escribí sus nombres para buscar">
+                    placeholder="Buscá por nombre">
                     <!-- Lista de usuarios elegidos -->
                     <template #chip="slotProps">
                         <div class="flex items-center">

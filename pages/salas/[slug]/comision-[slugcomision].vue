@@ -37,7 +37,7 @@
                 </NuxtLink>
 
                 <!-- Boton agregar integrantes -->
-                <Button v-if="puedeAgregarIntegrantes" class="h-6 w-6" severity="secondary" icon="pi pi-plus" iconPos="left"  v-tooltip.top="'Agregar integrantes'" @click="agregarIntegrantesVisible = true"/>
+                <Button v-if="puedeAgregarIntegrantes" class="h-6 w-6" text severity="secondary" icon="pi pi-user-edit" iconPos="left"  v-tooltip.top="'Editar integrantes'" @click="abrirModalAgregarIntegrantes"/>
             </div>
             
             <!-- Btn Abandonar -->
@@ -50,13 +50,13 @@
         </div>
 
         <!-- Modal agregar integrantes -->
-        <Dialog v-model:visible="agregarIntegrantesVisible" modal header="Agregar integrantes" style="min-width: 35vw;">
+        <Dialog v-model:visible="agregarIntegrantesVisible" modal header="Editar integrantes" style="min-width: 35vw;" @update:visible="cerrarModalSinGuardar">
             <form @submit.prevent="handleSubmitAgregarIntegrantes" class="space-y-3">
                 <SelectorUsuarios v-model="nuevosIntegrantes" />
-                <div class="text-right mb-10">
-                    <Button type="submit" class="" label="Agregar" iconPos="right" :loading="loading" />
+                <div class="flex gap-2 justify-end">
+                    <Button type="button" label="Cancelar" severity="secondary" @click="cerrarModalSinGuardar" />
+                    <Button type="submit" label="Guardar cambios" :loading="loading" />
                 </div>
-
             </form>
         </Dialog>
 
@@ -72,6 +72,16 @@ const puedeAgregarIntegrantes = auth.data.value.user.rol == 'docente' || auth.da
 const agregarIntegrantesVisible = ref(false)
 const nuevosIntegrantes = ref([]);
 const loading = ref(false)
+
+const abrirModalAgregarIntegrantes = () => {
+    nuevosIntegrantes.value = comision.value.integrantes ? [...comision.value.integrantes] : []
+    agregarIntegrantesVisible.value = true
+}
+
+const cerrarModalSinGuardar = () => {
+    agregarIntegrantesVisible.value = false
+    nuevosIntegrantes.value = []
+}
 
 const route = useRoute()
 const slug = route.params?.slug
@@ -109,22 +119,18 @@ if(salon.value.archivo.activar){
 
 const handleSubmitAgregarIntegrantes = async () => {
     loading.value = true
-    let integrantes = comision.value.integrantes?.map(integrante => integrante.id) || []
-    
-    let nuevosIntegrantesIds = nuevosIntegrantes.value.map(integrante => integrante.id)
-    let listaIntegrantes = [...new Set([...integrantes, ...nuevosIntegrantesIds])]
+    let integrantesIds = nuevosIntegrantes.value.map(integrante => integrante.id)
     try{
         const res = await useAPI(`/api/comisiones/${comision.value.id}`, {
             method: 'PATCH',
-            body: { integrantes: listaIntegrantes }
+            body: { integrantes: integrantesIds }
         })
-        toast.add({ severity: 'success', summary: 'Éxito', detail: 'Integrantes agregados correctamente',  life: 3000 });
+        toast.add({ severity: 'success', summary: 'Éxito', detail: 'Integrantes actualizados correctamente',  life: 3000 });
         RecargarComision()
-        agregarIntegrantesVisible.value = false
-        nuevosIntegrantes.value = []
+        cerrarModalSinGuardar()
     }catch(e){
-        console.error('Error al agregar integrantes', e)
-        toast.add({ severity: 'error', summary: 'Error', detail: 'Error al agregar integrantes', life: 3000 });
+        console.error('Error al actualizar integrantes', e)
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Error al actualizar integrantes', life: 3000 });
     }finally{
         loading.value = false
     }
