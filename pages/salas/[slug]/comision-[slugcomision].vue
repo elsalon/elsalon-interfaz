@@ -21,7 +21,7 @@
         </div>
         
         <!-- Docentes A Cargo y Alumnos -->
-        <div class="text-center flex justify-evenly items-center gap-x-2 w-full mb-2 bg-white p-1">
+        <div class="text-center flex flex-wrap justify-around items-center w-full mb-2 bg-surface-50 border border-solid border-surface-200 dark:bg-surface-700 dark:border-0 p-1">
             <div class="flex flex-wrap gap-1 items-center self-center">
                 <!-- Docentes -->
                 <NuxtLink v-for="docente in comision.docentes" class="h-6" :key="docente.id" :to="`/usuarios/${docente.slug}`" v-tooltip.top="docente.nombre">
@@ -45,7 +45,7 @@
             
             <!-- Btn tooltip info comision -->
              <div class="w-6 h-6" tabindex="1" v-tooltip.top.focus="'Las comisiones funcionan como un filtro, reuniendo en un solo lugar las entradas y bitácoras de sus integrantes y grupos, sin ser un espacio de publicación directa.'">
-                <i class="pi pi-question-circle text-zinc-600 hover:text-zinc-900"></i>
+                <i class="pi pi-question-circle text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"></i>
              </div>
         </div>
 

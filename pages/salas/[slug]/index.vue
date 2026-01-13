@@ -12,7 +12,7 @@
         </div>
 
         <!-- Menu principal Sala -->
-        <div class="text-center flex flex-wrap justify-around items-center w-full mb-2 bg-surface-50 border border-solid border-surface-200 dark:bg-surface-700 dark:border-0 p-1 ">
+        <div class="text-center flex flex-wrap justify-around items-center w-full mb-2 bg-surface-50 border border-solid border-surface-200 dark:bg-surface-700 dark:border-0 p-1">
             <!-- Lista de avatares de miembros -->
             <ListaMiembrosSala :miembros="miembros" />
 

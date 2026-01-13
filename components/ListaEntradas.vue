@@ -5,7 +5,7 @@
   <div v-if="listaEntradas.length === 0" class="text-center h-40 mt-10 flex flex-col justify-center items-center">
     <!-- CTA Primera publicacion -->
     <p class="font-bold">Todavía no hay entradas</p>
-    <p class="text-zinc-600">Podés enlazarte y escribir la primera</p>
+    <p class="text-zinc-600 dark:text-zinc-400">Podés enlazarte y escribir la primera</p>
   </div>
 
   <!-- Content -->
