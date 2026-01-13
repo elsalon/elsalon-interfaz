@@ -6,16 +6,20 @@
         <FijarEntrada />
 
         <!-- Fixed Nav -->
-        <nav class="w-full flex flex-row justify-between items-start mt-2">
-            <MenuPrincipal/>
+        <nav class="w-full grid grid-cols-3 items-start mt-2 gap-4">
+            <div class="flex justify-start">
+                <MenuPrincipal/>
+            </div>
 
-            <div class="flex items-center">
+            <div class="flex items-center justify-center">
                 <h1 class="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
                     <slot name="header" />
                 </h1>
             </div>
 
-            <MenuUsuario/>
+            <div class="flex justify-end">
+                <MenuUsuario/>
+            </div>
         </nav>
     </header>
     <main :class="containerType">

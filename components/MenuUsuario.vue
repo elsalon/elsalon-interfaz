@@ -1,5 +1,6 @@
 <template>
     <template v-if="auth?.data">
+        <Button @click="toggleTheme" :icon="themeIcon" text class="dark:text-zinc-300" :title="colorMode.preference" />
         <!-- Avatar Con notificationes -->
         <template v-if="notificacionesStore.nuevas > 0">
             <OverlayBadge severity="contrast">
@@ -42,6 +43,51 @@ const auth = useAuth()
 import { PrimeIcons } from '@primevue/core/api';
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
+const colorMode = useColorMode();
+
+let saveThemeTimeout = null;
+
+const saveThemeToDatabase = async (theme) => {
+    try {
+        const user = auth.data.value.user;
+        await useAPI(`/api/users/${user.id}`, {
+            body: {
+                opciones: {
+                    theme: theme
+                }
+            },
+            method: 'PATCH'
+        });
+        await auth.getSession();
+    } catch (e) {
+        console.error('Error saving theme preference:', e);
+    }
+};
+
+const themeIcon = computed(() => {
+    const theme = colorMode.preference;
+    if (theme === 'dark') return PrimeIcons.MOON;
+    if (theme === 'light') return PrimeIcons.SUN;
+    return PrimeIcons.DESKTOP;
+});
+
+const toggleTheme = () => {
+    const themes = ['system', 'light', 'dark'];
+    const currentIndex = themes.indexOf(colorMode.preference);
+    const nextTheme = themes[(currentIndex + 1) % themes.length];
+    
+    colorMode.preference = nextTheme;
+    
+    // Clear previous timeout
+    if (saveThemeTimeout) {
+        clearTimeout(saveThemeTimeout);
+    }
+    
+    // Debounce save to database
+    saveThemeTimeout = setTimeout(() => {
+        saveThemeToDatabase(nextTheme);
+    }, 1000);
+};
 
 // listen for notificacionesNuevas change
 watch(() => notificacionesStore.nuevas, (val, oldVal) => {
