@@ -11,7 +11,7 @@
             </span>
         </div>
 
-        <div class="pl-0 border-l-1 border-zinc-100 relative" >
+        <div class="pl-0 border-l-1 border-zinc-100 relative space-y-6">
             <template v-if="comentariosLocal.length > 0">
                 <Comentario v-for="(comentario, index) in comentariosLocal" :comentario="comentario" :key="comentario.id"
                     @eliminar="EliminarComentario(comentario.id)" @toggleCommentBox="ToggleNewComment"
