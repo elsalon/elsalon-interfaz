@@ -12,7 +12,7 @@
         <div class="flex items-center justify-between">
           <label for="password" class="block text-900 mb-2">Password</label>
           <div class="text-sm">
-            <a href="/olvide" class=" text-zinc-600 hover:text-zinc-900" tabindex="5">¿Olvidaste tu contraseña?</a>
+            <a href="/olvide" class=" text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200" tabindex="5">¿Olvidaste tu contraseña?</a>
           </div>
         </div>
         <Password v-model="password" inputProps="" fluid toggleMask :input-props="{ tabindex: 2 }" :feedback="false"
@@ -28,9 +28,9 @@
       </div>
     </form>
 
-    <p class="mt-10 text-center text-sm text-zinc-600">
+    <p class="mt-10 text-center text-sm text-zinc-600 dark:text-zinc-400 ">
       ¿No tenés usuario?
-      <a href="/registrar" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900" tabindex="4">Registrate</a>
+      <a href="/registrar" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200" tabindex="4">Registrate</a>
     </p>
 
 
