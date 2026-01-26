@@ -11,9 +11,22 @@
                 <h1>{{ salon.nombre }}</h1>
             </NuxtLink>
 
-            <!-- <BtnListaComisiones :salon="salon" :periodo="periodo"/>
-            <BtnListaArchivo v-if="salon.archivo.activar" :salon="salon"/> -->
-            <div class="flex flex-col md:flex-row space-x-2">
+            <!-- Botón Agregar a Calendario -->
+            <div v-if="salon.eventos.calendarioUrl" class="my-3">
+                <Button 
+                    label="Sincronizar con calendario" 
+                    icon="pi pi-calendar-plus"
+                    @click="toggleCalendarMenu"
+                    aria-haspopup="true"
+                    aria-controls="calendar_menu"
+                    severity="secondary"
+                    outlined
+                    size="small"
+                />
+                <Menu ref="calendarMenu" id="calendar_menu" :model="calendarMenuItems" :popup="true" />
+            </div>
+
+            <div class="flex flex-col md:flex-row space-x-2 p-2">
 
                 <client-only>
                     <VCalendar id="calendar" ref="calendar" :view="calendarView" :is-dark="isDark"
@@ -25,33 +38,41 @@
                         @did-move="onDidMove" @update:pages="onUpdatePages">
                     </VCalendar>
 
-                    <div class="md:mt-9 md:w-full">
+                    <div class="md:mt-12 md:w-full">
                         <template v-if="eventos.docs.length == 0">
-                            <div class="text-center text-zinc-600 dark:text-zinc-400 text-sm">Clickeá en una fecha para crear el primer
-                                evento</div>
+                            <div class="text-center text-zinc-600 dark:text-zinc-400 text-sm py-4">
+                                Clickeá en una fecha para crear el primer evento
+                            </div>
                         </template>
                         <template v-else>
-                            <div v-if="!fechasVisibles.length" class="text-center text-zinc-600 dark:text-zinc-400 text-sm">
-                                No hay eventos en este periodo</div>
+                            <div v-if="!fechasVisibles.length" class="text-center text-zinc-600 dark:text-zinc-400 text-sm py-4">
+                                No hay eventos en este periodo
+                            </div>
                         </template>
                         <div v-for="evento in fechasVisibles" :key="evento.id" :ref="el => evtRefs[evento.id] = el"
-                            class="p-2 mb-2 text-left hover:cursor-pointer"
-                            :class="{ 'bg-orange-50 dark:bg-gray-900': eventoIdHovered == evento.id, 'text-zinc-600 dark:text-zinc-400': evento.pasado, 'opacity-30': evento.loading }"
+                            class="p-3 mb-2 text-left hover:cursor-pointer rounded-lg border border-surface-200 dark:border-surface-700 bg-white dark:bg-surface-800 transition-colors"
+                            :class="{ 
+                                'bg-orange-50 dark:bg-orange-950 border-orange-200 dark:border-orange-900': eventoIdHovered == evento.id, 
+                                'text-zinc-600 dark:text-zinc-400': evento.pasado, 
+                                'opacity-30': evento.loading 
+                            }"
                             @click="focusEvento(evento)" @mouseleave="eventoIdHovered = null">
                             <div class="flex">
-                                <div class="text-lg font-semibold flex-grow">{{ evento.titulo }}</div>
-                                <!-- Btn Comenzar Editar -->
+                                <div class="text-lg font-semibold flex-grow text-zinc-900 dark:text-zinc-100" :class="{ 'text-zinc-600 dark:text-zinc-400': evento.pasado }">
+                                    {{ evento.titulo }}
+                                </div>
                                 <div class="event-actions flex">
-                                    <Button v-if="puedeEditar" icon="pi pi-trash mt-2" size="small" severity="danger"
-                                        text rounded aria-label="Filter" @click="PromptEliminarEvento(evento)" />
-                                    <Button v-if="puedeEditar" icon="pi pi-cog mt-2 dark:text-zinc-400" size="small" text rounded
-                                        aria-label="Filter" @click="ComenzarEditarEvento(evento)" />
+                                    <Button v-if="puedeEditar" icon="pi pi-trash" size="small" severity="danger"
+                                        text rounded aria-label="Eliminar" @click="PromptEliminarEvento(evento)" />
+                                    <Button v-if="puedeEditar" icon="pi pi-cog" size="small" text rounded
+                                        aria-label="Editar" @click="ComenzarEditarEvento(evento)" 
+                                        class="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100" />
                                 </div>
                             </div>
-                            <div class="text-xs md:text-sm text-zinc-600 dark:text-zinc-400">
+                            <div class="text-xs md:text-sm text-zinc-600 dark:text-zinc-400 mt-1">
                                 <time :datetime="evento.fecha">{{ $formatDateCorto(evento.fecha) }}</time>
                             </div>
-                            <div class="text-sm md:text-base">{{ evento.descripcion }}</div>
+                            <div class="text-sm md:text-base text-zinc-700 dark:text-zinc-300 mt-2">{{ evento.descripcion }}</div>
                         </div>
                     </div>
                 </client-only>
@@ -130,6 +151,50 @@ const confirm = useConfirm();
 
 const colorMode = useColorMode()
 const isDark = computed(() => { return colorMode.value === 'dark' });
+
+// Calendar menu
+const calendarMenu = ref()
+const toggleCalendarMenu = (event) => {
+    calendarMenu.value.toggle(event)
+}
+const calendarMenuItems = computed(() => [
+    {
+        label: 'Google Calendar',
+        icon: 'pi pi-google',
+        command: () => {
+            const url = encodeURIComponent(salon.value.eventos.calendarioUrl)
+            window.open(`https://calendar.google.com/calendar/r?cid=${url}`, '_blank')
+        }
+    },
+    {
+        label: 'Apple Calendar',
+        icon: 'pi pi-apple',
+        command: () => {
+            const url = salon.value.eventos.calendarioUrl
+            const webcalUrl = url.replace('https://', 'webcal://').replace('http://', 'webcal://')
+            window.location.href = webcalUrl
+        }
+    },
+    {
+        label: 'Outlook',
+        icon: 'pi pi-microsoft',
+        command: () => {
+            const url = encodeURIComponent(salon.value.eventos.calendarioUrl)
+            window.open(`https://outlook.live.com/calendar/0/addevent?path=/calendar/action/compose&rru=addsubscription&url=${url}`, '_blank')
+        }
+    },
+    {
+        separator: true
+    },
+    {
+        label: 'Descargar .ics',
+        icon: 'pi pi-download',
+        command: () => {
+            window.open(salon.value.eventos.calendarioUrl, '_blank')
+        }
+    }
+])
+
 
 import { useScreens } from 'vue-screen-utils';
 const { mapCurrent } = useScreens({

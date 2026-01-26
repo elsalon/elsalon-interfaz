@@ -28,11 +28,12 @@
             <div class="flex-1 md:w-1/2">
                 <BtnEnlazar @estadoEnlace="onEstadoEnlace" type="sala"/>
             </div>
+
         </div>
         
         <!-- Secciones -->
         <div  v-if="estadoEnlace == 2"
-            class="text-center flex flex-wrap justify-center gap-x-2 items-center w-full mb-4 p-1 text-sm">
+        class="text-center flex flex-wrap justify-center gap-x-2 items-center w-full mb-4 p-1 text-sm">
             <SeccionesSalaListaSecciones :salon="salon" />
             <SeccionesSalaBtnAgregarSeccion :salon="salon" />            
         </div>

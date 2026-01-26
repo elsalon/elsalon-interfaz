@@ -8,6 +8,10 @@ interface Archivo {
   periodos: Array<object>;
 }
 
+interface Eventos{
+  activar: Boolean;
+  calendarioUrl: String | null;
+}
 interface Salon {
   id: string;
   nombre: string;
@@ -15,6 +19,7 @@ interface Salon {
   color: string;
   slug: string;
   archivo: Archivo;
+  eventos: Eventos;
 }
 
 interface Etiqueta {
