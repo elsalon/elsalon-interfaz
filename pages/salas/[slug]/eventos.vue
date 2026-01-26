@@ -62,9 +62,9 @@
                                     {{ evento.titulo }}
                                 </div>
                                 <div class="event-actions flex">
-                                    <Button v-if="puedeEditar" icon="pi pi-trash" size="small" severity="danger"
+                                    <Button v-if="puedeEditar" icon="pi pi-trash" style="padding: 0;" size="small" severity="danger"
                                         text rounded aria-label="Eliminar" @click="PromptEliminarEvento(evento)" />
-                                    <Button v-if="puedeEditar" icon="pi pi-cog" size="small" text rounded
+                                    <Button v-if="puedeEditar" icon="pi pi-cog" style="padding: 0;" size="small" text rounded
                                         aria-label="Editar" @click="ComenzarEditarEvento(evento)" 
                                         class="text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100" />
                                 </div>
