@@ -12,7 +12,7 @@
             </NuxtLink>
 
             <!-- Botón Agregar a Calendario -->
-            <div v-if="salon.eventos.calendarioUrl" class="my-3">
+            <div v-if="salon.eventos.calendarioUrl" class="my-10">
                 <Button 
                     label="Sincronizar con calendario" 
                     icon="pi pi-calendar-plus"
