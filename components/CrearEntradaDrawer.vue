@@ -62,6 +62,7 @@
                         :loading="enlacesLoading"
                         :disabled="uploading || enlacesLoading"
                         placeholder="Selecciona una sala"
+                        :pt="{ dropdownIcon: { class: 'hidden' }, trigger: { class: 'pr-2' } }"
                         fluid>
                         <template #value="slotProps">
                             <div v-if="slotProps.value !== undefined" class="flex items-center gap-2">

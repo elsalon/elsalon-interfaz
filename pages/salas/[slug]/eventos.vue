@@ -98,6 +98,11 @@
 
 
 <script setup>
+import { defineAsyncComponent } from 'vue'
+import 'v-calendar/style.css'
+
+const VCalendar = defineAsyncComponent(() => import('v-calendar').then(m => m.Calendar))
+
 const calendar = ref(null)
 const route = useRoute()
 const slug = route.params?.slug

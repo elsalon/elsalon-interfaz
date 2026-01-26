@@ -24,7 +24,15 @@
         </div>
 
         <!-- Recovery Dialog -->
-        <Dialog v-model:visible="showRecoveryDialog" modal header="Contenido guardado" :style="{ width: '28rem' }" :dismissableMask="false">
+        <Dialog
+            v-model:visible="showRecoveryDialog"
+            modal
+            header="Contenido guardado"
+            :style="{ width: '28rem' }"
+            :dismissableMask="false"
+            :closable="false"
+            :pt="{ closeButton: { class: 'hidden' }, closeIcon: { class: 'hidden' } }"
+        >
             <div class="space-y-4">
                 <p class="text-sm text-zinc-700 dark:text-zinc-200">
                     Se encontró contenido guardado automáticamente hace poco. ¿Deseas restaurarlo?

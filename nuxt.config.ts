@@ -13,7 +13,6 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@primevue/nuxt-module',
     'mixpanel-nuxt',
-    '@samk-dev/nuxt-vcalendar',
     "@nuxtjs/color-mode",
   ],
   runtimeConfig: {

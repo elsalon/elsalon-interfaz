@@ -25,12 +25,12 @@
     "quill": "^2.0.2",
     "quill-mention": "^6.0.1",
     "tailwindcss-primeui": "^0.3.4",
+    "v-calendar": "^3.0.0-beta.10",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
     "@primevue/nuxt-module": "^4.0.5",
-    "@samk-dev/nuxt-vcalendar": "^1.0.4",
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.20",
     "mixpanel-nuxt": "^0.0.13",
