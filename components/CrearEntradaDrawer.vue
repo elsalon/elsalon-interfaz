@@ -2,7 +2,7 @@
     <ClientOnly>
         <div class="h-full w-full flex flex-col container-small justify-between">
             <div class="flex flex-col flex-grow max-h-[calc(100vh-11rem)] md:max-h-[calc(100vh-5rem)] relative">
-                <EditorRichText ref="editor" :editingData="props.entryEdit" @publishHotKey="Publicar"
+                <EditorRichText ref="editor" :editingData="props.entryEdit" @publishHotKey="solicitarConfirmacionSala"
                     class="min-h-[120px] overflow-auto">
                     <template #footerBeforeAttach>
                         <div v-if="auth.data.value.user.opciones?.mostrarContadorPalabras"
@@ -33,12 +33,69 @@
                 <!-- Selector Identidad -->
                 <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading" class="w-10 h-10" />
                 <!-- Boton Publicar -->
-                <Button @click="Publicar"
+                <Button @click="solicitarConfirmacionSala"
                     class="w-full md:w-auto flex-grow md:flex-grow-0 text-xs md:text-sm btn-publicar"
                     :loading="uploading" md:fluid :label="isEditing ? 'Guardar' : publicarLabel"
                     iconPos="right"></Button>
             </div>
         </div>
+
+        <Dialog v-model:visible="confirmSalaVisible" modal header="Confirmar sala" :style="{ width: '26rem' }"
+            :dismissableMask="true">
+            <div class="space-y-3">
+                <p class="text-sm text-zinc-600 dark:text-zinc-300">
+                    Estás por publicar en <span class="font-semibold text-zinc-800 dark:text-white">{{ salaSeleccionadaNombre }}</span>.
+                    Lo que publiques acá será visible para toda la comunidad.<br><br>
+                    Si querías publicar en  <span class="font-semibold text-zinc-800 dark:text-white">una materia o en tu bitácora</span>, podés cambiar la sala antes de publicar.
+                </p>
+
+                <div class="flex flex-col gap-2">
+                    <Select v-model="salaSeleccionadaId"
+                        :options="salaDropdownOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        :loading="enlacesLoading"
+                        :disabled="uploading || enlacesLoading"
+                        placeholder="Selecciona una sala"
+                        fluid>
+                        <template #value="slotProps">
+                            <div v-if="slotProps.value !== undefined" class="flex items-center gap-2">
+                                <template v-if="slotProps.value === null">
+                                    <AvatarSalon class="mr-2 w-8 h-8" :usuario="auth?.data.value.user"/>
+                                    <span>{{ salaDropdownOptions.find(o => o.value === null)?.label }}</span>
+                                </template>
+                                <template v-else>
+                                    <Avatar :label="salaDropdownOptions.find(o => o.value === slotProps.value)?.sigla" 
+                                            :style="{ backgroundColor: salaDropdownOptions.find(o => o.value === slotProps.value)?.color || '#000', color: '#fff' }" 
+                                            shape="" class="w-8 h-8 text-xs md:text-base" />
+                                    <span>{{ salaDropdownOptions.find(o => o.value === slotProps.value)?.label }}</span>
+                                </template>
+                            </div>
+                            <span v-else class="text-zinc-400">{{ slotProps.placeholder }}</span>
+                        </template>
+                        <template #option="slotProps">
+                            <div class="flex items-center gap-2" v-if="slotProps.option">
+                                <AvatarSalon v-if="slotProps.option.isBitacora" class="mr-2 w-8 h-8" :usuario="auth?.data.value.user"/>
+                                <Avatar v-else :label="slotProps.option.sigla" :style="{ backgroundColor: slotProps.option.color || '#000', color: '#fff' }" shape="" class="w-8 h-8 text-xs md:text-base" />
+                                <!-- <img :src="slotProps.option.image" :alt="slotProps.option.label" class="w-8 h-8 rounded" /> -->
+                                <span>{{ slotProps.option.label }}</span>
+                            </div>
+                        </template>
+                    </Select>
+                </div>
+
+                <p class="text-xs text-zinc-600 dark:text-zinc-300">
+                    Si no ves la sala que buscás, asegurate de haberte enlazado primero.
+                </p>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <Button type="button" label="Cancelar" severity="secondary" @click="cancelarConfirmacionSala"
+                        :disabled="uploading || enlacesLoading"></Button>
+                    <Button type="button" iconPos="right" label="Publicar" @click="confirmarYPublicar"
+                        :loading="uploading" :disabled="enlacesLoading"></Button>
+                </div>
+            </div>
+        </Dialog>
     </ClientOnly>
 </template>
 
@@ -58,6 +115,11 @@ const props = defineProps(
     },
 )
 const autorSeleccionado = ref(null)
+const confirmSalaVisible = ref(false)
+const salaSeleccionadaId = ref(null)
+const salaConfirmDefaults = ref({ sala: null, salaNombre: '' })
+const enlacesLoading = ref(false)
+const enlacesData = ref(null)
 
 const wordCount = computed(() => editor.value?.wordCount)
 const characterCount = computed(() => editor.value?.characterCount)
@@ -89,7 +151,142 @@ watch(() => autorSeleccionado.value, () => {
 const mixpanel = useMixpanel()
 const toast = useToast()
 
-const Publicar = async () => {
+const resolveSalaDataForPublication = () => {
+    if (salonStore.currContext === 'bitacora' || salonStore.currContext === 'grupo') {
+        return {
+            sala: null,
+            salaNombre: salonStore.currContext === 'bitacora' ? 'Bitácora' : 'Bitácora grupal',
+        }
+    }
+
+    if (isEditing.value && !['bitacora', 'grupo'].includes(salonStore.currContext)) {
+        return {
+            sala: props.entryEdit?.entrada?.sala?.id ?? paginaActual.value?.id ?? null,
+            salaNombre: props.entryEdit?.entrada?.sala?.nombre ?? paginaActual.value?.nombre ?? '',
+        }
+    }
+
+    return {
+        sala: paginaActual.value?.id ?? null,
+        salaNombre: paginaActual.value?.nombre ?? '',
+    }
+}
+
+const enlazadoIds = computed(() => {
+    return enlacesData.value?.docs?.map(e => e.idEnlazado) || []
+})
+
+const salaDropdownOptions = computed(() => {
+    const base = resolveSalaDataForPublication()
+    const baseLabel = base.salaNombre || 'Contexto actual'
+
+    const options = [{
+        label: `${baseLabel} (actual)`,
+        value: base.sala ?? null,
+        sigla: base.sigla || 'S',
+        color: base.color || '#000',
+        isBitacora: false,
+    }]
+
+    // Add user's bitácora (id: null)
+    if (base.sala !== null) {
+        options.push({
+            label: 'Bitácora',
+            value: null,
+            isBitacora: true,
+        })
+    }
+
+    // Add only salas the user has enlazado
+    const otherSalas = salonStore.salas
+        .filter(s => s.id !== base.sala && enlazadoIds.value.includes(s.id))
+        .map(s => ({ 
+            label: s.nombre, 
+            value: s.id,
+            image: 'https://via.placeholder.com/32?text=Sala',
+            sigla: s.siglas || 'S',
+            color: s.color || '#000',
+            isBitacora: false,
+        }))
+
+    return [...options, ...otherSalas]
+})
+
+const salaSeleccionadaNombre = computed(() => {
+    if (salaSeleccionadaId.value === null && salaConfirmDefaults.value.sala === null) {
+        return salaConfirmDefaults.value.salaNombre || 'el contexto actual'
+    }
+
+    if (salaSeleccionadaId.value === salaConfirmDefaults.value.sala) {
+        return salaConfirmDefaults.value.salaNombre || 'el contexto actual'
+    }
+
+    const match = salonStore.salas.find(s => s.id === salaSeleccionadaId.value)
+    return match?.nombre || salaConfirmDefaults.value.salaNombre || 'el contexto actual'
+})
+
+const solicitarConfirmacionSala = async () => {
+    if (uploading.value) return
+
+    if (editor.value.EditorIsEmpty()) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'La entrada está vacía', life: 3000 });
+        return
+    }
+    
+    if (!SospechaSalaIncorrecta()) {
+        Publicar();
+        return;
+    }
+    
+    // Show modal immediately
+    const baseSala = resolveSalaDataForPublication()
+    salaConfirmDefaults.value = baseSala
+    salaSeleccionadaId.value = baseSala.sala ?? null
+    confirmSalaVisible.value = true
+
+    // Fetch enlaces in background only if not already loaded
+    if (!enlacesData.value) {
+        try {
+            enlacesLoading.value = true
+            const result = await useAPI(`/api/enlaces?where[autor][equals]=${auth.data.value.user.id}`)
+            enlacesData.value = result
+        } catch (e) {
+            console.error("Error fetching enlaces", e)
+            toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las salas', life: 3000 });
+        } finally {
+            enlacesLoading.value = false
+        }
+    }
+}
+
+const SospechaSalaIncorrecta = () => {
+    // Si no es El Salon, no hace falta confirmacion
+    console.log("Curr context:", salonStore.currContext)
+    if(salonStore.contextoId != salonStore.elSalonId){
+        return false
+    }
+    // Si el usuario se creo hace mas de x año, no hace falta confirmacion
+    const aniosParaConfirmacion = 1
+    const fechaCreacion = new Date(auth.data.value.user.createdAt)
+    const xAniosDespues = new Date(fechaCreacion)
+    xAniosDespues.setFullYear(xAniosDespues.getFullYear() + aniosParaConfirmacion)
+    if (new Date() > xAniosDespues) {
+        return false
+    }
+    return true
+}
+
+const cancelarConfirmacionSala = () => {
+    if (uploading.value) return
+    confirmSalaVisible.value = false
+}
+
+const confirmarYPublicar = async () => {
+    confirmSalaVisible.value = false
+    await Publicar(salaSeleccionadaId.value)
+}
+
+const Publicar = async (salaOverrideId = undefined) => {
     if (editor.value.EditorIsEmpty()) {
         toast.add({ severity: 'error', summary: 'Error', detail: 'La entrada está vacía', life: 3000 });
         return
@@ -97,28 +294,18 @@ const Publicar = async () => {
     uploading.value = true
     const { html, imagenes, archivos, mencionados, etiquetas, embedsYoutube, embedsVimeo } = await editor.value.parseEditorToUpload(publicarLabel)
     if (html == "") {
+        uploading.value = false
         return;
     }
 
-    const resolveSalaByContext = () => {
-        if (salonStore.currContext === 'bitacora' || salonStore.currContext === 'grupo') {
-            return {
-                sala: null,
-                salaNombre: salonStore.currContext === 'bitacora' ? 'Bitácora' : 'Bitácora grupal',
-            }
-        }
-        return {
-            sala: paginaActual.value?.id ?? null,
-            salaNombre: paginaActual.value?.nombre ?? '',
-        }
-    }
+    const baseSalaData = resolveSalaDataForPublication()
+    let salaData = baseSalaData
 
-    let salaData = resolveSalaByContext()
-
-    if (isEditing.value && !['bitacora', 'grupo'].includes(salonStore.currContext)) {
+    if (salaOverrideId !== undefined) {
+        const match = salonStore.salas.find(s => s.id === salaOverrideId)
         salaData = {
-            sala: props.entryEdit.entrada.sala?.id ?? null,
-            salaNombre: props.entryEdit.entrada.sala?.nombre ?? '',
+            sala: salaOverrideId,
+            salaNombre: match?.nombre ?? baseSalaData.salaNombre,
         }
     }
 

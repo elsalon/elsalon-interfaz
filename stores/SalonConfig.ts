@@ -39,6 +39,7 @@ export const useSalonStore = defineStore('salon', {
     gruposDelUsuario: null as null,
     gruposDelUsuarioFetching: false,
     invalidating: false,
+    elSalonId: null as String | null,
   }),
 
   actions: {
@@ -67,6 +68,8 @@ export const useSalonStore = defineStore('salon', {
         if (data.value) {
           this.salas = data.value.salas;
           this.etiquetas = data.value.etiquetas;
+          const elSalon = this.salas.find(sala => sala.slug === 'el-salon');
+          this.elSalonId = elSalon ? elSalon.id : null;
         }
 
         this.initialized = true;
