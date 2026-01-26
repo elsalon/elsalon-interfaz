@@ -2,7 +2,12 @@
     <ClientOnly>
         <div class="h-full w-full flex flex-col container-small justify-between">
             <div class="flex flex-col flex-grow max-h-[calc(100vh-11rem)] md:max-h-[calc(100vh-5rem)] relative">
-                <EditorRichText ref="editor" :editingData="props.entryEdit" @publishHotKey="solicitarConfirmacionSala"
+                <EditorRichText 
+                    ref="editor" 
+                    :editingData="props.entryEdit" 
+                    :autosaveContext="autosaveContext"
+                    :autosaveEnabled="!isEditing"
+                    @publishHotKey="solicitarConfirmacionSala"
                     class="min-h-[120px] overflow-auto">
                     <template #footerBeforeAttach>
                         <div v-if="auth.data.value.user.opciones?.mostrarContadorPalabras"
@@ -120,6 +125,27 @@ const salaSeleccionadaId = ref(null)
 const salaConfirmDefaults = ref({ sala: null, salaNombre: '' })
 const enlacesLoading = ref(false)
 const enlacesData = ref(null)
+
+// Compute autosave context for new entries (context-aware)
+const autosaveContext = computed(() => {
+    const baseType = 'entrada'
+
+    // Bitácora personal: use user id to avoid clashes
+    if (salonStore.currContext === 'bitacora') {
+        return { type: baseType, id: `bitacora:${auth.data.value.user.id}` }
+    }
+
+    // Bitácora grupal: tie to current contextoId
+    if (salonStore.currContext === 'grupo') {
+        return { type: baseType, id: `grupo:${salonStore.contextoId || 'sin-id'}` }
+    }
+
+    // Default: current sala/context id
+    return {
+        type: baseType,
+        id: salonStore.contextoId || paginaActual.value?.id || 'nueva'
+    }
+})
 
 const wordCount = computed(() => editor.value?.wordCount)
 const characterCount = computed(() => editor.value?.characterCount)
@@ -347,6 +373,8 @@ const Publicar = async (salaOverrideId = undefined) => {
         } else {
             useNuxtApp().callHook("publicacion:creada", { resultado: "ok", entrada: response.doc })
             mixpanel.track("Entrada creada", { id: response.doc.id, sala: salaNombre, imagenes: response.doc.imagenes.length, archivos: response.doc.archivos.length, videos: cantVideos, menciones: response.doc.mencionados.length, autoriaGrupal: response.doc.autoriaGrupal })
+            // Clear autosave after successful publication
+            editor.value?.clearAutoSave()
         }
 
     } catch (e) {

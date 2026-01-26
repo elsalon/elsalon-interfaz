@@ -22,6 +22,23 @@
                 <span class="text-2xl text-zinc-700 dark:text-zinc-200">Arrastrá imágenes, gifs o archivos</span>
             </div>
         </div>
+
+        <!-- Recovery Dialog -->
+        <Dialog v-model:visible="showRecoveryDialog" modal header="Contenido guardado" :style="{ width: '28rem' }" :dismissableMask="false">
+            <div class="space-y-4">
+                <p class="text-sm text-zinc-700 dark:text-zinc-200">
+                    Se encontró contenido guardado automáticamente hace poco. ¿Deseas restaurarlo?
+                </p>
+                <p class="text-xs text-zinc-500 dark:text-zinc-400">
+                    <i class="pi pi-info-circle mr-2"></i>
+                    Si tenías archivos adjuntos, deberás agregarlos nuevamente.
+                </p>
+                <div class="flex justify-end gap-2 pt-2">
+                    <Button type="button" label="Descartar" severity="secondary" @click="handleRecoveryDiscard" />
+                    <Button type="button" label="Restaurar" @click="handleRecoveryAccept" />
+                </div>
+            </div>
+        </Dialog>
     </ClientOnly>
 </template>
 
@@ -44,14 +61,112 @@ const fileInput = ref(null)
 const wordCount = ref(0)
 const characterCount = ref(0)
 
+// Autosave state
+const showRecoveryDialog = ref(false)
+const recoveredData = ref(null)
+const hadAttachedFiles = ref(false)
+let hasPromptedRecovery = false
+let recoveryResolved = false
+let hasUserInteracted = false
+
 const emit = defineEmits(['publishHotKey'])
 const props = defineProps({
-    editingData: { type: Object, default: null }
+    editingData: { type: Object, default: null },
+    autosaveContext: { 
+        type: Object, 
+        required: true,
+        validator: (value) => value && value.type && value.id
+    },
+    autosaveEnabled: { type: Boolean, default: true }
 })
 
 const urlRegex = /(https?:\/\/[^\s]+)/g;
 const youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:shorts\/|[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
 const vimeoRegex = /(?:https?:\/\/)?(?:www\.|player\.)?vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^\/]*)\/videos\/|video\/|)(\d+)(?:[a-zA-Z0-9_-]+)?/i;
+
+// Autosave methods
+const getAutosaveKey = () => {
+    return `autosave:${props.autosaveContext.type}:${props.autosaveContext.id}`
+}
+
+const saveToLocalStorage = () => {
+    if (!props.autosaveEnabled || !quill) return
+
+    try {
+        const html = quill.root.innerHTML
+        const autosaveData = {
+            timestamp: Date.now(),
+            html,
+            imagenes: attachedImages.value,
+            hadFiles: attachedFiles.value.length > 0,
+            contextType: props.autosaveContext.type,
+            contextId: props.autosaveContext.id,
+        }
+        localStorage.setItem(getAutosaveKey(), JSON.stringify(autosaveData))
+        console.log('[Autosave] Guardado:', getAutosaveKey())
+    } catch (error) {
+        console.error('[Autosave] Error al guardar:', error)
+    }
+}
+
+const loadFromLocalStorage = () => {
+    if (!props.autosaveEnabled) return null
+
+    try {
+        const saved = localStorage.getItem(getAutosaveKey())
+        return saved ? JSON.parse(saved) : null
+    } catch (error) {
+        console.error('[Autosave] Error al cargar:', error)
+        return null
+    }
+}
+
+const clearAutoSave = () => {
+    try {
+        localStorage.removeItem(getAutosaveKey())
+        console.log('[Autosave] Eliminado:', getAutosaveKey())
+    } catch (error) {
+        console.error('[Autosave] Error al eliminar:', error)
+    }
+}
+
+const restoreAutoSave = (data) => {
+    if (!quill || !data) return
+    
+    quill.root.innerHTML = data.html
+    attachedImages.value = data.imagenes || []
+    hadAttachedFiles.value = data.hadFiles || false
+}
+
+const handleRecoveryAccept = () => {
+    restoreAutoSave(recoveredData.value)
+    showRecoveryDialog.value = false
+    recoveredData.value = null
+    hasPromptedRecovery = true
+    recoveryResolved = true
+}
+
+const handleRecoveryDiscard = () => {
+    clearAutoSave()
+    showRecoveryDialog.value = false
+    recoveredData.value = null
+    hasPromptedRecovery = true
+    recoveryResolved = true
+}
+
+const promptRecoveryIfNeeded = () => {
+    if (hasPromptedRecovery || recoveryResolved || hasUserInteracted || props.editingData || !props.autosaveEnabled) return
+    const savedData = loadFromLocalStorage()
+    if (savedData) {
+        recoveredData.value = savedData
+        showRecoveryDialog.value = true
+        hasPromptedRecovery = true
+    }
+}
+
+const debouncedAutoSave = debounce(() => {
+    saveToLocalStorage()
+}, 4000)
 
 
 const handleUploadFileClick = () => {
@@ -60,6 +175,8 @@ const handleUploadFileClick = () => {
 const handleFileChange = (e) => {
     const files = e.target.files;
     attachedFiles.value.push(files[0])
+    hasUserInteracted = true
+    saveToLocalStorage()
 }
 
 
@@ -282,8 +399,11 @@ const handleDroppedFile = async (file) => {
     if (file.type.startsWith('image/')) {
         const range = quill.getSelection() || { index: quill.getLength() };
         await insertImageFromFile(file, range);
+        hasUserInteracted = true
     } else if (isAcceptedFile(file)) {
         attachedFiles.value.push(file);
+        hasUserInteracted = true
+        saveToLocalStorage()
     }else{
         toast.add({ severity: 'error', summary: 'Error', detail: `Tipo de archivo no soportado: ${file.name}`, life: 3000 });
     }
@@ -575,6 +695,13 @@ onMounted(async () => {
         debouncedCountWords(text);
     }
 
+    if (source === 'user') {
+        hasUserInteracted = true
+    }
+
+    // Trigger autosave on text change
+    debouncedAutoSave();
+
     // Only process user inputs (not programmatic changes)
     if (source !== 'user') return;
 
@@ -675,12 +802,19 @@ onMounted(async () => {
 
         editorContainer.value.firstChild.onfocus = () => {
             window.addEventListener('keydown', handlePublishHotkey)
+            // Re-check autosave each time user focuses the editor (covers reopen without remount)
+            promptRecoveryIfNeeded()
         }
         editorContainer.value.firstChild.onblur = () => {
             window.removeEventListener('keydown', handlePublishHotkey)
         }
         
         quill.focus();
+
+        // Initialize autosave recovery
+        if (!props.editingData) {
+            promptRecoveryIfNeeded()
+        }
     }
 
     if (props.editingData) {
@@ -700,6 +834,10 @@ const clear = () => {
     quill.root.innerHTML = ''
     attachedImages.value = []
     attachedFiles.value = []
+    clearAutoSave()
+    hasPromptedRecovery = false
+    recoveryResolved = false
+    hasUserInteracted = false
 }
 // Expose the function so the parent can access it
 defineExpose({
@@ -707,7 +845,8 @@ defineExpose({
     characterCount,
     EditorIsEmpty,
     parseEditorToUpload,
-    clear
+    clear,
+    clearAutoSave
 })
 </script>
 

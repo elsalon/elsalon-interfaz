@@ -3,7 +3,12 @@
         <div>
             <!-- Editor -->
             <div class="comment-input bg-white">
-                <EditorRichText ref="editor" :editingData="props.commentEdit" @publishHotKey="Publicar"/>
+                <EditorRichText 
+                    ref="editor" 
+                    :editingData="props.commentEdit" 
+                    :autosaveContext="autosaveContext"
+                    :autosaveEnabled="!isEditing"
+                    @publishHotKey="Publicar"/>
                 <!-- <QuillEditor placeholder="Comentario" v-model:content="miComentario" content-type="html" :toolbar="editorToolbar" theme="bubble" @focus="focused" @blur="blured"/> -->
             </div>
             <div class="text-right mt-2 flex justify-end flex-row">
@@ -38,6 +43,19 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['userPosted', 'cancelComment'])
+
+// Compute autosave context for new comments
+const autosaveContext = computed(() => {
+    if (props.commentEdit) {
+        // When editing, don't autosave (not required per user)
+        return null
+    }
+    // For new comments, use the entrada id as context
+    return {
+        type: 'comentario',
+        id: props.entradaId
+    }
+})
 
 const userEdited = computed(() => {
     return miComentario.value !== ''
@@ -99,6 +117,8 @@ const Publicar = async () => {
         }else{
             toast.add({ severity: 'contrast', detail: 'Comentario publicado', life: 3000});
             mixpanel.track("Comentario creado", {id: response.doc.id, entrada: props.entradaId})
+            // Clear autosave after successful publication
+            editor.value?.clearAutoSave()
         }
         
 	}catch{
