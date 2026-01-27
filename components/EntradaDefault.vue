@@ -55,7 +55,10 @@
             <div class="actions mt-1 flex" :class="{ 'mb-3': comentariosState.length > 0 && !hasNextPage }">
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
                  <div>
-                     <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
+                    <div class="flex">
+                        <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
+                        <Guardar :contenidoid="entrada.id" contenidotipo="entrada" :guardadoPorUsuario="entrada.guardadoPorUsuario"/>
+                    </div>
                      <BtnComentar v-if="!comentariosState.length > 0" @click="ToggleCommentBox"
                          :labelCancelar="showCommentBox === '1'" />
                  </div>
