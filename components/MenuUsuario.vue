@@ -152,6 +152,11 @@ const itemsUserMenu = computed(() => [
                 route: '/opciones/grupos',
             },
             {
+                label: 'Guardados',
+                icon: PrimeIcons.BOOKMARK,
+                route: '/guardados',
+            },
+            {
                 label: 'Ayuda',
                 icon: PrimeIcons.QUESTION_CIRCLE,
                 route: '/nodo/ayuda'

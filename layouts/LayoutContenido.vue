@@ -11,7 +11,7 @@
                 <MenuPrincipal/>
             </div>
 
-            <div class="flex items-center justify-center">
+            <div class="flex items-center justify-center self-center">
                 <h1 class="text-lg font-semibold text-zinc-800 dark:text-zinc-200">
                     <slot name="header" />
                 </h1>

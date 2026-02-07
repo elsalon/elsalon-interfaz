@@ -18,6 +18,8 @@
 
 <script setup>
 import qs from 'qs';
+import { GUARDADO_CATEGORIES } from '~/utils/categories';
+
 const { data: authData } = useAuth();
 const mixpanel = useMixpanel();
 const toast = useToast();
@@ -46,22 +48,15 @@ const showAnim = ref(false);
 const selectedCategory = ref(null);
 const categoryMenu = ref(null);
 
-const categories = [
-    { label: 'Referencias', value: 'referencias' },
-    { label: 'Técnicas', value: 'tecnicas' },
-    { label: 'Ideas', value: 'ideas' },
-    { label: 'Lecturas', value: 'lecturas' },
-];
-
 const categoryMenuItems = computed(() =>
-    categories.map((cat) => ({
+    GUARDADO_CATEGORIES.map((cat) => ({
         label: cat.label,
         command: () => selectCategory(cat.value),
     }))
 );
 
 const currentCategoryLabel = computed(() =>
-    categories.find((c) => c.value === savedCategory.value)?.label || ''
+    GUARDADO_CATEGORIES.find((c) => c.value === savedCategory.value)?.label || ''
 );
 
 const tooltipText = computed(() => {

@@ -13,6 +13,9 @@ const emit = defineEmits(['eliminar']);
 const auth = useAuth();
 
 // Initialize entrada comentarios state
+if (!props.entrada.comentarios) {
+  props.entrada.comentarios = [];
+}
 props.entrada.comentarios.fetching = false;
 props.entrada.masComentarios = false;
 
