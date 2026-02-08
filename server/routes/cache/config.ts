@@ -116,7 +116,6 @@ async function FetchSecciones(sala: Salon){
   console.log(`${runtimeConfig.apiBase}/api/secciones?where[sala][equals]=${sala.id}&depth=0`);
   // TODO Filtrar tambien dentro de periodo
   let secciones = await $fetch<{ docs: any[] }>(`${runtimeConfig.apiBase}/api/secciones?where[sala][equals]=${sala.id}&depth=0`);
-  console.log(secciones.docs)
   // Elimino los campos excepto blockType para reducir el tamaño del cache
   secciones.docs?.forEach((seccion: any) => {
     // camposSeccionEliiminar.forEach((campo) => {
