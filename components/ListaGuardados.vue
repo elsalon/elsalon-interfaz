@@ -66,7 +66,7 @@ const {
   apiUrl: computed(() => props.apiUrl),
   query: computed(() => props.query),
   cacheKey: computed(() => props.cacheKey),
-  paginationField: 'createdAt',
+  paginationMode: 'page',
   defaultParams: {
     depth: 3,
   },

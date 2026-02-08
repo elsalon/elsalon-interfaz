@@ -11,6 +11,7 @@ import qs from 'qs';
  * @param {import('vue').Ref<string>|string} options.cacheKey - Cache key for useAsyncData
  * @param {Object} options.defaultParams - Default params merged into every request (e.g. { populate, depth, sort })
  * @param {string} options.paginationField - Field used for cursor-based pagination (default: 'lastActivity')
+ * @param {string} options.paginationMode - 'cursor' (default) for cursor-based, 'page' for page-based pagination
  */
 export function usePaginatedList(options = {}) {
   const {
@@ -23,6 +24,7 @@ export function usePaginatedList(options = {}) {
       sort: '-lastActivity',
     },
     paginationField = 'lastActivity',
+    paginationMode = 'cursor',
   } = options;
 
   // Resolve reactive or plain values
@@ -36,6 +38,7 @@ export function usePaginatedList(options = {}) {
   const loading = ref(false);
   const initialLoading = ref(true);
   const observerTarget = ref(null);
+  const currentPage = ref(1);
 
   // Fetch function
   const fetchItems = async () => {
@@ -54,6 +57,7 @@ export function usePaginatedList(options = {}) {
     if (data.value) {
       items.value = data.value.docs;
       hasNextPage.value = data.value.hasNextPage;
+      currentPage.value = data.value.page || 1;
     }
     initialLoading.value = false;
   };
@@ -63,6 +67,7 @@ export function usePaginatedList(options = {}) {
     items.value = [];
     hasNextPage.value = false;
     initialLoading.value = true;
+    currentPage.value = 1;
 
     try {
       const res = await fetchItems();
@@ -79,37 +84,51 @@ export function usePaginatedList(options = {}) {
   const fetchNextItems = async () => {
     loading.value = true;
 
-    const lastItem = items.value[items.value.length - 1];
-    const lastCursorValue = lastItem ? lastItem[paginationField] : null;
-
-    const baseQuery = {
-      ...defaultParams,
-      createdLessThan: lastCursorValue, // For custom feed endpoints
-      ...getQuery(),
-    };
-
-    if (lastCursorValue) {
-      const cursorCondition = { [paginationField]: { less_than: lastCursorValue } };
-
-      if (baseQuery.where) {
-        if (Array.isArray(baseQuery.where.and)) {
-          baseQuery.where.and = baseQuery.where.and.filter(
-            cond => !cond[paginationField]
-          );
-          baseQuery.where.and.push(cursorCondition);
-        } else {
-          baseQuery.where = { and: [baseQuery.where, cursorCondition] };
-        }
-      } else {
-        baseQuery.where = cursorCondition;
-      }
-    }
-
-    const queryParams = qs.stringify(baseQuery, { encode: false });
-
     try {
+      let queryParams;
+
+      if (paginationMode === 'page') {
+        // Page-based pagination
+        const nextPage = currentPage.value + 1;
+        queryParams = qs.stringify({
+          ...defaultParams,
+          ...getQuery(),
+          page: nextPage,
+        }, { encode: false });
+      } else {
+        // Cursor-based pagination
+        const lastItem = items.value[items.value.length - 1];
+        const lastCursorValue = lastItem ? lastItem[paginationField] : null;
+
+        const baseQuery = {
+          ...defaultParams,
+          createdLessThan: lastCursorValue, // For custom feed endpoints
+          ...getQuery(),
+        };
+
+        if (lastCursorValue) {
+          const cursorCondition = { [paginationField]: { less_than: lastCursorValue } };
+
+          if (baseQuery.where) {
+            if (Array.isArray(baseQuery.where.and)) {
+              baseQuery.where.and = baseQuery.where.and.filter(
+                cond => !cond[paginationField]
+              );
+              baseQuery.where.and.push(cursorCondition);
+            } else {
+              baseQuery.where = { and: [baseQuery.where, cursorCondition] };
+            }
+          } else {
+            baseQuery.where = cursorCondition;
+          }
+        }
+
+        queryParams = qs.stringify(baseQuery, { encode: false });
+      }
+
       const res = await useAPI(`${getApiUrl()}?${queryParams}`);
       hasNextPage.value = res.hasNextPage;
+      currentPage.value = res.page || currentPage.value + 1;
       items.value = [...items.value, ...res.docs];
     } catch (error) {
       console.error('Error fetching next items:', error);

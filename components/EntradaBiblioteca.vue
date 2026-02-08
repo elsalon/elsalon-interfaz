@@ -28,9 +28,12 @@
                         <AvatarSalon :usuario="identidad" size="small" />
                         <span class="text-zinc-600 dark:text-zinc-400 text-sm line-clamp-1">{{ identidad.nombre }}</span>
                     </NuxtLink>
-                    <NuxtLink class="text-zinc-500 dark:text-zinc-500 text-xs hover:underline mt-1 block" :to="`/entradas/${entrada.id}`">
-                        <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>
-                    </NuxtLink>
+                    <div class="flex justify-between items-center">
+                        <NuxtLink class="text-zinc-500 dark:text-zinc-500 text-xs hover:underline mt-1 block" :to="`/entradas/${entrada.id}`">
+                            <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>
+                        </NuxtLink>
+                        <Guardar :contenidoId="entrada.id" relationTo="entradas" :guardadoPorUsuario="entrada.guardadoPorUsuario" class="mt-1" />
+                    </div>
                 </div>
                 <div v-if="UsuarioTieneAutoridad" class="md:opacity-0 group-hover/entrada:opacity-100 transition-opacity">
                     <Button severity="contrast" text @click="ToggleArticleOptions">...</Button>

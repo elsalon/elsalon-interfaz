@@ -374,7 +374,7 @@ ol{
 }
 
 .ql-snow .ql-tooltip{
-  transform: translateX(150px) !important;
+  transform: translteX(150px) !important;
 }
 
 /* For browsers that DON'T support color-mix */
@@ -407,5 +407,10 @@ ol{
 }
 .dark .scrollbar{
   @apply [&::-webkit-scrollbar-thumb]:bg-zinc-100
+}
+
+
+.dark .ql-code-block-container{
+  @apply bg-surface-800 !text-surface-300;
 }
 
