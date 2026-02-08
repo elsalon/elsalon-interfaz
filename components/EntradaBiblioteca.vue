@@ -1,6 +1,6 @@
 <template>
     <div class="group/entrada transition-all duration-300 entrada-biblioteca flex flex-col"
-        :class="{ 'opacity-30': loading, 'bg-orange-50 dark:bg-orange-950/30': resaltar }">
+        :class="{ 'opacity-30': loading, 'bg-orange-50 dark:bg-amber-900/25': resaltar }">
 
         <!-- Cover Image -->
         <NuxtLink :to="`/entradas/${entrada.id}`" class="block">
@@ -33,7 +33,7 @@
                     </NuxtLink>
                 </div>
                 <div v-if="UsuarioTieneAutoridad" class="md:opacity-0 group-hover/entrada:opacity-100 transition-opacity">
-                    <Button text @click="ToggleArticleOptions" class="!p-1">...</Button>
+                    <Button severity="contrast" text @click="ToggleArticleOptions">...</Button>
                     <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo"
                         :popup="true" class="text-xs" />
                 </div>
