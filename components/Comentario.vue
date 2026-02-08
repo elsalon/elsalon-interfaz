@@ -32,11 +32,10 @@
             @cancelComment="handleUserCancelComment" />
         </DeferredContent>
 
-        <div class="actions">
-            <!-- <Button v-show="isLast" link class="my-2 mr-2 text-xs text-zinc-600 leading-normal" label="Comentar"  style="padding: 0"
-                @click="ToggleComment" /> -->
+        <div class="actions flex">
             <Aprecio :contenidoid="comentario.id" contenidotipo="comentario"
                 :aprecioIniciales="comentario.aprecios" />
+            <Guardar :contenidoId="comentario.id" relationTo="comentarios" :guardadoPorUsuario="comentario.guardadoPorUsuario" />
         </div>
     </Panel>
 </template>

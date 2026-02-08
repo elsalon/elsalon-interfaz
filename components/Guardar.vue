@@ -88,7 +88,7 @@ const handleGuardarClicked = async (event) => {
                 }
             }, { encode: false })
 
-            const res = await useAPI(`/api/guardado/list?${queryParams}`, { method: 'DELETE' })
+            const res = await useAPI(`/api/guardado/?${queryParams}`, { method: 'DELETE' })
             console.log(res)
             didSucceed = true;
 
@@ -137,7 +137,7 @@ const selectCategory = async (categoryValue) => {
             }, 
             categoria: categoryValue 
         }
-        const res = await useAPI(`/api/guardado/list`, { body, method: 'POST' })
+        const res = await useAPI(`/api/guardado/`, { body, method: 'POST' })
         console.log(res)
         didSucceed = !!(res && res.doc && res.doc.id);
 
