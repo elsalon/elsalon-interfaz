@@ -1,41 +1,44 @@
 <template>
-    <div class="group/entrada transition-all entrada-biblioteca flex md:flex-col"
-        :class="{ 'opacity-30': loading, 'bg-orange-50 dark:bg-gray-900': resaltar }">
+    <div class="group/entrada transition-all duration-300 entrada-biblioteca flex flex-col"
+        :class="{ 'opacity-30': loading, 'bg-orange-50 dark:bg-orange-950/30': resaltar }">
 
-        
-        
-        <NuxtLink :to="`/entradas/${entrada.id}`">
-            <figure v-if="entrada.imagenes.length > 0" class="mr-5 md:mr-0 ">
-                <img :src="entrada.imagenes[0].imagen.sizes.medium.url" class="max-w-32 object-cover aspect-[6/9] md:w-full md:max-w-none" />
+        <!-- Cover Image -->
+        <NuxtLink :to="`/entradas/${entrada.id}`" class="block">
+            <figure v-if="entrada.imagenes?.length > 0" class="mb-3 overflow-hidden">
+                <img :src="entrada.imagenes[0].imagen.sizes.medium.url" 
+                     class="w-full object-cover aspect-[3/4] hover:scale-105 transition-transform duration-300" />
             </figure>
         </NuxtLink>
         
-        <article class="flex flex-col flex-grow overflow-auto">
-            <div class="flex-grow mb-2">
-                <div class="prose  prose-headings:text-xl prose-headings:font-semibold prose-headings:my-1 prose-p:my-0 leading-normal prose-img:my-2 break-words line-clamp-6">
+        <!-- Content -->
+        <article class="flex flex-col flex-grow">
+            <div class="flex-grow mb-3">
+                <div class="prose prose-sm prose-headings:text-base prose-headings:font-semibold prose-headings:my-1 prose-p:my-0 leading-relaxed break-words line-clamp-4 text-zinc-800 dark:text-zinc-200">
                     <ContenidoRendereado ref="contenidoRender" :contenido="entrada" />
                 </div>
-                <div v-if="entrada.archivos.length">
+                <div v-if="entrada.archivos?.length" class="mt-2">
                     <ListaArchivos :archivos="entrada.archivos" />
                 </div>
             </div>
-            <div class="despues-entrada flex">
+
+            <!-- Author & Meta -->
+            <div class="mt-auto pt-2 flex items-start justify-between">
                 <div>
-                    <NuxtLink :to="identidadUrl" class="link flex items-center gap-x-2">
+                    <NuxtLink :to="identidadUrl" class="flex items-center gap-x-2 hover:underline">
                         <AvatarSalon :usuario="identidad" size="small" />
-                        <h2 class=" text-zinc-600  text-sm">{{ identidad.nombre }}</h2>
+                        <span class="text-zinc-600 dark:text-zinc-400 text-sm line-clamp-1">{{ identidad.nombre }}</span>
                     </NuxtLink>
-                    <NuxtLink class="text-zinc-600 text-xs hover:underline" :to="`/entradas/${entrada.id}`">
+                    <NuxtLink class="text-zinc-500 dark:text-zinc-500 text-xs hover:underline mt-1 block" :to="`/entradas/${entrada.id}`">
                         <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>
                     </NuxtLink>
                 </div>
-                <div v-if="UsuarioTieneAutoridad" class="flex-grow md:invisible group-hover/entrada:visible text-right">
-                    <Button text @click="ToggleArticleOptions">...</Button>
+                <div v-if="UsuarioTieneAutoridad" class="md:opacity-0 group-hover/entrada:opacity-100 transition-opacity">
+                    <Button text @click="ToggleArticleOptions" class="!p-1">...</Button>
                     <Menu :ref="el => menuRefs[entrada.id] = el" id="overlay_menu_article" :model="opcionesArticulo"
-                        :popup="true" class="text-xs opacity-100" />
-                    </div>
+                        :popup="true" class="text-xs" />
                 </div>
-            </article>
+            </div>
+        </article>
     </div>
 </template>
 
