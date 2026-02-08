@@ -1,6 +1,6 @@
 <template>
     <div class="group/entrada transition-all duration-300 entrada-biblioteca flex flex-col"
-        :class="{ 'opacity-30': loading, 'bg-orange-50 dark:bg-amber-900/25': resaltar }">
+        :class="{ 'opacity-30': loading, 'bg-orange-50 dark:bg-gray-900': resaltar }">
 
         <!-- Cover Image -->
         <NuxtLink :to="`/entradas/${entrada.id}`" class="block">
