@@ -34,13 +34,11 @@ const currCategory = ref(null);
 const cacheKey = computed(() => `guardados-${auth.data.value?.user?.id}-${currCategory.value || 'todos'}`);
 
 const query = computed(() => {
-  if (currCategory.value) {
-    return {
-        categoria:{
-            equals: currCategory.value
+    if (currCategory.value) {
+        return {
+            categoria: currCategory.value
         }
-    }    
-  }
-  return {}
+    }
+    return {}
 });
 </script>
