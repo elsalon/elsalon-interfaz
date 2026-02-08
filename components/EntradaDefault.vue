@@ -57,7 +57,7 @@
                  <div>
                     <div class="flex">
                         <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
-                        <Guardar :contenidoid="entrada.id" contenidotipo="entrada" :guardadoPorUsuario="entrada.guardadoPorUsuario"/>
+                        <Guardar :contenidoId="entrada.id" relationTo="entradas" :guardadoPorUsuario="entrada.guardadoPorUsuario"/>
                     </div>
                      <BtnComentar v-if="!comentariosState.length > 0" @click="ToggleCommentBox"
                          :labelCancelar="showCommentBox === '1'" />
@@ -68,7 +68,7 @@
                     <i class="pi pi-play-circle" />
                 </Button>
             </div>
-            <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios"
+            <ListaComentarios :entradaId="entrada.id" :comentariosIniciales="entrada.comentarios || { docs: [], hasNextPage: false }"
                 v-model:comentarios="comentariosState" v-model:hasNextPage="hasNextPage"
                 v-model:showCommentBox="showCommentBox" @userPosted="UserCommented" ref="listaComentarios" />
         </div>
@@ -119,6 +119,7 @@ watch(() => props.entrada, () => {
 
 
 const ContarVideos = (contenido) => {
+    if (!contenido?.embedsYoutube || !contenido?.embedsVimeo) return 0;
     return contenido.embedsYoutube.length + contenido.embedsVimeo.length
 }
 
@@ -145,7 +146,7 @@ const UserCommented = () => {
     listaComentarios.value.HideCommentbox()
     
     // Force a check for videos in the latest comment
-    if (comentariosState.value.length > 0) {
+    if (comentariosState.value && comentariosState.value.length > 0) {
         const nuevoComentario = comentariosState.value[comentariosState.value.length - 1]
         const videosEnNuevoComentario = ContarVideos(nuevoComentario)
     }

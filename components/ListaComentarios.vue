@@ -67,7 +67,7 @@ const hasNextPageLocal = computed({
 
 const comentariosRestantes = ref(0)
 const comentariosLocal = computed({
-    get: () => props.comentarios.length > 0 ? props.comentarios : props.comentariosIniciales.docs,
+    get: () => props.comentarios && props.comentarios.length > 0 ? props.comentarios : (props.comentariosIniciales?.docs || []),
     set: (val) => emit('update:comentarios', val)
 })
 const newestCommentDate = computed(() => comentariosLocal.value.length > 0 ? comentariosLocal.value[comentariosLocal.value.length - 1].createdAt : null)
@@ -85,9 +85,9 @@ const cajaComentario = ref(null)
 const emit = defineEmits(['userPosted', 'update:comentarios', 'update:hasNextPage', 'update:showCommentBox'])
 
 onMounted(() => {
-    comentariosLocal.value = props.comentariosIniciales.docs
-    hasNextPageLocal.value = props.comentariosIniciales.hasNextPage
-    comentariosRestantes.value = props.comentariosIniciales.totalDocs - comentariosLocal.value.length
+    comentariosLocal.value = props.comentariosIniciales?.docs || []
+    hasNextPageLocal.value = props.comentariosIniciales?.hasNextPage || false
+    comentariosRestantes.value = (props.comentariosIniciales?.totalDocs || 0) - comentariosLocal.value.length
 })
 
 const ToggleNewComment = () => {

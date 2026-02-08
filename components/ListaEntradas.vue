@@ -1,7 +1,13 @@
 <template>
   <NotificacionEntradasNuevas ref="notifEntradasNuevas" />
+
+  <!-- Initial Loading State -->
+  <div v-if="initialLoading" class="text-center h-40 mt-10 flex flex-col justify-center items-center text-zinc-500">
+    Cargando...
+  </div>
+
   <!-- Empty State -->
-  <div v-if="listaEntradas.length === 0" class="text-center h-40 mt-10 flex flex-col justify-center items-center">
+  <div v-else-if="listaEntradas.length === 0" class="text-center h-40 mt-10 flex flex-col justify-center items-center">
     <!-- CTA Primera publicacion -->
     <p class="font-bold text-zinc-900 dark:text-zinc-100">{{ emptyStateTitle }}</p>
     <p v-if="emptyStateSubtitle" class="text-zinc-600 dark:text-zinc-400">{{ emptyStateSubtitle }}</p>
@@ -39,12 +45,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useAsyncData } from "#app";
 import qs from 'qs';
 const notifEntradasNuevas = ref(null);
 const SalonStore = useSalonStore();
-const hasNextPage = ref(false);
 
 // Props
 const props = defineProps({
@@ -58,13 +63,41 @@ const props = defineProps({
   emptyStateSubtitle: { type: String, default: 'Podés enlazarte y escribir la primera' },
 });
 
-// States
+// Paginated list composable
+const {
+  items: entradasPaginadas,
+  hasNextPage,
+  loading,
+  initialLoading,
+  observerTarget,
+  refetch,
+  removeItem,
+  initialFetch,
+} = usePaginatedList({
+  apiUrl: computed(() => props.apiUrl),
+  query: computed(() => props.query),
+  cacheKey: computed(() => props.cacheKey),
+});
+
+await initialFetch();
+
+// Watch for cacheKey changes and refetch (including fijadas)
+watch(() => props.cacheKey, async (newKey, oldKey) => {
+  if (newKey === oldKey) return;
+  
+  entradasFijadas.value = [];
+  idsEntradasFijadas.value = [];
+  
+  await refetch();
+  
+  if (!props.saltearFijadas) {
+    await fetchFijadas();
+  }
+});
+
+// States (entrada-specific)
 const idsEntradasFijadas = ref([]);
 const entradasFijadas = ref([]);
-const entradasPaginadas = ref([]);
-const loading = ref(false);
-const observerTarget = ref(null)
-
 const entradaRefs = ref({});
 
 const entradaContainerClass = computed(() => {
@@ -88,21 +121,32 @@ const { hooks } = useNuxtApp()
 let OnCreateEntryHook = null;
 let OnEntradaFijadaHook = null;
 let OnEntradaDesfijadaHook = null;
-let OnPublicacionEditadaHook = null; // Add this new hook
+let OnPublicacionEditadaHook = null;
 
-// Fetch inicial de entradas
-const queryParams = qs.stringify({
-  populate: 'entradas,comentarios', // custom query param
-  depth: 2,
-  sort: '-lastActivity',
-  ...props.query,
-}, { encode: false })
-const { data: entradas } = await useAsyncData(props.cacheKey, () => useAPI(`${props.apiUrl}?${queryParams}`))
-entradasPaginadas.value = entradas.value.docs;
-hasNextPage.value = entradas.value.hasNextPage;
+// Fetch function for fijadas
+const fetchFijadas = async () => {
+  const queryParams = qs.stringify({
+    populate: 'entradas,comentarios',
+    depth: 4,
+    sort: '-lastActivity',
+    limit: 12,
+    where: {
+      "contexto": { equals: SalonStore.contextoId }
+    }
+  }, { encode: false })
+  
+  const res = await useAPI(`/api/fijadas?${queryParams}`)
+  idsEntradasFijadas.value = [];
+  res.docs.forEach(item => {
+    if (item.entrada.id != undefined) {
+      idsEntradasFijadas.value.push(item.entrada.id)
+      item.entrada.fijada = item.id;
+    }
+  })
+  entradasFijadas.value = res.docs.map(item => item.entrada);
+}
 
 // Fetch inicial de fijadas
-
 if (!props.saltearFijadas) {
   const cacheKey = `${props.cacheKey}:fijadas`;
   const queryParams = qs.stringify({
@@ -131,65 +175,6 @@ const listaEntradas = computed(() => {
   const filteredEntries = entradasPaginadas.value.filter(entry => !idsEntradasFijadas.value.includes(entry.id));
   return [...entradasFijadas.value, ...filteredEntries];
 })
-
-const fetchNextItems = async () => {
-  loading.value = true
-
-  const lastItem = entradasPaginadas.value[entradasPaginadas.value.length - 1]
-  const lastLastActivity = lastItem ? lastItem.lastActivity : null
-
-  const baseQuery = {
-    depth: 2,
-    sort: '-lastActivity',
-    createdLessThan: lastLastActivity,
-    ...props.query,
-    populate: 'entradas,comentarios'
-  }
-
-  if (lastLastActivity) {
-    const lastActivityCondition = { lastActivity: { less_than: lastLastActivity } }
-
-    if (baseQuery.where) {
-      // If where is an 'and' array, replace or add lastActivity condition
-      if (Array.isArray(baseQuery.where.and)) {
-        // Remove any existing lastActivity condition
-        baseQuery.where.and = baseQuery.where.and.filter(
-          cond => !cond.lastActivity
-        )
-        baseQuery.where.and.push(lastActivityCondition)
-      } else {
-        // If where exists but is not an 'and' array, wrap it and add our condition
-        baseQuery.where = { and: [baseQuery.where, lastActivityCondition] }
-      }
-    } else {
-      // No where clause, just add it
-      baseQuery.where = lastActivityCondition
-    }
-  }
-
-  const queryParams = qs.stringify(baseQuery, { encode: false })
-
-  try {
-    const res = await useAPI(`${props.apiUrl}?${queryParams}`)
-    console.log('Fetched items:', res)
-    hasNextPage.value = res.hasNextPage
-    entradasPaginadas.value = [...entradasPaginadas.value, ...res.docs]
-  } catch (error) {
-    console.error('Error fetching items:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-
-// Intersection Observer callback
-const handleIntersect = async (entries) => {
-  const entry = entries[0]
-  if (entry.isIntersecting && hasNextPage.value && !loading.value) {
-    await fetchNextItems()
-  }
-}
-
 
 const FetchNewerFromDate = async (date) => {
   console.log('Fetching newer items from:', date)
@@ -270,28 +255,15 @@ const handlePublicacionEditada = async (data) => {
 
 const EliminarEntrada = async (id) => {
   try {
-    // Puede estar en fijadas o en paginadas. Lo saco de ambos
     entradasFijadas.value = entradasFijadas.value.filter(entrada => entrada.id !== id)
-    entradasPaginadas.value = entradasPaginadas.value.filter(entrada => entrada.id !== id)
+    removeItem(id)
   } catch (e) {
     console.warn(e);
   }
 }
 
-// Set up Intersection Observer
-let observer
+// Set up hooks
 onMounted(() => {
-  // Create observer
-  observer = new IntersectionObserver(handleIntersect, {
-    rootMargin: '100px', // Start loading before reaching the bottom
-    threshold: 0.1
-  })
-
-  if (observerTarget.value) {
-    observer.observe(observerTarget.value)
-  }
-  // console.log("lista de entradas", listaEntradas.value)
-
   OnCreateEntryHook = hooks.hook('publicacion:creada', handlePublicacionCreada)
   OnEntradaFijadaHook = hooks.hook('entrada:fijada', ({ entrada, fijada }) => {
     entrada.fijada = fijada.id
@@ -313,13 +285,10 @@ onMounted(() => {
 
 // Clean up
 onUnmounted(() => {
-  if (observer) {
-    observer.disconnect()
-  }
   if (OnCreateEntryHook) OnCreateEntryHook()
   if (OnEntradaFijadaHook) OnEntradaFijadaHook()
   if (OnEntradaDesfijadaHook) OnEntradaDesfijadaHook()
-  if (OnPublicacionEditadaHook) OnPublicacionEditadaHook() // Clean up the new hook
+  if (OnPublicacionEditadaHook) OnPublicacionEditadaHook()
 })
 
 </script>

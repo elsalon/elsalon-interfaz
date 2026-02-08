@@ -30,11 +30,11 @@ const props = defineProps({
         type: String,
         default: null,
     },
-    contenidoid: {
+    contenidoId: {
         type: String,
         required: true,
     },
-    contenidotipo: {
+    relationTo: {
         type: String,
         required: true,
     },
@@ -78,21 +78,21 @@ const handleGuardarClicked = async (event) => {
         savedCategory.value = null;
         let didSucceed = false;
         try {
-            console.log('Eliminando guardado', props.contenidoid)
+            console.log('Eliminando guardado', props.contenidoId)
             const queryParams = qs.stringify({
                 where: {
                     and: [
-                        { contenidoid: { equals: props.contenidoid } },
+                        { 'contenido.value': { equals: props.contenidoId } },
                         { autor: { equals: authData.value.user.id } },
                     ]
                 }
             }, { encode: false })
 
-            const res = await useAPI(`/api/guardado?${queryParams}`, { method: 'DELETE' })
+            const res = await useAPI(`/api/guardado/list?${queryParams}`, { method: 'DELETE' })
             console.log(res)
             didSucceed = true;
 
-            mixpanel.track('Guardado eliminado', { contenidoid: props.contenidoid, contenidotipo: props.contenidotipo })
+            mixpanel.track('Guardado eliminado', { contenidoId: props.contenidoId, relationTo: props.relationTo })
         } catch (e) {
             console.log(e)
         } finally {
@@ -129,13 +129,19 @@ const selectCategory = async (categoryValue) => {
     try {
         ActivateAnim();
 
-        console.log('Creando guardado con categoría', props.contenidoid, categoryValue)
-        const body = { contenidoid: props.contenidoid, contenidotipo: props.contenidotipo, categoria: categoryValue }
-        const res = await useAPI(`/api/guardado/`, { body, method: 'POST' })
+        console.log('Creando guardado con categoría', props.contenidoId, categoryValue)
+        const body = { 
+            contenido: { 
+                value: props.contenidoId, 
+                relationTo: props.relationTo 
+            }, 
+            categoria: categoryValue 
+        }
+        const res = await useAPI(`/api/guardado/list`, { body, method: 'POST' })
         console.log(res)
         didSucceed = !!(res && res.doc && res.doc.id);
 
-        mixpanel.track('Guardado', { contenidoid: props.contenidoid, contenidotipo: props.contenidotipo, categoria: categoryValue })
+        mixpanel.track('Guardado', { contenidoId: props.contenidoId, relationTo: props.relationTo, categoria: categoryValue })
     } catch (e) {
         console.log(e)
     } finally {

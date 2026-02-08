@@ -35,7 +35,7 @@
         >
             <div class="space-y-4">
                 <p class="text-sm text-zinc-700 dark:text-zinc-200">
-                    Se encontró contenido guardado automáticamente hace poco. ¿Deseas restaurarlo?
+                    Tenés contenido guardado automáticamente hace poco. Querés restaurarlo?
                 </p>
                 <p class="text-xs text-zinc-500 dark:text-zinc-400">
                     <i class="pi pi-info-circle mr-2"></i>

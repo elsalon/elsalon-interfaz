@@ -20,16 +20,8 @@
         </Button>
     </div>
     
-    <Suspense>
-      <template #fallback>
-        <div class="text-center h-40 mt-10 flex flex-col justify-center items-center text-zinc-500">
-          Cargando...
-        </div>
-      </template>
-      <ListaEntradas apiUrl="/api/guardado/feed" :query="query" :cacheKey="cacheKey" :key="cacheKey" 
-        emptyStateTitle="No tenés guardados" 
-        emptyStateSubtitle="Guardá entradas para verlas acá"/> 
-    </Suspense>
+    <ListaGuardados :query="query" :cacheKey="cacheKey" /> 
+    
 </NuxtLayout>
 </div>
 </template>
