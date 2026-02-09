@@ -56,10 +56,13 @@
                 <!-- Boton Comentar. Solo se muestra si no tiene comentarios -->
                  <div>
                     <div class="flex">
-                        <Aprecio :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
+                        <Aprecio v-if="mostrarBtnAprecio" :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
                         <Guardar :contenidoId="entrada.id" relationTo="entradas" :guardadoPorUsuario="entrada.guardadoPorUsuario"/>
+                        <!-- Link a entrada completa (se usa en guardados) -->
+                        <NuxtLink v-if="mostrarLinkEntrada" class="text-xs mr-1 hover:underline text-zinc-600 font-mono dark:text-zinc-400 self-center"
+                            :to="`/entradas/${entrada.id}`">Ver Hilo</NuxtLink>
                     </div>
-                     <BtnComentar v-if="!comentariosState.length > 0" @click="ToggleCommentBox"
+                     <BtnComentar v-if="mostrarBtnComentar && !comentariosState.length > 0" @click="ToggleCommentBox"
                          :labelCancelar="showCommentBox === '1'" />
                  </div>
                  
@@ -80,6 +83,9 @@ const salonStore = useSalonStore()
 const auth = useAuth()
 const { $formatDate, $formatDateRelative } = useNuxtApp()
 const { GenerateSalaUrl } = useGenerateSalaUrl()
+const IrAEntrada = () => {
+    router.push(GenerateSalaUrl(props.entrada.sala.slug, props.entrada.id))
+}
 
 const props = defineProps({
     entrada: Object,
@@ -91,6 +97,10 @@ const props = defineProps({
     resaltar: Boolean,
     loading: Boolean,
     showCommentBox: Boolean,
+    
+    mostrarBtnAprecio: Boolean,
+    mostrarBtnComentar: Boolean,
+    mostrarLinkEntrada: Boolean,
     // Methods
     ToggleCommentBox: Function,
     ToggleArticleOptions: Function,

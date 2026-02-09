@@ -8,6 +8,19 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    mostrarBtnAprecio: {
+        type: Boolean,
+        default: true,
+    },
+    mostrarBtnComentar: {
+        type: Boolean,
+        default: true,
+    },
+    mostrarLinkEntrada: {
+        type: Boolean,
+        default: false,
+    },
+
 });
 const emit = defineEmits(['eliminar']);
 const auth = useAuth();
@@ -108,6 +121,9 @@ defineExpose({ ResaltarEntrada });
         :CopiarLink="CopiarLink"
         :DestacarEntrada="DestacarEntrada"
         :resaltar="resaltar"
+        :mostrarBtnAprecio="mostrarBtnAprecio"
+        :mostrarBtnComentar="mostrarBtnComentar"
+        :mostrarLinkEntrada="mostrarLinkEntrada"
         @fetchComentarios="fetchComentarios"
         @fetchComentariosRecientes="fetchComentariosRecientes"
     />

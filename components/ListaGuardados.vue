@@ -13,8 +13,8 @@
   <!-- Content -->
   <div v-else class="space-y-24">
     <template v-for="item in items" :key="item.id">
-      <Entrada v-if="item.contenido.relationTo === 'entradas'" :entrada="item.contenido.value" />
-      <Comentario v-else-if="item.contenido.relationTo === 'comentarios'" :comentario="item.contenido.value" />
+      <Entrada v-if="item.contenido.relationTo === 'entradas'" :entrada="item.contenido.value" :mostrar-btn-aprecio="false" :mostrar-btn-comentar="false" :mostrar-link-entrada="true" />
+      <Comentario v-else-if="item.contenido.relationTo === 'comentarios'" :comentario="item.contenido.value" :mostrar-btn-aprecio="false" :mostrar-link-entrada="true"/>
     </template>
   </div>
 

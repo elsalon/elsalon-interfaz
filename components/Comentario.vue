@@ -33,9 +33,12 @@
         </DeferredContent>
 
         <div class="actions flex">
-            <Aprecio :contenidoid="comentario.id" contenidotipo="comentario"
+            <Aprecio v-if="mostrarBtnAprecio" :contenidoid="comentario.id" contenidotipo="comentario"
                 :aprecioIniciales="comentario.aprecios" />
             <Guardar :contenidoId="comentario.id" relationTo="comentarios" :guardadoPorUsuario="comentario.guardadoPorUsuario" />
+            <!-- Link a entrada completa (se usa en guardados) -->
+            <NuxtLink v-if="mostrarLinkEntrada" class="text-xs mr-1 hover:underline text-zinc-600 font-mono dark:text-zinc-400 self-center"
+                :to="`/entradas/${comentario.entrada}`">Ver Hilo</NuxtLink>
         </div>
     </Panel>
 </template>
@@ -54,7 +57,15 @@ const props = defineProps({
     isLast: {
         type: Boolean,
         default: false,
-    }
+    },
+     mostrarBtnAprecio: {
+        type: Boolean,
+        default: true,
+    },
+    mostrarLinkEntrada: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const comentarioDom = ref();
