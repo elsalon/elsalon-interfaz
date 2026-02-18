@@ -4,7 +4,7 @@
             <RouterLink :to="`/`" class="link">S</RouterLink> /
             {{ salon.nombre }}
         </template>
-        <div class="text-center mb-5">
+        <div class="text-center mb-10">
             <LogoSala :salon="salon" />
         </div>
 
