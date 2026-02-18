@@ -17,7 +17,6 @@
       <Comentario v-else-if="item.contenido.relationTo === 'comentarios'" :comentario="item.contenido.value" :mostrar-btn-aprecio="false" :mostrar-link-entrada="true"/>
     </template>
   </div>
-
   <div class="h-10"></div>
   <div>
     <!-- Loading Indicator -->
