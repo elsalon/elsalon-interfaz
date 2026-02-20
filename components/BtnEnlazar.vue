@@ -2,6 +2,7 @@
     <div class="text-center" v-if="estadoMostrarBtnEnlace > 0">
         <Button v-if="estadoMostrarBtnEnlace==1" @click="IniciarEnlace" iconPos="right" :loading="loading" :label="loading? 'Enlazando' : 'Enlazar'" v-tooltip.bottom="tooltip" size="small"/>
         <Button v-if="estadoMostrarBtnEnlace==2" @click="DetenerEnlace" iconPos="right" :loading="loading" severity="secondary" :label="loading? 'Desenlazando' : 'Desenlazar'" size="small"></Button>
+        <Button v-if="estadoMostrarBtnEnlace==3" @click="IniciarEnlace" iconPos="right" :loading="loading" :label="loading? 'Re-enlazando' : 'Re-enlazar'" v-tooltip.bottom="tooltip" size="small"/>
     </div>
 </template>
 
@@ -10,7 +11,7 @@
     const SalonStore = useSalonStore()
     const toast = useToast()
     const idEnlace = ref(null)
-    const estadoMostrarBtnEnlace = ref(0) // 0 no se muestra nada, 1 se muestra "enlace", 2 se muestra "desenlazar"
+    const estadoMostrarBtnEnlace = ref(0) // 0 no se muestra nada, 1 se muestra "enlace", 2 se muestra "desenlazar", 3 se muestra "re-enlazar"
     const loading = ref(false)
 
     const props = defineProps({
@@ -74,11 +75,25 @@
     const emit = defineEmits(['estadoEnlace'])
     
     const enlaceCacheKey = `enlace-${SalonStore.contextoId}+${auth.data.value.user.id}`
-    const { data: resEnlace } = await useAsyncData(enlaceCacheKey, () => useAPI(`/api/enlaces?where[autor][equals]=${auth.data.value.user.id}&where[idEnlazado][equals]=${SalonStore.contextoId}`))
-    if(resEnlace.value.docs.length > 0){
-        idEnlace.value = resEnlace.value.docs[0].id
-        estadoMostrarBtnEnlace.value = 2
-    }else{
+    const { data: resEnlace } = await useAsyncData(
+        enlaceCacheKey,
+        () => useAPI(`/api/enlaces?where[autor][equals]=${auth.data.value.user.id}&where[idEnlazado][equals]=${SalonStore.contextoId}&sort=-createdAt&limit=1`)
+    )
+
+    if (resEnlace.value.docs.length > 0) {
+        const enlace = resEnlace.value.docs[0]
+        idEnlace.value = enlace.id
+
+        if (props.type === 'sala' && enlace.fin) {
+            const finDate = new Date(enlace.fin)
+            const now = new Date()
+            const isExpired = !isNaN(finDate.getTime()) && finDate < now
+            estadoMostrarBtnEnlace.value = isExpired ? 3 : 2
+        } else {
+            // Legacy enlaces without dates or non-sala enlaces are treated as active
+            estadoMostrarBtnEnlace.value = 2
+        }
+    } else {
         estadoMostrarBtnEnlace.value = 1
     }
     emit('estadoEnlace', estadoMostrarBtnEnlace.value)
