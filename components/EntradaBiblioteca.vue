@@ -46,6 +46,7 @@
                         <!-- <NuxtLink class="text-zinc-500 dark:text-zinc-500 text-xs hover:underline mt-1 block" :to="`/entradas/${entrada.id}`">
                             <time :datetime="entrada.createdAt">{{ $formatDate(entrada.createdAt) }}</time>
                         </NuxtLink> -->
+                        <Aprecio v-if="mostrarBtnAprecio" :contenidoid="entrada.id" contenidotipo="entrada" :aprecioIniciales="entrada.aprecios" />
                         <Guardar :contenidoId="entrada.id" relationTo="entradas" :guardadoPorUsuario="entrada.guardadoPorUsuario" class="mt-1" />
                     </div>
                 </div>
@@ -85,6 +86,7 @@ const props = defineProps({
     resaltar: Boolean,
     loading: Boolean,
     showCommentBox: Boolean,
+    mostrarBtnAprecio: Boolean,
     // Methods
     ToggleCommentBox: Function,
     ToggleArticleOptions: Function,

@@ -241,14 +241,14 @@ form label{
 }
 .ql-mention-list-container{
   z-index: 1000;
-  @apply bg-white p-1 border border-solid border-zinc-100;
+  @apply bg-white dark:bg-surface-800 p-1 border border-solid border-zinc-100 dark:border-zinc-700;
   .ql-mention-list-item {
-    @apply p-1 cursor-pointer hover:bg-zinc-100;
+    @apply p-1 cursor-pointer hover:bg-zinc-100 dark:hover:bg-surface-700;
     &.selected{
-      @apply bg-zinc-100;
+      @apply bg-zinc-100 dark:bg-surface-700;
     }
     .mention-item{
-      @apply flex items-center;
+      @apply flex items-center text-zinc-800 dark:text-zinc-200;
       .mention-iniciales, .mention-avatar{
         @apply w-6 h-6 mr-1;
       }

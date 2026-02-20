@@ -1,16 +1,16 @@
 <template>
     <Dialog v-model:visible="visible" modal :header="`Fijar entrada en ${paginaActual.nombre}`" :style="{ width: '25rem' }" :dismissableMask="true">	
 
-        <span class="text-surface-500 dark:text-surface-400 block mb-8">Elegí por cuanto tiempo fijar esta
+        <span class="text-zinc-800 dark:text-zinc-100 block mb-8">Elegí por cuanto tiempo fijar esta
             entrada</span>
 
         <div v-for="opcion in opciones" :key="opcion.value" class="flex items-center gap-2">
             <RadioButton v-model="opcionSeleccionada" name="dynamic" :value="opcion.value" :input-id="opcion.value"
                 variant="filled" />
-            <label :for="opcion.value">{{ opcion.label }}</label>
+            <label :for="opcion.value" class="text-zinc-800 dark:text-zinc-100">{{ opcion.label }}</label>
         </div>
 
-        <Message v-if="paginaActual.slug == 'el-salon'" severity="secondary" class="my-4 bg-white text-xs">
+        <Message v-if="paginaActual.slug == 'el-salon'" severity="secondary" class="my-4 bg-white dark:bg-surface-800 text-xs text-zinc-600 dark:text-zinc-300">
             La entrada se fijará en el espacio de El Salón, y será visible para todxs lxs usuarixs de la plataforma. 
         </Message>
         

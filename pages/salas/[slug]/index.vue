@@ -107,11 +107,18 @@ const onEstadoEnlace = (estado) => {
     primerestadoEnlaceUpdate.value = false;
 }
 
+const buildActiveMiembrosQuery = () => {
+    // Fetch only active sala enlaces (dentro del periodo activo)
+    // Filter for: idEnlazado = sala AND (fin is null OR fin > now)
+    const now = new Date().toISOString();
+    return `/api/enlaces?where[idEnlazado][equals]=${salon.value.id}&where[or][0][fin][exists]=false&where[or][1][fin][greater_than]=${encodeURIComponent(now)}&limit=0`;
+}
+
 const RefreshMiembros = async () => {
-    miembros.value = await useAPI(`/api/enlaces?where[idEnlazado][equals]=${salon.value.id}&limit=0`);
+    miembros.value = await useAPI(buildActiveMiembrosQuery());
 }
 
 const miembrosCacheKey = `miembros-${salon.value.id}`;
-const { data: miembros } = await useAsyncData(miembrosCacheKey, () => useAPI(`/api/enlaces?where[idEnlazado][equals]=${salon.value.id}&limit=0`))
+const { data: miembros } = await useAsyncData(miembrosCacheKey, () => useAPI(buildActiveMiembrosQuery()))
 
 </script>
