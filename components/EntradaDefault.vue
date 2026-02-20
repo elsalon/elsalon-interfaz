@@ -65,9 +65,10 @@
                      <BtnComentar v-if="mostrarBtnComentar && !comentariosState.length > 0" @click="ToggleCommentBox"
                          :labelCancelar="showCommentBox === '1'" />
                  </div>
-                 
-                <Button v-if="HabilitarPlaylist" class="ml-auto group/playlist font-mono text-xs hover:text-black animate-pulse hover:animate-none" @click="AbrirPlaylist" link >
-                    <span class="mr-1 md:opacity-0 group-hover/playlist:opacity-100 transition-opacity">Playlist</span>
+                
+                <!-- Playlist -->
+                <Button v-if="HabilitarPlaylist" class="ml-auto font-mono text-xs text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white animate-pulse hover:animate-none" @click="AbrirPlaylist" link >
+                    <span class="mr-1 md:opacity-0 group-hover/entrada:opacity-100 transition-opacity">Playlist</span>
                     <i class="pi pi-play-circle" />
                 </Button>
             </div>
@@ -134,10 +135,6 @@ const ContarVideos = (contenido) => {
 }
 
 const HabilitarPlaylist = computed(() => {
-    if(!auth.data.value.user.opciones?.mostrarPlaylistVideos){
-        return false
-    }
-
     // contar video en entrada
     const vidsEntrada = ContarVideos(props.entrada)
     // contar videos en comentarios
