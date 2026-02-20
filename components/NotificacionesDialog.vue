@@ -14,8 +14,8 @@
             
             <div v-if="notificacionesStore.fetching">
                 <div v-if="notificacionesStore.notificaciones.length==0" class="h-20"></div><!-- Relleno de altur -->
-                <div class="absolute w-full h-full flex justify-center items-center bg-white bg-opacity-90 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-                    <div  class="p-3 text-sm text-zinc-600 text-center">
+                <div class="absolute w-full h-full flex justify-center items-center bg-white dark:bg-surface-900 bg-opacity-90 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
+                    <div  class="p-3 text-sm text-zinc-600 dark:text-zinc-300 text-center">
                         <span class="texto-cargando">Cargando notificaciones...</span>
                     </div>
                 </div>
