@@ -23,11 +23,11 @@
                                dark:hover:[filter:drop-shadow(0_2px_4px_rgba(0,0,0,0.4))_drop-shadow(1px_0_3px_rgba(0,0,0,0.25))]
                                relative overflow-hidden flex items-center justify-center"
                  :style="{ background: getPlaceholderGradient() }">
-                <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" 
+                <div class="absolute inset-0 opacity-[0.08] dark:opacity-[0.12]" 
                      style="background-image: url('data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' /%3E%3C/filter%3E%3Crect width=\'100\' height=\'100\' filter=\'url(%23noise)\' /%3E%3C/svg%3E')">
                 </div>
-                <div class="text-6xl font-light text-white/20 dark:text-white/10 select-none">
-                    {{ getInitial() }}
+                <div class="text-white/40 dark:text-white/30 select-none font-mono w-[75%] p-2 border border-white/20 uppercase text-center text-sm relative top-[-50px] break-all line-clamp-3 overflow-hidden">
+                    {{ getMockName() }}
                 </div>
             </div>
         </NuxtLink>
@@ -110,30 +110,18 @@ const contenidoRender = ref()
 const menuRefs = ref({})
 
 const getPlaceholderGradient = () => {
-    const gradients = [
-        'linear-gradient(135deg, #8b9198 0%, #6b7280 100%)', // slate grey
-        'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)', // grey
-        'linear-gradient(135deg, #78716c 0%, #57534e 100%)', // warm stone
-        'linear-gradient(135deg, #71717a 0%, #52525b 100%)', // zinc
-        'linear-gradient(135deg, #737373 0%, #525252 100%)', // neutral
-        'linear-gradient(135deg, #64748b 0%, #475569 100%)', // slate blue
-        'linear-gradient(135deg, #6b7280 0%, #4b5563 100%)', // cool grey
-        'linear-gradient(135deg, #7c7c7c 0%, #5a5a5a 100%)', // charcoal
-        'linear-gradient(135deg, #78716c 0%, #44403c 100%)', // deep stone
-        'linear-gradient(135deg, #6b7280 0%, #374151 100%)', // dark slate
-    ];
-    const hash = props.entrada.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return gradients[hash % gradients.length];
+    return 'linear-gradient(135deg, #2a2a2a 0%, #0a0a0a 100%)';
 };
 
-const getInitial = () => {
-    if (props.entrada.titulo) {
-        return props.entrada.titulo.charAt(0).toUpperCase();
+const getMockName = () => {
+    if (props.entrada.archivos && props.entrada.archivos.length > 0) {
+        const nombreArchivo = props.entrada.archivos[0].archivo.filename;
+        return nombreArchivo;
+        // const extension = nombreArchivo.split('.').pop().toUpperCase();
+        // return extension;
     }
-    if (props.identidad?.nombre) {
-        return props.identidad.nombre.charAt(0).toUpperCase();
-    }
-    return '•';
+    
+    return ["♠", "♣", "♥", "♦"][Math.floor(Math.random() * 4)];
 };
 
 const ToggleArticleOptions = (event) => {

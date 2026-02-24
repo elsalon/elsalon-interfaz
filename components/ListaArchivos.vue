@@ -2,7 +2,7 @@
     <div v-for="archivo in archivos" :key="archivo.id" class="group text-sm font-mono listaArchivos">
         <a :href="archivo.archivo.url" target="_blank">
             <i class="pi pi-paperclip mr-2 self-center text-zinc-600" style="font-size: .7rem"></i>
-            <span>
+            <span class="break-all">
                 {{ archivo.archivo.filename }}
             </span>
         </a>
