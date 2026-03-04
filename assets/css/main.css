@@ -108,6 +108,10 @@ html {
   max-width: 640px;
   @apply px-4 md:px-0 mx-auto;
 }
+.container-medium{
+  max-width: 768px;
+  @apply px-4 md:px-0 mx-auto;
+}
 
 .focus\:ring-surface-500:focus{
   --tw-ring-opacity: 0 !important;
@@ -226,8 +230,12 @@ form label{
 }
 .ql-editor {
   @apply prose prose prose-headings:font-semibold prose-headings:my-1 leading-normal max-w-none;
-  overflow: none;
   
+  overflow: none;
+}
+.ql-editor.ql-blank::before{
+  @apply text-surface-400 dark:text-surface-500;
+  font-style: normal !important;
 }
 .mention{
   color: var(--link-color);
@@ -261,11 +269,10 @@ form label{
   }
 }
 .ql-toolbar.ql-snow{
-  @apply bg-white dark:bg-surface-800 text-center text-black;
+  @apply  text-center text-black !mb-8 md:!mb-16;
   border: none !important;
 }
 .ql-container.ql-snow{
-  @apply bg-white dark:bg-surface-800;
   border: none !important;
   max-width: unset;
   font-family: unset !important;
@@ -273,7 +280,7 @@ form label{
   overflow-y: auto;
 }
 .comment-input{
-  @apply bg-white dark:bg-surface-800;
+  
   .ql-container{
     overflow: visible;
   }

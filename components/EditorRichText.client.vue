@@ -1,9 +1,9 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
         <div ref="editorContainer" tabindex="0"></div>
-        <div class="attachedFiled bg-white dark:bg-surface-800">
+        <div class="attachedFiled">
             <slot name="footerBeforeAttach"></slot>
-            <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-100 text-zinc-700 rounded-sm p-2 m-2 font-mono dark:bg-zinc-700 dark:text-zinc-200">
+            <div v-for="archivo in attachedFiles" class="text-sm bg-surface-100 text-surface-700 rounded-sm p-2 m-2 font-mono dark:bg-surface-800 dark:text-surface-200">
                 <div class="flex items">
                     <div class="grow">
                         <i class="pi pi-paperclip mr-2"></i>
@@ -500,7 +500,7 @@ onMounted(async () => {
 
         quill = new Quill(editorContainer.value, {
             theme: 'snow',
-            // placeholder: 'Escribe algo...',
+            placeholder: 'Escribí acá',
             modules: {
                 toolbar: {
                     container: [
