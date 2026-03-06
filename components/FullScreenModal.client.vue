@@ -4,7 +4,7 @@
       <div v-if="isOpen" class="fixed inset-0 bg-white dark:bg-surface-900 flex items-center justify-center z-50"
         @click.self="closeModal" @keydown.esc="closeModal" tabindex="0" ref="modalRef">
         <div class="w-full h-full overflow-auto pt-14 md:pt-6 pb-2 flex flex-col">
-          <button class="absolute top-6 right-6 flex items-center justify-center transition-colors" text
+          <button class="absolute top-6 right-6 flex items-center justify-center transition-colors z-50" text
             @click="closeModal">
             <i class="pi pi-times text-surface-500 dark:text-surface-300"></i>
           </button>

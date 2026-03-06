@@ -234,8 +234,9 @@ form label{
   overflow: none;
 }
 .ql-editor.ql-blank::before{
-  @apply text-surface-400 dark:text-surface-500;
+  @apply !text-surface-300 dark:!text-surface-500;
   font-style: normal !important;
+  left: 0 !important;
 }
 .mention{
   color: var(--link-color);
@@ -357,13 +358,21 @@ ol{
   animate-text;
 }
 
-
 @media (max-width: 767px) {
+  .ql-toolbar.ql-snow{
+    position: absolute;
+    top: -50px;
+    padding: 4px 50px 0px 0px !important;
+    text-align: left;
+  }
   .ql-toolbar.ql-snow .ql-formats{
     margin-right: 0px !important; 
   }
   .ql-snow.ql-toolbar button, .ql-snow .ql-toolbar button{
-    width: 26px;
+    width: 32px !important;
+  }
+  .ql-editor{
+    padding: 48px 0 0 0 !important;
   }
 }
 
