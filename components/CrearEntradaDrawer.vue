@@ -1,7 +1,7 @@
 <template>
     <ClientOnly>
-        <div class="h-full w-full flex flex-col container-small justify-between">
-            <div class="flex flex-col flex-grow max-h-[calc(100vh-11rem)] md:max-h-[calc(100vh-5rem)] relative">
+        <div class="h-full w-full flex flex-col container-medium justify-between">
+            <div class="flex flex-col flex-grow max-h-[calc(100vh-11rem)] md:max-h-[calc(100vh-2rem)] relative">
                 <EditorRichText 
                     ref="editor" 
                     :editingData="props.entryEdit" 

@@ -1,9 +1,9 @@
 <template>
     <ClientOnly fallback-tag="div" fallback="cargando editor...">
         <div ref="editorContainer" tabindex="0"></div>
-        <div class="attachedFiled bg-white dark:bg-surface-800">
+        <div class="attachedFiled">
             <slot name="footerBeforeAttach"></slot>
-            <div v-for="archivo in attachedFiles" class="text-sm bg-zinc-100 text-zinc-700 rounded-sm p-2 m-2 font-mono dark:bg-zinc-700 dark:text-zinc-200">
+            <div v-for="archivo in attachedFiles" class="text-sm bg-surface-100 text-surface-700 rounded-sm p-2 m-2 font-mono dark:bg-surface-800 dark:text-surface-200">
                 <div class="flex items">
                     <div class="grow">
                         <i class="pi pi-paperclip mr-2"></i>
@@ -76,6 +76,7 @@ const hadAttachedFiles = ref(false)
 let hasPromptedRecovery = false
 let recoveryResolved = false
 let hasUserInteracted = false
+let debouncedAutoSave = null
 
 const emit = defineEmits(['publishHotKey'])
 const props = defineProps({
@@ -99,6 +100,12 @@ const getAutosaveKey = () => {
 
 const saveToLocalStorage = () => {
     if (!props.autosaveEnabled || !quill) return
+
+    // Avoid storing empty editor states; remove stale drafts instead.
+    if (EditorIsEmpty()) {
+        clearAutoSave()
+        return
+    }
 
     try {
         const html = quill.root.innerHTML
@@ -131,6 +138,7 @@ const loadFromLocalStorage = () => {
 
 const clearAutoSave = () => {
     try {
+        debouncedAutoSave?.cancel?.()
         localStorage.removeItem(getAutosaveKey())
         console.log('[Autosave] Eliminado:', getAutosaveKey())
     } catch (error) {
@@ -172,7 +180,7 @@ const promptRecoveryIfNeeded = () => {
     }
 }
 
-const debouncedAutoSave = debounce(() => {
+debouncedAutoSave = debounce(() => {
     saveToLocalStorage()
 }, 4000)
 
@@ -427,7 +435,7 @@ const parseExistingContent = () => {
 // Debounce utility function
 function debounce(func, wait, immediate = false) {
   let timeout;
-  return function() {
+    const debounced = function() {
     const context = this;
     const args = arguments;
     
@@ -441,7 +449,14 @@ function debounce(func, wait, immediate = false) {
     timeout = setTimeout(later, wait);
     
     if (callNow) func.apply(context, args);
-  };
+    };
+
+    debounced.cancel = () => {
+        clearTimeout(timeout);
+        timeout = null;
+    };
+
+    return debounced;
 }
 
 // Your existing word counting function
@@ -500,7 +515,7 @@ onMounted(async () => {
 
         quill = new Quill(editorContainer.value, {
             theme: 'snow',
-            // placeholder: 'Escribe algo...',
+            placeholder: 'Empezá a escribir...',
             modules: {
                 toolbar: {
                     container: [
@@ -708,7 +723,7 @@ onMounted(async () => {
     }
 
     // Trigger autosave on text change
-    debouncedAutoSave();
+    debouncedAutoSave?.();
 
     // Only process user inputs (not programmatic changes)
     if (source !== 'user') return;
@@ -833,6 +848,7 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+    debouncedAutoSave?.cancel?.()
     if (quill) {
         quill.off('text-change')
     }
