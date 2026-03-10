@@ -173,7 +173,7 @@ html {
   @apply w-full aspect-video;
 }
 .prose img{
-  @apply w-full;
+  @apply w-full mx-auto;
   @media (min-width: 640px) {
     max-height: 50vh;
     object-fit: contain;
@@ -229,12 +229,11 @@ form label{
   @apply font-mono;
 }
 .ql-editor {
-  @apply prose prose prose-headings:font-semibold prose-headings:my-1 leading-normal max-w-none;
-  
+  @apply prose prose prose-headings:font-semibold prose-headings:my-1 leading-normal max-w-none !p-0;
   overflow: none;
 }
 .ql-editor.ql-blank::before{
-  @apply !text-surface-300 dark:!text-surface-500;
+  @apply !text-surface-300 dark:!text-surface-500 pl-1;
   font-style: normal !important;
   left: 0 !important;
 }
@@ -361,7 +360,7 @@ ol{
 @media (max-width: 767px) {
   .ql-toolbar.ql-snow{
     position: absolute;
-    top: -50px;
+    top: -41px;
     padding: 4px 50px 0px 0px !important;
     text-align: left;
   }

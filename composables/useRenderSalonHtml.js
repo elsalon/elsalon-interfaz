@@ -17,7 +17,7 @@ export default function useRenderSalonHtml(entrada){
         // const imageId = match[1]
         const image = entrada.imagenes.find(img => img.imagen.id == imageId)
         if (image) {
-            const imgTag = `<img src="${image.imagen.sizes.medium.url}" data-salonid="${imageId}" />`
+            const imgTag = `<img src="${image.imagen.sizes.medium.url}" data-salonid="${imageId}" style="max-width: ${image.imagen.sizes.medium.width}px;" />`
             content = content.replace(match[0], imgTag);
         }
     }
