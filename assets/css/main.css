@@ -280,6 +280,12 @@ form label{
   overflow-y: auto;
 }
 .comment-input{
+  .ql-editor.ql-blank::before{
+    left: 10px !important;
+  }
+  .ql-editor{
+    padding: 10px !important;
+  }
   @apply bg-white dark:bg-surface-800 ;
   .ql-toolbar.ql-snow{
     @apply !mb-0;
