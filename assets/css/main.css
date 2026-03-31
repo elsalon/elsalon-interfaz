@@ -269,7 +269,7 @@ form label{
   }
 }
 .ql-toolbar.ql-snow{
-  @apply  text-center text-black !mb-8 md:!mb-16;
+  @apply  text-center text-black !mb-8 md:!mb-16 ;
   border: none !important;
 }
 .ql-container.ql-snow{
@@ -280,7 +280,10 @@ form label{
   overflow-y: auto;
 }
 .comment-input{
-  
+  @apply bg-white dark:bg-surface-800 ;
+  .ql-toolbar.ql-snow{
+    @apply !mb-0;
+  }
   .ql-container{
     overflow: visible;
   }
