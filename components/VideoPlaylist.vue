@@ -69,13 +69,99 @@ const playlistFinished = ref(false)
 const isClosing = ref(false)
 const originalUrl = ref(null)
 
+const handleFullscreenHotkey = (event) => {
+    if (event.key?.toLowerCase() !== 'f') return
+    if (!visible.value || !player) return
+    if (event.ctrlKey || event.metaKey || event.altKey) return
+
+    const activeTag = document.activeElement?.tagName?.toLowerCase()
+    const isEditable = document.activeElement?.isContentEditable
+    if (isEditable || activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
+        return
+    }
+
+    event.preventDefault()
+    player.fullscreen?.toggle()
+}
+
+const PreviousVideo = () => {
+    if (!playlist.value.length) return
+
+    if (playlistFinished.value) {
+        const lastIndex = playlist.value.length - 1
+        LoadVideo(playlist.value[lastIndex], lastIndex)
+        return
+    }
+
+    if (currentVideo.value > 0) {
+        const previousIndex = currentVideo.value - 1
+        LoadVideo(playlist.value[previousIndex], previousIndex)
+    } else {
+        player?.restart()
+    }
+}
+
+const NextVideo = () => {
+    if (!playlist.value.length) return
+
+    if (playlistFinished.value || currentVideo.value === null) {
+        LoadVideo(playlist.value[0], 0)
+        return
+    }
+
+    if (currentVideo.value < playlist.value.length - 1) {
+        const nextIndex = currentVideo.value + 1
+        LoadVideo(playlist.value[nextIndex], nextIndex)
+    } else {
+        // console.log("Playlist finished")
+        currentVideo.value = null;
+        playlistFinished.value = true;
+    }
+}
+
+const AttachPlaylistControls = () => {
+    if (!player?.elements?.controls) return
+
+    const controls = player.elements.controls
+    const playButton = controls.querySelector('[data-plyr="play"]')
+
+    let prevButton = controls.querySelector('.plyr__control--playlist-prev')
+    if (!prevButton) {
+        prevButton = document.createElement('button')
+        prevButton.type = 'button'
+        prevButton.className = 'plyr__control plyr__control--playlist-prev'
+        prevButton.setAttribute('aria-label', 'Video anterior')
+        prevButton.innerHTML = '<svg class="plyr__icon" aria-hidden="true" style="transform: rotate(180deg);"><use xlink:href="#plyr-fast-forward"></use></svg>'
+    }
+
+    let nextButton = controls.querySelector('.plyr__control--playlist-next')
+    if (!nextButton) {
+        nextButton = document.createElement('button')
+        nextButton.type = 'button'
+        nextButton.className = 'plyr__control plyr__control--playlist-next'
+        nextButton.setAttribute('aria-label', 'Video siguiente')
+        nextButton.innerHTML = '<svg class="plyr__icon" aria-hidden="true"><use xlink:href="#plyr-fast-forward"></use></svg>'
+    }
+
+    if (playButton) {
+        playButton.insertAdjacentElement('afterend', nextButton)
+        playButton.insertAdjacentElement('afterend', prevButton)
+    } else {
+        controls.prepend(nextButton)
+        controls.prepend(prevButton)
+    }
+
+    prevButton.onclick = PreviousVideo
+    nextButton.onclick = NextVideo
+}
+
 const InitPlayer = () => {
     player = new Plyr(playerRef.value, {
         youtube: {
             rel: 0, // Disables related videos
             modestbranding: 1,   // Removes YouTube logo
             iv_load_policy: 3,   // Hides annotations
-            cc_load_policy: 1,   // Starts captions if available
+            cc_load_policy: 0,   // Starts captions if available
             cc_lang_pref: 'es'   // Preferred caption language
         },
         vimeo: {
@@ -84,9 +170,17 @@ const InitPlayer = () => {
             title: false,
             dnt: true,
         },
-        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+        captions: {
+            active: false,
+            language: 'es',
+            update: true,
+        },
+        settings: ['captions', 'speed', 'loop'],
+        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'fullscreen'],
         autoplay: false, // Autoplay is often blocked unless muted
     })
+
+    AttachPlaylistControls()
 
     // player.on('playing', () => {
     //     console.log("Video started playing")
@@ -95,6 +189,10 @@ const InitPlayer = () => {
     player.on('ended', () => {
         // console.log("Video playback finished")
         NextVideo();
+    })
+
+    player.on('ready', () => {
+        AttachPlaylistControls()
     })
 }
 
@@ -122,17 +220,6 @@ const LoadVideo = (item, index = 0) => {
         // console.log("New video loaded")
         player.play().catch(err => console.warn("Autoplay failed:", err))
     })
-}
-
-const NextVideo = () => {
-    if (currentVideo.value < playlist.value.length - 1) {
-        currentVideo.value++
-        LoadVideo(playlist.value[currentVideo.value], currentVideo.value)
-    } else {
-        // console.log("Playlist finished")
-        currentVideo.value = null;
-        playlistFinished.value = true;
-    }
 }
 
 const handleOpenVideoPlaylist = async (data) => {
@@ -234,10 +321,12 @@ watch(() => visible.value, (newValue) => {
 
 onMounted(() => {
     startVideoPlaylistHook = hooks.hook('videoplaylist:open', handleOpenVideoPlaylist)
+    window.addEventListener('keydown', handleFullscreenHotkey)
 })
 
 onUnmounted(() => {
     if (startVideoPlaylistHook) startVideoPlaylistHook()
+    window.removeEventListener('keydown', handleFullscreenHotkey)
 })
 </script>
 
