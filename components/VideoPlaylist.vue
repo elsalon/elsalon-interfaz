@@ -84,6 +84,57 @@ const handleFullscreenHotkey = (event) => {
     player.fullscreen?.toggle()
 }
 
+const handlePlayPauseHotkey = (event) => {
+    if (event.key?.toLowerCase() !== 'k') return
+    if (!visible.value || !player) return
+    if (event.ctrlKey || event.metaKey || event.altKey) return
+
+    const activeTag = document.activeElement?.tagName?.toLowerCase()
+    const isEditable = document.activeElement?.isContentEditable
+    if (isEditable || activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
+        return
+    }
+
+    event.preventDefault()
+    player.togglePlay()
+}
+
+const handleSeekHotkey = (event) => {
+    const key = event.key?.toLowerCase()
+    if (key !== 'j' && key !== 'l') return
+    if (!visible.value || !player) return
+    if (event.ctrlKey || event.metaKey || event.altKey) return
+
+    const activeTag = document.activeElement?.tagName?.toLowerCase()
+    const isEditable = document.activeElement?.isContentEditable
+    if (isEditable || activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
+        return
+    }
+
+    event.preventDefault()
+    if (event.shiftKey) {
+        if (key === 'l') {
+            NextVideo()
+        } else {
+            PreviousVideo()
+        }
+    } else {
+        if (key === 'l') {
+            player.forward(10)
+        } else {
+            player.rewind(10)
+        }
+    }
+}
+
+const handleWindowBlur = () => {
+    setTimeout(() => {
+        if (visible.value && document.activeElement?.tagName === 'IFRAME') {
+            window.focus()
+        }
+    }, 0)
+}
+
 const PreviousVideo = () => {
     if (!playlist.value.length) return
 
@@ -322,11 +373,17 @@ watch(() => visible.value, (newValue) => {
 onMounted(() => {
     startVideoPlaylistHook = hooks.hook('videoplaylist:open', handleOpenVideoPlaylist)
     window.addEventListener('keydown', handleFullscreenHotkey)
+    window.addEventListener('keydown', handlePlayPauseHotkey)
+    window.addEventListener('keydown', handleSeekHotkey)
+    window.addEventListener('blur', handleWindowBlur)
 })
 
 onUnmounted(() => {
     if (startVideoPlaylistHook) startVideoPlaylistHook()
     window.removeEventListener('keydown', handleFullscreenHotkey)
+    window.removeEventListener('keydown', handlePlayPauseHotkey)
+    window.removeEventListener('keydown', handleSeekHotkey)
+    window.removeEventListener('blur', handleWindowBlur)
 })
 </script>
 
