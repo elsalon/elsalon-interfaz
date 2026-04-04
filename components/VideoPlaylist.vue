@@ -22,23 +22,23 @@
             <!-- PLAYLIST SECTION - sidebar on desktop, bottom on mobile -->
             <div class="w-full md:w-1/4 mt-4 md:mt-0 md:flex md:flex-col">
                 <div class="flex justify-between items-center my-2">
-                    <span class="font-medium mb-2 pl-6">Videos </span>
-                    <span class="text-xs text-gray-400 mr-2">{{currentVideo+1}}/{{ playlist.length }}</span>
+                    <span class="font-medium mb-2 pl-6 text-zinc-500 dark:text-zinc-400">Videos </span>
+                    <span class="text-xs mr-2 text-zinc-400 dark:text-zinc-500">{{currentVideo+1}}/{{ playlist.length }}</span>
                 </div>
-                <div class="max-h-[300px] md:max-h-[calc(100vh-150px)] overflow-y-auto pr-2 scrollbar-container">
+                <div class="max-h-[300px] md:max-h-[calc(100vh-150px)] overflow-y-auto pr-2 scrollbar-container rounded-xl p-2">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-2">
                         <div 
                             v-for="(video,i) in playlist" 
                             :key="video.id" 
                             @click="LoadVideo(video, i)"
-                            class="cursor-pointer p-2 rounded-md hover:bg-gray-100 transition-colors flex items-center gap-2"
-                            :class="{'bg-gray-100': i == currentVideo}"
+                            class="cursor-pointer p-2 rounded-lg border border-transparent transition-colors flex items-center gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-800/60"
+                            :class="i === currentVideo ? 'bg-zinc-200/60 border-zinc-300 dark:bg-zinc-800/80 dark:border-zinc-700' : 'bg-transparent'"
                         >
                             <div class="w-2 h-full flex items-center">
-                                <div v-if="i == currentVideo" class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                                <div v-if="i == currentVideo" class="w-2 h-2 bg-sky-500 dark:bg-sky-400 rounded-full"></div>
                             </div>
                             <AvatarSalon :usuario="video.identidad" size="small" style="font-size: .6rem;"/>
-                            <div class="truncate flex-grow">
+                            <div class="truncate flex-grow text-zinc-700 dark:text-zinc-200">
                                 {{ video.identidad.nombre }}
                             </div> 
                         </div>
