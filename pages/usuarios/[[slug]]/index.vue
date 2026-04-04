@@ -11,11 +11,12 @@
                 <div v-if="tieneLink">
                     <a  class="link" :href="linkAbsoluta" target="_blank">{{ linkSimplificada }}</a>
                 </div>
-                <div v-if="usuario.mostrarEmail">
-                    <a class="link" :href="'mailto:'+usuario.email">{{ usuario.email }}</a>
+                <div v-if="usuario.mostrarEmail" class="flex items-center justify-center gap-2 group">
+                    <a class="link" :href="'mailto:'+usuario.email">{{ usuario.email }}</a> 
+                    <i class="pi pi-clone mr-2 h-2 w-2 text-xs cursor-pointer opacity-0 group-hover:opacity-50 group-hover:hover:opacity-100 transition-opacity duration-200 text-zinc-600 dark:text-zinc-400" @click="copyMailToClipboard"></i>
                 </div>
             </div>
-            <div class="text-md">{{ usuario.bio }}</div>
+            <div v-if="usuario.bio" class="text-md text-zinc-800 dark:text-zinc-200 mb-10">{{ usuario.bio }}</div>
         </div>
 
         <!-- GRUPOS DEL USUARIO -->
@@ -43,6 +44,7 @@ import 'photoswipe/style.css';
 const route = useRoute()
 const slug = route.params?.slug
 const auth = useAuth()
+const toast = useToast()
 
 // Fetch the user data based on the slug
 const usrQueryCacheKey = "usr"+slug;
@@ -114,5 +116,15 @@ grupos.value = resGrupos.docs
 
 const UserEdited = (userData) => {
     usuario.value = userData
+}
+
+
+const copyMailToClipboard = async () => {
+    try {
+        await navigator.clipboard.writeText(usuario.value.email);
+        toast.add({ severity: 'contrast', detail: 'Email copiado', life: 3000 });
+    } catch (err) {
+        toast.add({ severity: 'error', detail: 'Error al copiar el email', life: 3000 });
+    }
 }
 </script>

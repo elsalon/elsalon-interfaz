@@ -1,6 +1,6 @@
 <template>
     <div class="absolute right-0" v-if="opciones.length > 0">
-        <Button text @click="ToggleMenu">...</Button>
+        <Button severity="contrast" text @click="ToggleMenu">...</Button>
         <Menu v-if="opciones.length>0" ref="menu" id="overlay_menu_article" :model="opciones"
             :popup="true" class="text-xs" />
     </div>

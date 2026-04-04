@@ -14,20 +14,32 @@
             :class="{ 'opacity-30': fetching }" style="padding: 0" :label="`(${totalDocs})`"
             @click="AbrirTodosLosAprecios()" />
 
-        <!-- {{ aprecioIniciales }} -->
-        <Dialog v-model:visible="mostrarTodosAprecios" modal header=" " :style="{ width: '25rem' }"
+        <!-- Aprecio Dialog -->
+        <Dialog v-model:visible="mostrarTodosAprecios" modal header=" " :style="{ width: 'min(90vw, 40rem)' }"
             :dismissableMask="true">
+            <template #closeicon>
+                <Button icon="pi pi-times" severity="secondary" size="small" text />
+            </template>
+
             <template v-if="fetching" class="text-center">
-                <span class="texto-cargando">
-                    Cargando...
-                </span>
+                <div class="flex items-center justify-center py-8">
+                    <span class="texto-cargando text-sm text-zinc-600 dark:text-zinc-300">
+                        Cargando...
+                    </span>
+                </div>
+            </template>
+            <template v-else-if="docs.length === 0">
+                <div class="text-center py-6">
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400">Sin aprecio aún</p>
+                </div>
             </template>
             <template v-else>
-                <div :class="{'grid grid-cols-1': docs.length === 1, 'grid grid-cols-1 md:grid-cols-2': docs.length > 1}">
-                    <NuxtLink v-for="doc in docs" :key="doc.id" :to="`/usuarios/${doc.autor.slug}`"
-                        class="flex gap-2 items-center p-2 hover:bg-zinc-200 w-full">
+                <div class="space-y-px md:flex md:flex-wrap">
+                    <NuxtLink v-for="(doc, idx) in docs" :key="doc.id" :to="`/usuarios/${doc.autor.slug}`"
+                        class="flex gap-3 items-center px-3 py-2.5 rounded-sm hover:bg-zinc-50 dark:hover:bg-surface-900/60 transition-all duration-150 group cursor-pointer"
+                        :class="{ 'border-b border-zinc-100 dark:border-surface-800': idx < docs.length - 1 }">
                         <AvatarSalon :usuario="doc.autor" />
-                        <span class="line-clamp-2">
+                        <span class="flex-1 text-sm text-zinc-700 dark:text-zinc-200 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors">
                             {{ doc.autor.nombre }}
                         </span>
                     </NuxtLink>
