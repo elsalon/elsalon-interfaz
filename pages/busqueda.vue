@@ -12,7 +12,7 @@
                 <div v-for="category of categories" :key="category.key" class="flex items-center ">
                     <Checkbox v-model="selectedCategories" :inputId="category.key" name="category"
                     :value="category.key" />
-                    <label :for="category.key" class="ml-2">{{ category.name }}</label>
+                    <label :for="category.key" class="ml-2 text-zinc-700 dark:text-zinc-300">{{ category.name }}</label>
                 </div>
             </div>
             
