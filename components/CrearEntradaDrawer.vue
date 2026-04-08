@@ -293,7 +293,7 @@ const SospechaSalaIncorrecta = () => {
         return false
     }
     // Si el usuario se creo hace mas de x año, no hace falta confirmacion
-    const aniosParaConfirmacion = 1
+    const aniosParaConfirmacion = 3
     const fechaCreacion = new Date(auth.data.value.user.createdAt)
     const xAniosDespues = new Date(fechaCreacion)
     xAniosDespues.setFullYear(xAniosDespues.getFullYear() + aniosParaConfirmacion)
