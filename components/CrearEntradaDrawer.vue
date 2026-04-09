@@ -305,8 +305,11 @@ const solicitarConfirmacionSala = async () => {
 
 const SospechaSalaIncorrecta = () => {
     // Si no es El Salon, no hace falta confirmacion
-    console.log("Curr context:", salonStore.currContext)
     if(salonStore.contextoId != salonStore.elSalonId){
+        return false
+    }
+    // Si está editando una entrada, no hace falta confirmacion
+    if (isEditing.value) {
         return false
     }
     // Si el usuario se creo hace mas de x año, no hace falta confirmacion
