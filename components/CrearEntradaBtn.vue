@@ -1,5 +1,5 @@
 <template>
-    <Button id="btnEscribir" label="+ Escribir" @click="AbrirEditor" class="z-40"/>
+    <Button v-if="showButton" id="btnEscribir" label="+ Escribir" @click="AbrirEditor" class="z-40"/>
 
     <FullScreenModal v-model:isOpen="visible">
         <CrearEntradaDrawer :entryEdit="editContent"/>
@@ -7,6 +7,13 @@
 </template>
 
 <script setup>
+defineProps({
+    showButton: {
+        type: Boolean,
+        default: true
+    }
+})
+
 const { hooks } = useNuxtApp()
 const toast = useToast();
 import { useToast } from "primevue/usetoast";

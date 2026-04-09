@@ -6,6 +6,7 @@
                 <NuxtLink :to="contextoUrl" class="link">{{ contexto.nombre }}</NuxtLink> /
             </template>
         </template>     
+        <CrearEntradaBtn :show-button="false" />
         <Entrada :key="entrada.id" :entrada="entrada" />
         <div class="h-10"></div>
     </NuxtLayout>
@@ -19,7 +20,6 @@ const route = useRoute()
 // Extract the entradaId from slug
 const slugParts = Array.isArray(route.params.slug) ? route.params.slug : [route.params.slug]
 const entradaId = slugParts[0]
-const isPlaylist = slugParts.length > 1 && slugParts[1] === 'playlist'
 
 // We don't need to modify URL here since the Entrada component 
 // will handle showing the playlist if the URL contains 'playlist'
