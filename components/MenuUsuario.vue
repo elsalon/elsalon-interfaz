@@ -1,6 +1,6 @@
 <template>
     <template v-if="auth?.data">
-        <Button @click="toggleTheme" :icon="themeIcon" text class="dark:text-zinc-300" :title="ToggleThemeTitle[colorMode.preference]" />
+        <Button @click="toggleTheme" :icon="themeIcon" text class="dark:text-zinc-300" :title="currentThemeTitle" />
         <!-- Avatar Con notificationes -->
         <template v-if="notificacionesStore.nuevas > 0">
             <OverlayBadge severity="contrast">
@@ -44,6 +44,7 @@ import { PrimeIcons } from '@primevue/core/api';
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
 const colorMode = useColorMode();
+const isMounted = ref(false);
 
 let saveThemeTimeout = null;
 
@@ -71,10 +72,15 @@ const saveThemeToDatabase = async (theme) => {
 };
 
 const themeIcon = computed(() => {
-    const theme = colorMode.preference;
+    const theme = isMounted.value ? colorMode.preference : 'system';
     if (theme === 'dark') return PrimeIcons.MOON;
     if (theme === 'light') return PrimeIcons.SUN;
     return PrimeIcons.DESKTOP;
+});
+
+const currentThemeTitle = computed(() => {
+    const theme = isMounted.value ? colorMode.preference : 'system';
+    return ToggleThemeTitle[theme] ?? ToggleThemeTitle.system;
 });
 
 const toggleTheme = () => {
@@ -94,6 +100,10 @@ const toggleTheme = () => {
         saveThemeToDatabase(nextTheme);
     }, 1000);
 };
+
+onMounted(() => {
+    isMounted.value = true;
+});
 
 // listen for notificacionesNuevas change
 watch(() => notificacionesStore.nuevas, (val, oldVal) => {
