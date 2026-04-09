@@ -252,6 +252,17 @@ const salaSeleccionadaNombre = computed(() => {
     return match?.nombre || salaConfirmDefaults.value.salaNombre || 'el contexto actual'
 })
 
+const getSalaAnalyticsPayload = (baseSalaId, selectedSalaId) => {
+    const changedSala = selectedSalaId !== baseSalaId
+    return {
+        sala_original_id: baseSalaId,
+        sala_seleccionada_id: selectedSalaId,
+        sala_cambiada: changedSala,
+        sospecha_falso_positivo: !changedSala,
+        es_bitacora_destino: selectedSalaId === null,
+    }
+}
+
 const solicitarConfirmacionSala = async () => {
     if (uploading.value) return
 
@@ -269,6 +280,12 @@ const solicitarConfirmacionSala = async () => {
     const baseSala = resolveSalaDataForPublication()
     salaConfirmDefaults.value = baseSala
     salaSeleccionadaId.value = baseSala.sala ?? null
+
+    mixpanel.track('Sospecha sala incorrecta: disparada', {
+        sala_original_id: baseSala.sala ?? null,
+        sala_original_nombre: baseSala.salaNombre || '',
+    })
+
     confirmSalaVisible.value = true
 
     // Fetch enlaces in background only if not already loaded
@@ -305,10 +322,19 @@ const SospechaSalaIncorrecta = () => {
 
 const cancelarConfirmacionSala = () => {
     if (uploading.value) return
+    mixpanel.track('Sospecha sala incorrecta: cancelada', {
+        ...getSalaAnalyticsPayload(salaConfirmDefaults.value.sala ?? null, salaSeleccionadaId.value ?? null),
+        sala_original_nombre: salaConfirmDefaults.value.salaNombre || '',
+    })
     confirmSalaVisible.value = false
 }
 
 const confirmarYPublicar = async () => {
+    mixpanel.track('Sospecha sala incorrecta: confirmada', {
+        ...getSalaAnalyticsPayload(salaConfirmDefaults.value.sala ?? null, salaSeleccionadaId.value ?? null),
+        sala_original_nombre: salaConfirmDefaults.value.salaNombre || '',
+        sala_seleccionada_nombre: salaSeleccionadaNombre.value || '',
+    })
     confirmSalaVisible.value = false
     await Publicar(salaSeleccionadaId.value)
 }
