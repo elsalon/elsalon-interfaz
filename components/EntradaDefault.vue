@@ -125,7 +125,7 @@ const hasNextPage = ref(props.entrada.comentarios?.hasNextPage || false)
 const showCommentBox = ref("0") // Default closed
 
 watch(() => props.entrada, () => {
-    contenidoRender.value.ReloadContents(props.entrada)
+    contenidoRender.value?.ReloadContent?.(props.entrada)
 });
 
 

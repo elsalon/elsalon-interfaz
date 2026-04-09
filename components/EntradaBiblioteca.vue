@@ -102,7 +102,7 @@ const props = defineProps({
 
 watch(() => props.entrada, () => {
     console.log("Entrada cambiada")
-    contenidoRender.value.ReloadContents(props.entrada)
+    contenidoRender.value?.ReloadContent?.(props.entrada)
 });
 
 

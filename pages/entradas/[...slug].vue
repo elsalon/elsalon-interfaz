@@ -16,6 +16,7 @@
 const elsalon = useSalonStore();
 elsalon.setContext('entrada')
 const route = useRoute()
+const { hooks } = useNuxtApp()
 
 // Extract the entradaId from slug
 const slugParts = Array.isArray(route.params.slug) ? route.params.slug : [route.params.slug]
@@ -26,6 +27,22 @@ const entradaId = slugParts[0]
 
 const cacheKey = `entrada-${entradaId}`
 const { data: entrada } = await useAsyncData(cacheKey, () => useAPI(`/api/entradas/${entradaId}`))
+
+let removeOnEditFinishHook = null
+
+const handlePublicacionEditada = (data) => {
+    if (data?.resultado === 'ok' && data?.entrada?.id === entrada.value?.id) {
+        entrada.value = data.entrada
+    }
+}
+
+onMounted(() => {
+    removeOnEditFinishHook = hooks.hook('publicacion:editada', handlePublicacionEditada)
+})
+
+onUnmounted(() => {
+    if (removeOnEditFinishHook) removeOnEditFinishHook()
+})
 
 const contexto = ref(null)
 const contextoUrl = ref(null)
