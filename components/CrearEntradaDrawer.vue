@@ -30,13 +30,52 @@
             <!-- Opciones de Entrada (autoria, boton, adjuntos) -->
             
             <div class="flex justify-end mt-2 md:space-y-0 h-10 overflow-hidden">
-                
-                <div v-if="paginaActual.slug == 'el-salon'" class="my-2 mx-2 w-6 h-6 text-center" tabindex="1" v-tooltip.focus="'Lo que publiques en este espacio será visible para todxs lxs usuarixs de la plataforma. Si preferís compartir algo con un grupo más reducido, también podés publicar en los espacios de materias o bitácoras.'">
-                    <i class="pi pi-question-circle text-zinc-600 hover:text-zinc-900"></i>
+
+                <div class="flex items-center pr-2" v-if="isEditing">
+                    <Select
+                        v-model="editSalaModel"
+                        :options="editSalaDropdownOptions"
+                        optionLabel="label"
+                        optionValue="value"
+                        :loading="enlacesLoading"
+                        :disabled="uploading || enlacesLoading"
+                        placeholder="Selecciona una sala"
+                        class="w-10 h-10 overflow-hidden"
+                        :pt="SalaSelectStyleProperties"
+                    >
+                        <template #value="slotProps">
+                            <div v-if="slotProps.value !== undefined" class="flex items-center gap-2">
+                                <template v-if="slotProps.value === BITACORA_SELECT_VALUE">
+                                    <AvatarSalon class="w-10 h-10" :usuario="auth?.data.value.user"/>
+                                    
+                                </template>
+                                <template v-else>
+                                    <Avatar :label="editSalaDropdownOptions.find(o => o.value === slotProps.value)?.sigla"
+                                            :style="{ backgroundColor: editSalaDropdownOptions.find(o => o.value === slotProps.value)?.color || '#000', color: '#fff' }"
+                                            shape="" class="w-10 !h-10 text-xs" size="large" />
+                                        </template>
+                                    </div>
+                                    <span v-else class="text-zinc-400">{{ slotProps.placeholder }}</span>
+                                </template>
+                                <template #option="slotProps">
+                                    <div class="flex items-center gap-2" v-if="slotProps.option">
+                                        <AvatarSalon v-if="slotProps.option.isBitacora" class="mr-2 w-5 h-5" :usuario="auth?.data.value.user"/>
+                                        <Avatar v-else :label="slotProps.option.sigla" size="small"  :style="{ backgroundColor: slotProps.option.color || '#000', color: '#fff' }" shape="" class="w-5 h-5 text-[10px]" />
+                                        <span>{{ slotProps.option.label }}</span>
+                                    </div>
+                                </template>
+                            </Select>
+                            <!-- Selected label -->
+                            <span class="text-xs ml-2 hidden md:block">{{ editSalaDropdownOptions.find(o => o.value === editSalaModel)?.label }}</span>
                 </div>
+                <div class="grow"></div>
+                
+                <!-- <div v-if="paginaActual.slug == 'el-salon'" class="my-2 mx-2 w-6 h-6 text-center" tabindex="1" v-tooltip.focus="'Lo que publiques en este espacio será visible para todxs lxs usuarixs de la plataforma. Si preferís compartir algo con un grupo más reducido, también podés publicar en los espacios de materias o bitácoras.'">
+                    <i class="pi pi-question-circle text-zinc-600 hover:text-zinc-900"></i>
+                </div> -->
 
                 <!-- Selector Identidad -->
-                <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading" class="w-10 h-10" />
+                <SelectorIdentidad v-model="autorSeleccionado" :disabled="uploading" class="!w-10 !h-10" />
                 <!-- Boton Publicar -->
                 <Button @click="solicitarConfirmacionSala"
                     class="w-full md:w-auto flex-grow md:flex-grow-0 text-xs md:text-sm btn-publicar"
@@ -67,21 +106,21 @@
                         <template #value="slotProps">
                             <div v-if="slotProps.value !== undefined" class="flex items-center gap-2">
                                 <template v-if="slotProps.value === null">
-                                    <AvatarSalon class="mr-2 w-8 h-8" :usuario="auth?.data.value.user"/>
-                                    <span>{{ salaDropdownOptions.find(o => o.value === null)?.label }}</span>
+                                    <AvatarSalon class="mr-2 w-10 h-10" :usuario="auth?.data.value.user"/>
+                                    <!-- <span>{{ salaDropdownOptions.find(o => o.value === null)?.label }}</span> -->
                                 </template>
                                 <template v-else>
                                     <Avatar :label="salaDropdownOptions.find(o => o.value === slotProps.value)?.sigla" 
                                             :style="{ backgroundColor: salaDropdownOptions.find(o => o.value === slotProps.value)?.color || '#000', color: '#fff' }" 
-                                            shape="" class="w-8 h-8 text-xs md:text-base" />
-                                    <span>{{ salaDropdownOptions.find(o => o.value === slotProps.value)?.label }}</span>
+                                            shape="" class="w-10 h-10 text-xs md:text-base" />
+                                    <!-- <span>{{ salaDropdownOptions.find(o => o.value === slotProps.value)?.label }}</span> -->
                                 </template>
                             </div>
                             <span v-else class="text-zinc-400">{{ slotProps.placeholder }}</span>
                         </template>
                         <template #option="slotProps">
                             <div class="flex items-center gap-2" v-if="slotProps.option">
-                                <AvatarSalon v-if="slotProps.option.isBitacora" class="mr-2 w-8 h-8" :usuario="auth?.data.value.user"/>
+                                <AvatarSalon v-if="slotProps.option.isBitacora" class="mr-2 w-10 h-10" :usuario="auth?.data.value.user"/>
                                 <Avatar v-else :label="slotProps.option.sigla" :style="{ backgroundColor: slotProps.option.color || '#000', color: '#fff' }" shape="" class="w-8 h-8 text-xs md:text-base" />
                                 <!-- <img :src="slotProps.option.image" :alt="slotProps.option.label" class="w-8 h-8 rounded" /> -->
                                 <span>{{ slotProps.option.label }}</span>
@@ -102,12 +141,14 @@
                 </div>
             </div>
         </Dialog>
+
     </ClientOnly>
 </template>
 
 <script setup>
 const auth = useAuth()
 const editor = ref(null)
+const BITACORA_SELECT_VALUE = '__bitacora__'
 const isEditing = ref(false)
 const uploading = ref(false)
 const salonStore = useSalonStore()
@@ -124,8 +165,40 @@ const autorSeleccionado = ref(null)
 const confirmSalaVisible = ref(false)
 const salaSeleccionadaId = ref(null)
 const salaConfirmDefaults = ref({ sala: null, salaNombre: '' })
+const editSalaOverrideId = ref(undefined)
 const enlacesLoading = ref(false)
 const enlacesData = ref(null)
+
+const SalaSelectStyleProperties = {
+    dropdown: [
+        'flex items-center justify-center',
+        'shrink-0',
+        'text-surface-500',
+        'w-2 h-2',
+        'font-sm',
+        'absolute right-[2px] bottom-[2px]',
+        'text-white',
+    ],
+    label: [
+        'leading-[normal]',
+        'block',
+        'flex-auto',
+        'bg-transparent',
+        'border-0',
+        'placeholder:text-surface-400 dark:placeholder:text-surface-500',
+        'w-[1%]',
+        'py-0 pr-0 pl-0',
+        'rounded-none',
+        'transition',
+        'duration-200',
+        'focus:outline-none focus:shadow-none',
+        'relative',
+        'cursor-pointer',
+        'overflow-hidden overflow-ellipsis',
+        'whitespace-nowrap',
+        'appearance-none',
+    ]
+}
 
 // Compute autosave context for new entries (context-aware)
 const autosaveContext = computed(() => {
@@ -203,6 +276,56 @@ const enlazadoIds = computed(() => {
     return enlacesData.value?.docs?.map(e => e.idEnlazado) || []
 })
 
+const editSalaDropdownOptions = computed(() => {
+    const savedSala = props.entryEdit?.entrada?.sala
+    const savedSalaId = savedSala?.id ?? null
+
+    const salasEnlazadas = salonStore.salas
+        .filter(s => enlazadoIds.value.includes(s.id))
+        .map(s => ({
+            label: s.nombre,
+            value: s.id,
+            sigla: s.siglas || 'S',
+            color: s.color || '#000',
+            isBitacora: false,
+        }))
+
+    const hasSavedSalaInOptions = savedSalaId === null || salasEnlazadas.some(s => s.value === savedSalaId)
+    const savedSalaOption = !hasSavedSalaInOptions && savedSalaId !== null
+        ? [{
+            label: `${savedSala?.nombre || ''}`,
+            value: savedSalaId,
+            sigla: savedSala?.siglas || '',
+            color: savedSala?.color || '#000',
+            isBitacora: false,
+        }]
+        : []
+
+    return [
+        {
+            label: 'Bitácora',
+            value: BITACORA_SELECT_VALUE,
+            sigla: 'B',
+            color: '#000',
+            isBitacora: true,
+        },
+        ...savedSalaOption,
+        ...salasEnlazadas
+    ]
+})
+
+const currentEditSalaId = computed(() => props.entryEdit?.entrada?.sala?.id ?? null)
+
+const editSalaModel = computed({
+    get() {
+        const selectedSala = editSalaOverrideId.value !== undefined ? editSalaOverrideId.value : currentEditSalaId.value
+        return selectedSala === null ? BITACORA_SELECT_VALUE : selectedSala
+    },
+    set(value) {
+        editSalaOverrideId.value = value === BITACORA_SELECT_VALUE ? null : value
+    }
+})
+
 const salaDropdownOptions = computed(() => {
     const base = resolveSalaDataForPublication()
     const baseLabel = base.salaNombre || 'Contexto actual'
@@ -272,7 +395,7 @@ const solicitarConfirmacionSala = async () => {
     }
     
     if (!SospechaSalaIncorrecta()) {
-        Publicar();
+        Publicar(isEditing.value ? editSalaOverrideId.value : undefined);
         return;
     }
     
@@ -288,19 +411,25 @@ const solicitarConfirmacionSala = async () => {
 
     confirmSalaVisible.value = true
 
-    // Fetch enlaces in background only if not already loaded
-    if (!enlacesData.value) {
-        try {
-            enlacesLoading.value = true
-            const result = await useAPI(`/api/enlaces?where[autor][equals]=${auth.data.value.user.id}`)
-            enlacesData.value = result
-        } catch (e) {
-            console.error("Error fetching enlaces", e)
-            toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las salas', life: 3000 });
-        } finally {
-            enlacesLoading.value = false
-        }
+    await ensureEnlacesLoaded()
+}
+
+const ensureEnlacesLoaded = async () => {
+    if (enlacesData.value) return
+    try {
+        enlacesLoading.value = true
+        const result = await useAPI(`/api/enlaces?where[autor][equals]=${auth.data.value.user.id}`)
+        enlacesData.value = result
+    } catch (e) {
+        console.error("Error fetching enlaces", e)
+        toast.add({ severity: 'error', summary: 'Error', detail: 'No se pudieron cargar las salas', life: 3000 });
+    } finally {
+        enlacesLoading.value = false
     }
+}
+
+if (props.entryEdit) {
+    ensureEnlacesLoaded()
 }
 
 const SospechaSalaIncorrecta = () => {
@@ -372,7 +501,6 @@ const Publicar = async (salaOverrideId = undefined) => {
     let method = 'POST'
     let body = {
         contenido: html,
-        sala,
         autoriaGrupal: false,
         imagenes,
         archivos,
@@ -386,6 +514,13 @@ const Publicar = async (salaOverrideId = undefined) => {
     if (isEditing.value) {
         method = 'PATCH';
         endpoint = `/api/entradas/${props.entryEdit.entrada.id}`
+    } else {
+        body.sala = sala
+    }
+
+    // Keep original sala on normal edit; only change it on explicit override.
+    if (isEditing.value && salaOverrideId !== undefined) {
+        body.sala = sala
     }
     // Autoria grupal
     if (autorSeleccionado.value.id != auth.data.value.user.id) {
