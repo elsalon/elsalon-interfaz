@@ -134,6 +134,8 @@ const handleAprecioClicked = async () => {
         }
     } catch (e) {
         console.log(e)
+        // Refetch para asegurar estado consistente
+        await FetchAllAprecios();
     } finally {
         CheckUserHaApreciado();
         fetching.value = false;
