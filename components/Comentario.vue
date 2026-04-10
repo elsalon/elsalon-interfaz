@@ -17,7 +17,7 @@
         </template>
 
         <template #icons v-if="opcionesComment.length">
-            <Button text @click="ToggleCommentOptions" class="md:invisible group-hover/comentario:visible">...</Button>
+            <Button severity="contrast" text @click="ToggleCommentOptions" class="md:invisible group-hover/comentario:visible">...</Button>
             <Menu :ref="el => menuCommentRefs[comentario.id] = el" id="overlay_menu_comment" :model="opcionesComment"
                 :popup="true" class="text-xs" />
         </template>
