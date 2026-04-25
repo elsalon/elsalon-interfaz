@@ -20,16 +20,23 @@
             </div>
             
             <!-- PLAYLIST SECTION - sidebar on desktop, bottom on mobile -->
-            <div class="w-full md:w-1/4 mt-4 md:mt-0 md:flex md:flex-col">
+            <div class="w-full md:w-1/4 mt-4 md:mt-6 md:flex md:flex-col">
                 <div class="flex justify-between items-center my-2">
-                    <span class="font-medium mb-2 pl-6 text-zinc-500 dark:text-zinc-400">Videos </span>
+                    <span class="font-medium pl-6 text-zinc-500 dark:text-zinc-400">Videos </span>
                     <span class="text-xs mr-2 text-zinc-400 dark:text-zinc-500">{{currentVideo+1}}/{{ playlist.length }}</span>
+                    <SelectButton v-model="loopMode" :options="loopOptions" size="small" :allowEmpty="false">
+                         <template #option="slotProps" >
+                            <i :class="slotProps.option.icon" v-tooltip.bottom="slotProps.option.label"></i>                              
+                        </template>
+                    </SelectButton>
+                    <!-- {{ loopMode }} -->
                 </div>
-                <div class="max-h-[300px] md:max-h-[calc(100vh-150px)] overflow-y-auto pr-2 scrollbar-container rounded-xl p-2">
+                <div ref="userListRef" class="userlist max-h-[300px] md:max-h-[calc(100vh-150px)] overflow-y-auto pr-2 scrollbar-container rounded-xl p-2">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-2">
                         <div 
                             v-for="(video,i) in playlist" 
                             :key="video.id" 
+                            :ref="(element) => setPlaylistItemRef(element, i)"
                             @click="LoadVideo(video, i)"
                             class="cursor-pointer p-2 rounded-lg border border-transparent transition-colors flex items-center gap-2 hover:bg-zinc-100 dark:hover:bg-zinc-800/60"
                             :class="i === currentVideo ? 'bg-zinc-200/60 border-zinc-300 dark:bg-zinc-800/80 dark:border-zinc-700' : 'bg-transparent'"
@@ -61,13 +68,63 @@ let startVideoPlaylistHook = null;
 const visible = ref(false)
 const loading = ref(true)
 const playerRef = ref(null)
+const userListRef = ref(null)
 let player = null
 const playlist = ref([])
 const currentVideo = ref(0)
 const playlistFinished = ref(false)
+const playlistItemRefs = ref([])
 
 const isClosing = ref(false)
 const originalUrl = ref(null)
+
+const loopOptions = ref([
+    { value: 'one' , label: 'Repetir video', icon: 'pi pi-replay' },
+    { value: 'all', label: 'Reproducir playlist', icon: 'pi pi-list' },
+])
+const loopMode = ref(loopOptions.value[1])
+
+const getLoopModeValue = () => {
+    if (typeof loopMode.value === 'string') return loopMode.value
+    return loopMode.value?.value
+}
+
+const setPlaylistItemRef = (element, index) => {
+    if (!element) {
+        delete playlistItemRefs.value[index]
+        return
+    }
+
+    playlistItemRefs.value[index] = element
+}
+
+const scrollCurrentVideoIntoView = async () => {
+    if (currentVideo.value === null || currentVideo.value < 0) return
+
+    await nextTick()
+
+    const container = userListRef.value
+    const currentItem = playlistItemRefs.value[currentVideo.value]
+    if (!container || !currentItem) return
+
+    const containerRect = container.getBoundingClientRect()
+    const itemRect = currentItem.getBoundingClientRect()
+    const nextItem = playlistItemRefs.value[currentVideo.value + 1]
+    const nextItemHeight = nextItem?.getBoundingClientRect().height || itemRect.height
+    const bottomMargin = Math.min(nextItemHeight + 8, Math.max(container.clientHeight * 0.25, 0))
+
+    const isAboveView = itemRect.top < containerRect.top
+    const isBelowView = itemRect.bottom > containerRect.bottom - bottomMargin
+    if (!isAboveView && !isBelowView) return
+
+    const targetTop = currentItem.offsetTop - Math.max(container.clientHeight - currentItem.offsetHeight - bottomMargin, 0)
+    const maxScrollTop = Math.max(container.scrollHeight - container.clientHeight, 0)
+
+    container.scrollTo({
+        top: Math.min(Math.max(targetTop, 0), maxScrollTop),
+        behavior: 'smooth',
+    })
+}
 
 const handleFullscreenHotkey = (event) => {
     if (event.key?.toLowerCase() !== 'f') return
@@ -170,6 +227,16 @@ const NextVideo = () => {
     }
 }
 
+const HandleVideoEnded = () => {
+    if (getLoopModeValue() === 'one') {
+        player?.restart()
+        player?.play().catch(err => console.warn("Autoplay failed:", err))
+        return
+    }
+
+    NextVideo()
+}
+
 const AttachPlaylistControls = () => {
     if (!player?.elements?.controls) return
 
@@ -239,7 +306,7 @@ const InitPlayer = () => {
 
     player.on('ended', () => {
         // console.log("Video playback finished")
-        NextVideo();
+        HandleVideoEnded()
     })
 
     player.on('ready', () => {
@@ -348,6 +415,14 @@ const CrearItemPlaylist = (contenido) => {
     return items;
     
 }
+
+watch(() => playlist.value.length, () => {
+    playlistItemRefs.value = []
+})
+
+watch(() => currentVideo.value, () => {
+    scrollCurrentVideoIntoView()
+})
 
 watch(() => visible.value, (newValue) => {
   if (!newValue && !isClosing.value && originalUrl.value) {
