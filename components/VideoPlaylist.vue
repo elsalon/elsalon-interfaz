@@ -122,29 +122,13 @@ const scrollCurrentVideoIntoView = async () => {
 
     await nextTick()
 
-    const container = userListRef.value
     const currentItem = playlistItemRefs.value[currentVideo.value]
-    if (!container || !currentItem) return
+    if (!currentItem) return
 
-    const itemTop = currentItem.offsetTop
-    const itemBottom = itemTop + currentItem.offsetHeight
-    const viewTop = container.scrollTop
-    const viewBottom = viewTop + container.clientHeight
-
-    let targetTop = viewTop
-    if (itemTop < viewTop) {
-        targetTop = itemTop
-    } else if (itemBottom > viewBottom) {
-        targetTop = itemBottom - container.clientHeight
-    }
-
-    const maxScrollTop = Math.max(container.scrollHeight - container.clientHeight, 0)
-    const clampedTargetTop = Math.min(Math.max(targetTop, 0), maxScrollTop)
-    if (clampedTargetTop === viewTop) return
-
-    container.scrollTo({
-        top: clampedTargetTop,
+    currentItem.scrollIntoView({
         behavior: 'smooth',
+        block: 'nearest',
+        inline: 'nearest',
     })
 }
 
