@@ -13,23 +13,23 @@
         </div>
 
         <div>
-          <p class="text-xs text-center text-zinc-600 mt-5">Al recuperar te llegará un mail con un link para activar tu cuenta</p>
+          <p class="text-xs text-center text-zinc-600 dark:text-zinc-400 mt-5">Al recuperar te llegará un mail con un link para activar tu cuenta</p>
           <Button type="submit" label="Recuperar contraseña" class="block mt-3" :loading="loading"  fluid iconPos="right"></Button>
         </div>
       </form>
 
-      <p class="mt-10 text-center text-sm text-zinc-600">También podés
-        <a href="/login" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900">iniciar sesión</a>
+      <p class="mt-10 text-center text-sm text-zinc-600 dark:text-zinc-400">También podés
+        <a href="/login" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200">iniciar sesión</a>
         o
-        <a href="/registrar" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900">registrarte</a>
+        <a href="/registrar" class="font-semibold leading-6 text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200">registrarte</a>
       </p>
     </div>
 
     <div v-else class="text-center py-8">
-      <p class="text-xl font-bold text-zinc-800 mb-4">¡Correo enviado!</p>
-      <p class="text-zinc-600">Se ha enviado un email con instrucciones para recuperar tu contraseña.</p>
+      <p class="text-xl font-bold text-zinc-800 dark:text-zinc-100 mb-4">¡Correo enviado!</p>
+      <p class="text-zinc-600 dark:text-zinc-400">Se ha enviado un email con instrucciones para recuperar tu contraseña.</p>
       <p class="mt-6">
-        <a href="/login" class="font-semibold text-zinc-600 hover:text-zinc-900">Volver al inicio de sesión</a>
+        <a href="/login" class="font-semibold text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200">Volver al inicio de sesión</a>
       </p>
     </div>
   </NuxtLayout>
