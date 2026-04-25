@@ -79,14 +79,33 @@ const isClosing = ref(false)
 const originalUrl = ref(null)
 
 const loopOptions = ref([
-    { value: 'one' , label: 'Repetir video', icon: 'pi pi-replay' },
-    { value: 'all', label: 'Reproducir playlist', icon: 'pi pi-list' },
+    { value: 'one' , label: 'Repetir Video', icon: 'pi pi-replay' },
+    { value: 'all', label: 'Reproducir Playlist', icon: 'pi pi-list' },
 ])
 const loopMode = ref(loopOptions.value[1])
+let loopToggleButton = null
 
 const getLoopModeValue = () => {
     if (typeof loopMode.value === 'string') return loopMode.value
     return loopMode.value?.value
+}
+
+const toggleLoopMode = () => {
+    const nextMode = getLoopModeValue() === 'one' ? 'all' : 'one'
+    loopMode.value = loopOptions.value.find(option => option.value === nextMode)
+}
+
+const updateLoopToggleButton = () => {
+    if (!loopToggleButton) return
+
+    const mode = getLoopModeValue()
+    const isOne = mode === 'one'
+    const iconClass = isOne ? 'pi pi-replay' : 'pi pi-list'
+    const ariaLabel = isOne ? 'Cambiar a repetir playlist' : 'Cambiar a repetir video'
+
+    loopToggleButton.setAttribute('aria-label', ariaLabel)
+    loopToggleButton.setAttribute('aria-pressed', isOne ? 'true' : 'false')
+    loopToggleButton.innerHTML = `<i class="${iconClass}" aria-hidden="true"></i>`
 }
 
 const setPlaylistItemRef = (element, index) => {
@@ -107,21 +126,24 @@ const scrollCurrentVideoIntoView = async () => {
     const currentItem = playlistItemRefs.value[currentVideo.value]
     if (!container || !currentItem) return
 
-    const containerRect = container.getBoundingClientRect()
-    const itemRect = currentItem.getBoundingClientRect()
-    const nextItem = playlistItemRefs.value[currentVideo.value + 1]
-    const nextItemHeight = nextItem?.getBoundingClientRect().height || itemRect.height
-    const bottomMargin = Math.min(nextItemHeight + 8, Math.max(container.clientHeight * 0.25, 0))
+    const itemTop = currentItem.offsetTop
+    const itemBottom = itemTop + currentItem.offsetHeight
+    const viewTop = container.scrollTop
+    const viewBottom = viewTop + container.clientHeight
 
-    const isAboveView = itemRect.top < containerRect.top
-    const isBelowView = itemRect.bottom > containerRect.bottom - bottomMargin
-    if (!isAboveView && !isBelowView) return
+    let targetTop = viewTop
+    if (itemTop < viewTop) {
+        targetTop = itemTop
+    } else if (itemBottom > viewBottom) {
+        targetTop = itemBottom - container.clientHeight
+    }
 
-    const targetTop = currentItem.offsetTop - Math.max(container.clientHeight - currentItem.offsetHeight - bottomMargin, 0)
     const maxScrollTop = Math.max(container.scrollHeight - container.clientHeight, 0)
+    const clampedTargetTop = Math.min(Math.max(targetTop, 0), maxScrollTop)
+    if (clampedTargetTop === viewTop) return
 
     container.scrollTo({
-        top: Math.min(Math.max(targetTop, 0), maxScrollTop),
+        top: clampedTargetTop,
         behavior: 'smooth',
     })
 }
@@ -142,7 +164,9 @@ const handleFullscreenHotkey = (event) => {
 }
 
 const handlePlayPauseHotkey = (event) => {
-    if (event.key?.toLowerCase() !== 'k') return
+    const key = event.key?.toLowerCase()
+    const isSpace = event.code === 'Space' || event.key === ' ' || key === 'spacebar'
+    if (key !== 'k' && !isSpace) return
     if (!visible.value || !player) return
     if (event.ctrlKey || event.metaKey || event.altKey) return
 
@@ -182,6 +206,26 @@ const handleSeekHotkey = (event) => {
             player.rewind(10)
         }
     }
+}
+
+const toggleMute = () => {
+    if (!player) return
+    player.muted = !player.muted
+}
+
+const handleMuteHotkey = (event) => {
+    if (event.key?.toLowerCase() !== 'm') return
+    if (!visible.value || !player) return
+    if (event.ctrlKey || event.metaKey || event.altKey) return
+
+    const activeTag = document.activeElement?.tagName?.toLowerCase()
+    const isEditable = document.activeElement?.isContentEditable
+    if (isEditable || activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
+        return
+    }
+
+    event.preventDefault()
+    toggleMute()
 }
 
 const handleWindowBlur = () => {
@@ -261,6 +305,15 @@ const AttachPlaylistControls = () => {
         nextButton.innerHTML = '<svg class="plyr__icon" aria-hidden="true"><use xlink:href="#plyr-fast-forward"></use></svg>'
     }
 
+    let loopButton = controls.querySelector('.plyr__control--playlist-loop')
+    if (!loopButton) {
+        loopButton = document.createElement('button')
+        loopButton.type = 'button'
+        loopButton.className = 'plyr__control plyr__control--playlist-loop'
+        loopButton.setAttribute('aria-label', 'Modo de Reproducción')
+        loopButton.innerHTML = '<svg class="plyr__icon" aria-hidden="true"><use xlink:href="#plyr-fast-forward"></use></svg>'
+    }
+
     if (playButton) {
         playButton.insertAdjacentElement('afterend', nextButton)
         playButton.insertAdjacentElement('afterend', prevButton)
@@ -269,8 +322,18 @@ const AttachPlaylistControls = () => {
         controls.prepend(prevButton)
     }
 
+    const settingsButton = controls.querySelector('[data-plyr="settings"]')
+    if (settingsButton) {
+        settingsButton.insertAdjacentElement('beforebegin', loopButton)
+    } else {
+        controls.append(loopButton)
+    }
+
     prevButton.onclick = PreviousVideo
     nextButton.onclick = NextVideo
+    loopButton.onclick = toggleLoopMode
+    loopToggleButton = loopButton
+    updateLoopToggleButton()
 }
 
 const InitPlayer = () => {
@@ -424,6 +487,10 @@ watch(() => currentVideo.value, () => {
     scrollCurrentVideoIntoView()
 })
 
+watch(() => loopMode.value, () => {
+    updateLoopToggleButton()
+})
+
 watch(() => visible.value, (newValue) => {
   if (!newValue && !isClosing.value && originalUrl.value) {
     isClosing.value = true
@@ -441,6 +508,7 @@ watch(() => visible.value, (newValue) => {
     if (player) {
       player.destroy()
       player = null
+            loopToggleButton = null
     }
   }
 })
@@ -450,6 +518,7 @@ onMounted(() => {
     window.addEventListener('keydown', handleFullscreenHotkey)
     window.addEventListener('keydown', handlePlayPauseHotkey)
     window.addEventListener('keydown', handleSeekHotkey)
+    window.addEventListener('keydown', handleMuteHotkey)
     window.addEventListener('blur', handleWindowBlur)
 })
 
@@ -458,6 +527,7 @@ onUnmounted(() => {
     window.removeEventListener('keydown', handleFullscreenHotkey)
     window.removeEventListener('keydown', handlePlayPauseHotkey)
     window.removeEventListener('keydown', handleSeekHotkey)
+    window.removeEventListener('keydown', handleMuteHotkey)
     window.removeEventListener('blur', handleWindowBlur)
 })
 </script>
