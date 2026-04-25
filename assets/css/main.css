@@ -367,11 +367,16 @@ ol{
 }
 
 @media (max-width: 767px) {
+  #crearEntradaDrawer{
+    .ql-toolbar.ql-snow{
+      position: absolute;
+      top: -41px;
+      padding: 4px 50px 0px 0px !important;
+    }
+  }
   .ql-toolbar.ql-snow{
-    position: absolute;
-    top: -41px;
-    padding: 4px 50px 0px 0px !important;
     text-align: left;
+    padding: 2px 0px 2px 6px !important;
   }
   .ql-toolbar.ql-snow .ql-formats{
     margin-right: 0px !important; 
