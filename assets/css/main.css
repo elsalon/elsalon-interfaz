@@ -443,3 +443,6 @@ ol{
   @apply bg-surface-800 !text-surface-300;
 }
 
+.notification-item{
+  overflow-wrap: anywhere;
+}
