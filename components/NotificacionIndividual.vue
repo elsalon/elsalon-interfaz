@@ -1,7 +1,7 @@
 <template>
     <NuxtLink @click.prevent="HandleNotificacionLink()" :to="linkNotificacion" class="p-3 mb-1 block"
         :class="{ 'bg-zinc-200 dark:bg-zinc-700': !notificacion.leida }">
-        <div class="flex notification-item">
+        <div class="flex notification-item wrap-anywhere">
             <div>
                 <AvatarSalon :usuario="props.notificacion.identidad.value" size="small" class="mr-4" style="font-size: .6rem;" 
                 :avatarType="props.notificacion.identidad.relationTo"/>
