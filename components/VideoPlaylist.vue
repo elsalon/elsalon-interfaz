@@ -23,7 +23,8 @@
             <div class="w-full md:w-1/4 mt-4 md:mt-6 md:flex md:flex-col">
                 <div class="flex justify-between items-center my-2">
                     <span class="font-medium pl-6 text-zinc-500 dark:text-zinc-400">Videos </span>
-                    <span class="text-xs mr-2 text-zinc-400 dark:text-zinc-500">{{currentVideo+1}}/{{ playlist.length }}</span>
+                    
+                    <span class="text-xs mr-2 text-zinc-400 dark:text-zinc-500">{{currentVideo+1}}/{{ playlist.length }} ({{ totalDurationLabel }})</span>
                     <SelectButton v-model="loopMode" :options="loopOptions" size="small" :allowEmpty="false">
                          <template #option="slotProps" >
                             <i :class="slotProps.option.icon" v-tooltip.bottom="slotProps.option.label"></i>                              
@@ -57,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, watch, onUnmounted } from 'vue'
+import { ref, onMounted, nextTick, watch, onUnmounted, computed } from 'vue'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 const { hooks } = useNuxtApp();
@@ -74,6 +75,8 @@ const playlist = ref([])
 const currentVideo = ref(0)
 const playlistFinished = ref(false)
 const playlistItemRefs = ref([])
+const totalDurationSeconds = ref(0)
+const totalDurationLoading = ref(false)
 
 const isClosing = ref(false)
 const originalUrl = ref(null)
@@ -84,6 +87,129 @@ const loopOptions = ref([
 ])
 const loopMode = ref(loopOptions.value[1])
 let loopToggleButton = null
+let durationCalcRequestId = 0
+let probeContainer = null
+let probePlayer = null
+
+const ensureProbePlayer = () => {
+    if (typeof window === 'undefined') return null
+    if (probePlayer) return probePlayer
+
+    probeContainer = document.createElement('div')
+    probeContainer.style.position = 'fixed'
+    probeContainer.style.left = '-9999px'
+    probeContainer.style.top = '-9999px'
+    probeContainer.style.width = '1px'
+    probeContainer.style.height = '1px'
+
+    const probeElement = document.createElement('video')
+    probeContainer.appendChild(probeElement)
+    document.body.appendChild(probeContainer)
+
+    probePlayer = new Plyr(probeElement, {
+        controls: [],
+        autoplay: false,
+        youtube: {
+            rel: 0,
+            modestbranding: 1,
+        },
+        vimeo: {
+            dnt: true,
+        },
+    })
+
+    return probePlayer
+}
+
+const destroyProbePlayer = () => {
+    if (probePlayer) {
+        try {
+            probePlayer.destroy()
+        } catch (_) {
+            // ignore probe cleanup errors
+        }
+        probePlayer = null
+    }
+
+    if (probeContainer) {
+        probeContainer.remove()
+        probeContainer = null
+    }
+}
+
+const formatDurationLabel = (seconds) => {
+    const safeSeconds = Math.max(0, Math.floor(Number(seconds) || 0))
+    const totalMinutes = Math.round(safeSeconds / 60)
+
+    if (totalMinutes < 60) {
+        return `${totalMinutes}m`
+    }
+
+    const hours = Math.floor(totalMinutes / 60)
+    const minutes = totalMinutes % 60
+
+    return `${hours}h ${minutes}m`
+}
+
+const totalDurationLabel = computed(() => {
+    if (totalDurationLoading.value) return '...'
+    return formatDurationLabel(totalDurationSeconds.value)
+})
+
+const getDurationFromProbePlayer = (item) => {
+    return new Promise((resolve) => {
+        const currentProbePlayer = ensureProbePlayer()
+        if (!currentProbePlayer) {
+            resolve(0)
+            return
+        }
+
+        let cleanedUp = false
+        const cleanup = () => {
+            if (cleanedUp) return
+            cleanedUp = true
+            clearTimeout(timeoutId)
+        }
+
+        const resolveWithDuration = () => {
+            const duration = Number(currentProbePlayer.duration)
+            if (Number.isFinite(duration) && duration > 0) {
+                cleanup()
+                resolve(duration)
+            }
+        }
+
+        const timeoutId = setTimeout(() => {
+            cleanup()
+            resolve(0)
+        }, 8000)
+
+        currentProbePlayer.once('ready', resolveWithDuration)
+        currentProbePlayer.once('durationchange', resolveWithDuration)
+        currentProbePlayer.once('loadedmetadata', resolveWithDuration)
+
+        currentProbePlayer.source = {
+            type: 'video',
+            sources: [
+                {
+                    src: item.id,
+                    provider: item.provider || 'youtube',
+                }
+            ]
+        }
+    })
+}
+
+const calculateTotalPlaylistDuration = async (items) => {
+    if (!items?.length) return 0
+
+    let total = 0
+    for (const item of items) {
+        total += await getDurationFromProbePlayer(item)
+    }
+
+    return total
+}
 
 const getLoopModeValue = () => {
     if (typeof loopMode.value === 'string') return loopMode.value
@@ -401,6 +527,20 @@ const handleOpenVideoPlaylist = async (data) => {
     }
     
     playlist.value = await ProcesarEntradaAPlaylist(data.entrada)
+    totalDurationSeconds.value = 0
+    totalDurationLoading.value = true
+    const requestId = ++durationCalcRequestId
+
+    calculateTotalPlaylistDuration(playlist.value)
+        .then((duration) => {
+            if (requestId !== durationCalcRequestId) return
+            totalDurationSeconds.value = duration
+        })
+        .finally(() => {
+            if (requestId !== durationCalcRequestId) return
+            totalDurationLoading.value = false
+        })
+
     // console.log("Generado playlist", playlist.value)
     nextTick(() => {
         LoadVideo(playlist.value[0])
@@ -477,6 +617,8 @@ watch(() => loopMode.value, () => {
 
 watch(() => visible.value, (newValue) => {
   if (!newValue && !isClosing.value && originalUrl.value) {
+        durationCalcRequestId++
+    destroyProbePlayer()
     isClosing.value = true
     
     // Restore the original URL that was stored when opening the playlist
@@ -508,6 +650,7 @@ onMounted(() => {
 
 onUnmounted(() => {
     if (startVideoPlaylistHook) startVideoPlaylistHook()
+    destroyProbePlayer()
     window.removeEventListener('keydown', handleFullscreenHotkey)
     window.removeEventListener('keydown', handlePlayPauseHotkey)
     window.removeEventListener('keydown', handleSeekHotkey)
