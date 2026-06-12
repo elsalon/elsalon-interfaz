@@ -58,9 +58,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, watch, onUnmounted, computed } from 'vue'
-import Plyr from 'plyr'
-import 'plyr/dist/plyr.css'
+import { ref, onMounted, nextTick, watch, onUnmounted } from 'vue'
+// Plyr se carga on-demand al abrir la playlist para no inflar el bundle de cada página
+let PlyrCtor = null
+const loadPlyr = async () => {
+    if (PlyrCtor) return PlyrCtor
+    const [{ default: Plyr }] = await Promise.all([
+        import('plyr'),
+        import('plyr/dist/plyr.css'),
+    ])
+    PlyrCtor = Plyr
+    return PlyrCtor
+}
 const { hooks } = useNuxtApp();
 import qs from 'qs';
 
@@ -94,6 +103,7 @@ let probePlayer = null
 const ensureProbePlayer = () => {
     if (typeof window === 'undefined') return null
     if (probePlayer) return probePlayer
+    if (!PlyrCtor) return null
 
     probeContainer = document.createElement('div')
     probeContainer.style.position = 'fixed'
@@ -106,7 +116,7 @@ const ensureProbePlayer = () => {
     probeContainer.appendChild(probeElement)
     document.body.appendChild(probeContainer)
 
-    probePlayer = new Plyr(probeElement, {
+    probePlayer = new PlyrCtor(probeElement, {
         controls: [],
         autoplay: false,
         youtube: {
@@ -447,7 +457,7 @@ const AttachPlaylistControls = () => {
 }
 
 const InitPlayer = () => {
-    player = new Plyr(playerRef.value, {
+    player = new PlyrCtor(playerRef.value, {
         youtube: {
             rel: 0, // Disables related videos
             modestbranding: 1,   // Removes YouTube logo
@@ -520,12 +530,13 @@ const handleOpenVideoPlaylist = async (data) => {
     
     visible.value = true
     loading.value = true
-    
+
     // Update URL without affecting browser history
     if (data.entrada && data.entrada.id) {
         window.history.replaceState(null, '', `/entradas/${data.entrada.id}/playlist`)
     }
-    
+
+    await loadPlyr()
     playlist.value = await ProcesarEntradaAPlaylist(data.entrada)
     totalDurationSeconds.value = 0
     totalDurationLoading.value = true

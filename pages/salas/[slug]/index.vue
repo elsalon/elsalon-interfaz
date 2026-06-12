@@ -7,7 +7,7 @@
         <div class="text-center mb-2">
             <LogoSala :salon="salon" />
             <h2 class="text-xl">
-                <CajaAulas :salon="salaData" />
+                <CajaAulas v-if="salaData" :salon="salaData" />
             </h2>
         </div>
 
@@ -64,15 +64,18 @@ const salon = computed(() => {
   return found
 })
 
-const salaQueryCacheKey = "sala"+ slug;
-const { data: salaQuery } = await useAsyncData(salaQueryCacheKey, () => useAPI(`/api/salas?where[slug][equals]=${slug}`))
-if (salaQuery.value.docs.length === 0) {
+// El store ya tiene todas las salas (cargadas por el middleware), así que el 404
+// se resuelve sincrónicamente y el fetch de datos frescos no bloquea la navegación
+if (!salon.value) {
     throw createError({
         statusCode: 404,
         statusMessage: 'Not Found',
     })
 }
-const salaData = salaQuery.value.docs[0]
+
+const salaQueryCacheKey = "sala"+ slug;
+const { data: salaQuery } = useAsyncData(salaQueryCacheKey, () => useAPI(`/api/salas?where[slug][equals]=${slug}`), { lazy: true, server: false })
+const salaData = computed(() => salaQuery.value?.docs?.[0] || null)
 
 // Update these lines to handle possible undefined value during initial load
 // and use optional chaining
@@ -118,7 +121,8 @@ const RefreshMiembros = async () => {
     miembros.value = await useAPI(buildActiveMiembrosQuery());
 }
 
+// ListaMiembrosSala muestra "..." mientras miembros es null, no hace falta bloquear
 const miembrosCacheKey = `miembros-${salon.value.id}`;
-const { data: miembros } = await useAsyncData(miembrosCacheKey, () => useAPI(buildActiveMiembrosQuery()))
+const { data: miembros } = useAsyncData(miembrosCacheKey, () => useAPI(buildActiveMiembrosQuery()), { lazy: true, server: false })
 
 </script>

@@ -43,6 +43,7 @@ export const useSalonStore = defineStore('salon', {
     // finCuatri2: '12-31', // mes / dia 31 diciembre
     gruposDelUsuario: null as null,
     gruposDelUsuarioFetching: false,
+    gruposPromise: null as Promise<void> | null,
     invalidating: false,
     elSalonId: null as String | null,
   }),
@@ -68,11 +69,11 @@ export const useSalonStore = defineStore('salon', {
       this.loading = true;
 
       try {
-        const { data } = await useFetch("/cache/config");
+        const data = await $fetch("/cache/config");
 
-        if (data.value) {
-          this.salas = data.value.salas;
-          this.etiquetas = data.value.etiquetas;
+        if (data) {
+          this.salas = data.salas;
+          this.etiquetas = data.etiquetas;
           const elSalon = this.salas.find(sala => sala.slug === 'el-salon');
           this.elSalonId = elSalon ? elSalon.id : null;
         }
@@ -147,10 +148,13 @@ export const useSalonStore = defineStore('salon', {
     },
 
     async FetchGruposDelUsuario(force = false) {
-      // If we need fresh data or don't have cached data, and we're not already fetching
-      if ((force || !this.gruposDelUsuario) && !this.gruposDelUsuarioFetching) {
+      // Si ya hay un fetch en curso, me sumo a esa promesa
+      if (this.gruposPromise) return this.gruposPromise;
+      if (!force && this.gruposDelUsuario) return;
+
+      this.gruposDelUsuarioFetching = true;
+      this.gruposPromise = (async () => {
         try {
-          this.gruposDelUsuarioFetching = true;
           const { docs: gruposDelUsuario } = await useAPI(`/api/grupos/me`);
           this.gruposDelUsuario = gruposDelUsuario;
         } catch (error) {
@@ -158,19 +162,10 @@ export const useSalonStore = defineStore('salon', {
           throw error;
         } finally {
           this.gruposDelUsuarioFetching = false;
+          this.gruposPromise = null;
         }
-      }
-      // If another fetch is already in progress, wait for it to complete
-      else if (this.gruposDelUsuarioFetching) {
-        await new Promise((resolve) => {
-          const checkInterval = setInterval(() => {
-            if (!this.gruposDelUsuarioFetching) {
-              clearInterval(checkInterval);
-              resolve();
-            }
-          }, 50);
-        });
-      }
+      })();
+      return this.gruposPromise;
     }
   },
 });

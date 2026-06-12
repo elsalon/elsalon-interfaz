@@ -5,7 +5,6 @@ export default defineNuxtConfig({
   plugins: [
     '~/plugins/api.ts',
     '~/plugins/notificationStartPolling.js',
-    { src: '~/plugins/plyr.js', mode: 'client' },
     '~/plugins/set-color-mode.client.js',
   ],
   modules: [
@@ -30,7 +29,7 @@ export default defineNuxtConfig({
   // *****
   mixpanel: {
     config:{
-      debug: true,
+      debug: process.env.NODE_ENV !== 'production',
       ignore_dnt: true,
       persistence: 'localStorage',
     }
@@ -143,7 +142,7 @@ export default defineNuxtConfig({
   // *********
   // TAILWIND
   // *********
-  css: ['~/assets/css/main.css', 'primeicons/primeicons.css', 'plyr/dist/plyr.css'],
+  css: ['~/assets/css/main.css', 'primeicons/primeicons.css'],
   postcss: {
     plugins: {
       tailwindcss: {},

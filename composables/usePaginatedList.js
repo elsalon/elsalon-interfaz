@@ -51,15 +51,28 @@ export function usePaginatedList(options = {}) {
     return res;
   };
 
-  // Initial fetch
-  const initialFetch = async () => {
-    const { data } = await useAsyncData(getCacheKey(), fetchItems);
-    if (data.value) {
-      items.value = data.value.docs;
-      hasNextPage.value = data.value.hasNextPage;
-      currentPage.value = data.value.page || 1;
-    }
-    initialLoading.value = false;
+  // Initial fetch (non-blocking: navigation completes while data loads).
+  // Importante: durante la hidratación inicial Nuxt difiere el fetch (server: false)
+  // pero la promesa de useAsyncData resuelve igual, así que hay que consumir
+  // data/status reactivamente y no via .then()
+  const initialFetch = () => {
+    if (import.meta.server) return; // SSR renders the loading state
+
+    const key = getCacheKey();
+    const { data, status } = useAsyncData(key, fetchItems, { lazy: true, server: false });
+
+    watch([data, status], ([newData, newStatus]) => {
+      if (getCacheKey() !== key) return; // key changed mid-flight; refetch() owns state
+      if (newData) {
+        items.value = newData.docs;
+        hasNextPage.value = newData.hasNextPage;
+        currentPage.value = newData.page || 1;
+      }
+      if (newStatus === 'success' || newStatus === 'error') {
+        if (newStatus === 'error') console.error('Error fetching initial items');
+        initialLoading.value = false;
+      }
+    }, { immediate: true });
   };
 
   // Refetch (clears data and fetches fresh)
