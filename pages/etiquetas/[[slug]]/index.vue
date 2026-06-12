@@ -1,7 +1,7 @@
 <template>
     <NuxtLayout name="layout-contenido">
         <template #header>#{{ etiqueta?.nombre }}</template>  
-        <ListaEntradas :query="query"/> 
+        <ListaEntradas :query="query" :cacheKey="`etiqueta-${slug}`"/>
     </NuxtLayout>
 </template>
 

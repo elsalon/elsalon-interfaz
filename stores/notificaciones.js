@@ -29,13 +29,11 @@ export const useNotificacionesStore = defineStore('notificaciones', {
 
     async resetNotificacionesNuevas() {
       if (this.nuevas === 0) return
-      const res = await useAPI('/api/notificaciones/resetnuevas', { method: 'PATCH' })
-      console.log('Notificaciones nuevas reseteadas', res)
+      await useAPI('/api/notificaciones/resetnuevas', { method: 'PATCH' })
       this.nuevas = 0
     },
 
     async fetchNotificacionesTodas(fromDate = new Date()) {
-      console.log("fetch", {fromDate})
       const user = useAuth().data.value.user; // Access the user data
       const limit = 5
 
@@ -59,29 +57,21 @@ export const useNotificacionesStore = defineStore('notificaciones', {
     },
 
     MergeNotificaciones(docs) {
-      // Remove notificaciones present in docs
-      this.notificaciones = this.notificaciones.filter(n => !docs.some(d => d.id === n.id))
-      if (this.notificaciones == null) {
-        this.notificaciones = docs
-      } else {
-        this.notificaciones.push(...docs)
-      }
-      // Remove duplicate
-      this.notificaciones = this.notificaciones.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i)
-      // sort actualizacion
-      this.notificaciones.sort((a, b) => new Date(b.actualizacion) - new Date(a.actualizacion))
+      // Mergeo por id (docs nuevos pisan los existentes) y ordeno una sola vez
+      const byId = new Map(this.notificaciones.map(n => [n.id, n]))
+      docs.forEach(d => byId.set(d.id, d))
+      this.notificaciones = [...byId.values()]
+        .sort((a, b) => new Date(b.actualizacion) - new Date(a.actualizacion))
     },
 
     async fetchNotificacionesMas() {
       const ultimaNotificacion = this.notificaciones[this.notificaciones.length - 1]
-      console.log('Ultima notificacion', ultimaNotificacion)
       if (!ultimaNotificacion) return
       this.fetchNotificacionesTodas(new Date(ultimaNotificacion.actualizacion))
     },
 
 
     async MarcarTodasLeidas() {
-      console.log('Marcar todas leidas')
       try{
         this.fetching = true
         await useAPI(`/api/notificaciones/todasleidas`, { method: 'PATCH' })
@@ -112,15 +102,4 @@ export const useNotificacionesStore = defineStore('notificaciones', {
       this.isPolling = false
     }
   },
-})
-
-// plugin/notifications.ts
-export default defineNuxtPlugin((nuxtApp) => {
-  const store = useNotificationsStore()
-  store.startPolling()
-
-  // Clean up on app unmount
-  nuxtApp.hook('app:beforeMount', () => {
-    store.stopPolling()
-  })
 })

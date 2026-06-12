@@ -2,7 +2,7 @@
     <Button v-if="showButton" id="btnEscribir" label="+ Escribir" @click="AbrirEditor" class="z-40"/>
 
     <FullScreenModal v-model:isOpen="visible">
-        <CrearEntradaDrawer :entryEdit="editContent"/>
+        <LazyCrearEntradaDrawer :entryEdit="editContent"/>
     </FullScreenModal>
 </template>
 

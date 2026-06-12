@@ -71,7 +71,7 @@ const {
   },
 });
 
-await initialFetch();
+initialFetch();
 
 // Watch for cacheKey changes and refetch
 watch(() => props.cacheKey, async (newKey, oldKey) => {

@@ -46,7 +46,6 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from "vue";
-import { useAsyncData } from "#app";
 import qs from 'qs';
 const notifEntradasNuevas = ref(null);
 const SalonStore = useSalonStore();
@@ -79,7 +78,7 @@ const {
   cacheKey: computed(() => props.cacheKey),
 });
 
-await initialFetch();
+initialFetch();
 
 // Watch for cacheKey changes and refetch (including fijadas)
 watch(() => props.cacheKey, async (newKey, oldKey) => {
@@ -147,27 +146,8 @@ const fetchFijadas = async () => {
 }
 
 // Fetch inicial de fijadas
-if (!props.saltearFijadas) {
-  const cacheKey = `${props.cacheKey}:fijadas`;
-  const queryParams = qs.stringify({
-    populate: 'entradas,comentarios', // custom query param
-    depth: 4,
-    sort: '-lastActivity',
-    limit: 12,
-    where: {
-      "contexto": { equals: SalonStore.contextoId }
-    }
-  }, { encode: false })
-  const { data: entradasFijadasRes } = await useAsyncData(cacheKey, () => useAPI(`/api/fijadas?${queryParams}`))
-  idsEntradasFijadas.value = [];
-  entradasFijadasRes.value.docs.forEach(item => {
-    if (item.entrada.id != undefined) {
-      idsEntradasFijadas.value.push(item.entrada.id)
-      item.entrada.fijada = item.id; // le agrego el id de la fijada a la entrada
-    }
-  })
-  // console.log(entradasFijadasRes.value)
-  entradasFijadas.value = entradasFijadasRes.value.docs.map(item => item.entrada);
+if (!props.saltearFijadas && import.meta.client) {
+  fetchFijadas().catch((e) => console.error('Error fetching fijadas:', e));
 }
 
 const listaEntradas = computed(() => {

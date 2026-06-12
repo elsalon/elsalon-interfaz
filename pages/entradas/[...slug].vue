@@ -7,7 +7,10 @@
             </template>
         </template>     
         <CrearEntradaBtn :show-button="false" />
-        <Entrada :key="entrada.id" :entrada="entrada" />
+        <div v-if="!entrada" class="text-center h-40 mt-10 flex flex-col justify-center items-center text-zinc-500">
+            Cargando...
+        </div>
+        <Entrada v-else :key="entrada.id" :entrada="entrada" />
         <div class="h-10"></div>
     </NuxtLayout>
 </template>
@@ -26,7 +29,16 @@ const entradaId = slugParts[0]
 // will handle showing the playlist if the URL contains 'playlist'
 
 const cacheKey = `entrada-${entradaId}`
-const { data: entrada } = await useAsyncData(cacheKey, () => useAPI(`/api/entradas/${entradaId}`))
+const { data: entrada, error } = useAsyncData(cacheKey, () => useAPI(`/api/entradas/${entradaId}`), { lazy: true, server: false })
+
+watch(error, (e) => {
+    if (e) {
+        showError({
+            statusCode: e.statusCode || 404,
+            statusMessage: 'Not Found',
+        })
+    }
+})
 
 let removeOnEditFinishHook = null
 
@@ -44,22 +56,19 @@ onUnmounted(() => {
     if (removeOnEditFinishHook) removeOnEditFinishHook()
 })
 
-const contexto = ref(null)
-const contextoUrl = ref(null)
-if(!entrada.value.sala){
-    // Bitacora
-    if(entrada.value.autoriaGrupal){
-        contexto.value = entrada.value.grupo;
-        contextoUrl.value = `/grupos/${contexto.value.slug}`
-    }else{
-        contexto.value = entrada.value.autor;
-        contextoUrl.value = `/usuarios/${contexto.value.slug}`
-    }
-}else{
-    contexto.value = entrada.value.sala;
-    contextoUrl.value = `/salas/${contexto.value.slug}`
-}
-if(contexto.value?.slug == "el-salon"){
-    contexto.value = null
-}
+// Derivado reactivamente porque entrada llega de forma asíncrona (fetch no bloqueante)
+const contexto = computed(() => {
+    const e = entrada.value
+    if (!e) return null
+    const c = e.sala ? e.sala : (e.autoriaGrupal ? e.grupo : e.autor)
+    if (c?.slug == "el-salon") return null
+    return c
+})
+
+const contextoUrl = computed(() => {
+    const e = entrada.value
+    if (!e) return null
+    if (e.sala) return `/salas/${e.sala.slug}`
+    return e.autoriaGrupal ? `/grupos/${e.grupo.slug}` : `/usuarios/${e.autor.slug}`
+})
 </script>

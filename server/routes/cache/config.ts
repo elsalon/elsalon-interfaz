@@ -48,7 +48,7 @@ export default defineEventHandler(async () => {
   const salasData = salasRes.docs || [];
   if (salasData.length > 0) {
     salas = salasData.sort((a: any, b: any) => a.orden - b.orden);
-    salas.forEach(async (salon: Salon) => await parseSalaCache(salon));
+    await Promise.all(salas.map((salon: Salon) => parseSalaCache(salon)));
   }
 
 
@@ -73,7 +73,6 @@ const finCuatri2 = '12-31'; // mes / dia 31 diciembre
 // Make parseSalaCache function available to other modules
 export async function parseSalaCache(salon: Salon) {
   await FetchSecciones(salon);
-  console.log("Parseando", salon.nombre, "para limpiar campos y agregar periodos");
   // if(salon.archivo.activar){
   let periodos = []
   let now = new Date();
@@ -112,8 +111,6 @@ export async function parseSalaCache(salon: Salon) {
 
 const camposSeccionEliiminar = ['extracto','contenido','imagenes','archivos','embedsYoutube','embedsVimeo']
 async function FetchSecciones(sala: Salon){
-  console.log("Fetch secciones", sala.nombre);
-  console.log(`${runtimeConfig.apiBase}/api/secciones?where[sala][equals]=${sala.id}&depth=0`);
   // TODO Filtrar tambien dentro de periodo
   let secciones = await $fetch<{ docs: any[] }>(`${runtimeConfig.apiBase}/api/secciones?where[sala][equals]=${sala.id}&depth=0`);
   // Elimino los campos excepto blockType para reducir el tamaño del cache

@@ -51,8 +51,17 @@
 
 <script setup>
 import { ref, onMounted, nextTick, watch, onUnmounted } from 'vue'
-import Plyr from 'plyr'
-import 'plyr/dist/plyr.css'
+// Plyr se carga on-demand al abrir la playlist para no inflar el bundle de cada página
+let PlyrCtor = null
+const loadPlyr = async () => {
+    if (PlyrCtor) return PlyrCtor
+    const [{ default: Plyr }] = await Promise.all([
+        import('plyr'),
+        import('plyr/dist/plyr.css'),
+    ])
+    PlyrCtor = Plyr
+    return PlyrCtor
+}
 const { hooks } = useNuxtApp();
 import qs from 'qs';
 
@@ -68,6 +77,184 @@ const playlistFinished = ref(false)
 
 const isClosing = ref(false)
 const originalUrl = ref(null)
+
+const loopOptions = ref([
+    { value: 'one' , label: 'Repetir Video', icon: 'pi pi-replay' },
+    { value: 'all', label: 'Reproducir Playlist', icon: 'pi pi-list' },
+])
+const loopMode = ref(loopOptions.value[1])
+let loopToggleButton = null
+let durationCalcRequestId = 0
+let probeContainer = null
+let probePlayer = null
+
+const ensureProbePlayer = () => {
+    if (typeof window === 'undefined') return null
+    if (probePlayer) return probePlayer
+    if (!PlyrCtor) return null
+
+    probeContainer = document.createElement('div')
+    probeContainer.style.position = 'fixed'
+    probeContainer.style.left = '-9999px'
+    probeContainer.style.top = '-9999px'
+    probeContainer.style.width = '1px'
+    probeContainer.style.height = '1px'
+
+    const probeElement = document.createElement('video')
+    probeContainer.appendChild(probeElement)
+    document.body.appendChild(probeContainer)
+
+    probePlayer = new PlyrCtor(probeElement, {
+        controls: [],
+        autoplay: false,
+        youtube: {
+            rel: 0,
+            modestbranding: 1,
+        },
+        vimeo: {
+            dnt: true,
+        },
+    })
+
+    return probePlayer
+}
+
+const destroyProbePlayer = () => {
+    if (probePlayer) {
+        try {
+            probePlayer.destroy()
+        } catch (_) {
+            // ignore probe cleanup errors
+        }
+        probePlayer = null
+    }
+
+    if (probeContainer) {
+        probeContainer.remove()
+        probeContainer = null
+    }
+}
+
+const formatDurationLabel = (seconds) => {
+    const safeSeconds = Math.max(0, Math.floor(Number(seconds) || 0))
+    const totalMinutes = Math.round(safeSeconds / 60)
+
+    if (totalMinutes < 60) {
+        return `${totalMinutes}m`
+    }
+
+    const hours = Math.floor(totalMinutes / 60)
+    const minutes = totalMinutes % 60
+
+    return `${hours}h ${minutes}m`
+}
+
+const totalDurationLabel = computed(() => {
+    if (totalDurationLoading.value) return '...'
+    return formatDurationLabel(totalDurationSeconds.value)
+})
+
+const getDurationFromProbePlayer = (item) => {
+    return new Promise((resolve) => {
+        const currentProbePlayer = ensureProbePlayer()
+        if (!currentProbePlayer) {
+            resolve(0)
+            return
+        }
+
+        let cleanedUp = false
+        const cleanup = () => {
+            if (cleanedUp) return
+            cleanedUp = true
+            clearTimeout(timeoutId)
+        }
+
+        const resolveWithDuration = () => {
+            const duration = Number(currentProbePlayer.duration)
+            if (Number.isFinite(duration) && duration > 0) {
+                cleanup()
+                resolve(duration)
+            }
+        }
+
+        const timeoutId = setTimeout(() => {
+            cleanup()
+            resolve(0)
+        }, 8000)
+
+        currentProbePlayer.once('ready', resolveWithDuration)
+        currentProbePlayer.once('durationchange', resolveWithDuration)
+        currentProbePlayer.once('loadedmetadata', resolveWithDuration)
+
+        currentProbePlayer.source = {
+            type: 'video',
+            sources: [
+                {
+                    src: item.id,
+                    provider: item.provider || 'youtube',
+                }
+            ]
+        }
+    })
+}
+
+const calculateTotalPlaylistDuration = async (items) => {
+    if (!items?.length) return 0
+
+    let total = 0
+    for (const item of items) {
+        total += await getDurationFromProbePlayer(item)
+    }
+
+    return total
+}
+
+const getLoopModeValue = () => {
+    if (typeof loopMode.value === 'string') return loopMode.value
+    return loopMode.value?.value
+}
+
+const toggleLoopMode = () => {
+    const nextMode = getLoopModeValue() === 'one' ? 'all' : 'one'
+    loopMode.value = loopOptions.value.find(option => option.value === nextMode)
+}
+
+const updateLoopToggleButton = () => {
+    if (!loopToggleButton) return
+
+    const mode = getLoopModeValue()
+    const isOne = mode === 'one'
+    const iconClass = isOne ? 'pi pi-replay' : 'pi pi-list'
+    const ariaLabel = isOne ? 'Cambiar a repetir playlist' : 'Cambiar a repetir video'
+
+    loopToggleButton.setAttribute('aria-label', ariaLabel)
+    loopToggleButton.setAttribute('aria-pressed', isOne ? 'true' : 'false')
+    loopToggleButton.innerHTML = `<i class="${iconClass}" aria-hidden="true"></i>`
+}
+
+const setPlaylistItemRef = (element, index) => {
+    if (!element) {
+        delete playlistItemRefs.value[index]
+        return
+    }
+
+    playlistItemRefs.value[index] = element
+}
+
+const scrollCurrentVideoIntoView = async () => {
+    if (currentVideo.value === null || currentVideo.value < 0) return
+
+    await nextTick()
+
+    const currentItem = playlistItemRefs.value[currentVideo.value]
+    if (!currentItem) return
+
+    currentItem.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'nearest',
+    })
+}
 
 const handleFullscreenHotkey = (event) => {
     if (event.key?.toLowerCase() !== 'f') return
@@ -207,7 +394,7 @@ const AttachPlaylistControls = () => {
 }
 
 const InitPlayer = () => {
-    player = new Plyr(playerRef.value, {
+    player = new PlyrCtor(playerRef.value, {
         youtube: {
             rel: 0, // Disables related videos
             modestbranding: 1,   // Removes YouTube logo
@@ -280,12 +467,13 @@ const handleOpenVideoPlaylist = async (data) => {
     
     visible.value = true
     loading.value = true
-    
+
     // Update URL without affecting browser history
     if (data.entrada && data.entrada.id) {
         window.history.replaceState(null, '', `/entradas/${data.entrada.id}/playlist`)
     }
-    
+
+    await loadPlyr()
     playlist.value = await ProcesarEntradaAPlaylist(data.entrada)
     // console.log("Generado playlist", playlist.value)
     nextTick(() => {

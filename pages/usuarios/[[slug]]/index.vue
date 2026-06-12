@@ -110,9 +110,13 @@ const OpenAvatar = () => {
     galleryPswp.init();
 }
 
+// No bloquea la navegación: el template ya guarda con v-if="grupos.length"
 const grupos = ref([])
-const resGrupos = await useAPI(`/api/grupos?where[integrantes][contains]=${usuario.value.id}`)
-grupos.value = resGrupos.docs
+if (import.meta.client) {
+    useAPI(`/api/grupos?where[integrantes][contains]=${usuario.value.id}`)
+        .then(res => { grupos.value = res.docs })
+        .catch(e => console.error('Error fetching grupos del usuario:', e))
+}
 
 const UserEdited = (userData) => {
     usuario.value = userData
