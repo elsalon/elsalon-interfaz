@@ -2,8 +2,9 @@
   <NotificacionEntradasNuevas ref="notifEntradasNuevas" />
 
   <!-- Initial Loading State -->
-  <div v-if="initialLoading" class="text-center h-40 mt-10 flex flex-col justify-center items-center text-zinc-500">
-    Cargando...
+  <div v-if="initialLoading"
+    class="flex items-center justify-center min-h-[60vh] w-full">
+    <span class="texto-cargando text-2xl md:text-lg tracking-tight font-mono">Cargando</span>
   </div>
 
   <!-- Empty State -->
@@ -34,7 +35,7 @@
       </div>
     </Transition>
     <!-- Pagination Status -->
-    <div v-show="!hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-zinc-400 text-sm">
+    <div v-show="!initialLoading && !loading && !hasNextPage && listaEntradas.length !== 0" class="mt-10 h-10 text-center text-zinc-400 text-sm">
       No hay más entradas
     </div>
   </div>
