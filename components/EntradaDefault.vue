@@ -173,10 +173,10 @@ const ToggleArticleOptions = (event) => {
 
 const opcionesArticulo = ref([
     // Dejo comentada la opcion de copiar link
-    // {
-    //     label: 'Copiar Link',
-    //     command: () => props.CopiarLink(),
-    // },
+    {
+        label: 'Copiar Link',
+        command: () => props.CopiarLink(),
+    },
 ]);
 // Opciones si el usuario es el autor o parte del grupo
 if (props.UsuarioTieneAutoridad) {
@@ -185,7 +185,6 @@ if (props.UsuarioTieneAutoridad) {
         {
             label: 'Editar',
             command: () => {
-                console.log('Editar');
                 useNuxtApp().callHook("publicacion:editar", { entrada: props.entrada, html: contenidoRender.value.contenidoRendereado })
             }
         },
