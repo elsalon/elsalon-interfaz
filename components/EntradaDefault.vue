@@ -172,7 +172,6 @@ const ToggleArticleOptions = (event) => {
 };
 
 const opcionesArticulo = ref([
-    // Dejo comentada la opcion de copiar link
     {
         label: 'Copiar Link',
         command: () => props.CopiarLink(),

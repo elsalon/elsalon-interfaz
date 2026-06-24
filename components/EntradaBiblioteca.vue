@@ -131,7 +131,12 @@ const ToggleArticleOptions = (event) => {
     }
 };
 
-const opcionesArticulo = ref([]);
+const opcionesArticulo = ref([
+    {
+        label: 'Copiar Link',
+        command: () => props.CopiarLink(),
+    },
+]);
 // Opciones si el usuario es el autor o parte del grupo
 if (props.UsuarioTieneAutoridad) {
     opcionesArticulo.value = [
