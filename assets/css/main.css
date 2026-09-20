@@ -67,6 +67,9 @@
 .dark .ql-snow .pi{
   color: white !important
 }
+.dark .ql-picker-options{
+  background-color: var(--p-surface-800) !important;
+}
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
